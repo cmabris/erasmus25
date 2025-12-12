@@ -21,7 +21,7 @@ return new class extends Migration
             $table->text('evaluation_procedure')->nullable();
             $table->date('official_date');
             $table->timestamp('published_at')->nullable();
-            $table->foreignId('created_by')->constrained('users')->nullOnDelete();
+            $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
 
             $table->index(['call_id', 'type']);

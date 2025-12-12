@@ -22,7 +22,7 @@ return new class extends Migration
             $table->dateTime('end_date')->nullable();
             $table->string('location')->nullable();
             $table->boolean('is_public')->default(true);
-            $table->foreignId('created_by')->constrained('users')->nullOnDelete();
+            $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
 
             $table->index(['program_id', 'start_date']);

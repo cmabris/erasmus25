@@ -30,7 +30,7 @@ return new class extends Migration
             $table->enum('status', ['borrador', 'abierta', 'cerrada', 'en_baremacion', 'resuelta', 'archivada'])->default('borrador');
             $table->timestamp('published_at')->nullable();
             $table->timestamp('closed_at')->nullable();
-            $table->foreignId('created_by')->constrained('users')->nullOnDelete();
+            $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
 

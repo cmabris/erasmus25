@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('media_consents', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('media_id')->constrained('media')->cascadeOnDelete();
+            // Foreign key to media table will be added after Laravel Media Library is installed
+            // See migration: add_foreign_key_to_media_consents_table.php
+            $table->unsignedBigInteger('media_id');
             $table->enum('consent_type', ['imagen', 'video', 'audio']);
             $table->string('person_name')->nullable();
             $table->string('person_email')->nullable();

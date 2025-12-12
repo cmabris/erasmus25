@@ -26,7 +26,7 @@ return new class extends Migration
             $table->enum('mobility_category', ['FCT', 'job_shadowing', 'intercambio', 'curso', 'otro'])->nullable();
             $table->enum('status', ['borrador', 'en_revision', 'publicado', 'archivado'])->default('borrador');
             $table->timestamp('published_at')->nullable();
-            $table->foreignId('author_id')->constrained('users')->nullOnDelete();
+            $table->foreignId('author_id')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('reviewed_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamp('reviewed_at')->nullable();
             $table->timestamps();

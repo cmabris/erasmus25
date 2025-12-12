@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('version')->nullable();
             $table->boolean('is_active')->default(true);
             $table->integer('download_count')->default(0);
-            $table->foreignId('created_by')->constrained('users')->nullOnDelete();
+            $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
 
