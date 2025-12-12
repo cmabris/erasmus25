@@ -1,0 +1,20 @@
+{
+    "mcpServers": {
+        "laravel-boost": {
+            "command": "/Users/carlos/Library/Application Support/Herd/bin/php83",
+            "args": [
+                "/Users/carlos/Qsync/proyectosHerd/erasmus25/artisan",
+                "boost:mcp"
+            ]
+        },
+        "herd": {
+            "command": "/Users/carlos/Library/Application Support/Herd/bin/php83",
+            "args": [
+                "/Applications/Herd.app/Contents/Resources/herd-mcp.phar"
+            ],
+            "env": {
+                "SITE_PATH": "/Users/carlos/Qsync/proyectosHerd/erasmus25"
+            }
+        }
+    }
+}
