@@ -4,6 +4,10 @@ Esta carpeta contiene la documentación técnica de la aplicación web "Erasmus+
 
 ## Estructura de la Documentación
 
+### Guía de Desarrollo
+
+- **[Paso 1: Diseño de Base de Datos y Cobertura Completa de Tests](pasos/paso1.md)**: Guión completo con todos los prompts utilizados y resultados obtenidos en el desarrollo inicial de la aplicación. Incluye diseño de base de datos, migraciones, modelos, factories, tests y cobertura al 100%.
+
 ### Base de Datos
 
 - **[Migraciones - Resumen General](migrations-overview.md)**: Visión general del esquema de base de datos
