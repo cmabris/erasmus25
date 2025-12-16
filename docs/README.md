@@ -14,7 +14,13 @@ Esta carpeta contiene la documentación técnica de la aplicación web "Erasmus+
 
 ### Modelos
 
-- *Próximamente: Documentación de modelos Eloquent*
+- **[Tests de Relaciones de Modelos](models-tests.md)**: Tests automatizados que verifican todas las relaciones Eloquent (113 tests, 209 assertions)
+- **[Plan de Trabajo - Tests de Modelos](models-testing-plan.md)**: Plan original de implementación de tests
+- **[Resumen de Testing](testing-summary.md)**: Resumen ejecutivo del estado de los tests
+
+### Testing
+
+- **[Resumen de Testing](testing-summary.md)**: Estado general de los tests implementados
 
 ### Controladores
 

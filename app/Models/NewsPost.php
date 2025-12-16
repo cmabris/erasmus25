@@ -101,6 +101,6 @@ class NewsPost extends Model
      */
     public function tags(): BelongsToMany
     {
-        return $this->belongsToMany(NewsTag::class);
+        return $this->belongsToMany(NewsTag::class, 'news_post_tag');
     }
 }
