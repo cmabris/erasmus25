@@ -90,3 +90,11 @@ it('removes relationships when news post is deleted', function () {
     expect($tag->newsPosts)->toHaveCount(0);
 });
 
+it('generates slug automatically when slug is empty', function () {
+    $tag = NewsTag::create([
+        'name' => 'Test Tag Name',
+        'slug' => '', // Empty slug
+    ]);
+
+    expect($tag->slug)->toBe('test-tag-name');
+});

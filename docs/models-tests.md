@@ -6,17 +6,20 @@ Este documento describe los tests automatizados que verifican las relaciones Elo
 
 ✅ **COMPLETADO** - Todos los tests de relaciones de modelos han sido implementados y están pasando correctamente.
 
+✅ **100% COBERTURA DE CÓDIGO** - Todos los modelos tienen 100% de cobertura de código, incluyendo accessors, mutators, métodos personalizados y eventos de modelo.
+
 ## Resumen Ejecutivo
 
-Se han creado **113 tests** con **209 assertions** que verifican todas las relaciones Eloquent definidas en los 18 modelos principales de la aplicación. Todos los tests pasan correctamente tanto individualmente como cuando se ejecutan todos juntos.
+Se han creado **134 tests** con **245 assertions** que verifican todas las relaciones Eloquent definidas en los 19 modelos principales de la aplicación, así como métodos personalizados, accessors, mutators y eventos de modelo. Todos los tests pasan correctamente tanto individualmente como cuando se ejecutan todos juntos.
 
 ### Estadísticas
 
-- **Total de tests**: 113
-- **Total de assertions**: 209
+- **Total de tests**: 134
+- **Total de assertions**: 245
 - **Tasa de éxito**: 100%
-- **Duración promedio**: ~3.26 segundos
-- **Modelos testeados**: 18
+- **Duración promedio**: ~5.45 segundos
+- **Modelos testeados**: 19
+- **Cobertura de código**: 100% (165/165 líneas, 66/66 métodos, 19/19 clases)
 
 ## Estructura de Tests
 
@@ -24,24 +27,25 @@ Los tests están organizados en la carpeta `tests/Feature/Models/` siguiendo la 
 
 ```
 tests/Feature/Models/
-├── AcademicYearTest.php          ✅ 8 tests, 18 assertions
-├── AuditLogTest.php              ✅ 6 tests, 12 assertions
-├── CallApplicationTest.php       ✅ 2 tests, 3 assertions
-├── CallPhaseTest.php             ✅ 4 tests, 6 assertions
-├── CallTest.php                  ✅ 15 tests, 29 assertions
-├── DocumentCategoryTest.php      ✅ 4 tests, 8 assertions
-├── DocumentTest.php              ✅ 14 tests, 28 assertions
-├── ErasmusEventTest.php          ✅ 9 tests, 15 assertions
-├── LanguageTest.php              ✅ 2 tests, 4 assertions
-├── MediaConsentTest.php          ✅ 3 tests, 5 assertions
-├── NewsPostTest.php              ✅ 14 tests, 28 assertions
-├── NewsTagTest.php               ✅ 4 tests, 8 assertions
-├── NewsletterSubscriptionTest.php ✅ 4 tests, 8 assertions
-├── NotificationTest.php          ✅ 3 tests, 5 assertions
-├── ProgramTest.php               ✅ 6 tests, 14 assertions
-├── ResolutionTest.php            ✅ 7 tests, 11 assertions
-├── SettingTest.php               ✅ 3 tests, 5 assertions
-└── TranslationTest.php           ✅ 5 tests, 9 assertions
+├── AcademicYearTest.php          ✅ 8 tests, 18 assertions (100% cobertura)
+├── AuditLogTest.php              ✅ 6 tests, 12 assertions (100% cobertura)
+├── CallApplicationTest.php       ✅ 2 tests, 3 assertions (100% cobertura)
+├── CallPhaseTest.php             ✅ 4 tests, 6 assertions (100% cobertura)
+├── CallTest.php                  ✅ 16 tests, 30 assertions (100% cobertura)
+├── DocumentCategoryTest.php      ✅ 5 tests, 9 assertions (100% cobertura)
+├── DocumentTest.php              ✅ 15 tests, 29 assertions (100% cobertura)
+├── ErasmusEventTest.php          ✅ 9 tests, 15 assertions (100% cobertura)
+├── LanguageTest.php              ✅ 2 tests, 4 assertions (100% cobertura)
+├── MediaConsentTest.php          ✅ 3 tests, 5 assertions (100% cobertura)
+├── NewsPostTest.php              ✅ 15 tests, 29 assertions (100% cobertura)
+├── NewsTagTest.php               ✅ 5 tests, 9 assertions (100% cobertura)
+├── NewsletterSubscriptionTest.php ✅ 4 tests, 8 assertions (100% cobertura)
+├── NotificationTest.php          ✅ 3 tests, 5 assertions (100% cobertura)
+├── ProgramTest.php               ✅ 7 tests, 15 assertions (100% cobertura)
+├── ResolutionTest.php            ✅ 7 tests, 11 assertions (100% cobertura)
+├── SettingTest.php               ✅ 13 tests, 30 assertions (100% cobertura)
+├── TranslationTest.php           ✅ 5 tests, 9 assertions (100% cobertura)
+└── UserTest.php                  ✅ 5 tests, 5 assertions (100% cobertura)
 ```
 
 ## Fases de Implementación
@@ -259,11 +263,27 @@ tests/Feature/Models/
 
 #### SettingTest
 **Relaciones verificadas:**
-- `updater()` - BelongsTo → User (updated_by, nullable)
+- ✅ `updater()` - BelongsTo → User (updated_by, nullable)
+
+**Accessors y Mutators verificados:**
+- ✅ `getValueAttribute()` - Convierte valores según tipo (integer, boolean, json, string/default)
+- ✅ `setValueAttribute()` - Convierte valores al guardar según tipo (integer, boolean, json, string/default)
 
 **Tests implementados:**
 - ✅ Un setting puede tener un actualizador (nullable)
 - ✅ Al eliminar el usuario actualizador, el setting mantiene el historial (nullOnDelete)
+- ✅ El accessor convierte valores integer correctamente
+- ✅ El accessor convierte valores boolean correctamente (true/false)
+- ✅ El accessor convierte valores json correctamente
+- ✅ El accessor devuelve valores string sin modificar
+- ✅ El mutator convierte valores integer al guardar
+- ✅ El mutator convierte valores boolean al guardar (true → '1', false → '0')
+- ✅ El mutator convierte valores json al guardar
+- ✅ El mutator guarda valores string sin modificar
+- ✅ El accessor maneja el tipo por defecto (string)
+- ✅ El mutator maneja el tipo por defecto (string)
+
+**Cobertura de código: 100%** ✅
 
 #### MediaConsentTest
 **Relaciones verificadas:**
@@ -316,6 +336,33 @@ public function documents(): HasMany
     return $this->hasMany(Document::class, 'category_id');
 }
 ```
+
+## Tests Añadidos para Cobertura Completa
+
+Para alcanzar el 100% de cobertura de código, se añadieron tests adicionales para:
+
+### Generación Automática de Slugs
+Se añadieron tests para verificar que los eventos `creating` generan slugs automáticamente cuando están vacíos en los siguientes modelos:
+- ✅ **Call**: `it('generates slug automatically when slug is empty')`
+- ✅ **Program**: `it('generates slug automatically when slug is empty')`
+- ✅ **NewsTag**: `it('generates slug automatically when slug is empty')`
+- ✅ **DocumentCategory**: `it('generates slug automatically when slug is empty')`
+- ✅ **Document**: `it('generates slug automatically when slug is empty')`
+- ✅ **NewsPost**: `it('generates slug automatically when slug is empty')`
+
+### Accessors y Mutators
+Se añadieron tests para el modelo **Setting** que verifican:
+- ✅ Conversión de valores integer al obtener y establecer
+- ✅ Conversión de valores boolean al obtener y establecer
+- ✅ Conversión de valores JSON al obtener y establecer
+- ✅ Manejo de valores string por defecto
+
+### Métodos Personalizados
+Se añadieron tests para el modelo **User** que verifican:
+- ✅ Generación de iniciales desde nombres completos
+- ✅ Generación de iniciales desde nombres simples
+- ✅ Generación de iniciales desde nombres con múltiples palabras (solo primeras 2)
+- ✅ Manejo de nombres vacíos
 
 ## Estrategias de Aislamiento de Tests
 
@@ -376,11 +423,24 @@ php artisan test tests/Feature/Models/ --stop-on-failure
 Todos los tests pasan correctamente tanto individualmente como cuando se ejecutan todos juntos:
 
 ```
-Tests:    113 passed (209 assertions)
-Duration: 3.26s
+Tests:    134 passed (245 assertions)
+Duration: 5.45s
 ```
 
 ✅ **Verificado**: Todos los tests pasan correctamente al ejecutarlos todos juntos sin conflictos.
+
+### Cobertura de Código
+
+**100% de cobertura alcanzado en todos los modelos:**
+- ✅ **Líneas**: 165/165 (100%)
+- ✅ **Métodos**: 66/66 (100%)
+- ✅ **Clases**: 19/19 (100%)
+
+Todos los modelos tienen cobertura completa incluyendo:
+- Relaciones Eloquent (belongsTo, hasMany, belongsToMany, morphTo)
+- Accessors y mutators
+- Métodos personalizados
+- Eventos de modelo (boot, creating)
 
 ## Próximos Pasos
 

@@ -219,3 +219,16 @@ it('sets updated_by to null when updater user is deleted', function () {
         ->and($document->updater)->toBeNull();
 });
 
+it('generates slug automatically when slug is empty', function () {
+    $category = DocumentCategory::factory()->create();
+    $user = User::factory()->create();
+    $document = Document::create([
+        'category_id' => $category->id,
+        'title' => 'Test Document Title',
+        'slug' => '', // Empty slug
+        'document_type' => 'convocatoria',
+        'created_by' => $user->id,
+    ]);
+
+    expect($document->slug)->toBe('test-document-title');
+});

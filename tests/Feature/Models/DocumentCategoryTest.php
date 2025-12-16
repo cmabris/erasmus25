@@ -85,3 +85,12 @@ it('can have documents without program', function () {
         ->and($category->documents->first()->program_id)->toBeNull();
 });
 
+it('generates slug automatically when slug is empty', function () {
+    $category = DocumentCategory::create([
+        'name' => 'Test Category Name',
+        'slug' => '', // Empty slug
+        'order' => 1,
+    ]);
+
+    expect($category->slug)->toBe('test-category-name');
+});

@@ -234,3 +234,20 @@ it('sets updated_by to null when updater user is deleted', function () {
         ->and($call->updater)->toBeNull();
 });
 
+it('generates slug automatically when slug is empty', function () {
+    $program = Program::factory()->create();
+    $academicYear = AcademicYear::factory()->create();
+    $call = Call::create([
+        'program_id' => $program->id,
+        'academic_year_id' => $academicYear->id,
+        'title' => 'Test Call Title',
+        'slug' => '', // Empty slug
+        'type' => 'alumnado',
+        'modality' => 'corta',
+        'number_of_places' => 10,
+        'destinations' => ['Spain'],
+        'status' => 'borrador',
+    ]);
+
+    expect($call->slug)->toBe('test-call-title');
+});

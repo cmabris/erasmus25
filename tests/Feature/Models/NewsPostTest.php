@@ -217,3 +217,17 @@ it('removes tag relationships when news post is deleted', function () {
     expect($tag->newsPosts)->toHaveCount(0);
 });
 
+it('generates slug automatically when slug is empty', function () {
+    $academicYear = AcademicYear::factory()->create();
+    $user = User::factory()->create();
+    $newsPost = NewsPost::create([
+        'academic_year_id' => $academicYear->id,
+        'title' => 'Test News Post Title',
+        'slug' => '', // Empty slug
+        'content' => 'Test content',
+        'status' => 'borrador',
+        'author_id' => $user->id,
+    ]);
+
+    expect($newsPost->slug)->toBe('test-news-post-title');
+});

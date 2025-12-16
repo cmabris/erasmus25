@@ -103,3 +103,14 @@ it('can have news posts from different academic years', function () {
         ->and($program->newsPosts->pluck('academic_year_id')->unique())->toHaveCount(2);
 });
 
+it('generates slug automatically when slug is empty', function () {
+    $program = Program::create([
+        'code' => 'KA999',
+        'name' => 'Test Program Name',
+        'slug' => '', // Empty slug
+        'is_active' => true,
+        'order' => 1,
+    ]);
+
+    expect($program->slug)->toBe('test-program-name');
+});

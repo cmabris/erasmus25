@@ -21,6 +21,10 @@ Esta carpeta contiene la documentación técnica de la aplicación web "Erasmus+
 ### Testing
 
 - **[Resumen de Testing](testing-summary.md)**: Estado general de los tests implementados
+- **[Tests de Relaciones de Modelos](models-tests.md)**: Tests automatizados que verifican todas las relaciones Eloquent (134 tests, 245 assertions)
+- **[Cobertura 100% - Modelos](models-coverage-100.md)**: Detalle del proceso para alcanzar 100% de cobertura en todos los modelos
+- **[Cobertura 100% - Livewire](livewire-coverage-100.md)**: Detalle del proceso para alcanzar 100% de cobertura en todos los componentes Livewire
+- **[Mejora de Cobertura - Setting](setting-coverage-improvement.md)**: Detalle de la mejora de cobertura del modelo Setting al 100%
 
 ### Controladores
 
