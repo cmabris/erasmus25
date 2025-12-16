@@ -1,0 +1,244 @@
+erDiagram
+    users ||--o{ calls : "crea"
+    users ||--o{ news_posts : "autor"
+    users ||--o{ documents : "crea"
+    users ||--o{ resolutions : "crea"
+    users ||--o{ erasmus_events : "crea"
+    users ||--o{ sessions : "tiene"
+    users ||--o{ notifications : "recibe"
+    users ||--o{ audit_logs : "genera"
+    
+    programs ||--o{ calls : "tiene"
+    programs ||--o{ news_posts : "tiene"
+    programs ||--o{ documents : "tiene"
+    programs ||--o{ erasmus_events : "tiene"
+    
+    academic_years ||--o{ calls : "tiene"
+    academic_years ||--o{ news_posts : "tiene"
+    academic_years ||--o{ documents : "tiene"
+    
+    calls ||--o{ call_phases : "tiene"
+    calls ||--o{ call_applications : "recibe"
+    calls ||--o{ resolutions : "genera"
+    calls ||--o{ erasmus_events : "tiene"
+    
+    call_phases ||--o{ resolutions : "tiene"
+    
+    document_categories ||--o{ documents : "categoriza"
+    documents ||--o{ media_consents : "referencia"
+    
+    news_posts }o--o{ news_tags : "etiquetado"
+    
+    languages ||--o{ translations : "tiene"
+    
+    users }o--o{ roles : "tiene"
+    users }o--o{ permissions : "tiene"
+    roles }o--o{ permissions : "tiene"
+    
+    media ||--o{ media_consents : "tiene"
+    
+    users {
+        bigint id PK
+        string name
+        string email UK
+        string password
+    }
+    
+    programs {
+        bigint id PK
+        string code UK
+        string name
+        string slug UK
+        boolean is_active
+    }
+    
+    academic_years {
+        bigint id PK
+        string year UK
+        date start_date
+        date end_date
+        boolean is_current
+    }
+    
+    calls {
+        bigint id PK
+        bigint program_id FK
+        bigint academic_year_id FK
+        string title
+        string slug UK
+        enum type
+        enum modality
+        integer number_of_places
+        enum status
+        bigint created_by FK
+    }
+    
+    call_phases {
+        bigint id PK
+        bigint call_id FK
+        enum phase_type
+        string name
+        boolean is_current
+    }
+    
+    call_applications {
+        bigint id PK
+        bigint call_id FK
+        string applicant_name
+        string applicant_email
+        enum status
+        decimal score
+    }
+    
+    resolutions {
+        bigint id PK
+        bigint call_id FK
+        bigint call_phase_id FK
+        enum type
+        string title
+        bigint created_by FK
+    }
+    
+    documents {
+        bigint id PK
+        bigint category_id FK
+        bigint program_id FK
+        bigint academic_year_id FK
+        string title
+        string slug UK
+        enum document_type
+        bigint created_by FK
+    }
+    
+    document_categories {
+        bigint id PK
+        string name
+        string slug UK
+    }
+    
+    news_posts {
+        bigint id PK
+        bigint program_id FK
+        bigint academic_year_id FK
+        string title
+        string slug UK
+        enum status
+        bigint author_id FK
+    }
+    
+    news_tags {
+        bigint id PK
+        string name UK
+        string slug UK
+    }
+    
+    news_post_tag {
+        bigint news_post_id FK
+        bigint news_tag_id FK
+    }
+    
+    erasmus_events {
+        bigint id PK
+        bigint program_id FK
+        bigint call_id FK
+        string title
+        enum event_type
+        datetime start_date
+        bigint created_by FK
+    }
+    
+    media {
+        bigint id PK
+        string model_type
+        bigint model_id
+        string collection_name
+        string file_name
+    }
+    
+    media_consents {
+        bigint id PK
+        bigint media_id FK
+        enum consent_type
+        boolean consent_given
+        bigint consent_document_id FK
+    }
+    
+    languages {
+        bigint id PK
+        string code UK
+        string name
+        boolean is_default
+    }
+    
+    translations {
+        bigint id PK
+        string translatable_type
+        bigint translatable_id
+        bigint language_id FK
+        string field
+        text value
+    }
+    
+    settings {
+        bigint id PK
+        string key UK
+        text value
+        enum type
+    }
+    
+    newsletter_subscriptions {
+        bigint id PK
+        string email UK
+        boolean is_active
+    }
+    
+    notifications {
+        bigint id PK
+        bigint user_id FK
+        enum type
+        string title
+        boolean is_read
+    }
+    
+    audit_logs {
+        bigint id PK
+        bigint user_id FK
+        enum action
+        string model_type
+        bigint model_id
+    }
+    
+    sessions {
+        string id PK
+        bigint user_id FK
+        text payload
+    }
+    
+    roles {
+        bigint id PK
+        string name UK
+        string guard_name
+    }
+    
+    permissions {
+        bigint id PK
+        string name UK
+        string guard_name
+    }
+    
+    model_has_roles {
+        bigint role_id FK
+        string model_type
+        bigint model_id
+    }
+    
+    model_has_permissions {
+        bigint permission_id FK
+        string model_type
+        bigint model_id
+    }
+    
+    role_has_permissions {
+        bigint permission_id FK
+        bigint role_id FK
+    }
