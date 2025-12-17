@@ -292,6 +292,40 @@ return [
             'required' => 'La fecha oficial es obligatoria.',
             'date' => 'La fecha oficial debe ser una fecha válida.',
         ],
+        'excerpt' => [
+            'string' => 'El extracto debe ser una cadena de texto.',
+        ],
+        'content' => [
+            'required' => 'El contenido es obligatorio.',
+            'string' => 'El contenido debe ser una cadena de texto.',
+        ],
+        'country' => [
+            'string' => 'El país debe ser una cadena de texto.',
+            'max' => 'El país no puede exceder 255 caracteres.',
+        ],
+        'city' => [
+            'string' => 'La ciudad debe ser una cadena de texto.',
+            'max' => 'La ciudad no puede exceder 255 caracteres.',
+        ],
+        'host_entity' => [
+            'string' => 'La entidad de acogida debe ser una cadena de texto.',
+            'max' => 'La entidad de acogida no puede exceder 255 caracteres.',
+        ],
+        'mobility_type' => [
+            'in' => 'El tipo de movilidad seleccionado no es válido.',
+        ],
+        'mobility_category' => [
+            'in' => 'La categoría de movilidad seleccionada no es válida.',
+        ],
+        'author_id' => [
+            'exists' => 'El autor seleccionado no es válido.',
+        ],
+        'reviewed_by' => [
+            'exists' => 'El revisor seleccionado no es válido.',
+        ],
+        'reviewed_at' => [
+            'date' => 'La fecha de revisión debe ser una fecha válida.',
+        ],
     ],
 
     /*
@@ -338,6 +372,16 @@ return [
         'call_phase_id' => 'fase',
         'evaluation_procedure' => 'procedimiento de evaluación',
         'official_date' => 'fecha oficial',
+        'excerpt' => 'extracto',
+        'content' => 'contenido',
+        'country' => 'país',
+        'city' => 'ciudad',
+        'host_entity' => 'entidad de acogida',
+        'mobility_type' => 'tipo de movilidad',
+        'mobility_category' => 'categoría de movilidad',
+        'author_id' => 'autor',
+        'reviewed_by' => 'revisor',
+        'reviewed_at' => 'fecha de revisión',
     ],
 
 ];

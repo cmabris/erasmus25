@@ -290,6 +290,40 @@ return [
             'required' => 'The official date is required.',
             'date' => 'The official date must be a valid date.',
         ],
+        'excerpt' => [
+            'string' => 'The excerpt must be a string.',
+        ],
+        'content' => [
+            'required' => 'The content is required.',
+            'string' => 'The content must be a string.',
+        ],
+        'country' => [
+            'string' => 'The country must be a string.',
+            'max' => 'The country may not be greater than 255 characters.',
+        ],
+        'city' => [
+            'string' => 'The city must be a string.',
+            'max' => 'The city may not be greater than 255 characters.',
+        ],
+        'host_entity' => [
+            'string' => 'The host entity must be a string.',
+            'max' => 'The host entity may not be greater than 255 characters.',
+        ],
+        'mobility_type' => [
+            'in' => 'The selected mobility type is invalid.',
+        ],
+        'mobility_category' => [
+            'in' => 'The selected mobility category is invalid.',
+        ],
+        'author_id' => [
+            'exists' => 'The selected author is invalid.',
+        ],
+        'reviewed_by' => [
+            'exists' => 'The selected reviewer is invalid.',
+        ],
+        'reviewed_at' => [
+            'date' => 'The review date must be a valid date.',
+        ],
     ],
 
     /*
@@ -335,6 +369,16 @@ return [
         'call_phase_id' => 'phase',
         'evaluation_procedure' => 'evaluation procedure',
         'official_date' => 'official date',
+        'excerpt' => 'excerpt',
+        'content' => 'content',
+        'country' => 'country',
+        'city' => 'city',
+        'host_entity' => 'host entity',
+        'mobility_type' => 'mobility type',
+        'mobility_category' => 'mobility category',
+        'author_id' => 'author',
+        'reviewed_by' => 'reviewer',
+        'reviewed_at' => 'review date',
     ],
 
 ];
