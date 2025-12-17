@@ -342,6 +342,17 @@ return [
         'updated_by' => [
             'exists' => 'The selected updater is invalid.',
         ],
+        'event_type' => [
+            'required' => 'The event type is required.',
+            'in' => 'The selected event type is invalid.',
+        ],
+        'location' => [
+            'string' => 'The location must be a string.',
+            'max' => 'The location may not be greater than 255 characters.',
+        ],
+        'is_public' => [
+            'boolean' => 'The public status must be true or false.',
+        ],
     ],
 
     /*
@@ -402,6 +413,9 @@ return [
         'version' => 'version',
         'created_by' => 'created by',
         'updated_by' => 'updated by',
+        'event_type' => 'event type',
+        'location' => 'location',
+        'is_public' => 'public',
     ],
 
 ];

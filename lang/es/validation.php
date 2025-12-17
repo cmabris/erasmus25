@@ -344,6 +344,17 @@ return [
         'updated_by' => [
             'exists' => 'El usuario actualizador seleccionado no es válido.',
         ],
+        'event_type' => [
+            'required' => 'El tipo de evento es obligatorio.',
+            'in' => 'El tipo de evento seleccionado no es válido.',
+        ],
+        'location' => [
+            'string' => 'La ubicación debe ser una cadena de texto.',
+            'max' => 'La ubicación no puede exceder 255 caracteres.',
+        ],
+        'is_public' => [
+            'boolean' => 'El estado público debe ser verdadero o falso.',
+        ],
     ],
 
     /*
@@ -405,6 +416,9 @@ return [
         'version' => 'versión',
         'created_by' => 'creado por',
         'updated_by' => 'actualizado por',
+        'event_type' => 'tipo de evento',
+        'location' => 'ubicación',
+        'is_public' => 'público',
     ],
 
 ];
