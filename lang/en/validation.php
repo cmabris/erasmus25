@@ -324,6 +324,24 @@ return [
         'reviewed_at' => [
             'date' => 'The review date must be a valid date.',
         ],
+        'category_id' => [
+            'required' => 'The category is required.',
+            'exists' => 'The selected category is invalid.',
+        ],
+        'document_type' => [
+            'required' => 'The document type is required.',
+            'in' => 'The selected document type is invalid.',
+        ],
+        'version' => [
+            'string' => 'The version must be a string.',
+            'max' => 'The version may not be greater than 255 characters.',
+        ],
+        'created_by' => [
+            'exists' => 'The selected creator is invalid.',
+        ],
+        'updated_by' => [
+            'exists' => 'The selected updater is invalid.',
+        ],
     ],
 
     /*
@@ -379,6 +397,11 @@ return [
         'author_id' => 'author',
         'reviewed_by' => 'reviewer',
         'reviewed_at' => 'review date',
+        'category_id' => 'category',
+        'document_type' => 'document type',
+        'version' => 'version',
+        'created_by' => 'created by',
+        'updated_by' => 'updated by',
     ],
 
 ];

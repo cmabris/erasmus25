@@ -326,6 +326,24 @@ return [
         'reviewed_at' => [
             'date' => 'La fecha de revisión debe ser una fecha válida.',
         ],
+        'category_id' => [
+            'required' => 'La categoría es obligatoria.',
+            'exists' => 'La categoría seleccionada no es válida.',
+        ],
+        'document_type' => [
+            'required' => 'El tipo de documento es obligatorio.',
+            'in' => 'El tipo de documento seleccionado no es válido.',
+        ],
+        'version' => [
+            'string' => 'La versión debe ser una cadena de texto.',
+            'max' => 'La versión no puede exceder 255 caracteres.',
+        ],
+        'created_by' => [
+            'exists' => 'El usuario creador seleccionado no es válido.',
+        ],
+        'updated_by' => [
+            'exists' => 'El usuario actualizador seleccionado no es válido.',
+        ],
     ],
 
     /*
@@ -382,6 +400,11 @@ return [
         'author_id' => 'autor',
         'reviewed_by' => 'revisor',
         'reviewed_at' => 'fecha de revisión',
+        'category_id' => 'categoría',
+        'document_type' => 'tipo de documento',
+        'version' => 'versión',
+        'created_by' => 'creado por',
+        'updated_by' => 'actualizado por',
     ],
 
 ];
