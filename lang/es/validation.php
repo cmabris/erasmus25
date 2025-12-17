@@ -206,6 +206,24 @@ return [
         'order' => [
             'integer' => 'El orden debe ser un número entero.',
         ],
+        'year' => [
+            'required' => 'El año académico es obligatorio.',
+            'string' => 'El año académico debe ser una cadena de texto.',
+            'regex' => 'El año académico debe tener el formato YYYY-YYYY (ej: 2024-2025).',
+            'unique' => 'Ya existe un año académico con este valor.',
+        ],
+        'start_date' => [
+            'required' => 'La fecha de inicio es obligatoria.',
+            'date' => 'La fecha de inicio debe ser una fecha válida.',
+        ],
+        'end_date' => [
+            'required' => 'La fecha de fin es obligatoria.',
+            'date' => 'La fecha de fin debe ser una fecha válida.',
+            'after' => 'La fecha de fin debe ser posterior a la fecha de inicio.',
+        ],
+        'is_current' => [
+            'boolean' => 'El estado actual debe ser verdadero o falso.',
+        ],
     ],
 
     /*
@@ -227,6 +245,10 @@ return [
         'description' => 'descripción',
         'is_active' => 'estado activo',
         'order' => 'orden',
+        'year' => 'año académico',
+        'start_date' => 'fecha de inicio',
+        'end_date' => 'fecha de fin',
+        'is_current' => 'año actual',
     ],
 
 ];

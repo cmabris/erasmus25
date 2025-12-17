@@ -204,6 +204,24 @@ return [
         'order' => [
             'integer' => 'The order must be an integer.',
         ],
+        'year' => [
+            'required' => 'The academic year is required.',
+            'string' => 'The academic year must be a string.',
+            'regex' => 'The academic year must be in the format YYYY-YYYY (e.g., 2024-2025).',
+            'unique' => 'An academic year with this value already exists.',
+        ],
+        'start_date' => [
+            'required' => 'The start date is required.',
+            'date' => 'The start date must be a valid date.',
+        ],
+        'end_date' => [
+            'required' => 'The end date is required.',
+            'date' => 'The end date must be a valid date.',
+            'after' => 'The end date must be after the start date.',
+        ],
+        'is_current' => [
+            'boolean' => 'The current status must be true or false.',
+        ],
     ],
 
     /*
@@ -224,6 +242,10 @@ return [
         'description' => 'description',
         'is_active' => 'active status',
         'order' => 'order',
+        'year' => 'academic year',
+        'start_date' => 'start date',
+        'end_date' => 'end date',
+        'is_current' => 'current year',
     ],
 
 ];
