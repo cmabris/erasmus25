@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Support\Roles;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
@@ -27,9 +28,9 @@ class AdminUserSeeder extends Seeder
         );
 
         // Asignar rol de super-admin
-        $superAdminRole = Role::where('name', 'super-admin')->first();
-        if ($superAdminRole && ! $admin->hasRole('super-admin')) {
-            $admin->assignRole('super-admin');
+        $superAdminRole = Role::where('name', Roles::SUPER_ADMIN)->first();
+        if ($superAdminRole && ! $admin->hasRole(Roles::SUPER_ADMIN)) {
+            $admin->assignRole(Roles::SUPER_ADMIN);
         }
     }
 }

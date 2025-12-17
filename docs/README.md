@@ -24,6 +24,10 @@ Esta carpeta contiene la documentación técnica de la aplicación web "Erasmus+
 - **[Plan de Trabajo - Tests de Modelos](models-testing-plan.md)**: Plan original de implementación de tests
 - **[Resumen de Testing](testing-summary.md)**: Resumen ejecutivo del estado de los tests
 
+### Roles y Permisos
+
+- **[Sistema de Roles y Permisos](roles-and-permissions.md)**: Documentación completa sobre la estructura de roles y permisos, su uso y ejemplos de implementación
+
 ### Testing
 
 - **[Resumen de Testing](testing-summary.md)**: Estado general de los tests implementados
