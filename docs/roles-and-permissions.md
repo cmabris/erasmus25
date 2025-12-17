@@ -213,10 +213,37 @@ public function update(User $user, Program $program): bool
 
 ### En Middleware
 
+El paquete Spatie Laravel Permission proporciona middleware incorporado que está registrado en `bootstrap/app.php`:
+
 ```php
+// Un solo permiso
 Route::middleware(['auth', 'permission:' . Permissions::CALLS_PUBLISH])
     ->group(function () {
         // Rutas que requieren permiso de publicar convocatorias
+    });
+
+// Múltiples permisos con OR (el usuario necesita al menos uno)
+Route::middleware(['auth', 'permission:' . Permissions::CALLS_VIEW . '|' . Permissions::CALLS_CREATE])
+    ->group(function () {
+        // Rutas que requieren ver O crear convocatorias
+    });
+
+// Múltiples permisos con AND (el usuario necesita todos)
+Route::middleware(['auth', 'permission:' . Permissions::CALLS_VIEW, 'permission:' . Permissions::CALLS_PUBLISH])
+    ->group(function () {
+        // Rutas que requieren ver Y publicar convocatorias
+    });
+
+// También disponible: middleware de roles
+Route::middleware(['auth', 'role:' . Roles::ADMIN])
+    ->group(function () {
+        // Rutas solo para administradores
+    });
+
+// O combinación de rol o permiso
+Route::middleware(['auth', 'role_or_permission:' . Roles::ADMIN . '|' . Permissions::CALLS_PUBLISH])
+    ->group(function () {
+        // Rutas para administradores O usuarios con permiso de publicar
     });
 ```
 
@@ -243,13 +270,15 @@ public function publish(): void
 
 ## Notas Importantes
 
-1. **Caché**: Spatie Permission cachea los permisos por defecto. Si se modifican roles o permisos, es necesario limpiar la caché con `php artisan permission:cache-reset`.
+1. **Middleware**: La aplicación utiliza el middleware incorporado de Spatie Laravel Permission (`PermissionMiddleware`, `RoleMiddleware`, `RoleOrPermissionMiddleware`), registrado en `bootstrap/app.php` con los alias `permission`, `role` y `role_or_permission`.
 
-2. **Wildcards**: Los permisos con `.*` (ej: `programs.*`) otorgan todos los permisos del módulo. Sin embargo, Spatie Permission requiere que `enable_wildcard_permission` esté habilitado en la configuración para que funcionen correctamente.
+2. **Caché**: Spatie Permission cachea los permisos por defecto. Si se modifican roles o permisos, es necesario limpiar la caché con `php artisan permission:cache-reset`.
 
-3. **Guard**: Todos los roles y permisos utilizan el guard `web` por defecto.
+3. **Wildcards**: Los permisos con `.*` (ej: `programs.*`) otorgan todos los permisos del módulo. Sin embargo, Spatie Permission requiere que `enable_wildcard_permission` esté habilitado en la configuración para que funcionen correctamente.
 
-4. **Usuario Administrador Inicial**: El seeder `AdminUserSeeder` crea un usuario administrador con email `admin@erasmus-murcia.es` y contraseña `password` con rol `super-admin`.
+4. **Guard**: Todos los roles y permisos utilizan el guard `web` por defecto.
+
+5. **Usuario Administrador Inicial**: El seeder `AdminUserSeeder` crea un usuario administrador con email `admin@erasmus-murcia.es` y contraseña `password` con rol `super-admin`.
 
 ---
 

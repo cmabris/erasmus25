@@ -8,6 +8,8 @@ Esta carpeta contiene la documentación técnica de la aplicación web "Erasmus+
 
 - **[Paso 1: Diseño de Base de Datos y Cobertura Completa de Tests](pasos/paso1.md)**: Guión completo con todos los prompts utilizados y resultados obtenidos en el desarrollo inicial de la aplicación. Incluye diseño de base de datos, migraciones, modelos, factories, tests y cobertura al 100%.
 - **[Paso 2: Generación de Diagramas de Base de Datos](pasos/paso2.md)**: Documentación del proceso de generación de diagramas de base de datos en múltiples formatos (Mermaid, PNG, SVG, MySQL Workbench).
+- **[Paso 3: Planificación de Pasos de Desarrollo](pasos/paso3.md)**: Documentación del proceso de establecimiento de la planificación completa y estructurada de los siguientes pasos en el desarrollo de la aplicación.
+- **[Paso 4: Configuración Base y Datos Iniciales](pasos/paso4.md)**: Documentación completa del desarrollo de seeders, configuración de roles y permisos, y middleware. Incluye creación de clases de constantes, tests unitarios y corrección de conflictos.
 - **[Planificación de Pasos de Desarrollo](planificacion_pasos.md)**: Planificación completa y estructurada de los siguientes pasos en el desarrollo de la aplicación, incluyendo seeders, Form Requests, Policies, área pública, panel de administración, rutas, funcionalidades avanzadas, testing y optimización.
 
 ### Base de Datos

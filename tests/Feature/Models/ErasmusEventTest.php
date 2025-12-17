@@ -78,7 +78,7 @@ it('can have null creator', function () {
 });
 
 it('sets program_id to null when program is deleted', function () {
-    $program = Program::factory()->create();
+    $program = Program::factory()->create(['code' => 'KA999-TEST', 'slug' => 'ka999-test']);
     $user = User::factory()->create();
     $event = ErasmusEvent::factory()->create([
         'program_id' => $program->id,
@@ -93,8 +93,8 @@ it('sets program_id to null when program is deleted', function () {
 });
 
 it('sets call_id to null when call is deleted', function () {
-    $program = Program::factory()->create(['code' => 'KA131-HED', 'name' => 'Educación Superior', 'slug' => 'educacion-superior']);
-    $academicYear = AcademicYear::factory()->create(['year' => '2024-2025']);
+    $program = Program::factory()->create();
+    $academicYear = AcademicYear::factory()->create();
     $call = Call::factory()->create([
         'program_id' => $program->id,
         'academic_year_id' => $academicYear->id,

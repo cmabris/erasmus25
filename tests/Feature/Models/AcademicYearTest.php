@@ -111,8 +111,8 @@ it('sets academic_year_id to null when academic year is deleted (nullOnDelete)',
 
 it('can have calls from different programs', function () {
     $academicYear = AcademicYear::factory()->create();
-    $program1 = Program::factory()->create(['code' => 'KA1xx', 'name' => 'Educación Escolar', 'slug' => 'educacion-escolar']);
-    $program2 = Program::factory()->create(['code' => 'KA121-VET', 'name' => 'Formación Profesional', 'slug' => 'formacion-profesional']);
+    $program1 = Program::factory()->create(['code' => 'KA997-TEST', 'slug' => 'ka997-test']);
+    $program2 = Program::factory()->create(['code' => 'KA996-TEST', 'slug' => 'ka996-test']);
 
     Call::factory()->create([
         'program_id' => $program1->id,
