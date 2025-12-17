@@ -222,6 +222,74 @@ return [
         'is_current' => [
             'boolean' => 'The current status must be true or false.',
         ],
+        'program_id' => [
+            'required' => 'The program is required.',
+            'exists' => 'The selected program is invalid.',
+        ],
+        'academic_year_id' => [
+            'required' => 'The academic year is required.',
+            'exists' => 'The selected academic year is invalid.',
+        ],
+        'title' => [
+            'required' => 'The title is required.',
+            'string' => 'The title must be a string.',
+            'max' => 'The title may not be greater than 255 characters.',
+        ],
+        'type' => [
+            'required' => 'The type is required.',
+            'in' => 'The selected type is invalid.',
+        ],
+        'modality' => [
+            'required' => 'The modality is required.',
+            'in' => 'The selected modality is invalid.',
+        ],
+        'number_of_places' => [
+            'required' => 'The number of places is required.',
+            'integer' => 'The number of places must be an integer.',
+            'min' => 'The number of places must be at least 1.',
+        ],
+        'destinations' => [
+            'required' => 'The destinations are required.',
+            'array' => 'The destinations must be an array.',
+        ],
+        'destinations.*' => [
+            'string' => 'Each destination must be a string.',
+        ],
+        'estimated_start_date' => [
+            'date' => 'The estimated start date must be a valid date.',
+        ],
+        'estimated_end_date' => [
+            'date' => 'The estimated end date must be a valid date.',
+            'after' => 'The estimated end date must be after the estimated start date.',
+        ],
+        'scoring_table' => [
+            'array' => 'The scoring table must be an array.',
+        ],
+        'status' => [
+            'in' => 'The selected status is invalid.',
+        ],
+        'published_at' => [
+            'date' => 'The publication date must be a valid date.',
+        ],
+        'closed_at' => [
+            'date' => 'The closing date must be a valid date.',
+        ],
+        'call_id' => [
+            'required' => 'The call is required.',
+            'exists' => 'The selected call is invalid.',
+        ],
+        'phase_type' => [
+            'required' => 'The phase type is required.',
+            'in' => 'The selected phase type is invalid.',
+        ],
+        'call_phase_id' => [
+            'required' => 'The phase is required.',
+            'exists' => 'The selected phase is invalid.',
+        ],
+        'official_date' => [
+            'required' => 'The official date is required.',
+            'date' => 'The official date must be a valid date.',
+        ],
     ],
 
     /*
@@ -246,6 +314,27 @@ return [
         'start_date' => 'start date',
         'end_date' => 'end date',
         'is_current' => 'current year',
+        'program_id' => 'program',
+        'academic_year_id' => 'academic year',
+        'title' => 'title',
+        'type' => 'type',
+        'modality' => 'modality',
+        'number_of_places' => 'number of places',
+        'destinations' => 'destinations',
+        'estimated_start_date' => 'estimated start date',
+        'estimated_end_date' => 'estimated end date',
+        'requirements' => 'requirements',
+        'documentation' => 'documentation',
+        'selection_criteria' => 'selection criteria',
+        'scoring_table' => 'scoring table',
+        'status' => 'status',
+        'published_at' => 'publication date',
+        'closed_at' => 'closing date',
+        'call_id' => 'call',
+        'phase_type' => 'phase type',
+        'call_phase_id' => 'phase',
+        'evaluation_procedure' => 'evaluation procedure',
+        'official_date' => 'official date',
     ],
 
 ];

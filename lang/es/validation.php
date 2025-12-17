@@ -224,6 +224,74 @@ return [
         'is_current' => [
             'boolean' => 'El estado actual debe ser verdadero o falso.',
         ],
+        'program_id' => [
+            'required' => 'El programa es obligatorio.',
+            'exists' => 'El programa seleccionado no es válido.',
+        ],
+        'academic_year_id' => [
+            'required' => 'El año académico es obligatorio.',
+            'exists' => 'El año académico seleccionado no es válido.',
+        ],
+        'title' => [
+            'required' => 'El título es obligatorio.',
+            'string' => 'El título debe ser una cadena de texto.',
+            'max' => 'El título no puede exceder 255 caracteres.',
+        ],
+        'type' => [
+            'required' => 'El tipo es obligatorio.',
+            'in' => 'El tipo seleccionado no es válido.',
+        ],
+        'modality' => [
+            'required' => 'La modalidad es obligatoria.',
+            'in' => 'La modalidad seleccionada no es válida.',
+        ],
+        'number_of_places' => [
+            'required' => 'El número de plazas es obligatorio.',
+            'integer' => 'El número de plazas debe ser un número entero.',
+            'min' => 'El número de plazas debe ser al menos 1.',
+        ],
+        'destinations' => [
+            'required' => 'Los destinos son obligatorios.',
+            'array' => 'Los destinos deben ser un array.',
+        ],
+        'destinations.*' => [
+            'string' => 'Cada destino debe ser una cadena de texto.',
+        ],
+        'estimated_start_date' => [
+            'date' => 'La fecha estimada de inicio debe ser una fecha válida.',
+        ],
+        'estimated_end_date' => [
+            'date' => 'La fecha estimada de fin debe ser una fecha válida.',
+            'after' => 'La fecha estimada de fin debe ser posterior a la fecha estimada de inicio.',
+        ],
+        'scoring_table' => [
+            'array' => 'La tabla de baremación debe ser un array.',
+        ],
+        'status' => [
+            'in' => 'El estado seleccionado no es válido.',
+        ],
+        'published_at' => [
+            'date' => 'La fecha de publicación debe ser una fecha válida.',
+        ],
+        'closed_at' => [
+            'date' => 'La fecha de cierre debe ser una fecha válida.',
+        ],
+        'call_id' => [
+            'required' => 'La convocatoria es obligatoria.',
+            'exists' => 'La convocatoria seleccionada no es válida.',
+        ],
+        'phase_type' => [
+            'required' => 'El tipo de fase es obligatorio.',
+            'in' => 'El tipo de fase seleccionado no es válido.',
+        ],
+        'call_phase_id' => [
+            'required' => 'La fase es obligatoria.',
+            'exists' => 'La fase seleccionada no es válida.',
+        ],
+        'official_date' => [
+            'required' => 'La fecha oficial es obligatoria.',
+            'date' => 'La fecha oficial debe ser una fecha válida.',
+        ],
     ],
 
     /*
@@ -249,6 +317,27 @@ return [
         'start_date' => 'fecha de inicio',
         'end_date' => 'fecha de fin',
         'is_current' => 'año actual',
+        'program_id' => 'programa',
+        'academic_year_id' => 'año académico',
+        'title' => 'título',
+        'type' => 'tipo',
+        'modality' => 'modalidad',
+        'number_of_places' => 'número de plazas',
+        'destinations' => 'destinos',
+        'estimated_start_date' => 'fecha estimada de inicio',
+        'estimated_end_date' => 'fecha estimada de fin',
+        'requirements' => 'requisitos',
+        'documentation' => 'documentación',
+        'selection_criteria' => 'criterios de selección',
+        'scoring_table' => 'tabla de baremación',
+        'status' => 'estado',
+        'published_at' => 'fecha de publicación',
+        'closed_at' => 'fecha de cierre',
+        'call_id' => 'convocatoria',
+        'phase_type' => 'tipo de fase',
+        'call_phase_id' => 'fase',
+        'evaluation_procedure' => 'procedimiento de evaluación',
+        'official_date' => 'fecha oficial',
     ],
 
 ];
