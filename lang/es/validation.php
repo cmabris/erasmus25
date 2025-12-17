@@ -355,6 +355,26 @@ return [
         'is_public' => [
             'boolean' => 'El estado público debe ser verdadero o falso.',
         ],
+        'email' => [
+            'required' => 'El correo electrónico es obligatorio.',
+            'string' => 'El correo electrónico debe ser una cadena de texto.',
+            'email' => 'El correo electrónico debe ser una dirección de correo válida.',
+            'max' => 'El correo electrónico no puede exceder 255 caracteres.',
+            'unique' => 'Ya existe un usuario con este correo electrónico.',
+        ],
+        'password' => [
+            'required' => 'La contraseña es obligatoria.',
+            'string' => 'La contraseña debe ser una cadena de texto.',
+            'confirmed' => 'La confirmación de la contraseña no coincide.',
+        ],
+        'roles' => [
+            'required' => 'Debe seleccionar al menos un rol.',
+            'array' => 'Los roles deben ser un conjunto de valores.',
+        ],
+        'roles.*' => [
+            'string' => 'Cada rol debe ser una cadena de texto.',
+            'in' => 'El rol seleccionado no es válido.',
+        ],
     ],
 
     /*
@@ -419,6 +439,11 @@ return [
         'event_type' => 'tipo de evento',
         'location' => 'ubicación',
         'is_public' => 'público',
+        'email' => 'correo electrónico',
+        'password' => 'contraseña',
+        'password_confirmation' => 'confirmación de contraseña',
+        'roles' => 'roles',
+        'roles.*' => 'rol',
     ],
 
 ];

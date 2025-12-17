@@ -353,6 +353,26 @@ return [
         'is_public' => [
             'boolean' => 'The public status must be true or false.',
         ],
+        'email' => [
+            'required' => 'The email address is required.',
+            'string' => 'The email address must be a string.',
+            'email' => 'The email address must be a valid email address.',
+            'max' => 'The email address may not be greater than 255 characters.',
+            'unique' => 'A user with this email address already exists.',
+        ],
+        'password' => [
+            'required' => 'The password is required.',
+            'string' => 'The password must be a string.',
+            'confirmed' => 'The password confirmation does not match.',
+        ],
+        'roles' => [
+            'required' => 'At least one role must be selected.',
+            'array' => 'The roles must be an array.',
+        ],
+        'roles.*' => [
+            'string' => 'Each role must be a string.',
+            'in' => 'The selected role is invalid.',
+        ],
     ],
 
     /*
@@ -416,6 +436,11 @@ return [
         'event_type' => 'event type',
         'location' => 'location',
         'is_public' => 'public',
+        'email' => 'email address',
+        'password' => 'password',
+        'password_confirmation' => 'password confirmation',
+        'roles' => 'roles',
+        'roles.*' => 'role',
     ],
 
 ];
