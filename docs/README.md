@@ -6,10 +6,19 @@ Esta carpeta contiene la documentación técnica de la aplicación web "Erasmus+
 
 ### Guía de Desarrollo
 
+#### Carpeta `pasos/` - Historial de Desarrollo
+
+> **Propósito**: La carpeta `pasos/` documenta el proceso de desarrollo de la aplicación chat por chat. Cada archivo contiene los prompts utilizados en orden cronológico junto con una descripción de los resultados obtenidos. Esta documentación sirve como referencia para:
+> - Entender el contexto de decisiones tomadas
+> - Replicar el proceso en otras aplicaciones similares
+> - Facilitar la continuidad entre sesiones de desarrollo
+> - Mantener un historial de las interacciones con el asistente IA
+
 - **[Paso 1: Diseño de Base de Datos y Cobertura Completa de Tests](pasos/paso1.md)**: Guión completo con todos los prompts utilizados y resultados obtenidos en el desarrollo inicial de la aplicación. Incluye diseño de base de datos, migraciones, modelos, factories, tests y cobertura al 100%.
 - **[Paso 2: Generación de Diagramas de Base de Datos](pasos/paso2.md)**: Documentación del proceso de generación de diagramas de base de datos en múltiples formatos (Mermaid, PNG, SVG, MySQL Workbench).
 - **[Paso 3: Planificación de Pasos de Desarrollo](pasos/paso3.md)**: Documentación del proceso de establecimiento de la planificación completa y estructurada de los siguientes pasos en el desarrollo de la aplicación.
 - **[Paso 4: Configuración Base y Datos Iniciales](pasos/paso4.md)**: Documentación completa del desarrollo de seeders, configuración de roles y permisos, y middleware. Incluye creación de clases de constantes, tests unitarios y corrección de conflictos.
+- **[Paso 5: Form Requests y Validación](pasos/paso5.md)**: Creación de 22 Form Requests para validación de datos, internacionalización de mensajes de error en español e inglés, y configuración de traducciones.
 - **[Planificación de Pasos de Desarrollo](planificacion_pasos.md)**: Planificación completa y estructurada de los siguientes pasos en el desarrollo de la aplicación, incluyendo seeders, Form Requests, Policies, área pública, panel de administración, rutas, funcionalidades avanzadas, testing y optimización.
 
 ### Base de Datos
@@ -29,6 +38,10 @@ Esta carpeta contiene la documentación técnica de la aplicación web "Erasmus+
 ### Roles y Permisos
 
 - **[Sistema de Roles y Permisos](roles-and-permissions.md)**: Documentación completa sobre la estructura de roles y permisos, su uso y ejemplos de implementación
+
+### Validación
+
+- **[Form Requests](form-requests.md)**: Documentación técnica de los 22 Form Requests implementados, reglas de validación por entidad, e internacionalización de mensajes de error
 
 ### Testing
 
