@@ -41,3 +41,4 @@ it('correctly identifies administrative roles', function () {
 it('returns false for non-existent roles', function () {
     expect(Roles::isAdministrative('non-existent-role'))->toBeFalse();
 });
+

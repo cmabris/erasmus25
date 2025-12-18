@@ -496,3 +496,4 @@ Este diagrama puede visualizarse en:
 - Editores Markdown con soporte Mermaid (VS Code, Obsidian, etc.)
 - Herramientas online como [Mermaid Live Editor](https://mermaid.live/)
 - Documentación generada con herramientas como MkDocs o Docusaurus
+
