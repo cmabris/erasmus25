@@ -98,10 +98,15 @@ describe('Home Component - Calls', function () {
     });
 
     it('does not display closed calls', function () {
+        $program = Program::factory()->create();
+        $academicYear = \App\Models\AcademicYear::factory()->create();
+
         $openCall = Call::factory()->published()->create([
             'title' => 'Open Call',
             'slug' => 'open-call-'.uniqid(),
             'status' => 'abierta',
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
         ]);
 
         $closedCall = Call::factory()->create([
@@ -109,6 +114,8 @@ describe('Home Component - Calls', function () {
             'slug' => 'closed-call-'.uniqid(),
             'status' => 'cerrada',
             'published_at' => now(),
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
         ]);
 
         Livewire::test(Home::class)
