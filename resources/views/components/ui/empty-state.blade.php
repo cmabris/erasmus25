@@ -37,7 +37,7 @@
 <div {{ $attributes->merge(['class' => "text-center $containerClasses"]) }}>
     <div class="flex justify-center">
         <div class="rounded-full bg-zinc-100 dark:bg-zinc-800 p-4">
-            <flux:icon :name="$icon" :class="$iconSizeClasses . ' text-zinc-400 dark:text-zinc-500'" />
+            <flux:icon :name="$icon" :class="$iconSizeClasses . ' text-zinc-400 dark:text-zinc-500'" variant="outline" />
         </div>
     </div>
     

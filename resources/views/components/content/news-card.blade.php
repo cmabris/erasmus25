@@ -60,7 +60,7 @@
             </div>
         @else
             <div class="flex aspect-[16/9] w-full items-center justify-center bg-gradient-to-br from-erasmus-100 to-erasmus-200 dark:from-erasmus-900/50 dark:to-erasmus-800/50">
-                <flux:icon name="newspaper" class="[:where(&)]:size-16 text-erasmus-400 dark:text-erasmus-600" />
+                <flux:icon name="newspaper" class="[:where(&)]:size-16 text-erasmus-400 dark:text-erasmus-600" variant="outline" />
             </div>
         @endif
         
@@ -72,7 +72,7 @@
                 @endif
                 @if($location)
                     <span class="inline-flex items-center gap-1 text-sm text-zinc-500 dark:text-zinc-400">
-                        <flux:icon name="map-pin" class="[:where(&)]:size-3.5" />
+                        <flux:icon name="map-pin" class="[:where(&)]:size-3.5" variant="outline" />
                         {{ $location }}
                     </span>
                 @endif
@@ -100,7 +100,7 @@
                 
                 <span class="inline-flex items-center gap-1 text-sm font-medium text-erasmus-600 dark:text-erasmus-400">
                     {{ __('Leer más') }}
-                    <flux:icon name="arrow-right" class="[:where(&)]:size-4" />
+                    <flux:icon name="arrow-right" class="[:where(&)]:size-4" variant="outline" />
                 </span>
             </div>
         </div>
@@ -128,7 +128,7 @@
                     </div>
                 @else
                     <div class="flex aspect-[16/9] h-full w-full items-center justify-center bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-800 dark:to-zinc-700 sm:aspect-auto">
-                        <flux:icon name="newspaper" class="[:where(&)]:size-10 text-zinc-400" />
+                        <flux:icon name="newspaper" class="[:where(&)]:size-10 text-zinc-400" variant="outline" />
                     </div>
                 @endif
             </div>
@@ -155,7 +155,7 @@
                     @endif
                     @if($location)
                         <span class="inline-flex items-center gap-1">
-                            <flux:icon name="map-pin" class="[:where(&)]:size-3.5" />
+                            <flux:icon name="map-pin" class="[:where(&)]:size-3.5" variant="outline" />
                             {{ $location }}
                         </span>
                     @endif
@@ -207,7 +207,7 @@
             </div>
         @else
             <div class="flex aspect-[16/10] w-full items-center justify-center bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-800 dark:to-zinc-700">
-                <flux:icon name="newspaper" class="[:where(&)]:size-12 text-zinc-400" />
+                <flux:icon name="newspaper" class="[:where(&)]:size-12 text-zinc-400" variant="outline" />
             </div>
         @endif
         

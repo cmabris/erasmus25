@@ -111,25 +111,25 @@
                 <div class="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-zinc-500 dark:text-zinc-400">
                     @if($typeLabel)
                         <span class="inline-flex items-center gap-1.5">
-                            <flux:icon name="user-group" class="[:where(&)]:size-4" />
+                            <flux:icon name="user-group" class="[:where(&)]:size-4" variant="outline" />
                             {{ $typeLabel }}
                         </span>
                     @endif
                     @if($modalityLabel)
                         <span class="inline-flex items-center gap-1.5">
-                            <flux:icon name="clock" class="[:where(&)]:size-4" />
+                            <flux:icon name="clock" class="[:where(&)]:size-4" variant="outline" />
                             {{ $modalityLabel }}
                         </span>
                     @endif
                     @if($numberOfPlaces)
                         <span class="inline-flex items-center gap-1.5">
-                            <flux:icon name="users" class="[:where(&)]:size-4" />
+                            <flux:icon name="users" class="[:where(&)]:size-4" variant="outline" />
                             {{ $numberOfPlaces }} {{ __('plazas') }}
                         </span>
                     @endif
                     @if($destinationsCount > 0)
                         <span class="inline-flex items-center gap-1.5">
-                            <flux:icon name="map-pin" class="[:where(&)]:size-4" />
+                            <flux:icon name="map-pin" class="[:where(&)]:size-4" variant="outline" />
                             {{ $destinationsCount }} {{ trans_choice('destino|destinos', $destinationsCount) }}
                         </span>
                     @endif
@@ -138,7 +138,7 @@
                 {{-- Dates --}}
                 @if($startDateFormatted || $endDateFormatted)
                     <div class="mt-3 inline-flex items-center gap-2 rounded-lg bg-zinc-100 px-3 py-1.5 text-sm dark:bg-zinc-800">
-                        <flux:icon name="calendar" class="[:where(&)]:size-4 text-zinc-500" />
+                        <flux:icon name="calendar" class="[:where(&)]:size-4 text-zinc-500" variant="outline" />
                         <span class="text-zinc-700 dark:text-zinc-300">
                             @if($startDateFormatted && $endDateFormatted)
                                 {{ $startDateFormatted }} - {{ $endDateFormatted }}

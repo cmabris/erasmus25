@@ -87,7 +87,7 @@
             
             @if($timeStart)
                 <p class="mt-2 inline-flex items-center gap-1 text-sm text-zinc-500 dark:text-zinc-400">
-                    <flux:icon name="clock" class="[:where(&)]:size-4" />
+                    <flux:icon name="clock" class="[:where(&)]:size-4" variant="outline" />
                     {{ $timeStart }}@if($timeEnd) - {{ $timeEnd }}@endif
                 </p>
             @endif
@@ -102,7 +102,7 @@
         
         {{-- Date bubble --}}
         <div class="relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full {{ $eventTypeConfig['color'] === 'success' ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400' : ($eventTypeConfig['color'] === 'danger' ? 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400' : ($eventTypeConfig['color'] === 'warning' ? 'bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400' : ($eventTypeConfig['color'] === 'info' ? 'bg-cyan-100 text-cyan-600 dark:bg-cyan-900/30 dark:text-cyan-400' : 'bg-erasmus-100 text-erasmus-600 dark:bg-erasmus-900/30 dark:text-erasmus-400'))) }}">
-            <flux:icon :name="$eventTypeConfig['icon']" class="[:where(&)]:size-5" />
+            <flux:icon :name="$eventTypeConfig['icon']" class="[:where(&)]:size-5" variant="outline" />
         </div>
         
         {{-- Content --}}
@@ -128,7 +128,7 @@
             
             @if($location)
                 <p class="mt-2 inline-flex items-center gap-1.5 text-sm text-zinc-500 dark:text-zinc-400">
-                    <flux:icon name="map-pin" class="[:where(&)]:size-4" />
+                    <flux:icon name="map-pin" class="[:where(&)]:size-4" variant="outline" />
                     {{ $location }}
                 </p>
             @endif
@@ -220,13 +220,13 @@
                 <div class="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-zinc-500 dark:text-zinc-400">
                     @if($timeStart)
                         <span class="inline-flex items-center gap-1">
-                            <flux:icon name="clock" class="[:where(&)]:size-4" />
+                            <flux:icon name="clock" class="[:where(&)]:size-4" variant="outline" />
                             {{ $timeStart }}@if($timeEnd) - {{ $timeEnd }}@endif
                         </span>
                     @endif
                     @if($location)
                         <span class="inline-flex items-center gap-1">
-                            <flux:icon name="map-pin" class="[:where(&)]:size-4" />
+                            <flux:icon name="map-pin" class="[:where(&)]:size-4" variant="outline" />
                             {{ $location }}
                         </span>
                     @endif

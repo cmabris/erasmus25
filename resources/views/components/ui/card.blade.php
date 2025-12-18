@@ -8,9 +8,13 @@
 ])
 
 @php
+    // Capture variant from props and unset to prevent conflicts with parent scope
+    $cardVariant = $variant;
+    unset($variant);
+    
     $baseClasses = 'block w-full transition-all duration-200';
     
-    $variantClasses = match($variant) {
+    $variantClasses = match($cardVariant) {
         'elevated' => 'bg-white dark:bg-zinc-800 shadow-lg dark:shadow-zinc-900/50',
         'bordered' => 'bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700',
         'flat' => 'bg-zinc-50 dark:bg-zinc-800/50',

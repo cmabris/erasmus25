@@ -18,20 +18,18 @@ class ProgramFactory extends Factory
      */
     public function definition(): array
     {
-        $name = fake()->randomElement([
-            'Educación Escolar',
-            'Formación Profesional',
-            'Educación Superior',
-        ]);
-
-        $codes = [
-            'Educación Escolar' => 'KA1xx',
-            'Formación Profesional' => 'KA121-VET',
-            'Educación Superior' => 'KA131-HED',
+        $uniqueId = fake()->unique()->numberBetween(1000, 9999);
+        $programTypes = [
+            ['name' => 'Educación Escolar', 'codePrefix' => 'KA1'],
+            ['name' => 'Formación Profesional', 'codePrefix' => 'VET'],
+            ['name' => 'Educación Superior', 'codePrefix' => 'HED'],
         ];
 
+        $type = fake()->randomElement($programTypes);
+        $name = $type['name'].' '.$uniqueId;
+
         return [
-            'code' => $codes[$name] ?? fake()->unique()->regexify('[A-Z0-9]{6}'),
+            'code' => $type['codePrefix'].'-'.$uniqueId,
             'name' => $name,
             'slug' => Str::slug($name),
             'description' => fake()->paragraph(),

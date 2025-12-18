@@ -60,7 +60,7 @@
                             wire:navigate
                             class="inline-flex items-center gap-2 rounded-lg bg-erasmus-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-erasmus-700 focus:outline-none focus:ring-2 focus:ring-erasmus-500 focus:ring-offset-2 dark:focus:ring-offset-zinc-900"
                         >
-                            <flux:icon name="squares-2x2" class="[:where(&)]:size-4" />
+                            <flux:icon name="squares-2x2" class="[:where(&)]:size-4" variant="outline" />
                             {{ __('Panel') }}
                         </a>
                     @else
@@ -92,8 +92,8 @@
                         :aria-expanded="open"
                     >
                         <span class="sr-only">{{ __('Abrir menú') }}</span>
-                        <flux:icon x-show="!open" name="bars-3" class="[:where(&)]:size-6" />
-                        <flux:icon x-show="open" x-cloak name="x-mark" class="[:where(&)]:size-6" />
+                        <flux:icon x-show="!open" name="bars-3" class="[:where(&)]:size-6" variant="outline" />
+                        <flux:icon x-show="open" x-cloak name="x-mark" class="[:where(&)]:size-6" variant="outline" />
                     </button>
 
                     {{-- Mobile Menu Panel --}}
@@ -122,7 +122,7 @@
                                             'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:text-white dark:hover:bg-zinc-800' => !request()->routeIs($item['route']),
                                         ])
                                     >
-                                        <flux:icon :name="$item['icon']" class="[:where(&)]:size-5 text-zinc-400" />
+                                        <flux:icon :name="$item['icon']" class="[:where(&)]:size-5 text-zinc-400" variant="outline" />
                                         {{ $item['label'] }}
                                     </a>
                                 @endforeach
@@ -136,7 +136,7 @@
                                         wire:navigate
                                         class="flex w-full items-center justify-center gap-2 rounded-lg bg-erasmus-600 px-4 py-3 text-base font-medium text-white"
                                     >
-                                        <flux:icon name="squares-2x2" class="[:where(&)]:size-5" />
+                                        <flux:icon name="squares-2x2" class="[:where(&)]:size-5" variant="outline" />
                                         {{ __('Panel de control') }}
                                     </a>
                                 @else

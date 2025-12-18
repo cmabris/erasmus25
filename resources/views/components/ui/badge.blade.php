@@ -78,12 +78,12 @@
     @endif
     
     @if($icon)
-        <flux:icon :name="$icon" :class="$iconSizeClasses" />
+        <flux:icon :name="$icon" :class="$iconSizeClasses" variant="mini" />
     @endif
     
     {{ $slot }}
     
     @if($iconTrailing)
-        <flux:icon :name="$iconTrailing" :class="$iconSizeClasses" />
+        <flux:icon :name="$iconTrailing" :class="$iconSizeClasses" variant="mini" />
     @endif
 </span>

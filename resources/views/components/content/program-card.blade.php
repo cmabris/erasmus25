@@ -69,7 +69,7 @@
             <div class="bg-gradient-to-br {{ $programConfig['gradient'] }} px-6 py-8 text-white sm:px-8 sm:py-10">
                 <div class="flex items-start justify-between">
                     <div class="rounded-xl bg-white/20 p-3 backdrop-blur-sm">
-                        <flux:icon :name="$programConfig['icon']" class="[:where(&)]:size-8" />
+                        <flux:icon :name="$programConfig['icon']" class="[:where(&)]:size-8" variant="outline" />
                     </div>
                     @if($showBadge && $code)
                         <span class="rounded-full bg-white/20 px-3 py-1 text-sm font-medium backdrop-blur-sm">
@@ -97,7 +97,7 @@
                     
                     <span class="inline-flex items-center gap-1 text-sm font-medium {{ $programConfig['textColor'] }}">
                         {{ __('Ver programa') }}
-                        <flux:icon name="arrow-right" class="[:where(&)]:size-4" />
+                        <flux:icon name="arrow-right" class="[:where(&)]:size-4" variant="outline" />
                     </span>
                 </div>
             </div>
@@ -114,7 +114,7 @@
     >
         <div class="flex items-center gap-4">
             <div class="shrink-0 rounded-lg p-2.5 {{ $programConfig['bgLight'] }}">
-                <flux:icon :name="$programConfig['icon']" class="[:where(&)]:size-5 {{ $programConfig['textColor'] }}" />
+                <flux:icon :name="$programConfig['icon']" class="[:where(&)]:size-5 {{ $programConfig['textColor'] }}" variant="outline" />
             </div>
             <div class="min-w-0 flex-1">
                 <h3 class="truncate font-semibold text-zinc-900 dark:text-white">{{ $name }}</h3>
@@ -122,7 +122,7 @@
                     <p class="text-sm text-zinc-500 dark:text-zinc-400">{{ $code }}</p>
                 @endif
             </div>
-            <flux:icon name="chevron-right" class="[:where(&)]:size-5 shrink-0 text-zinc-400" />
+            <flux:icon name="chevron-right" class="[:where(&)]:size-5 shrink-0 text-zinc-400" variant="outline" />
         </div>
     </x-ui.card>
 
@@ -135,7 +135,7 @@
     >
         <div class="flex items-start gap-4">
             <div class="shrink-0 rounded-xl p-3 {{ $programConfig['bgLight'] }}">
-                <flux:icon :name="$programConfig['icon']" class="[:where(&)]:size-6 {{ $programConfig['textColor'] }}" />
+                <flux:icon :name="$programConfig['icon']" class="[:where(&)]:size-6 {{ $programConfig['textColor'] }}" variant="outline" />
             </div>
             <div class="min-w-0 flex-1">
                 <div class="flex items-start justify-between gap-2">
@@ -156,7 +156,7 @@
             <div class="mt-4 flex items-center justify-end">
                 <span class="inline-flex items-center gap-1 text-sm font-medium {{ $programConfig['textColor'] }}">
                     {{ __('Más información') }}
-                    <flux:icon name="arrow-right" class="[:where(&)]:size-4" />
+                    <flux:icon name="arrow-right" class="[:where(&)]:size-4" variant="outline" />
                 </span>
             </div>
         @endif

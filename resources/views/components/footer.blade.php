@@ -111,19 +111,19 @@
                     </h3>
                     <ul class="mt-4 space-y-3">
                         <li class="flex items-start gap-3">
-                            <flux:icon name="map-pin" class="[:where(&)]:size-5 mt-0.5 shrink-0 text-zinc-500" />
+                            <flux:icon name="map-pin" class="[:where(&)]:size-5 mt-0.5 shrink-0 text-zinc-500" variant="outline" />
                             <span class="text-sm text-zinc-400">
                                 {{ __('Región de Murcia, España') }}
                             </span>
                         </li>
                         <li class="flex items-start gap-3">
-                            <flux:icon name="envelope" class="[:where(&)]:size-5 mt-0.5 shrink-0 text-zinc-500" />
+                            <flux:icon name="envelope" class="[:where(&)]:size-5 mt-0.5 shrink-0 text-zinc-500" variant="outline" />
                             <a href="mailto:erasmus@centro.edu" class="text-sm text-zinc-400 transition-colors hover:text-white">
                                 erasmus@centro.edu
                             </a>
                         </li>
                         <li class="flex items-start gap-3">
-                            <flux:icon name="phone" class="[:where(&)]:size-5 mt-0.5 shrink-0 text-zinc-500" />
+                            <flux:icon name="phone" class="[:where(&)]:size-5 mt-0.5 shrink-0 text-zinc-500" variant="outline" />
                             <a href="tel:+34968000000" class="text-sm text-zinc-400 transition-colors hover:text-white">
                                 +34 968 00 00 00
                             </a>

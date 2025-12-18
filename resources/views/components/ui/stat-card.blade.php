@@ -10,6 +10,10 @@
 ])
 
 @php
+    // Capture variant from props and unset to prevent conflicts with parent scope
+    $statVariant = $variant;
+    unset($variant);
+    
     $iconBgClasses = match($color) {
         'success' => 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400',
         'warning' => 'bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400',
@@ -31,19 +35,19 @@
         default => null,
     };
     
-    $valueSizeClasses = match($variant) {
+    $valueSizeClasses = match($statVariant) {
         'compact' => 'text-xl sm:text-2xl',
         'large' => 'text-4xl sm:text-5xl',
         default => 'text-2xl sm:text-3xl',
     };
     
-    $iconSizeClasses = match($variant) {
+    $iconSizeClasses = match($statVariant) {
         'compact' => 'p-2',
         'large' => 'p-4',
         default => 'p-3',
     };
     
-    $iconInnerSize = match($variant) {
+    $iconInnerSize = match($statVariant) {
         'compact' => '[:where(&)]:size-5',
         'large' => '[:where(&)]:size-8',
         default => '[:where(&)]:size-6',
@@ -65,7 +69,7 @@
                 @if($trendValue)
                     <span class="inline-flex items-center gap-1 text-sm font-medium {{ $trendColorClasses }}">
                         @if($trendIcon)
-                            <flux:icon :name="$trendIcon" class="[:where(&)]:size-4" />
+                            <flux:icon :name="$trendIcon" class="[:where(&)]:size-4" variant="outline" />
                         @endif
                         {{ $trendValue }}
                     </span>
@@ -81,7 +85,7 @@
         
         @if($icon)
             <div class="shrink-0 rounded-lg {{ $iconSizeClasses }} {{ $iconBgClasses }}">
-                <flux:icon :name="$icon" :class="$iconInnerSize" />
+                <flux:icon :name="$icon" :class="$iconInnerSize" variant="outline" />
             </div>
         @endif
     </div>
