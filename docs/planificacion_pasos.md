@@ -153,7 +153,25 @@ Para cada policy:
 - [ ] Mostrar convocatorias abiertas recientes
 - [ ] Mostrar últimas noticias
 - [ ] Mostrar próximos eventos del calendario
-- [ ] Diseño responsive con Flux UI
+- [ ] Diseño responsive con Flux UI:
+  - [ ] Móviles en vertical (< 640px)
+  - [ ] Móviles en horizontal (640px - 768px)
+  - [ ] Tabletas (768px - 1024px)
+  - [ ] Portátiles (1024px - 1280px)
+  - [ ] Pantallas grandes (> 1280px)
+- [ ] Crear componentes UI reutilizables:
+  - [ ] Card configurable (variantes, elevación, bordes)
+  - [ ] Badge/etiqueta con colores y tamaños
+  - [ ] Botón avanzado con variantes, tamaños e iconos
+  - [ ] Contenedor de sección con título y descripción
+  - [ ] Card de estadística para métricas
+  - [ ] Estado vacío para cuando no hay datos
+- [ ] Crear cards especializadas de contenido:
+  - [ ] Program Card para programas Erasmus+
+  - [ ] Call Card para convocatorias
+  - [ ] News Card para noticias
+  - [ ] Event Card para eventos
+- [ ] Crear layout público con navegación y footer
 
 #### 3.4.2. Listado y Detalle de Programas
 - [ ] Crear componente Livewire `Programs\Index` para listado público
