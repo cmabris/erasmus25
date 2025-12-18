@@ -20,6 +20,8 @@ Esta carpeta contiene la documentación técnica de la aplicación web "Erasmus+
 - **[Paso 4: Configuración Base y Datos Iniciales](pasos/paso4.md)**: Documentación completa del desarrollo de seeders, configuración de roles y permisos, y middleware. Incluye creación de clases de constantes, tests unitarios y corrección de conflictos.
 - **[Paso 5: Form Requests y Validación](pasos/paso5.md)**: Creación de 22 Form Requests para validación de datos, internacionalización de mensajes de error en español e inglés, y configuración de traducciones.
 - **[Paso 6: Policies y Autorización](pasos/paso6.md)**: Creación de 11 Policies para autorización, implementación del método `before()` para super-admin, y 80 tests de verificación de permisos por rol.
+- **[Paso 7: Página Principal - Home](pasos/paso7.md)**: Desarrollo de la página Home con componentes UI reutilizables, layout público, y componentes de contenido especializados.
+- **[Paso 8: Listado y Detalle de Programas](pasos/paso8.md)**: Implementación del listado y detalle de programas con filtros, búsqueda, breadcrumbs, y seeder de datos realistas.
 - **[Planificación de Pasos de Desarrollo](planificacion_pasos.md)**: Planificación completa y estructurada de los siguientes pasos en el desarrollo de la aplicación, incluyendo seeders, Form Requests, Policies, área pública, panel de administración, rutas, funcionalidades avanzadas, testing y optimización.
 
 ### Base de Datos
@@ -63,7 +65,8 @@ Esta carpeta contiene la documentación técnica de la aplicación web "Erasmus+
 
 ### Vistas y Componentes
 
-- *Próximamente: Documentación de vistas y componentes Livewire*
+- **[Componentes de la Página Home](home-components.md)**: Documentación técnica de los componentes UI base, componentes de contenido, layout público y componente Livewire Home. Incluye paleta de colores Erasmus+ y guía de uso.
+- **[Componentes de Programas](programs-components.md)**: Documentación técnica de los componentes de listado y detalle de programas, incluyendo breadcrumbs, search-input, y seeder de datos.
 
 ## Información General del Proyecto
 
