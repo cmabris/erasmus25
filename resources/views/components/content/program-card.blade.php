@@ -21,7 +21,7 @@
     $description = $program?->description ?? $description;
     $slug = $program?->slug ?? $slug;
     $isActive = $program?->is_active ?? $isActive;
-    $href = $href ?? ($slug ? route('home') : null); // TODO: Change to programas.show
+    $href = $href ?? ($slug ? route('programas.show', $slug) : null);
     
     // Program type icons and colors based on code
     $programConfig = match(true) {

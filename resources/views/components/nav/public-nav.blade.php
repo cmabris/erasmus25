@@ -5,7 +5,7 @@
 @php
     $navItems = [
         ['label' => __('Inicio'), 'route' => 'home', 'icon' => 'home'],
-        ['label' => __('Programas'), 'route' => 'home', 'icon' => 'academic-cap'], // TODO: Change to programas.index
+        ['label' => __('Programas'), 'route' => 'programas.index', 'icon' => 'academic-cap'],
         ['label' => __('Convocatorias'), 'route' => 'home', 'icon' => 'document-text'], // TODO: Change to calls.index
         ['label' => __('Noticias'), 'route' => 'home', 'icon' => 'newspaper'], // TODO: Change to news.index
         ['label' => __('Documentos'), 'route' => 'home', 'icon' => 'folder-open'], // TODO: Change to documents.index

@@ -52,10 +52,11 @@
                     </x-ui.button>
                     
                     <x-ui.button 
-                        href="#programas" 
+                        href="{{ route('programas.index') }}" 
                         size="lg"
                         variant="ghost"
                         class="text-white hover:bg-white/10"
+                        navigate
                     >
                         {{ __('Conocer programas') }}
                     </x-ui.button>
@@ -89,7 +90,7 @@
         <x-slot:title>{{ __('Programas Erasmus+') }}</x-slot:title>
         <x-slot:description>{{ __('Explora las diferentes modalidades de movilidad disponibles para alumnado y personal.') }}</x-slot:description>
         <x-slot:actions>
-            <x-ui.button href="#" variant="outline" icon="arrow-right">
+            <x-ui.button href="{{ route('programas.index') }}" variant="outline" icon="arrow-right" navigate>
                 {{ __('Ver todos los programas') }}
             </x-ui.button>
         </x-slot:actions>

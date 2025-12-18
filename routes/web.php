@@ -1,6 +1,7 @@
 <?php
 
 use App\Livewire\Public\Home;
+use App\Livewire\Public\Programs;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
@@ -9,6 +10,10 @@ use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 
 Route::get('/', Home::class)->name('home');
+
+// Rutas públicas de programas
+Route::get('/programas', Programs\Index::class)->name('programas.index');
+Route::get('/programas/{program:slug}', Programs\Show::class)->name('programas.show');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
