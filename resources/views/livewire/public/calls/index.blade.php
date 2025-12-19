@@ -1,0 +1,314 @@
+<div>
+    {{-- Hero Section --}}
+    <section class="relative overflow-hidden bg-gradient-to-br from-erasmus-600 via-erasmus-700 to-erasmus-900">
+        {{-- Background pattern --}}
+        <div class="absolute inset-0 opacity-10">
+            <svg class="h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <defs>
+                    <pattern id="calls-pattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+                        <circle cx="2" cy="2" r="1" fill="currentColor" />
+                    </pattern>
+                </defs>
+                <rect fill="url(#calls-pattern)" width="100%" height="100%" />
+            </svg>
+        </div>
+        
+        {{-- Decorative elements --}}
+        <div class="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-white/5 blur-3xl"></div>
+        <div class="absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-gold-500/10 blur-3xl"></div>
+        
+        <div class="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
+            {{-- Breadcrumbs --}}
+            <div class="mb-8">
+                <x-ui.breadcrumbs 
+                    :items="[
+                        ['label' => __('Convocatorias'), 'href' => route('convocatorias.index')],
+                    ]" 
+                    class="text-white/60 [&_a:hover]:text-white [&_a]:text-white/60 [&_span]:text-white"
+                />
+            </div>
+            
+            <div class="max-w-3xl">
+                <div class="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm">
+                    <flux:icon name="megaphone" class="[:where(&)]:size-5" variant="outline" />
+                    {{ __('Convocatorias Erasmus+') }}
+                </div>
+                
+                <h1 class="text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">
+                    {{ __('Oportunidades de Movilidad') }}
+                </h1>
+                
+                <p class="mt-4 text-lg leading-relaxed text-erasmus-100 sm:text-xl">
+                    {{ __('Consulta las convocatorias abiertas y cerradas. Encuentra la oportunidad perfecta para tu formación y desarrollo profesional en Europa.') }}
+                </p>
+            </div>
+            
+            {{-- Stats Row --}}
+            <div class="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6">
+                <div class="rounded-xl bg-white/10 px-4 py-4 text-center backdrop-blur-sm sm:px-6">
+                    <div class="text-2xl font-bold text-white sm:text-3xl">{{ $this->stats['total'] }}</div>
+                    <div class="mt-1 text-sm text-erasmus-200">{{ __('Convocatorias') }}</div>
+                </div>
+                <div class="rounded-xl bg-white/10 px-4 py-4 text-center backdrop-blur-sm sm:px-6">
+                    <div class="text-2xl font-bold text-white sm:text-3xl">{{ $this->stats['abierta'] }}</div>
+                    <div class="mt-1 text-sm text-erasmus-200">{{ __('Abiertas') }}</div>
+                </div>
+                <div class="col-span-2 rounded-xl bg-white/10 px-4 py-4 text-center backdrop-blur-sm sm:col-span-1 sm:px-6">
+                    <div class="text-2xl font-bold text-white sm:text-3xl">{{ $this->stats['cerrada'] }}</div>
+                    <div class="mt-1 text-sm text-erasmus-200">{{ __('Cerradas') }}</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{-- Filters Section --}}
+    <section class="border-b border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-800">
+        <div class="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                {{-- Search --}}
+                <div class="w-full sm:max-w-xs">
+                    <x-ui.search-input 
+                        wire:model.live.debounce.300ms="search" 
+                        :placeholder="__('Buscar convocatoria...')"
+                        size="md"
+                    />
+                </div>
+                
+                {{-- Filters --}}
+                <div class="flex flex-wrap items-center gap-3">
+                    {{-- Program Filter --}}
+                    @if($this->availablePrograms->isNotEmpty())
+                        <div class="flex items-center gap-2">
+                            <label for="program-filter" class="text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                                {{ __('Programa:') }}
+                            </label>
+                            <select 
+                                id="program-filter"
+                                wire:model.live="program"
+                                class="rounded-lg border border-zinc-300 bg-white py-2 pl-3 pr-8 text-sm shadow-sm focus:border-erasmus-500 focus:ring-erasmus-500 dark:border-zinc-600 dark:bg-zinc-700 dark:text-white"
+                            >
+                                <option value="">{{ __('Todos') }}</option>
+                                @foreach($this->availablePrograms as $prog)
+                                    <option value="{{ $prog->id }}">{{ $prog->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @endif
+                    
+                    {{-- Academic Year Filter --}}
+                    @if($this->availableAcademicYears->isNotEmpty())
+                        <div class="flex items-center gap-2">
+                            <label for="year-filter" class="text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                                {{ __('Año:') }}
+                            </label>
+                            <select 
+                                id="year-filter"
+                                wire:model.live="academicYear"
+                                class="rounded-lg border border-zinc-300 bg-white py-2 pl-3 pr-8 text-sm shadow-sm focus:border-erasmus-500 focus:ring-erasmus-500 dark:border-zinc-600 dark:bg-zinc-700 dark:text-white"
+                            >
+                                <option value="">{{ __('Todos') }}</option>
+                                @foreach($this->availableAcademicYears as $year)
+                                    <option value="{{ $year->id }}">{{ $year->year }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @endif
+                    
+                    {{-- Type Filter --}}
+                    <div class="flex items-center gap-2">
+                        <label for="type-filter" class="text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                            {{ __('Tipo:') }}
+                        </label>
+                        <select 
+                            id="type-filter"
+                            wire:model.live="type"
+                            class="rounded-lg border border-zinc-300 bg-white py-2 pl-3 pr-8 text-sm shadow-sm focus:border-erasmus-500 focus:ring-erasmus-500 dark:border-zinc-600 dark:bg-zinc-700 dark:text-white"
+                        >
+                            @foreach($this->programTypes as $value => $label)
+                                <option value="{{ $value }}">{{ $label }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    
+                    {{-- Modality Filter --}}
+                    <div class="flex items-center gap-2">
+                        <label for="modality-filter" class="text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                            {{ __('Modalidad:') }}
+                        </label>
+                        <select 
+                            id="modality-filter"
+                            wire:model.live="modality"
+                            class="rounded-lg border border-zinc-300 bg-white py-2 pl-3 pr-8 text-sm shadow-sm focus:border-erasmus-500 focus:ring-erasmus-500 dark:border-zinc-600 dark:bg-zinc-700 dark:text-white"
+                        >
+                            @foreach($this->modalities as $value => $label)
+                                <option value="{{ $value }}">{{ $label }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    
+                    {{-- Status Filter --}}
+                    <div class="flex items-center gap-2">
+                        <label for="status-filter" class="text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                            {{ __('Estado:') }}
+                        </label>
+                        <select 
+                            id="status-filter"
+                            wire:model.live="status"
+                            class="rounded-lg border border-zinc-300 bg-white py-2 pl-3 pr-8 text-sm shadow-sm focus:border-erasmus-500 focus:ring-erasmus-500 dark:border-zinc-600 dark:bg-zinc-700 dark:text-white"
+                        >
+                            @foreach($this->statuses as $value => $label)
+                                <option value="{{ $value }}">{{ $label }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    
+                    {{-- Reset Filters --}}
+                    @if($search || $program || $academicYear || $type || $modality || $status)
+                        <button 
+                            wire:click="resetFilters"
+                            type="button"
+                            class="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm text-zinc-600 transition-colors hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-700"
+                        >
+                            <flux:icon name="x-mark" class="[:where(&)]:size-4" variant="outline" />
+                            {{ __('Limpiar') }}
+                        </button>
+                    @endif
+                </div>
+            </div>
+            
+            {{-- Active filters summary --}}
+            @if($search || $program || $academicYear || $type || $modality || $status)
+                <div class="mt-3 flex flex-wrap items-center gap-2">
+                    <span class="text-sm text-zinc-500 dark:text-zinc-400">{{ __('Filtros:') }}</span>
+                    @if($search)
+                        <span class="inline-flex items-center gap-1 rounded-full bg-erasmus-100 px-2.5 py-1 text-xs font-medium text-erasmus-700 dark:bg-erasmus-900/30 dark:text-erasmus-300">
+                            "{{ $search }}"
+                            <button wire:click="$set('search', '')" class="hover:text-erasmus-900 dark:hover:text-erasmus-300">
+                                <flux:icon name="x-mark" class="[:where(&)]:size-3" variant="outline" />
+                            </button>
+                        </span>
+                    @endif
+                    @if($program)
+                        @php $selectedProgram = $this->availablePrograms->firstWhere('id', $program); @endphp
+                        @if($selectedProgram)
+                            <span class="inline-flex items-center gap-1 rounded-full bg-erasmus-100 px-2.5 py-1 text-xs font-medium text-erasmus-700 dark:bg-erasmus-900/30 dark:text-erasmus-300">
+                                {{ $selectedProgram->name }}
+                                <button wire:click="$set('program', '')" class="hover:text-erasmus-900 dark:hover:text-erasmus-300">
+                                    <flux:icon name="x-mark" class="[:where(&)]:size-3" variant="outline" />
+                                </button>
+                            </span>
+                        @endif
+                    @endif
+                    @if($academicYear)
+                        @php $selectedYear = $this->availableAcademicYears->firstWhere('id', $academicYear); @endphp
+                        @if($selectedYear)
+                            <span class="inline-flex items-center gap-1 rounded-full bg-erasmus-100 px-2.5 py-1 text-xs font-medium text-erasmus-700 dark:bg-erasmus-900/30 dark:text-erasmus-300">
+                                {{ $selectedYear->year }}
+                                <button wire:click="$set('academicYear', '')" class="hover:text-erasmus-900 dark:hover:text-erasmus-300">
+                                    <flux:icon name="x-mark" class="[:where(&)]:size-3" variant="outline" />
+                                </button>
+                            </span>
+                        @endif
+                    @endif
+                    @if($type)
+                        <span class="inline-flex items-center gap-1 rounded-full bg-erasmus-100 px-2.5 py-1 text-xs font-medium text-erasmus-700 dark:bg-erasmus-900/30 dark:text-erasmus-300">
+                            {{ $this->programTypes[$type] ?? $type }}
+                            <button wire:click="$set('type', '')" class="hover:text-erasmus-900 dark:hover:text-erasmus-300">
+                                <flux:icon name="x-mark" class="[:where(&)]:size-3" variant="outline" />
+                            </button>
+                        </span>
+                    @endif
+                    @if($modality)
+                        <span class="inline-flex items-center gap-1 rounded-full bg-erasmus-100 px-2.5 py-1 text-xs font-medium text-erasmus-700 dark:bg-erasmus-900/30 dark:text-erasmus-300">
+                            {{ $this->modalities[$modality] ?? $modality }}
+                            <button wire:click="$set('modality', '')" class="hover:text-erasmus-900 dark:hover:text-erasmus-300">
+                                <flux:icon name="x-mark" class="[:where(&)]:size-3" variant="outline" />
+                            </button>
+                        </span>
+                    @endif
+                    @if($status)
+                        <span class="inline-flex items-center gap-1 rounded-full bg-erasmus-100 px-2.5 py-1 text-xs font-medium text-erasmus-700 dark:bg-erasmus-900/30 dark:text-erasmus-300">
+                            {{ $this->statuses[$status] ?? $status }}
+                            <button wire:click="$set('status', '')" class="hover:text-erasmus-900 dark:hover:text-erasmus-300">
+                                <flux:icon name="x-mark" class="[:where(&)]:size-3" variant="outline" />
+                            </button>
+                        </span>
+                    @endif
+                </div>
+            @endif
+        </div>
+    </section>
+
+    {{-- Calls Grid --}}
+    <x-ui.section class="bg-zinc-50 dark:bg-zinc-900">
+        <div class="mb-6 flex items-center justify-between">
+            <p class="text-sm text-zinc-600 dark:text-zinc-400">
+                {{ trans_choice(':count convocatoria encontrada|:count convocatorias encontradas', $this->calls->total(), ['count' => $this->calls->total()]) }}
+            </p>
+        </div>
+        
+        @if($this->calls->isEmpty())
+            <x-ui.empty-state 
+                :title="__('No se encontraron convocatorias')"
+                :description="$search || $program || $academicYear || $type || $modality || $status
+                    ? __('No hay convocatorias que coincidan con los filtros seleccionados. Prueba a modificar los criterios de búsqueda.') 
+                    : __('Actualmente no hay convocatorias disponibles. Vuelve a consultar más adelante.')"
+                icon="megaphone"
+            >
+                @if($search || $program || $academicYear || $type || $modality || $status)
+                    <x-ui.button wire:click="resetFilters" variant="outline" icon="arrow-path">
+                        {{ __('Limpiar filtros') }}
+                    </x-ui.button>
+                @endif
+            </x-ui.empty-state>
+        @else
+            <div class="grid gap-6 lg:grid-cols-2">
+                @foreach($this->calls as $call)
+                    <x-content.call-card 
+                        :call="$call" 
+                        :variant="$loop->first && $loop->iteration === 1 && $this->calls->currentPage() === 1 ? 'featured' : 'default'"
+                    />
+                @endforeach
+            </div>
+            
+            {{-- Pagination --}}
+            @if($this->calls->hasPages())
+                <div class="mt-8 flex justify-center">
+                    {{ $this->calls->links() }}
+                </div>
+            @endif
+        @endif
+    </x-ui.section>
+
+    {{-- CTA Section --}}
+    <section class="bg-gradient-to-r from-gold-500 to-gold-600">
+        <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+            <div class="flex flex-col items-center justify-between gap-6 lg:flex-row">
+                <div class="text-center lg:text-left">
+                    <h2 class="text-2xl font-bold text-white sm:text-3xl">
+                        {{ __('¿Necesitas más información?') }}
+                    </h2>
+                    <p class="mt-2 text-gold-100">
+                        {{ __('Consulta los programas disponibles o contacta con nosotros para resolver tus dudas.') }}
+                    </p>
+                </div>
+                <div class="flex flex-shrink-0 gap-3">
+                    <x-ui.button 
+                        href="{{ route('programas.index') }}" 
+                        variant="secondary"
+                        navigate
+                    >
+                        {{ __('Ver programas') }}
+                    </x-ui.button>
+                    <x-ui.button 
+                        href="#" 
+                        variant="ghost"
+                        class="text-white hover:bg-white/10"
+                    >
+                        {{ __('Contactar') }}
+                    </x-ui.button>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\Public\Calls;
 use App\Livewire\Public\Home;
 use App\Livewire\Public\Programs;
 use App\Livewire\Settings\Appearance;
@@ -14,6 +15,10 @@ Route::get('/', Home::class)->name('home');
 // Rutas públicas de programas
 Route::get('/programas', Programs\Index::class)->name('programas.index');
 Route::get('/programas/{program:slug}', Programs\Show::class)->name('programas.show');
+
+// Rutas públicas de convocatorias
+Route::get('/convocatorias', Calls\Index::class)->name('convocatorias.index');
+Route::get('/convocatorias/{call:slug}', Calls\Show::class)->name('convocatorias.show');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])

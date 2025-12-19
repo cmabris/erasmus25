@@ -33,7 +33,7 @@
     $estimatedEndDate = $call?->estimated_end_date ?? $estimatedEndDate;
     $program = $call?->program ?? $program;
     $academicYear = $call?->academicYear ?? $academicYear;
-    $href = $href ?? ($slug ? route('home') : null); // TODO: Change to calls.show
+    $href = $href ?? ($slug ? route('convocatorias.show', $slug) : null);
     
     // Status configuration
     $statusConfig = match($status) {
@@ -96,7 +96,7 @@
                         @endif
                         @if($academicYear)
                             <span class="text-xs text-zinc-500 dark:text-zinc-400">
-                                {{ $academicYear->name ?? $academicYear }}
+                                {{ $academicYear->year ?? $academicYear }}
                             </span>
                         @endif
                     </div>

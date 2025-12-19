@@ -43,10 +43,11 @@
                 
                 <div class="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center">
                     <x-ui.button 
-                        href="#convocatorias" 
+                        href="{{ route('convocatorias.index') }}" 
                         size="lg"
                         variant="secondary"
                         icon="arrow-right"
+                        navigate
                     >
                         {{ __('Ver convocatorias') }}
                     </x-ui.button>
@@ -118,7 +119,7 @@
         <x-slot:title>{{ __('Convocatorias Abiertas') }}</x-slot:title>
         <x-slot:description>{{ __('Solicita tu participación en las convocatorias de movilidad activas.') }}</x-slot:description>
         <x-slot:actions>
-            <x-ui.button href="#" variant="outline" icon="arrow-right">
+            <x-ui.button href="{{ route('convocatorias.index') }}" variant="outline" icon="arrow-right" navigate>
                 {{ __('Ver todas las convocatorias') }}
             </x-ui.button>
         </x-slot:actions>
@@ -229,9 +230,10 @@
                 </p>
                 <div class="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
                     <x-ui.button 
-                        href="#convocatorias" 
+                        href="{{ route('convocatorias.index') }}" 
                         size="lg" 
                         variant="secondary"
+                        navigate
                     >
                         {{ __('Explorar convocatorias') }}
                     </x-ui.button>

@@ -19,6 +19,10 @@ class DatabaseSeeder extends Seeder
             SettingsSeeder::class,
             RolesAndPermissionsSeeder::class,
             AdminUserSeeder::class,
+            // Seeders de convocatorias (requieren Programs y AcademicYears)
+            CallSeeder::class,
+            CallPhaseSeeder::class,
+            ResolutionSeeder::class,
         ]);
     }
 }
