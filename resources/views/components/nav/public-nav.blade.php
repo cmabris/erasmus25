@@ -6,8 +6,8 @@
     $navItems = [
         ['label' => __('Inicio'), 'route' => 'home', 'icon' => 'home'],
         ['label' => __('Programas'), 'route' => 'programas.index', 'icon' => 'academic-cap'],
-        ['label' => __('Convocatorias'), 'route' => 'home', 'icon' => 'document-text'], // TODO: Change to calls.index
-        ['label' => __('Noticias'), 'route' => 'home', 'icon' => 'newspaper'], // TODO: Change to news.index
+        ['label' => __('Convocatorias'), 'route' => 'convocatorias.index', 'icon' => 'document-text'],
+        ['label' => __('Noticias'), 'route' => 'noticias.index', 'icon' => 'newspaper'],
         ['label' => __('Documentos'), 'route' => 'home', 'icon' => 'folder-open'], // TODO: Change to documents.index
         ['label' => __('Calendario'), 'route' => 'home', 'icon' => 'calendar-days'], // TODO: Change to events.index
     ];
@@ -41,8 +41,8 @@
                         wire:navigate
                         @class([
                             'px-4 py-2 rounded-lg text-sm font-medium transition-colors',
-                            'text-erasmus-700 bg-erasmus-50 dark:text-erasmus-300 dark:bg-erasmus-900/30' => request()->routeIs($item['route']),
-                            'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:text-white dark:hover:bg-zinc-800' => !request()->routeIs($item['route']),
+                            'text-erasmus-700 bg-erasmus-50 dark:text-erasmus-300 dark:bg-erasmus-900/30' => request()->routeIs($item['route']) || request()->routeIs($item['route'].'.*'),
+                            'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:text-white dark:hover:bg-zinc-800' => !request()->routeIs($item['route']) && !request()->routeIs($item['route'].'.*'),
                         ])
                     >
                         {{ $item['label'] }}
@@ -118,8 +118,8 @@
                                         @click="open = false"
                                         @class([
                                             'flex items-center gap-3 rounded-lg px-4 py-3 text-base font-medium transition-colors',
-                                            'text-erasmus-700 bg-erasmus-50 dark:text-erasmus-300 dark:bg-erasmus-900/30' => request()->routeIs($item['route']),
-                                            'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:text-white dark:hover:bg-zinc-800' => !request()->routeIs($item['route']),
+                                            'text-erasmus-700 bg-erasmus-50 dark:text-erasmus-300 dark:bg-erasmus-900/30' => request()->routeIs($item['route']) || request()->routeIs($item['route'].'.*'),
+                                            'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:text-white dark:hover:bg-zinc-800' => !request()->routeIs($item['route']) && !request()->routeIs($item['route'].'.*'),
                                         ])
                                     >
                                         <flux:icon :name="$item['icon']" class="[:where(&)]:size-5 text-zinc-400" variant="outline" />

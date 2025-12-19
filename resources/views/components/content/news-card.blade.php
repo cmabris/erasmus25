@@ -30,7 +30,20 @@
     $publishedAt = $news?->published_at ?? $publishedAt;
     $program = $news?->program ?? $program;
     $author = $news?->author ?? $author;
-    $href = $href ?? ($slug ? route('home') : null); // TODO: Change to news.show
+    
+    // Generate href - use route if available, otherwise fallback
+    if ($href) {
+        // href already provided
+    } elseif ($slug && $news) {
+        // Try to use news.show route if available
+        try {
+            $href = route('noticias.show', $news);
+        } catch (\Illuminate\Routing\Exceptions\RouteNotFoundException $e) {
+            $href = null; // Route not yet defined
+        }
+    } else {
+        $href = null;
+    }
     
     // Format date
     $dateFormatted = $publishedAt ? \Carbon\Carbon::parse($publishedAt)->translatedFormat('d M Y') : null;

@@ -2,6 +2,7 @@
 
 use App\Livewire\Public\Calls;
 use App\Livewire\Public\Home;
+use App\Livewire\Public\News;
 use App\Livewire\Public\Programs;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
@@ -19,6 +20,10 @@ Route::get('/programas/{program:slug}', Programs\Show::class)->name('programas.s
 // Rutas públicas de convocatorias
 Route::get('/convocatorias', Calls\Index::class)->name('convocatorias.index');
 Route::get('/convocatorias/{call:slug}', Calls\Show::class)->name('convocatorias.show');
+
+// Rutas públicas de noticias
+Route::get('/noticias', News\Index::class)->name('noticias.index');
+Route::get('/noticias/{newsPost:slug}', News\Show::class)->name('noticias.show');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])

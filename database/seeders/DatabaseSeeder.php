@@ -23,6 +23,9 @@ class DatabaseSeeder extends Seeder
             CallSeeder::class,
             CallPhaseSeeder::class,
             ResolutionSeeder::class,
+            // Seeders de noticias (requieren Programs, AcademicYears y Users)
+            NewsTagSeeder::class,
+            NewsPostSeeder::class,
         ]);
     }
 }
