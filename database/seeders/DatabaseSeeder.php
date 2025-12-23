@@ -26,6 +26,8 @@ class DatabaseSeeder extends Seeder
             // Seeders de noticias (requieren Programs, AcademicYears y Users)
             NewsTagSeeder::class,
             NewsPostSeeder::class,
+            // Seeders de documentos (requieren DocumentCategories, Programs, AcademicYears y Users)
+            DocumentsSeeder::class,
         ]);
     }
 }

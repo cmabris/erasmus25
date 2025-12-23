@@ -8,7 +8,7 @@
         ['label' => __('Programas'), 'route' => 'programas.index', 'icon' => 'academic-cap'],
         ['label' => __('Convocatorias'), 'route' => 'convocatorias.index', 'icon' => 'document-text'],
         ['label' => __('Noticias'), 'route' => 'noticias.index', 'icon' => 'newspaper'],
-        ['label' => __('Documentos'), 'route' => 'home', 'icon' => 'folder-open'], // TODO: Change to documents.index
+        ['label' => __('Documentos'), 'route' => 'documentos.index', 'icon' => 'folder-open'],
         ['label' => __('Calendario'), 'route' => 'home', 'icon' => 'calendar-days'], // TODO: Change to events.index
     ];
     

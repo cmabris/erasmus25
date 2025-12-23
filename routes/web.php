@@ -1,6 +1,7 @@
 <?php
 
 use App\Livewire\Public\Calls;
+use App\Livewire\Public\Documents;
 use App\Livewire\Public\Home;
 use App\Livewire\Public\News;
 use App\Livewire\Public\Programs;
@@ -24,6 +25,10 @@ Route::get('/convocatorias/{call:slug}', Calls\Show::class)->name('convocatorias
 // Rutas públicas de noticias
 Route::get('/noticias', News\Index::class)->name('noticias.index');
 Route::get('/noticias/{newsPost:slug}', News\Show::class)->name('noticias.show');
+
+// Rutas públicas de documentos
+Route::get('/documentos', Documents\Index::class)->name('documentos.index');
+Route::get('/documentos/{document:slug}', Documents\Show::class)->name('documentos.show');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])

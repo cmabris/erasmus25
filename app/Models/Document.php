@@ -6,11 +6,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class Document extends Model
+class Document extends Model implements HasMedia
 {
     /** @use HasFactory<\Database\Factories\DocumentFactory> */
     use HasFactory;
+
+    use InteractsWithMedia;
 
     /**
      * The attributes that are mass assignable.
@@ -97,5 +102,37 @@ class Document extends Model
     public function updater(): BelongsTo
     {
         return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    /**
+     * Register media collections for the document.
+     */
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('file')
+            ->singleFile()
+            ->acceptsMimeTypes([
+                'application/pdf',
+                'application/msword',
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'application/vnd.ms-excel',
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'application/vnd.ms-powerpoint',
+                'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                'text/plain',
+                'text/csv',
+                'image/jpeg',
+                'image/png',
+                'image/webp',
+            ]);
+    }
+
+    /**
+     * Register media conversions for the document.
+     */
+    public function registerMediaConversions(?Media $media = null): void
+    {
+        // For PDFs, we could add thumbnail generation if needed
+        // For now, we'll keep it simple and just store the files
     }
 }
