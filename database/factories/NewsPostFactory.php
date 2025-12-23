@@ -21,10 +21,24 @@ class NewsPostFactory extends Factory
     public function definition(): array
     {
         $title = fake()->sentence(6);
+        
+        // Use firstOrCreate to avoid duplicate academic years in parallel tests
+        $startYear = fake()->numberBetween(2000, 2100);
+        $yearString = "{$startYear}-".($startYear + 1);
+        
+        $academicYear = AcademicYear::firstOrCreate(
+            ['year' => $yearString],
+            [
+                'year' => $yearString,
+                'start_date' => fake()->dateTimeBetween("-{$startYear}-09-01", "-{$startYear}-09-15"),
+                'end_date' => fake()->dateTimeBetween(($startYear + 1)."-06-15", ($startYear + 1)."-06-30"),
+                'is_current' => false,
+            ]
+        );
 
         return [
             'program_id' => Program::factory(),
-            'academic_year_id' => AcademicYear::factory(),
+            'academic_year_id' => $academicYear->id,
             'title' => $title,
             'slug' => Str::slug($title),
             'excerpt' => fake()->paragraph(),

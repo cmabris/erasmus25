@@ -29,7 +29,7 @@
     $isPublic = $event?->is_public ?? $isPublic;
     $program = $event?->program ?? $program;
     $call = $event?->call ?? $call;
-    $href = $href ?? null; // TODO: Change to events.show if needed
+    $href = $href ?? ($event ? route('eventos.show', $event->id) : null);
     
     // Event type configuration
     $eventTypeConfig = match($eventType) {

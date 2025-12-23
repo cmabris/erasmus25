@@ -9,7 +9,7 @@
         ['label' => __('Convocatorias'), 'route' => 'convocatorias.index', 'icon' => 'document-text'],
         ['label' => __('Noticias'), 'route' => 'noticias.index', 'icon' => 'newspaper'],
         ['label' => __('Documentos'), 'route' => 'documentos.index', 'icon' => 'folder-open'],
-        ['label' => __('Calendario'), 'route' => 'home', 'icon' => 'calendar-days'], // TODO: Change to events.index
+        ['label' => __('Calendario'), 'route' => 'calendario', 'icon' => 'calendar-days'],
     ];
     
     $bgClasses = $transparent 

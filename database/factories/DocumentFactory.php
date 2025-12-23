@@ -23,10 +23,28 @@ class DocumentFactory extends Factory
     {
         $title = fake()->sentence(4);
 
+        // Use firstOrCreate to avoid duplicate academic years in parallel tests
+        $academicYearId = null;
+        if (fake()->boolean(70)) { // 70% chance of having academic year
+            $startYear = fake()->numberBetween(2000, 2100);
+            $yearString = "{$startYear}-".($startYear + 1);
+            
+            $academicYear = AcademicYear::firstOrCreate(
+                ['year' => $yearString],
+                [
+                    'year' => $yearString,
+                    'start_date' => fake()->dateTimeBetween("-{$startYear}-09-01", "-{$startYear}-09-15"),
+                    'end_date' => fake()->dateTimeBetween(($startYear + 1)."-06-15", ($startYear + 1)."-06-30"),
+                    'is_current' => false,
+                ]
+            );
+            $academicYearId = $academicYear->id;
+        }
+
         return [
             'category_id' => DocumentCategory::factory(),
             'program_id' => fake()->optional()->randomElement([Program::factory(), null]),
-            'academic_year_id' => fake()->optional()->randomElement([AcademicYear::factory(), null]),
+            'academic_year_id' => $academicYearId,
             'title' => $title,
             'slug' => Str::slug($title),
             'description' => fake()->optional()->paragraph(),

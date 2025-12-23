@@ -192,7 +192,7 @@
                             {{ __('Fechas importantes y reuniones') }}
                         </p>
                     </div>
-                    <x-ui.button href="#" variant="ghost" icon="arrow-right" size="sm">
+                    <x-ui.button href="{{ route('calendario') }}" variant="ghost" icon="arrow-right" size="sm" navigate>
                         {{ __('Calendario') }}
                     </x-ui.button>
                 </div>
