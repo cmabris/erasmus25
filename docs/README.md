@@ -24,6 +24,7 @@ Esta carpeta contiene la documentación técnica de la aplicación web "Erasmus+
 - **[Paso 8: Listado y Detalle de Programas](pasos/paso8.md)**: Implementación del listado y detalle de programas con filtros, búsqueda, breadcrumbs, y seeder de datos realistas.
 - **[Paso 9: Listado y Detalle de Convocatorias](pasos/paso9.md)**: Implementación del listado y detalle de convocatorias con filtros avanzados, fases, resoluciones, seeders y tests completos.
 - **[Paso 10: Listado y Detalle de Noticias](pasos/paso10.md)**: Implementación del listado y detalle de noticias con filtros avanzados, etiquetas interactivas, Media Library para imágenes destacadas, seeders y tests completos.
+- **[Paso 11: Listado y Detalle de Documentos](pasos/paso11.md)**: Implementación del listado y detalle de documentos con filtros avanzados, descarga de archivos mediante Media Library, visualización de consentimientos, seeders y tests completos.
 - **[Planificación de Pasos de Desarrollo](planificacion_pasos.md)**: Planificación completa y estructurada de los siguientes pasos en el desarrollo de la aplicación, incluyendo seeders, Form Requests, Policies, área pública, panel de administración, rutas, funcionalidades avanzadas, testing y optimización.
 
 ### Base de Datos
@@ -71,6 +72,7 @@ Esta carpeta contiene la documentación técnica de la aplicación web "Erasmus+
 - **[Componentes de Programas](programs-components.md)**: Documentación técnica de los componentes de listado y detalle de programas, incluyendo breadcrumbs, search-input, y seeder de datos.
 - **[Componentes de Convocatorias](calls-components.md)**: Documentación técnica de los componentes de listado y detalle de convocatorias, incluyendo filtros avanzados, fases, resoluciones, seeders y tests completos.
 - **[Componentes de Noticias](news-components.md)**: Documentación técnica de los componentes de listado y detalle de noticias, incluyendo filtros avanzados, etiquetas interactivas, Media Library para imágenes destacadas, seeders y tests completos.
+- **[Componentes de Documentos](documents-components.md)**: Documentación técnica de los componentes de listado y detalle de documentos, incluyendo filtros avanzados, descarga de archivos mediante Media Library, visualización de consentimientos, seeders y tests completos.
 
 ## Información General del Proyecto
 
