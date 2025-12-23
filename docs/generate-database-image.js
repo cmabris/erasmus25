@@ -95,3 +95,4 @@ fs.unlinkSync(tempMermaidFile);
 
 console.log('✨ ¡Proceso completado!');
 
+

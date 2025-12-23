@@ -497,3 +497,4 @@ Este diagrama puede visualizarse en:
 - Herramientas online como [Mermaid Live Editor](https://mermaid.live/)
 - Documentación generada con herramientas como MkDocs o Docusaurus
 
+

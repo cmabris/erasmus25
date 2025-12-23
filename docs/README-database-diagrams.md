@@ -158,3 +158,4 @@ La base de datos incluye:
 - Las foreign keys principales utilizan `ON DELETE CASCADE` para mantener la integridad
 - Los campos JSON almacenan estructuras de datos complejas (`destinations`, `scoring_table`, `programs`, `changes`)
 
+
