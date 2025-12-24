@@ -223,11 +223,16 @@ Para cada policy:
 - [ ] Selección de programas de interés
 - [ ] Confirmación de suscripción
 
-#### 3.4.8. Internacionalización (i18n)
-- [ ] Implementar cambio de idioma en frontend
-- [ ] Crear componente Livewire `Language\Switcher`
-- [ ] Traducir textos estáticos
-- [ ] Implementar traducciones dinámicas desde tabla `translations`
+#### 3.4.8. Internacionalización (i18n) ✅ COMPLETADO
+- [x] Implementar cambio de idioma en frontend
+- [x] Crear componente Livewire `Language\Switcher`
+- [x] Traducir textos estáticos
+- [x] Implementar traducciones dinámicas desde tabla `translations`
+
+**Documentación:**
+- [Plan detallado](pasos/paso-3.4.8-plan.md)
+- [Resumen completo del desarrollo](pasos/paso14.md)
+- [Documentación técnica del sistema i18n](../i18n-system.md)
 
 ---
 
