@@ -30,15 +30,15 @@
             <div class="max-w-3xl text-center">
                 <div class="mb-6 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm">
                     <flux:icon name="envelope" class="[:where(&)]:size-5" variant="outline" />
-                    {{ __('Newsletter') }}
+                    {{ __('common.newsletter.title') }}
                 </div>
                 
                 <h1 class="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
-                    {{ __('Mantente informado') }}
+                    {{ __('common.newsletter.stay_informed') }}
                 </h1>
                 
                 <p class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-erasmus-100 sm:text-xl">
-                    {{ __('Suscríbete a nuestra newsletter y recibe las últimas noticias, convocatorias abiertas, eventos importantes y novedades del programa Erasmus+.') }}
+                    {{ __('common.newsletter.subscribe_description') }}
                 </p>
             </div>
         </div>
@@ -54,10 +54,10 @@
                         <flux:icon name="check-circle" class="[:where(&)]:size-6 flex-shrink-0 text-green-600 dark:text-green-400" variant="solid" />
                         <div class="flex-1">
                             <h3 class="text-lg font-semibold text-green-900 dark:text-green-100">
-                                {{ __('¡Suscripción realizada con éxito!') }}
+                                {{ __('common.newsletter.subscription_success') }}
                             </h3>
                             <p class="mt-2 text-sm text-green-800 dark:text-green-200">
-                                {{ __('Te hemos enviado un email de verificación a tu dirección de correo. Por favor, revisa tu bandeja de entrada y haz clic en el enlace para confirmar tu suscripción.') }}
+                                {{ __('common.newsletter.verification_email_sent') }}
                             </p>
                         </div>
                     </div>
@@ -72,7 +72,7 @@
                         <div>
                             <flux:input
                                 wire:model="email"
-                                :label="__('Correo electrónico')"
+                                :label="__('common.newsletter.email')"
                                 type="email"
                                 required
                                 autofocus
@@ -91,10 +91,10 @@
                         <div>
                             <flux:input
                                 wire:model="name"
-                                :label="__('Nombre (opcional)')"
+                                :label="__('common.newsletter.name_optional')"
                                 type="text"
                                 autocomplete="name"
-                                placeholder="{{ __('Tu nombre') }}"
+                                placeholder="{{ __('common.newsletter.your_name') }}"
                                 :error="$errors->first('name')"
                             />
                             @error('name')
@@ -108,10 +108,10 @@
                         @if($this->availablePrograms->isNotEmpty())
                             <div>
                                 <label class="mb-3 block text-sm font-medium text-zinc-900 dark:text-white">
-                                    {{ __('Programas de interés (opcional)') }}
+                                    {{ __('common.newsletter.programs_interest') }}
                                 </label>
                                 <p class="mb-4 text-sm text-zinc-600 dark:text-zinc-400">
-                                    {{ __('Selecciona los programas sobre los que deseas recibir información:') }}
+                                    {{ __('common.newsletter.select_programs') }}
                                 </p>
                                 
                                 <div class="space-y-3">
@@ -159,11 +159,11 @@
                                     class="mt-0.5 size-4 rounded border-zinc-300 text-erasmus-600 focus:ring-erasmus-500 dark:border-zinc-600 dark:bg-zinc-700"
                                 />
                                 <span class="text-sm text-zinc-700 dark:text-zinc-300">
-                                    {{ __('Acepto la') }}
+                                    {{ __('common.newsletter.accept_privacy') }}
                                     <a href="#" class="font-medium text-erasmus-600 hover:text-erasmus-700 dark:text-erasmus-400 dark:hover:text-erasmus-300">
-                                        {{ __('política de privacidad') }}
+                                        {{ __('common.newsletter.privacy_policy') }}
                                     </a>
-                                    {{ __('y el tratamiento de mis datos personales.') }}
+                                    {{ __('common.newsletter.accept_data_processing') }}
                                 </span>
                             </label>
                             @error('acceptPrivacy')
@@ -182,7 +182,7 @@
                                 :disabled="$errors->any()"
                             >
                                 <flux:icon name="envelope" class="[:where(&)]:size-4" variant="outline" />
-                                {{ __('Suscribirse') }}
+                                {{ __('common.newsletter.subscribe') }}
                             </flux:button>
                         </div>
                     </form>
@@ -192,28 +192,28 @@
             {{-- Additional Information --}}
             <div class="mt-8 rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
                 <h3 class="mb-4 text-lg font-semibold text-zinc-900 dark:text-white">
-                    {{ __('¿Qué recibirás?') }}
+                    {{ __('common.newsletter.what_will_receive') }}
                 </h3>
                 <ul class="space-y-3 text-sm text-zinc-600 dark:text-zinc-400">
                     <li class="flex items-start gap-3">
                         <flux:icon name="check-circle" class="[:where(&)]:size-5 mt-0.5 flex-shrink-0 text-erasmus-600" variant="solid" />
-                        <span>{{ __('Nuevas convocatorias abiertas y plazos importantes') }}</span>
+                        <span>{{ __('common.newsletter.receive_calls') }}</span>
                     </li>
                     <li class="flex items-start gap-3">
                         <flux:icon name="check-circle" class="[:where(&)]:size-5 mt-0.5 flex-shrink-0 text-erasmus-600" variant="solid" />
-                        <span>{{ __('Últimas noticias y experiencias de movilidad') }}</span>
+                        <span>{{ __('common.newsletter.receive_news') }}</span>
                     </li>
                     <li class="flex items-start gap-3">
                         <flux:icon name="check-circle" class="[:where(&)]:size-5 mt-0.5 flex-shrink-0 text-erasmus-600" variant="solid" />
-                        <span>{{ __('Eventos y reuniones informativas') }}</span>
+                        <span>{{ __('common.newsletter.receive_events') }}</span>
                     </li>
                     <li class="flex items-start gap-3">
                         <flux:icon name="check-circle" class="[:where(&)]:size-5 mt-0.5 flex-shrink-0 text-erasmus-600" variant="solid" />
-                        <span>{{ __('Publicación de resoluciones y resultados') }}</span>
+                        <span>{{ __('common.newsletter.receive_resolutions') }}</span>
                     </li>
                     <li class="flex items-start gap-3">
                         <flux:icon name="check-circle" class="[:where(&)]:size-5 mt-0.5 flex-shrink-0 text-erasmus-600" variant="solid" />
-                        <span>{{ __('Puedes darte de baja en cualquier momento') }}</span>
+                        <span>{{ __('common.newsletter.unsubscribe_anytime') }}</span>
                     </li>
                 </ul>
             </div>

@@ -22,7 +22,7 @@
             <div class="mb-8">
                 <x-ui.breadcrumbs 
                     :items="[
-                        ['label' => __('Noticias'), 'href' => route('noticias.index')],
+                        ['label' => __('common.nav.news'), 'href' => route('noticias.index')],
                     ]" 
                     class="text-white/60 [&_a:hover]:text-white [&_a]:text-white/60 [&_span]:text-white"
                 />
@@ -31,15 +31,15 @@
             <div class="max-w-3xl">
                 <div class="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm">
                     <flux:icon name="newspaper" class="[:where(&)]:size-5" variant="outline" />
-                    {{ __('Noticias Erasmus+') }}
+                    {{ __('common.news.title') }}
                 </div>
                 
                 <h1 class="text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">
-                    {{ __('Últimas Noticias y Experiencias') }}
+                    {{ __('common.nav.news') }}
                 </h1>
                 
                 <p class="mt-4 text-lg leading-relaxed text-erasmus-100 sm:text-xl">
-                    {{ __('Descubre las últimas noticias, experiencias y novedades sobre movilidad internacional Erasmus+. Testimonios, proyectos y oportunidades de formación.') }}
+                    {{ __('common.news.hero_description') }}
                 </p>
             </div>
             
@@ -69,7 +69,7 @@
                 <div class="w-full sm:max-w-xs">
                     <x-ui.search-input 
                         wire:model.live.debounce.300ms="search" 
-                        :placeholder="__('Buscar noticia...')"
+                        :placeholder="__('common.search.news_placeholder')"
                         size="md"
                     />
                 </div>
@@ -99,14 +99,14 @@
                     @if($this->availableAcademicYears->isNotEmpty())
                         <div class="flex items-center gap-2">
                             <label for="year-filter" class="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                                {{ __('Año:') }}
+                                {{ __('common.news.year') }}
                             </label>
                             <select 
                                 id="year-filter"
                                 wire:model.live="academicYear"
                                 class="rounded-lg border border-zinc-300 bg-white py-2 pl-3 pr-8 text-sm shadow-sm focus:border-erasmus-500 focus:ring-erasmus-500 dark:border-zinc-600 dark:bg-zinc-700 dark:text-white"
                             >
-                                <option value="">{{ __('Todos') }}</option>
+                                <option value="">{{ __('common.filters.all') }}</option>
                                 @foreach($this->availableAcademicYears as $year)
                                     <option value="{{ $year->id }}">{{ $year->year }}</option>
                                 @endforeach
@@ -122,7 +122,7 @@
                             class="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm text-zinc-600 transition-colors hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-700"
                         >
                             <flux:icon name="x-mark" class="[:where(&)]:size-4" variant="outline" />
-                            {{ __('Limpiar') }}
+                            {{ __('common.actions.reset') }}
                         </button>
                     @endif
                 </div>
@@ -132,7 +132,7 @@
             @if($this->availableTags->isNotEmpty())
                 <div class="mt-4">
                     <label class="mb-2 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                        {{ __('Filtrar por etiquetas:') }}
+                        {{ __('common.news.filter_tags') }}
                     </label>
                     <div class="flex flex-wrap gap-2">
                         @foreach($this->availableTags as $tag)
@@ -160,7 +160,7 @@
             {{-- Active filters summary --}}
             @if($search || $program || $academicYear || $tags)
                 <div class="mt-4 flex flex-wrap items-center gap-2">
-                    <span class="text-sm text-zinc-500 dark:text-zinc-400">{{ __('Filtros activos:') }}</span>
+                    <span class="text-sm text-zinc-500 dark:text-zinc-400">{{ __('common.news.active_filters') }}</span>
                     @if($search)
                         <span class="inline-flex items-center gap-1 rounded-full bg-erasmus-100 px-2.5 py-1 text-xs font-medium text-erasmus-700 dark:bg-erasmus-900/30 dark:text-erasmus-300">
                             "{{ $search }}"
@@ -217,15 +217,15 @@
         
         @if($this->news->isEmpty())
             <x-ui.empty-state 
-                :title="__('No se encontraron noticias')"
+                :title="__('common.news.no_results_title')"
                 :description="$search || $program || $academicYear || $tags
-                    ? __('No hay noticias que coincidan con los filtros seleccionados. Prueba a modificar los criterios de búsqueda.') 
-                    : __('Actualmente no hay noticias disponibles. Vuelve a consultar más adelante.')"
+                    ? __('common.news.no_results_filtered') 
+                    : __('common.news.no_results_empty')"
                 icon="newspaper"
             >
                 @if($search || $program || $academicYear || $tags)
                     <x-ui.button wire:click="resetFilters" variant="outline" icon="arrow-path">
-                        {{ __('Limpiar filtros') }}
+                        {{ __('common.filters.clear') }}
                     </x-ui.button>
                 @endif
             </x-ui.empty-state>
@@ -264,7 +264,7 @@
                         {{ __('¿Quieres compartir tu experiencia?') }}
                     </h2>
                     <p class="mt-2 text-gold-100">
-                        {{ __('Si has participado en un programa Erasmus+, comparte tu experiencia con nosotros.') }}
+                        {{ __('common.news.share_experience') }}
                     </p>
                 </div>
                 <div class="flex flex-shrink-0 gap-3">
@@ -273,7 +273,7 @@
                         variant="secondary"
                         navigate
                     >
-                        {{ __('Ver programas') }}
+                        {{ __('common.news.view_programs') }}
                     </x-ui.button>
                     <x-ui.button 
                         href="{{ route('convocatorias.index') }}" 
@@ -281,7 +281,7 @@
                         class="text-white hover:bg-white/10"
                         navigate
                     >
-                        {{ __('Ver convocatorias') }}
+                        {{ __('common.news.view_calls') }}
                     </x-ui.button>
                 </div>
             </div>

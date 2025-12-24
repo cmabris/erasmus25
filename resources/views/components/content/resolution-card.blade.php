@@ -12,10 +12,10 @@
     }
     
     $typeLabel = match($resolution->type ?? '') {
-        'provisional' => __('Provisional'),
-        'definitiva' => __('Definitiva'),
-        'rectificativa' => __('Rectificativa'),
-        default => ucfirst($resolution->type ?? __('Resolución')),
+        'provisional' => __('common.resolution.provisional'),
+        'definitiva' => __('common.resolution.definitive'),
+        'rectificativa' => __('common.resolution.rectificative'),
+        default => ucfirst($resolution->type ?? __('common.resolution.provisional')),
     };
     
     $hasFile = false; // TODO: Check if resolution has media file when Media Library is implemented
@@ -30,7 +30,7 @@
                 </h4>
                 @if($resolution->official_date)
                     <p class="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-                        {{ __('Fecha oficial:') }} {{ $resolution->official_date->translatedFormat('d M Y') }}
+                        {{ __('common.resolution.official_date') }} {{ $resolution->official_date->translatedFormat('d M Y') }}
                     </p>
                 @endif
             </div>
@@ -47,7 +47,7 @@
                         size="sm"
                         icon="arrow-down-tray"
                     >
-                        {{ __('Descargar') }}
+                        {{ __('common.resolution.download') }}
                     </x-ui.button>
                 @endif
             </div>
@@ -74,7 +74,7 @@
                         </div>
                         @if($resolution->callPhase)
                             <p class="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-                                {{ __('Fase:') }} {{ $resolution->callPhase->name }}
+                                {{ __('common.resolution.phase') }} {{ $resolution->callPhase->name }}
                             </p>
                         @endif
                     </div>
@@ -89,7 +89,7 @@
                 @if($resolution->evaluation_procedure)
                     <div class="mt-3 rounded-lg bg-zinc-50 p-3 dark:bg-zinc-800/50">
                         <p class="text-xs font-medium text-zinc-700 dark:text-zinc-300">
-                            {{ __('Procedimiento de evaluación:') }}
+                            {{ __('common.resolution.evaluation_procedure') }}
                         </p>
                         <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
                             {{ $resolution->evaluation_procedure }}
@@ -101,14 +101,14 @@
                     @if($resolution->official_date)
                         <span class="inline-flex items-center gap-1.5">
                             <flux:icon name="calendar" class="[:where(&)]:size-3" variant="outline" />
-                            <span class="font-medium">{{ __('Fecha oficial:') }}</span>
+                            <span class="font-medium">{{ __('common.resolution.official_date') }}</span>
                             {{ $resolution->official_date->translatedFormat('d M Y') }}
                         </span>
                     @endif
                     @if($resolution->published_at)
                         <span class="inline-flex items-center gap-1.5">
                             <flux:icon name="globe-alt" class="[:where(&)]:size-3" variant="outline" />
-                            <span class="font-medium">{{ __('Publicada:') }}</span>
+                            <span class="font-medium">{{ __('common.resolution.published') }}</span>
                             {{ $resolution->published_at->translatedFormat('d M Y') }}
                         </span>
                     @endif
@@ -124,7 +124,7 @@
                     icon="arrow-down-tray"
                     size="sm"
                 >
-                    {{ __('Descargar PDF') }}
+                    {{ __('common.resolution.download_pdf') }}
                 </x-ui.button>
             </div>
         @endif

@@ -1,5 +1,5 @@
 @props([
-    'title' => __('No hay datos'),
+    'title' => __('common.empty_state.no_data'),
     'description' => null,
     'icon' => 'inbox', // Flux icon name
     'size' => 'md', // sm, md, lg

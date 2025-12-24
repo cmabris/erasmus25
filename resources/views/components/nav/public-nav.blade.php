@@ -4,12 +4,12 @@
 
 @php
     $navItems = [
-        ['label' => __('Inicio'), 'route' => 'home', 'icon' => 'home'],
-        ['label' => __('Programas'), 'route' => 'programas.index', 'icon' => 'academic-cap'],
-        ['label' => __('Convocatorias'), 'route' => 'convocatorias.index', 'icon' => 'document-text'],
-        ['label' => __('Noticias'), 'route' => 'noticias.index', 'icon' => 'newspaper'],
-        ['label' => __('Documentos'), 'route' => 'documentos.index', 'icon' => 'folder-open'],
-        ['label' => __('Calendario'), 'route' => 'calendario', 'icon' => 'calendar-days'],
+        ['label' => __('common.nav.home'), 'route' => 'home', 'icon' => 'home'],
+        ['label' => __('common.nav.programs'), 'route' => 'programas.index', 'icon' => 'academic-cap'],
+        ['label' => __('common.nav.calls'), 'route' => 'convocatorias.index', 'icon' => 'document-text'],
+        ['label' => __('common.nav.news'), 'route' => 'noticias.index', 'icon' => 'newspaper'],
+        ['label' => __('common.nav.documents'), 'route' => 'documentos.index', 'icon' => 'folder-open'],
+        ['label' => __('common.nav.calendar'), 'route' => 'calendario', 'icon' => 'calendar-days'],
     ];
     
     $bgClasses = $transparent 
@@ -66,7 +66,7 @@
                             class="inline-flex items-center gap-2 rounded-lg bg-erasmus-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-erasmus-700 focus:outline-none focus:ring-2 focus:ring-erasmus-500 focus:ring-offset-2 dark:focus:ring-offset-zinc-900"
                         >
                             <flux:icon name="squares-2x2" class="[:where(&)]:size-4" variant="outline" />
-                            {{ __('Panel') }}
+                            {{ __('common.nav.dashboard') }}
                         </a>
                     @else
                         <a 
@@ -74,7 +74,7 @@
                             wire:navigate
                             class="rounded-lg px-4 py-2 text-sm font-medium text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-white"
                         >
-                            {{ __('Iniciar sesión') }}
+                            {{ __('common.nav.login') }}
                         </a>
                         @if (Route::has('register'))
                             <a 
@@ -82,7 +82,7 @@
                                 wire:navigate
                                 class="inline-flex items-center rounded-lg bg-erasmus-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-erasmus-700 focus:outline-none focus:ring-2 focus:ring-erasmus-500 focus:ring-offset-2 dark:focus:ring-offset-zinc-900"
                             >
-                                {{ __('Registrarse') }}
+                                {{ __('common.nav.register') }}
                             </a>
                         @endif
                     @endauth
@@ -96,7 +96,7 @@
                         class="inline-flex items-center justify-center rounded-lg p-2 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 focus:outline-none focus:ring-2 focus:ring-erasmus-500 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white"
                         :aria-expanded="open"
                     >
-                        <span class="sr-only">{{ __('Abrir menú') }}</span>
+                        <span class="sr-only">{{ __('common.nav.open_menu') }}</span>
                         <flux:icon x-show="!open" name="bars-3" class="[:where(&)]:size-6" variant="outline" />
                         <flux:icon x-show="open" x-cloak name="x-mark" class="[:where(&)]:size-6" variant="outline" />
                     </button>
@@ -152,7 +152,7 @@
                                         class="flex w-full items-center justify-center gap-2 rounded-lg bg-erasmus-600 px-4 py-3 text-base font-medium text-white"
                                     >
                                         <flux:icon name="squares-2x2" class="[:where(&)]:size-5" variant="outline" />
-                                        {{ __('Panel de control') }}
+                                        {{ __('common.nav.dashboard_panel') }}
                                     </a>
                                 @else
                                     <div class="grid gap-2">
@@ -161,7 +161,7 @@
                                             wire:navigate
                                             class="flex w-full items-center justify-center rounded-lg border border-zinc-300 px-4 py-3 text-base font-medium text-zinc-700 dark:border-zinc-600 dark:text-zinc-300"
                                         >
-                                            {{ __('Iniciar sesión') }}
+                                            {{ __('common.nav.login') }}
                                         </a>
                                         @if (Route::has('register'))
                                             <a 
@@ -169,7 +169,7 @@
                                                 wire:navigate
                                                 class="flex w-full items-center justify-center rounded-lg bg-erasmus-600 px-4 py-3 text-base font-medium text-white"
                                             >
-                                                {{ __('Registrarse') }}
+                                                {{ __('common.nav.register') }}
                                             </a>
                                         @endif
                                     </div>

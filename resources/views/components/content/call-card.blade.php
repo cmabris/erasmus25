@@ -37,25 +37,25 @@
     
     // Status configuration
     $statusConfig = match($status) {
-        'abierta' => ['color' => 'success', 'label' => __('Abierta'), 'icon' => 'check-circle'],
-        'cerrada' => ['color' => 'danger', 'label' => __('Cerrada'), 'icon' => 'x-circle'],
-        'en_baremacion' => ['color' => 'warning', 'label' => __('En baremación'), 'icon' => 'clock'],
-        'resuelta' => ['color' => 'info', 'label' => __('Resuelta'), 'icon' => 'check-badge'],
-        'archivada' => ['color' => 'neutral', 'label' => __('Archivada'), 'icon' => 'archive-box'],
-        default => ['color' => 'neutral', 'label' => __('Borrador'), 'icon' => 'pencil-square'],
+        'abierta' => ['color' => 'success', 'label' => __('common.call_status.open'), 'icon' => 'check-circle'],
+        'cerrada' => ['color' => 'danger', 'label' => __('common.call_status.closed'), 'icon' => 'x-circle'],
+        'en_baremacion' => ['color' => 'warning', 'label' => __('common.call_status.evaluating'), 'icon' => 'clock'],
+        'resuelta' => ['color' => 'info', 'label' => __('common.call_status.resolved'), 'icon' => 'check-badge'],
+        'archivada' => ['color' => 'neutral', 'label' => __('common.call_status.archived'), 'icon' => 'archive-box'],
+        default => ['color' => 'neutral', 'label' => __('common.call_status.draft'), 'icon' => 'pencil-square'],
     };
     
     // Type labels
     $typeLabel = match($type) {
-        'alumnado' => __('Alumnado'),
-        'personal' => __('Personal'),
+        'alumnado' => __('common.call_types.students'),
+        'personal' => __('common.call_types.staff'),
         default => null,
     };
     
     // Modality labels
     $modalityLabel = match($modality) {
-        'corta' => __('Corta duración'),
-        'larga' => __('Larga duración'),
+        'corta' => __('common.call_modalities.short'),
+        'larga' => __('common.call_modalities.long'),
         default => null,
     };
     
@@ -124,7 +124,7 @@
                     @if($numberOfPlaces)
                         <span class="inline-flex items-center gap-1.5">
                             <flux:icon name="users" class="[:where(&)]:size-4" variant="outline" />
-                            {{ $numberOfPlaces }} {{ __('plazas') }}
+                            {{ $numberOfPlaces }} {{ __('common.call_places') }}
                         </span>
                     @endif
                     @if($destinationsCount > 0)

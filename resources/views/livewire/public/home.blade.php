@@ -30,15 +30,15 @@
             <div class="max-w-3xl">
                 <div class="mb-6 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm">
                     <flux:icon name="globe-europe-africa" class="[:where(&)]:size-5" variant="outline" />
-                    {{ __('Programa Erasmus+') }}
+                    {{ __('common.home.program_title') }}
                 </div>
                 
                 <h1 class="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
-                    {{ __('Abre las puertas al mundo') }}
+                    {{ __('common.home.hero_title') }}
                 </h1>
                 
                 <p class="mt-6 text-lg leading-relaxed text-erasmus-100 sm:text-xl">
-                    {{ __('Descubre las oportunidades de movilidad internacional para alumnado y personal. Formación, experiencia y crecimiento profesional en Europa.') }}
+                    {{ __('common.home.hero_description') }}
                 </p>
                 
                 <div class="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center">
@@ -49,7 +49,7 @@
                         icon="arrow-right"
                         navigate
                     >
-                        {{ __('Ver convocatorias') }}
+                        {{ __('common.actions.view_calls') }}
                     </x-ui.button>
                     
                     <x-ui.button 
@@ -59,7 +59,7 @@
                         class="text-white hover:bg-white/10"
                         navigate
                     >
-                        {{ __('Conocer programas') }}
+                        {{ __('common.actions.learn_programs') }}
                     </x-ui.button>
                 </div>
             </div>
@@ -68,19 +68,19 @@
             <div class="mt-16 grid grid-cols-2 gap-6 border-t border-white/10 pt-10 sm:grid-cols-4">
                 <div class="text-center sm:text-left">
                     <div class="text-3xl font-bold text-white sm:text-4xl">{{ $programs->count() }}</div>
-                    <div class="mt-1 text-sm text-erasmus-200">{{ __('Programas activos') }}</div>
+                    <div class="mt-1 text-sm text-erasmus-200">{{ __('common.home.active_programs') }}</div>
                 </div>
                 <div class="text-center sm:text-left">
                     <div class="text-3xl font-bold text-white sm:text-4xl">{{ $calls->count() }}</div>
-                    <div class="mt-1 text-sm text-erasmus-200">{{ __('Convocatorias abiertas') }}</div>
+                    <div class="mt-1 text-sm text-erasmus-200">{{ __('common.home.open_calls') }}</div>
                 </div>
                 <div class="text-center sm:text-left">
                     <div class="text-3xl font-bold text-white sm:text-4xl">27+</div>
-                    <div class="mt-1 text-sm text-erasmus-200">{{ __('Países de destino') }}</div>
+                    <div class="mt-1 text-sm text-erasmus-200">{{ __('common.home.destination_countries') }}</div>
                 </div>
                 <div class="text-center sm:text-left">
                     <div class="text-3xl font-bold text-white sm:text-4xl">{{ $events->count() }}</div>
-                    <div class="mt-1 text-sm text-erasmus-200">{{ __('Eventos próximos') }}</div>
+                    <div class="mt-1 text-sm text-erasmus-200">{{ __('common.home.upcoming_events') }}</div>
                 </div>
             </div>
         </div>
@@ -88,18 +88,18 @@
 
     {{-- Programs Section --}}
     <x-ui.section id="programas" class="bg-zinc-50 dark:bg-zinc-900">
-        <x-slot:title>{{ __('Programas Erasmus+') }}</x-slot:title>
-        <x-slot:description>{{ __('Explora las diferentes modalidades de movilidad disponibles para alumnado y personal.') }}</x-slot:description>
+        <x-slot:title>{{ __('common.home.programs_title') }}</x-slot:title>
+        <x-slot:description>{{ __('common.home.programs_description') }}</x-slot:description>
         <x-slot:actions>
             <x-ui.button href="{{ route('programas.index') }}" variant="outline" icon="arrow-right" navigate>
-                {{ __('Ver todos los programas') }}
+                {{ __('common.actions.view_all_programs') }}
             </x-ui.button>
         </x-slot:actions>
         
         @if($programs->isEmpty())
             <x-ui.empty-state 
-                :title="__('No hay programas disponibles')"
-                :description="__('Actualmente no hay programas activos. Vuelve a consultar más adelante.')"
+                :title="__('common.home.no_programs_title')"
+                :description="__('common.home.no_programs_description')"
                 icon="academic-cap"
             />
         @else
@@ -116,18 +116,18 @@
 
     {{-- Calls Section --}}
     <x-ui.section id="convocatorias">
-        <x-slot:title>{{ __('Convocatorias Abiertas') }}</x-slot:title>
-        <x-slot:description>{{ __('Solicita tu participación en las convocatorias de movilidad activas.') }}</x-slot:description>
+        <x-slot:title>{{ __('common.home.calls_title') }}</x-slot:title>
+        <x-slot:description>{{ __('common.home.calls_description') }}</x-slot:description>
         <x-slot:actions>
             <x-ui.button href="{{ route('convocatorias.index') }}" variant="outline" icon="arrow-right" navigate>
-                {{ __('Ver todas las convocatorias') }}
+                {{ __('common.actions.view_all_calls') }}
             </x-ui.button>
         </x-slot:actions>
         
         @if($calls->isEmpty())
             <x-ui.empty-state 
-                :title="__('No hay convocatorias abiertas')"
-                :description="__('Actualmente no hay convocatorias abiertas. Te notificaremos cuando haya nuevas oportunidades.')"
+                :title="__('common.home.no_calls_title')"
+                :description="__('common.home.no_calls_description')"
                 icon="megaphone"
             />
         @else
@@ -150,21 +150,21 @@
                 <div class="mb-6 flex items-center justify-between">
                     <div>
                         <h2 class="text-2xl font-bold text-zinc-900 dark:text-white">
-                            {{ __('Últimas Noticias') }}
+                            {{ __('common.home.latest_news') }}
                         </h2>
                         <p class="mt-1 text-zinc-600 dark:text-zinc-400">
-                            {{ __('Experiencias y novedades del programa Erasmus+') }}
+                            {{ __('common.home.news_description') }}
                         </p>
                     </div>
                     <x-ui.button href="#" variant="ghost" icon="arrow-right" size="sm">
-                        {{ __('Ver todas') }}
+                        {{ __('common.actions.see_all') }}
                     </x-ui.button>
                 </div>
                 
                 @if($news->isEmpty())
                     <x-ui.empty-state 
-                        :title="__('No hay noticias')"
-                        :description="__('Pronto publicaremos noticias y experiencias de movilidad.')"
+                        :title="__('common.home.no_news_title')"
+                        :description="__('common.home.no_news_description')"
                         icon="newspaper"
                         size="sm"
                     />
@@ -186,21 +186,21 @@
                 <div class="mb-6 flex items-center justify-between">
                     <div>
                         <h2 class="text-2xl font-bold text-zinc-900 dark:text-white">
-                            {{ __('Próximos Eventos') }}
+                            {{ __('common.home.upcoming_events_title') }}
                         </h2>
                         <p class="mt-1 text-zinc-600 dark:text-zinc-400">
-                            {{ __('Fechas importantes y reuniones') }}
+                            {{ __('common.home.events_description') }}
                         </p>
                     </div>
                     <x-ui.button href="{{ route('calendario') }}" variant="ghost" icon="arrow-right" size="sm" navigate>
-                        {{ __('Calendario') }}
+                        {{ __('common.nav.calendar') }}
                     </x-ui.button>
                 </div>
                 
                 @if($events->isEmpty())
                     <x-ui.empty-state 
-                        :title="__('No hay eventos próximos')"
-                        :description="__('Consulta el calendario para ver las fechas importantes.')"
+                        :title="__('common.home.no_events_title')"
+                        :description="__('common.home.no_events_description')"
                         icon="calendar"
                         size="sm"
                     />
@@ -223,14 +223,14 @@
         <div class="mx-auto max-w-4xl text-center">
             <div class="mb-6 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm">
                 <flux:icon name="envelope" class="[:where(&)]:size-5" variant="outline" />
-                {{ __('Newsletter') }}
+                {{ __('common.home.newsletter_title') }}
             </div>
             
             <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-                {{ __('Mantente informado') }}
+                {{ __('common.home.newsletter_heading') }}
             </h2>
             <p class="mx-auto mt-4 max-w-2xl text-lg text-erasmus-100">
-                {{ __('Suscríbete a nuestra newsletter y recibe las últimas noticias, convocatorias abiertas, eventos importantes y novedades del programa Erasmus+.') }}
+                {{ __('common.home.newsletter_description') }}
             </p>
             
             <div class="mt-8">
@@ -241,12 +241,12 @@
                     icon="envelope"
                     navigate
                 >
-                    {{ __('Suscribirse a la newsletter') }}
+                    {{ __('common.actions.subscribe_newsletter') }}
                 </x-ui.button>
             </div>
             
             <p class="mt-4 text-sm text-erasmus-200">
-                {{ __('Puedes cancelar tu suscripción en cualquier momento.') }}
+                {{ __('common.home.newsletter_cancel') }}
             </p>
         </div>
     </x-ui.section>
@@ -256,10 +256,10 @@
         <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
             <div class="text-center">
                 <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-                    {{ __('¿Listo para tu aventura Erasmus+?') }}
+                    {{ __('common.home.cta_title') }}
                 </h2>
                 <p class="mx-auto mt-4 max-w-2xl text-lg text-erasmus-100">
-                    {{ __('Consulta las convocatorias abiertas y da el primer paso hacia una experiencia internacional única.') }}
+                    {{ __('common.home.cta_description') }}
                 </p>
                 <div class="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
                     <x-ui.button 
@@ -268,7 +268,7 @@
                         variant="secondary"
                         navigate
                     >
-                        {{ __('Explorar convocatorias') }}
+                        {{ __('common.actions.explore_calls') }}
                     </x-ui.button>
                     <x-ui.button 
                         href="#" 
@@ -276,7 +276,7 @@
                         variant="ghost"
                         class="text-white hover:bg-white/10"
                     >
-                        {{ __('Contactar con nosotros') }}
+                        {{ __('common.actions.contact_us') }}
                     </x-ui.button>
                 </div>
             </div>

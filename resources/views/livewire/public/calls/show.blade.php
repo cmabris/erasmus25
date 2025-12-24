@@ -187,7 +187,7 @@
                         <span class="inline-flex items-center justify-center rounded-lg {{ $this->callConfig['bgLight'] }} p-2">
                             <flux:icon name="document-check" class="[:where(&)]:size-6 {{ $this->callConfig['textColor'] }}" variant="outline" />
                         </span>
-                        {{ __('Requisitos') }}
+                        {{ __('common.calls.requirements') }}
                     </h3>
                     <div class="prose prose-zinc max-w-none dark:prose-invert">
                         <p class="whitespace-pre-line text-zinc-600 dark:text-zinc-400">
@@ -204,7 +204,7 @@
                         <span class="inline-flex items-center justify-center rounded-lg {{ $this->callConfig['bgLight'] }} p-2">
                             <flux:icon name="document-duplicate" class="[:where(&)]:size-6 {{ $this->callConfig['textColor'] }}" variant="outline" />
                         </span>
-                        {{ __('Documentación necesaria') }}
+                        {{ __('common.calls.documentation') }}
                     </h3>
                     <div class="prose prose-zinc max-w-none dark:prose-invert">
                         <p class="whitespace-pre-line text-zinc-600 dark:text-zinc-400">
@@ -221,7 +221,7 @@
                         <span class="inline-flex items-center justify-center rounded-lg {{ $this->callConfig['bgLight'] }} p-2">
                             <flux:icon name="clipboard-document-check" class="[:where(&)]:size-6 {{ $this->callConfig['textColor'] }}" variant="outline" />
                         </span>
-                        {{ __('Criterios de selección') }}
+                        {{ __('common.calls.selection_criteria') }}
                     </h3>
                     <div class="prose prose-zinc max-w-none dark:prose-invert">
                         <p class="whitespace-pre-line text-zinc-600 dark:text-zinc-400">
@@ -236,8 +236,8 @@
     {{-- Phases Section --}}
     @if($this->currentPhases->isNotEmpty())
         <x-ui.section class="bg-zinc-50 dark:bg-zinc-900">
-            <x-slot:title>{{ __('Fases de la convocatoria') }}</x-slot:title>
-            <x-slot:description>{{ __('Consulta las diferentes fases del proceso de selección.') }}</x-slot:description>
+            <x-slot:title>{{ __('common.calls.phases_title') }}</x-slot:title>
+            <x-slot:description>{{ __('common.calls.phases_description') }}</x-slot:description>
             
             <x-content.call-phase-timeline :phases="$this->currentPhases" />
         </x-ui.section>
@@ -246,8 +246,8 @@
     {{-- Resolutions Section --}}
     @if($this->publishedResolutions->isNotEmpty())
         <x-ui.section>
-            <x-slot:title>{{ __('Resoluciones publicadas') }}</x-slot:title>
-            <x-slot:description>{{ __('Consulta las resoluciones oficiales de esta convocatoria.') }}</x-slot:description>
+            <x-slot:title>{{ __('common.calls.resolutions_title') }}</x-slot:title>
+            <x-slot:description>{{ __('common.calls.resolutions_description') }}</x-slot:description>
             
             <div class="grid gap-6">
                 @foreach($this->publishedResolutions as $resolution)

@@ -75,7 +75,7 @@
                     <span class="inline-flex items-center justify-center rounded-lg {{ $this->programConfig['bgLight'] }} p-2">
                         <flux:icon name="information-circle" class="[:where(&)]:size-6 {{ $this->programConfig['textColor'] }}" variant="outline" />
                     </span>
-                    {{ __('Acerca de este programa') }}
+                    {{ __('common.programs.about') }}
                 </h2>
                 
                 <p class="mt-4 whitespace-pre-line text-lg leading-relaxed text-zinc-600 dark:text-zinc-400">

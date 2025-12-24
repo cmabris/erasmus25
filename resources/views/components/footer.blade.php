@@ -18,7 +18,7 @@
                         </div>
                     </a>
                     <p class="mt-4 text-sm leading-relaxed text-zinc-400">
-                        {{ __('Portal de gestión de programas Erasmus+ para movilidades de Educación Escolar, Formación Profesional y Educación Superior.') }}
+                        {{ __('common.footer_content.description') }}
                     </p>
                     
                     {{-- Social Links --}}
@@ -49,22 +49,22 @@
                 {{-- Programs Column --}}
                 <div>
                     <h3 class="text-sm font-semibold uppercase tracking-wider text-white">
-                        {{ __('Programas') }}
+                        {{ __('common.footer_content.programs') }}
                     </h3>
                     <ul class="mt-4 space-y-3">
                         <li>
                             <a href="#" class="text-sm text-zinc-400 transition-colors hover:text-white">
-                                {{ __('Educación Escolar') }}
+                                {{ __('common.footer_content.school_education') }}
                             </a>
                         </li>
                         <li>
                             <a href="#" class="text-sm text-zinc-400 transition-colors hover:text-white">
-                                {{ __('Formación Profesional') }}
+                                {{ __('common.footer_content.vocational_training') }}
                             </a>
                         </li>
                         <li>
                             <a href="#" class="text-sm text-zinc-400 transition-colors hover:text-white">
-                                {{ __('Educación Superior') }}
+                                {{ __('common.footer_content.higher_education') }}
                             </a>
                         </li>
                     </ul>
@@ -73,38 +73,38 @@
                 {{-- Resources Column --}}
                 <div>
                     <h3 class="text-sm font-semibold uppercase tracking-wider text-white">
-                        {{ __('Recursos') }}
+                        {{ __('common.footer_content.resources') }}
                     </h3>
                     <ul class="mt-4 space-y-3">
                         <li>
                             <a href="#" class="text-sm text-zinc-400 transition-colors hover:text-white">
-                                {{ __('Convocatorias') }}
+                                {{ __('common.footer_content.calls') }}
                             </a>
                         </li>
                         <li>
                             <a href="#" class="text-sm text-zinc-400 transition-colors hover:text-white">
-                                {{ __('Documentos') }}
+                                {{ __('common.footer_content.documents') }}
                             </a>
                         </li>
                         <li>
                             <a href="#" class="text-sm text-zinc-400 transition-colors hover:text-white">
-                                {{ __('Noticias') }}
+                                {{ __('common.footer_content.news') }}
                             </a>
                         </li>
                         <li>
                             <a href="#" class="text-sm text-zinc-400 transition-colors hover:text-white">
-                                {{ __('Calendario') }}
+                                {{ __('common.footer_content.calendar') }}
                             </a>
                         </li>
                         <li>
                             <a href="#" class="text-sm text-zinc-400 transition-colors hover:text-white">
-                                {{ __('FAQ') }}
+                                {{ __('common.footer_content.faq') }}
                             </a>
                         </li>
                         <li>
                             <a href="{{ route('newsletter.subscribe') }}" class="text-sm text-zinc-400 transition-colors hover:text-white" wire:navigate>
                                 <flux:icon name="envelope" class="[:where(&)]:size-4 inline mr-1.5" variant="outline" />
-                                {{ __('Newsletter') }}
+                                {{ __('common.footer_content.newsletter') }}
                             </a>
                         </li>
                     </ul>
@@ -113,13 +113,13 @@
                 {{-- Contact Column --}}
                 <div>
                     <h3 class="text-sm font-semibold uppercase tracking-wider text-white">
-                        {{ __('Contacto') }}
+                        {{ __('common.footer_content.contact') }}
                     </h3>
                     <ul class="mt-4 space-y-3">
                         <li class="flex items-start gap-3">
                             <flux:icon name="map-pin" class="[:where(&)]:size-5 mt-0.5 shrink-0 text-zinc-500" variant="outline" />
                             <span class="text-sm text-zinc-400">
-                                {{ __('Región de Murcia, España') }}
+                                {{ __('common.footer_content.region') }}
                             </span>
                         </li>
                         <li class="flex items-start gap-3">
@@ -143,7 +143,7 @@
                                 <span class="text-lg">🇪🇺</span>
                             </div>
                             <p class="text-xs text-zinc-400">
-                                {{ __('Cofinanciado por la Unión Europea') }}
+                                {{ __('common.footer_content.cofunded') }}
                             </p>
                         </div>
                     </div>

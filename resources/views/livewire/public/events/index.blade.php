@@ -22,7 +22,7 @@
             <div class="mb-8">
                 <x-ui.breadcrumbs 
                     :items="[
-                        ['label' => __('Eventos'), 'href' => route('eventos.index')],
+                        ['label' => __('common.nav.events'), 'href' => route('eventos.index')],
                     ]" 
                     class="text-white/60 [&_a:hover]:text-white [&_a]:text-white/60 [&_span]:text-white"
                 />
@@ -31,15 +31,15 @@
             <div class="max-w-3xl">
                 <div class="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm">
                     <flux:icon name="calendar" class="[:where(&)]:size-5" variant="outline" />
-                    {{ __('Calendario de Eventos') }}
+                    {{ __('common.events.events_calendar') }}
                 </div>
                 
                 <h1 class="text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">
-                    {{ __('Eventos Erasmus+') }}
+                    {{ __('common.events.events_title') }}
                 </h1>
                 
                 <p class="mt-4 text-lg leading-relaxed text-erasmus-100 sm:text-xl">
-                    {{ __('Consulta el calendario de eventos Erasmus+. Reuniones informativas, aperturas y cierres de convocatorias, entrevistas y publicaciones de resultados.') }}
+                    {{ __('common.events.events_description') }}
                 </p>
             </div>
             
@@ -47,15 +47,15 @@
             <div class="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6">
                 <div class="rounded-xl bg-white/10 px-4 py-4 text-center backdrop-blur-sm sm:px-6">
                     <div class="text-2xl font-bold text-white sm:text-3xl">{{ $this->stats['total'] }}</div>
-                    <div class="mt-1 text-sm text-erasmus-200">{{ __('Eventos') }}</div>
+                    <div class="mt-1 text-sm text-erasmus-200">{{ __('common.events.events_count') }}</div>
                 </div>
                 <div class="rounded-xl bg-white/10 px-4 py-4 text-center backdrop-blur-sm sm:px-6">
                     <div class="text-2xl font-bold text-white sm:text-3xl">{{ $this->stats['this_month'] }}</div>
-                    <div class="mt-1 text-sm text-erasmus-200">{{ __('Este mes') }}</div>
+                    <div class="mt-1 text-sm text-erasmus-200">{{ __('common.time.this_month') }}</div>
                 </div>
                 <div class="col-span-2 rounded-xl bg-white/10 px-4 py-4 text-center backdrop-blur-sm sm:col-span-1 sm:px-6">
                     <div class="text-2xl font-bold text-white sm:text-3xl">{{ $this->stats['upcoming'] }}</div>
-                    <div class="mt-1 text-sm text-erasmus-200">{{ __('Próximos') }}</div>
+                    <div class="mt-1 text-sm text-erasmus-200">{{ __('common.events.upcoming_events') }}</div>
                 </div>
             </div>
         </div>
@@ -69,7 +69,7 @@
                 <div class="w-full sm:max-w-xs">
                     <x-ui.search-input 
                         wire:model.live.debounce.300ms="search" 
-                        :placeholder="__('Buscar evento...')"
+                        :placeholder="__('common.search.placeholder')"
                         size="md"
                     />
                 </div>
@@ -80,14 +80,14 @@
                     @if($this->availablePrograms->isNotEmpty())
                         <div class="flex items-center gap-2">
                             <label for="program-filter" class="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                                {{ __('Programa:') }}
+                                {{ __('common.events.program') }}
                             </label>
                             <select 
                                 id="program-filter"
                                 wire:model.live="program"
                                 class="rounded-lg border border-zinc-300 bg-white py-2 pl-3 pr-8 text-sm shadow-sm focus:border-erasmus-500 focus:ring-erasmus-500 dark:border-zinc-600 dark:bg-zinc-700 dark:text-white"
                             >
-                                <option value="">{{ __('Todos') }}</option>
+                                <option value="">{{ __('common.filters.all') }}</option>
                                 @foreach($this->availablePrograms as $prog)
                                     <option value="{{ $prog->id }}">{{ $prog->name }}</option>
                                 @endforeach
@@ -98,14 +98,14 @@
                     {{-- Event Type Filter --}}
                     <div class="flex items-center gap-2">
                         <label for="type-filter" class="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                            {{ __('Tipo:') }}
+                            {{ __('common.events.event_type') }}
                         </label>
                         <select 
                             id="type-filter"
                             wire:model.live="eventType"
                             class="rounded-lg border border-zinc-300 bg-white py-2 pl-3 pr-8 text-sm shadow-sm focus:border-erasmus-500 focus:ring-erasmus-500 dark:border-zinc-600 dark:bg-zinc-700 dark:text-white"
                         >
-                            <option value="">{{ __('Todos') }}</option>
+                            <option value="">{{ __('common.filters.all') }}</option>
                             @foreach($this->eventTypes as $type => $label)
                                 <option value="{{ $type }}">{{ $label }}</option>
                             @endforeach
@@ -115,7 +115,7 @@
                     {{-- Date From Filter --}}
                     <div class="flex items-center gap-2">
                         <label for="date-from-filter" class="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                            {{ __('Desde:') }}
+                            {{ __('common.events.from') }}
                         </label>
                         <input 
                             type="date"
@@ -128,7 +128,7 @@
                     {{-- Date To Filter --}}
                     <div class="flex items-center gap-2">
                         <label for="date-to-filter" class="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                            {{ __('Hasta:') }}
+                            {{ __('common.events.to') }}
                         </label>
                         <input 
                             type="date"
@@ -145,7 +145,7 @@
                             wire:model.live="showPast"
                             class="rounded border-zinc-300 text-erasmus-600 focus:ring-erasmus-500 dark:border-zinc-600 dark:bg-zinc-700"
                         />
-                        <span class="text-sm text-zinc-600 dark:text-zinc-400">{{ __('Incluir pasados') }}</span>
+                        <span class="text-sm text-zinc-600 dark:text-zinc-400">{{ __('common.events.include_past') }}</span>
                     </label>
                     
                     {{-- Reset Filters --}}
@@ -156,7 +156,7 @@
                             class="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm text-zinc-600 transition-colors hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-700"
                         >
                             <flux:icon name="x-mark" class="[:where(&)]:size-4" variant="outline" />
-                            {{ __('Limpiar') }}
+                            {{ __('common.actions.reset') }}
                         </button>
                     @endif
                 </div>
@@ -165,7 +165,7 @@
             {{-- Active filters summary --}}
             @if($search || $program || $eventType || $dateFrom || $dateTo)
                 <div class="mt-4 flex flex-wrap items-center gap-2">
-                    <span class="text-sm text-zinc-500 dark:text-zinc-400">{{ __('Filtros activos:') }}</span>
+                    <span class="text-sm text-zinc-500 dark:text-zinc-400">{{ __('common.filters.active') }}</span>
                     @if($search)
                         <span class="inline-flex items-center gap-1 rounded-full bg-erasmus-100 px-2.5 py-1 text-xs font-medium text-erasmus-700 dark:bg-erasmus-900/30 dark:text-erasmus-300">
                             "{{ $search }}"
@@ -195,7 +195,7 @@
                     @endif
                     @if($dateFrom)
                         <span class="inline-flex items-center gap-1 rounded-full bg-erasmus-100 px-2.5 py-1 text-xs font-medium text-erasmus-700 dark:bg-erasmus-900/30 dark:text-erasmus-300">
-                            {{ __('Desde') }}: {{ \Carbon\Carbon::parse($dateFrom)->translatedFormat('d/m/Y') }}
+                            {{ __('common.events.from_label') }}: {{ \Carbon\Carbon::parse($dateFrom)->translatedFormat('d/m/Y') }}
                             <button wire:click="$set('dateFrom', '')" class="hover:text-erasmus-900 dark:hover:text-erasmus-300">
                                 <flux:icon name="x-mark" class="[:where(&)]:size-3" variant="outline" />
                             </button>
@@ -203,7 +203,7 @@
                     @endif
                     @if($dateTo)
                         <span class="inline-flex items-center gap-1 rounded-full bg-erasmus-100 px-2.5 py-1 text-xs font-medium text-erasmus-700 dark:bg-erasmus-900/30 dark:text-erasmus-300">
-                            {{ __('Hasta') }}: {{ \Carbon\Carbon::parse($dateTo)->translatedFormat('d/m/Y') }}
+                            {{ __('common.events.to_label') }}: {{ \Carbon\Carbon::parse($dateTo)->translatedFormat('d/m/Y') }}
                             <button wire:click="$set('dateTo', '')" class="hover:text-erasmus-900 dark:hover:text-erasmus-300">
                                 <flux:icon name="x-mark" class="[:where(&)]:size-3" variant="outline" />
                             </button>
@@ -227,21 +227,21 @@
                 size="sm"
                 navigate
             >
-                {{ __('Vista calendario') }}
+                {{ __('common.events.calendar_view') }}
             </x-ui.button>
         </div>
         
         @if($this->events->isEmpty())
             <x-ui.empty-state 
-                :title="__('No se encontraron eventos')"
+                :title="__('common.events.no_results_title')"
                 :description="$search || $program || $eventType || $dateFrom || $dateTo
-                    ? __('No hay eventos que coincidan con los filtros seleccionados. Prueba a modificar los criterios de búsqueda.') 
-                    : __('Actualmente no hay eventos disponibles. Vuelve a consultar más adelante.')"
+                    ? __('common.events.no_results_filtered') 
+                    : __('common.events.no_results_empty')"
                 icon="calendar"
             >
                 @if($search || $program || $eventType || $dateFrom || $dateTo)
                     <x-ui.button wire:click="resetFilters" variant="outline" icon="arrow-path">
-                        {{ __('Limpiar filtros') }}
+                        {{ __('common.filters.clear') }}
                     </x-ui.button>
                 @endif
             </x-ui.empty-state>
@@ -272,10 +272,10 @@
             <div class="flex flex-col items-center justify-between gap-6 lg:flex-row">
                 <div class="text-center lg:text-left">
                     <h2 class="text-2xl font-bold text-white sm:text-3xl">
-                        {{ __('¿Quieres estar al día?') }}
+                        {{ __('common.events.stay_updated') }}
                     </h2>
                     <p class="mt-2 text-gold-100">
-                        {{ __('Consulta el calendario completo de eventos para no perderte ninguna fecha importante.') }}
+                        {{ __('common.events.check_full_calendar') }}
                     </p>
                 </div>
                 <div class="flex flex-shrink-0 gap-3">
@@ -284,7 +284,7 @@
                         variant="secondary"
                         navigate
                     >
-                        {{ __('Ver calendario') }}
+                        {{ __('common.events.view_calendar') }}
                     </x-ui.button>
                     <x-ui.button 
                         href="{{ route('convocatorias.index') }}" 
@@ -292,7 +292,7 @@
                         class="text-white hover:bg-white/10"
                         navigate
                     >
-                        {{ __('Ver convocatorias') }}
+                        {{ __('common.actions.view_calls') }}
                     </x-ui.button>
                 </div>
             </div>

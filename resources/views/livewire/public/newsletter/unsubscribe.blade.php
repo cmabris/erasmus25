@@ -17,15 +17,15 @@
             <div class="max-w-3xl text-center">
                 <div class="mb-6 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm">
                     <flux:icon name="envelope" class="[:where(&)]:size-5" variant="outline" />
-                    {{ __('Cancelar Suscripción') }}
+                    {{ __('common.newsletter.cancel_subscription_title') }}
                 </div>
                 
                 <h1 class="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
-                    {{ __('Cancelar suscripción') }}
+                    {{ __('common.newsletter.cancel_subscription') }}
                 </h1>
                 
                 <p class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-erasmus-100 sm:text-xl">
-                    {{ __('Lamentamos que quieras darte de baja. Puedes cancelar tu suscripción en cualquier momento.') }}
+                    {{ __('common.newsletter.sorry_unsubscribe') }}
                 </p>
             </div>
         </div>
@@ -43,7 +43,7 @@
                         </div>
                         
                         <h2 class="mb-4 text-2xl font-bold text-zinc-900 dark:text-white">
-                            {{ __('Suscripción cancelada') }}
+                            {{ __('common.newsletter.subscription_cancelled') }}
                         </h2>
                         
                         <p class="mb-6 text-lg text-zinc-600 dark:text-zinc-400">
@@ -54,22 +54,22 @@
                             <div class="mb-6 rounded-lg border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-700 dark:bg-zinc-800">
                                 <div class="text-sm text-zinc-600 dark:text-zinc-400">
                                     <div class="mb-2 font-medium text-zinc-900 dark:text-white">
-                                        {{ __('Detalles de la suscripción cancelada:') }}
+                                        {{ __('common.newsletter.cancelled_details') }}
                                     </div>
                                     <div class="space-y-1">
                                         <div>
-                                            <span class="font-medium">{{ __('Email:') }}</span>
+                                            <span class="font-medium">{{ __('common.newsletter.email_label') }}</span>
                                             <span>{{ $subscription->email }}</span>
                                         </div>
                                         @if($subscription->name)
                                             <div>
-                                                <span class="font-medium">{{ __('Nombre:') }}</span>
+                                                <span class="font-medium">{{ __('common.newsletter.name_label') }}</span>
                                                 <span>{{ $subscription->name }}</span>
                                             </div>
                                         @endif
                                         @if($subscription->unsubscribed_at)
                                             <div>
-                                                <span class="font-medium">{{ __('Fecha de cancelación:') }}</span>
+                                                <span class="font-medium">{{ __('common.newsletter.cancellation_date') }}</span>
                                                 <span>{{ $subscription->unsubscribed_at->translatedFormat('d F Y, H:i') }}</span>
                                             </div>
                                         @endif
@@ -80,7 +80,7 @@
 
                         <div class="mb-6 rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-900/20">
                             <p class="text-sm text-blue-800 dark:text-blue-200">
-                                {{ __('Si cambias de opinión, siempre puedes volver a suscribirte en cualquier momento.') }}
+                                {{ __('common.newsletter.change_mind') }}
                             </p>
                         </div>
 
@@ -92,7 +92,7 @@
                                 navigate
                             >
                                 <flux:icon name="home" class="[:where(&)]:size-4" variant="outline" />
-                                {{ __('Ir a la página principal') }}
+                                {{ __('common.newsletter.go_home') }}
                             </x-ui.button>
                             
                             <x-ui.button 
@@ -102,7 +102,7 @@
                                 navigate
                             >
                                 <flux:icon name="envelope" class="[:where(&)]:size-4" variant="outline" />
-                                {{ __('Volver a suscribirse') }}
+                                {{ __('common.newsletter.resubscribe') }}
                             </x-ui.button>
                         </div>
                     </div>
@@ -116,7 +116,7 @@
                         </div>
                         
                         <h2 class="mb-4 text-2xl font-bold text-zinc-900 dark:text-white">
-                            {{ __('Suscripción ya cancelada') }}
+                            {{ __('common.newsletter.already_cancelled') }}
                         </h2>
                         
                         <p class="mb-6 text-lg text-zinc-600 dark:text-zinc-400">
@@ -127,7 +127,7 @@
                             <div class="mb-6 rounded-lg border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-700 dark:bg-zinc-800">
                                 <div class="text-sm text-zinc-600 dark:text-zinc-400">
                                     <div>
-                                        <span class="font-medium">{{ __('Fecha de cancelación:') }}</span>
+                                        <span class="font-medium">{{ __('common.newsletter.cancellation_date') }}</span>
                                         <span>{{ $subscription->unsubscribed_at->translatedFormat('d F Y, H:i') }}</span>
                                     </div>
                                 </div>
@@ -142,7 +142,7 @@
                                 navigate
                             >
                                 <flux:icon name="home" class="[:where(&)]:size-4" variant="outline" />
-                                {{ __('Ir a la página principal') }}
+                                {{ __('common.newsletter.go_home') }}
                             </x-ui.button>
                         </div>
                     </div>
@@ -156,7 +156,7 @@
                         </div>
                         
                         <h2 class="mb-4 text-2xl font-bold text-zinc-900 dark:text-white">
-                            {{ __('Suscripción no encontrada') }}
+                            {{ __('common.newsletter.not_found') }}
                         </h2>
                         
                         <p class="mb-6 text-lg text-zinc-600 dark:text-zinc-400">
@@ -165,7 +165,7 @@
 
                         <div class="mb-6 rounded-lg border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-700 dark:bg-zinc-800">
                             <p class="text-sm text-zinc-600 dark:text-zinc-400">
-                                {{ __('Si crees que esto es un error, verifica que el correo electrónico o el enlace sean correctos. También puedes intentar suscribirte nuevamente si lo deseas.') }}
+                                {{ __('common.newsletter.not_found_message') }}
                             </p>
                         </div>
 
@@ -177,7 +177,7 @@
                                 navigate
                             >
                                 <flux:icon name="envelope" class="[:where(&)]:size-4" variant="outline" />
-                                {{ __('Suscribirse') }}
+                                {{ __('common.newsletter.subscribe') }}
                             </x-ui.button>
                             
                             <x-ui.button 
@@ -187,7 +187,7 @@
                                 navigate
                             >
                                 <flux:icon name="home" class="[:where(&)]:size-4" variant="outline" />
-                                {{ __('Ir a la página principal') }}
+                                {{ __('common.newsletter.go_home') }}
                             </x-ui.button>
                         </div>
                     </div>
@@ -201,7 +201,7 @@
                         </div>
                         
                         <h2 class="mb-4 text-2xl font-bold text-zinc-900 dark:text-white">
-                            {{ __('Error al cancelar') }}
+                            {{ __('common.newsletter.error_cancelling') }}
                         </h2>
                         
                         <p class="mb-6 text-lg text-zinc-600 dark:text-zinc-400">
@@ -216,7 +216,7 @@
                                 navigate
                             >
                                 <flux:icon name="home" class="[:where(&)]:size-4" variant="outline" />
-                                {{ __('Ir a la página principal') }}
+                                {{ __('common.newsletter.go_home') }}
                             </x-ui.button>
                         </div>
                     </div>
@@ -226,11 +226,11 @@
                 @if(!$status && !$token)
                     <div>
                         <h2 class="mb-4 text-2xl font-bold text-zinc-900 dark:text-white">
-                            {{ __('Cancelar tu suscripción') }}
+                            {{ __('common.newsletter.cancel_your_subscription') }}
                         </h2>
                         
                         <p class="mb-6 text-zinc-600 dark:text-zinc-400">
-                            {{ __('Introduce tu correo electrónico para cancelar tu suscripción a la newsletter.') }}
+                            {{ __('common.newsletter.enter_email_to_cancel') }}
                         </p>
 
                         <form wire:submit="unsubscribeByEmail" class="space-y-6">
@@ -238,7 +238,7 @@
                             <div>
                                 <flux:input
                                     wire:model="email"
-                                    :label="__('Correo electrónico')"
+                                    :label="__('common.newsletter.email')"
                                     type="email"
                                     required
                                     autofocus
@@ -259,10 +259,10 @@
                                     <flux:icon name="exclamation-triangle" class="[:where(&)]:size-5 mt-0.5 flex-shrink-0 text-amber-600 dark:text-amber-400" variant="solid" />
                                     <div class="flex-1">
                                         <p class="text-sm font-medium text-amber-900 dark:text-amber-100">
-                                            {{ __('¿Estás seguro?') }}
+                                            {{ __('common.newsletter.are_you_sure') }}
                                         </p>
                                         <p class="mt-1 text-sm text-amber-800 dark:text-amber-200">
-                                            {{ __('Al cancelar tu suscripción, dejarás de recibir nuestras newsletters con las últimas noticias, convocatorias y eventos del programa Erasmus+.') }}
+                                            {{ __('common.newsletter.cancel_warning') }}
                                         </p>
                                     </div>
                                 </div>
@@ -276,7 +276,7 @@
                                     size="lg"
                                     navigate
                                 >
-                                    {{ __('Cancelar') }}
+                                    {{ __('common.newsletter.cancel_action') }}
                                 </x-ui.button>
                                 
                                 <x-ui.button 
@@ -285,7 +285,7 @@
                                     class="w-full sm:w-auto"
                                     icon="x-mark"
                                 >
-                                    {{ __('Cancelar suscripción') }}
+                                    {{ __('common.newsletter.cancel_subscription') }}
                                 </x-ui.button>
                             </div>
                         </form>

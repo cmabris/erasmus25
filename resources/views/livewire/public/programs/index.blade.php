@@ -22,7 +22,7 @@
             <div class="mb-8">
                 <x-ui.breadcrumbs 
                     :items="[
-                        ['label' => __('Programas'), 'href' => route('programas.index')],
+                        ['label' => __('common.nav.programs'), 'href' => route('programas.index')],
                     ]" 
                     class="text-white/60 [&_a:hover]:text-white [&_a]:text-white/60 [&_span]:text-white"
                 />
@@ -31,15 +31,15 @@
             <div class="max-w-3xl">
                 <div class="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm">
                     <flux:icon name="academic-cap" class="[:where(&)]:size-5" variant="outline" />
-                    {{ __('Programas Erasmus+') }}
+                    {{ __('common.programs.title') }}
                 </div>
                 
                 <h1 class="text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">
-                    {{ __('Descubre tu próxima aventura') }}
+                    {{ __('common.programs.hero_title') }}
                 </h1>
                 
                 <p class="mt-4 text-lg leading-relaxed text-erasmus-100 sm:text-xl">
-                    {{ __('Explora los diferentes programas de movilidad y cooperación internacional. Encuentra la oportunidad perfecta para tu formación y desarrollo profesional.') }}
+                    {{ __('common.programs.hero_description') }}
                 </p>
             </div>
             
@@ -47,19 +47,19 @@
             <div class="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-6">
                 <div class="rounded-xl bg-white/10 px-4 py-4 text-center backdrop-blur-sm sm:px-6">
                     <div class="text-2xl font-bold text-white sm:text-3xl">{{ $this->stats['active'] }}</div>
-                    <div class="mt-1 text-sm text-erasmus-200">{{ __('Programas activos') }}</div>
+                    <div class="mt-1 text-sm text-erasmus-200">{{ __('common.programs.active_programs') }}</div>
                 </div>
                 <div class="rounded-xl bg-white/10 px-4 py-4 text-center backdrop-blur-sm sm:px-6">
                     <div class="text-2xl font-bold text-white sm:text-3xl">{{ $this->stats['mobility'] }}</div>
-                    <div class="mt-1 text-sm text-erasmus-200">{{ __('Movilidad') }}</div>
+                    <div class="mt-1 text-sm text-erasmus-200">{{ __('common.programs.mobility') }}</div>
                 </div>
                 <div class="rounded-xl bg-white/10 px-4 py-4 text-center backdrop-blur-sm sm:px-6">
                     <div class="text-2xl font-bold text-white sm:text-3xl">{{ $this->stats['cooperation'] }}</div>
-                    <div class="mt-1 text-sm text-erasmus-200">{{ __('Cooperación') }}</div>
+                    <div class="mt-1 text-sm text-erasmus-200">{{ __('common.programs.cooperation') }}</div>
                 </div>
                 <div class="rounded-xl bg-white/10 px-4 py-4 text-center backdrop-blur-sm sm:px-6">
                     <div class="text-2xl font-bold text-white sm:text-3xl">27+</div>
-                    <div class="mt-1 text-sm text-erasmus-200">{{ __('Países') }}</div>
+                    <div class="mt-1 text-sm text-erasmus-200">{{ __('common.programs.countries') }}</div>
                 </div>
             </div>
         </div>
@@ -73,7 +73,7 @@
                 <div class="w-full sm:max-w-xs">
                     <x-ui.search-input 
                         wire:model.live.debounce.300ms="search" 
-                        :placeholder="__('Buscar programa...')"
+                        :placeholder="__('common.search.program_placeholder')"
                         size="md"
                     />
                 </div>
@@ -83,7 +83,7 @@
                     {{-- Type Filter --}}
                     <div class="flex items-center gap-2">
                         <label for="type-filter" class="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                            {{ __('Tipo:') }}
+                            {{ __('common.programs.type') }}
                         </label>
                         <select 
                             id="type-filter"
@@ -104,7 +104,7 @@
                             class="size-4 rounded border-zinc-300 text-erasmus-600 focus:ring-erasmus-500 dark:border-zinc-600 dark:bg-zinc-700"
                         >
                         <span class="text-sm text-zinc-600 dark:text-zinc-400">
-                            {{ __('Solo activos') }}
+                            {{ __('common.programs.active_only') }}
                         </span>
                     </label>
                     
@@ -116,7 +116,7 @@
                             class="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm text-zinc-600 transition-colors hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-700"
                         >
                             <flux:icon name="x-mark" class="[:where(&)]:size-4" variant="outline" />
-                            {{ __('Limpiar') }}
+                            {{ __('common.actions.reset') }}
                         </button>
                     @endif
                 </div>
@@ -125,7 +125,7 @@
             {{-- Active filters summary --}}
             @if($search || $type)
                 <div class="mt-3 flex flex-wrap items-center gap-2">
-                    <span class="text-sm text-zinc-500 dark:text-zinc-400">{{ __('Filtros:') }}</span>
+                    <span class="text-sm text-zinc-500 dark:text-zinc-400">{{ __('common.programs.filters') }}</span>
                     @if($search)
                         <span class="inline-flex items-center gap-1 rounded-full bg-erasmus-100 px-2.5 py-1 text-xs font-medium text-erasmus-700 dark:bg-erasmus-900/30 dark:text-erasmus-300">
                             "{{ $search }}"
@@ -157,15 +157,15 @@
         
         @if($this->programs->isEmpty())
             <x-ui.empty-state 
-                :title="__('No se encontraron programas')"
+                :title="__('common.programs.no_results_title')"
                 :description="$search || $type 
-                    ? __('No hay programas que coincidan con los filtros seleccionados. Prueba a modificar los criterios de búsqueda.') 
-                    : __('Actualmente no hay programas disponibles. Vuelve a consultar más adelante.')"
+                    ? __('common.programs.no_results_filtered') 
+                    : __('common.programs.no_results_empty')"
                 icon="academic-cap"
             >
                 @if($search || $type || !$onlyActive)
                     <x-ui.button wire:click="resetFilters" variant="outline" icon="arrow-path">
-                        {{ __('Limpiar filtros') }}
+                        {{ __('common.filters.clear') }}
                     </x-ui.button>
                 @endif
             </x-ui.empty-state>
@@ -194,10 +194,10 @@
             <div class="flex flex-col items-center justify-between gap-6 lg:flex-row">
                 <div class="text-center lg:text-left">
                     <h2 class="text-2xl font-bold text-white sm:text-3xl">
-                        {{ __('¿No encuentras lo que buscas?') }}
+                        {{ __('common.programs.cta_title') }}
                     </h2>
                     <p class="mt-2 text-gold-100">
-                        {{ __('Consulta las convocatorias activas o contacta con nosotros para más información.') }}
+                        {{ __('common.programs.cta_description') }}
                     </p>
                 </div>
                 <div class="flex flex-shrink-0 gap-3">
@@ -205,14 +205,14 @@
                         href="#" 
                         variant="secondary"
                     >
-                        {{ __('Ver convocatorias') }}
+                        {{ __('common.programs.view_calls') }}
                     </x-ui.button>
                     <x-ui.button 
                         href="#" 
                         variant="ghost"
                         class="text-white hover:bg-white/10"
                     >
-                        {{ __('Contactar') }}
+                        {{ __('common.programs.contact') }}
                     </x-ui.button>
                 </div>
             </div>

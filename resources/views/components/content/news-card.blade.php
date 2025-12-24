@@ -112,7 +112,7 @@
                 @endif
                 
                 <span class="inline-flex items-center gap-1 text-sm font-medium text-erasmus-600 dark:text-erasmus-400">
-                    {{ __('Leer más') }}
+                    {{ __('common.actions.read_more') }}
                     <flux:icon name="arrow-right" class="[:where(&)]:size-4" variant="outline" />
                 </span>
             </div>

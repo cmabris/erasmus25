@@ -90,13 +90,13 @@
                 
                 <div class="mt-6 flex items-center justify-between">
                     @if(!$isActive)
-                        <x-ui.badge color="neutral">{{ __('Inactivo') }}</x-ui.badge>
+                        <x-ui.badge color="neutral">{{ __('common.program_status.inactive') }}</x-ui.badge>
                     @else
-                        <x-ui.badge color="success" :dot="true">{{ __('Activo') }}</x-ui.badge>
+                        <x-ui.badge color="success" :dot="true">{{ __('common.program_status.active') }}</x-ui.badge>
                     @endif
                     
                     <span class="inline-flex items-center gap-1 text-sm font-medium {{ $programConfig['textColor'] }}">
-                        {{ __('Ver programa') }}
+                        {{ __('common.actions.view_program') }}
                         <flux:icon name="arrow-right" class="[:where(&)]:size-4" variant="outline" />
                     </span>
                 </div>
@@ -155,7 +155,7 @@
         @if($href)
             <div class="mt-4 flex items-center justify-end">
                 <span class="inline-flex items-center gap-1 text-sm font-medium {{ $programConfig['textColor'] }}">
-                    {{ __('Más información') }}
+                    {{ __('common.actions.more_info') }}
                     <flux:icon name="arrow-right" class="[:where(&)]:size-4" variant="outline" />
                 </span>
             </div>

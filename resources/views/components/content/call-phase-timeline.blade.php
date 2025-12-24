@@ -10,8 +10,8 @@
 
 @if($phases->isEmpty())
     <x-ui.empty-state 
-        :title="__('No hay fases disponibles')"
-        :description="__('Esta convocatoria no tiene fases definidas.')"
+        :title="__('common.call_phases.no_phases')"
+        :description="__('common.call_phases.no_phases_description')"
         icon="calendar"
         size="sm"
     />
@@ -87,14 +87,14 @@
                             @if($phase->start_date)
                                 <span class="inline-flex items-center gap-1.5">
                                     <flux:icon name="calendar" class="[:where(&)]:size-3" variant="outline" />
-                                    <span class="font-medium">{{ __('Inicio:') }}</span>
+                                    <span class="font-medium">{{ __('common.call_phases.start') }}</span>
                                     {{ $phase->start_date->translatedFormat('d M Y') }}
                                 </span>
                             @endif
                             @if($phase->end_date)
                                 <span class="inline-flex items-center gap-1.5">
                                     <flux:icon name="calendar" class="[:where(&)]:size-3" variant="outline" />
-                                    <span class="font-medium">{{ __('Fin:') }}</span>
+                                    <span class="font-medium">{{ __('common.call_phases.end') }}</span>
                                     {{ $phase->end_date->translatedFormat('d M Y') }}
                                 </span>
                             @endif
@@ -103,7 +103,7 @@
                     
                     @if($isCurrent)
                         <x-ui.badge color="success" size="sm">
-                            {{ __('Fase actual') }}
+                            {{ __('common.call_phases.current_phase') }}
                         </x-ui.badge>
                     @endif
                 </div>

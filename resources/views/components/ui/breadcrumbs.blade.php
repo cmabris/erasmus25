@@ -12,7 +12,7 @@
     };
 @endphp
 
-<nav {{ $attributes->merge(['class' => 'flex', 'aria-label' => __('Breadcrumb')]) }}>
+<nav {{ $attributes->merge(['class' => 'flex', 'aria-label' => __('common.breadcrumb')]) }}>
     <ol role="list" class="flex flex-wrap items-center gap-1 text-sm">
         {{-- Home link (always first) --}}
         <li>
@@ -23,9 +23,9 @@
             >
                 @if($homeIcon)
                     <flux:icon name="home" class="[:where(&)]:size-4" variant="outline" />
-                    <span class="sr-only">{{ __('Inicio') }}</span>
+                    <span class="sr-only">{{ __('common.nav.home') }}</span>
                 @else
-                    <span>{{ __('Inicio') }}</span>
+                    <span>{{ __('common.nav.home') }}</span>
                 @endif
             </a>
         </li>

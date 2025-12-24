@@ -22,7 +22,7 @@
             <div class="mb-8">
                 <x-ui.breadcrumbs 
                     :items="[
-                        ['label' => __('Eventos'), 'href' => route('eventos.index')],
+                        ['label' => __('common.nav.events'), 'href' => route('eventos.index')],
                         ['label' => $event->title],
                     ]" 
                     class="text-white/60 [&_a:hover]:text-white [&_a]:text-white/60 [&_span]:text-white"
@@ -34,13 +34,13 @@
                 <div class="mb-4 flex flex-wrap items-center gap-3">
                     @php
                         $eventTypeConfig = match($event->event_type) {
-                            'apertura' => ['icon' => 'play-circle', 'color' => 'success', 'label' => __('Apertura')],
-                            'cierre' => ['icon' => 'stop-circle', 'color' => 'danger', 'label' => __('Cierre')],
-                            'entrevista' => ['icon' => 'chat-bubble-left-right', 'color' => 'info', 'label' => __('Entrevistas')],
-                            'publicacion_provisional' => ['icon' => 'document-text', 'color' => 'warning', 'label' => __('Listado provisional')],
-                            'publicacion_definitivo' => ['icon' => 'document-check', 'color' => 'success', 'label' => __('Listado definitivo')],
-                            'reunion_informativa' => ['icon' => 'user-group', 'color' => 'primary', 'label' => __('Reunión informativa')],
-                            default => ['icon' => 'calendar', 'color' => 'neutral', 'label' => __('Evento')],
+                            'apertura' => ['icon' => 'play-circle', 'color' => 'success', 'label' => __('common.events.opening')],
+                            'cierre' => ['icon' => 'stop-circle', 'color' => 'danger', 'label' => __('common.events.closing')],
+                            'entrevista' => ['icon' => 'chat-bubble-left-right', 'color' => 'info', 'label' => __('common.events.interview')],
+                            'publicacion_provisional' => ['icon' => 'document-text', 'color' => 'warning', 'label' => __('common.events.provisional_list')],
+                            'publicacion_definitivo' => ['icon' => 'document-check', 'color' => 'success', 'label' => __('common.events.definitive_list')],
+                            'reunion_informativa' => ['icon' => 'user-group', 'color' => 'primary', 'label' => __('common.events.info_meeting')],
+                            default => ['icon' => 'calendar', 'color' => 'neutral', 'label' => __('common.events.event')],
                         };
                     @endphp
                     
@@ -58,15 +58,15 @@
                     
                     @if($this->isToday)
                         <span class="rounded-full bg-green-500/20 px-3 py-1.5 text-sm font-semibold text-white backdrop-blur-sm">
-                            {{ __('Hoy') }}
+                            {{ __('common.events.today') }}
                         </span>
                     @elseif($this->isUpcoming)
                         <span class="rounded-full bg-blue-500/20 px-3 py-1.5 text-sm font-semibold text-white backdrop-blur-sm">
-                            {{ __('Próximo') }}
+                            {{ __('common.events.upcoming') }}
                         </span>
                     @elseif($this->isPast)
                         <span class="rounded-full bg-zinc-500/20 px-3 py-1.5 text-sm font-semibold text-white backdrop-blur-sm">
-                            {{ __('Pasado') }}
+                            {{ __('common.events.past') }}
                         </span>
                     @endif
                 </div>
@@ -116,7 +116,7 @@
                     </div>
                 @else
                     <p class="text-zinc-600 dark:text-zinc-400">
-                        {{ __('Este evento no tiene descripción adicional disponible.') }}
+                        {{ __('common.events.no_description') }}
                     </p>
                 @endif
                 
@@ -124,10 +124,10 @@
                 @if($event->call)
                     <div class="mt-8 rounded-xl border border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-700 dark:bg-zinc-800">
                         <h3 class="mb-4 text-lg font-semibold text-zinc-900 dark:text-white">
-                            {{ __('Convocatoria relacionada') }}
+                            {{ __('common.events.related_call') }}
                         </h3>
                         <p class="mb-4 text-zinc-600 dark:text-zinc-400">
-                            {{ __('Este evento está asociado a la siguiente convocatoria:') }}
+                            {{ __('common.events.associated_call') }}
                         </p>
                         <x-ui.button 
                             href="{{ route('convocatorias.show', $event->call->slug) }}" 
@@ -135,7 +135,7 @@
                             icon="arrow-right"
                             navigate
                         >
-                            {{ __('Ver convocatoria') }}: {{ $event->call->title }}
+                            {{ __('common.events.view_call') }}: {{ $event->call->title }}
                         </x-ui.button>
                     </div>
                 @endif
@@ -146,20 +146,20 @@
                 {{-- Event Details Card --}}
                 <x-ui.card>
                     <h3 class="mb-4 text-lg font-semibold text-zinc-900 dark:text-white">
-                        {{ __('Información del evento') }}
+                        {{ __('common.events.event_info') }}
                     </h3>
                     
                     <dl class="space-y-4">
                         <div>
                             <dt class="text-sm font-medium text-zinc-500 dark:text-zinc-400">
-                                {{ __('Fecha de inicio') }}
+                                {{ __('common.events.start_date') }}
                             </dt>
                             <dd class="mt-1 text-sm text-zinc-900 dark:text-white">
                                 {{ $event->start_date->translatedFormat('l, d F Y') }}
                                 @if($event->start_date->format('H:i') !== '00:00')
                                     <br>
                                     <span class="text-zinc-600 dark:text-zinc-400">
-                                        {{ __('Hora:') }} {{ $event->start_date->format('H:i') }}
+                                        {{ __('common.events.time') }} {{ $event->start_date->format('H:i') }}
                                     </span>
                                 @endif
                             </dd>
@@ -168,14 +168,14 @@
                         @if($event->end_date)
                             <div>
                                 <dt class="text-sm font-medium text-zinc-500 dark:text-zinc-400">
-                                    {{ __('Fecha de fin') }}
+                                    {{ __('common.events.end_date') }}
                                 </dt>
                                 <dd class="mt-1 text-sm text-zinc-900 dark:text-white">
                                     {{ $event->end_date->translatedFormat('l, d F Y') }}
                                     @if($event->end_date->format('H:i') !== '00:00')
                                         <br>
                                         <span class="text-zinc-600 dark:text-zinc-400">
-                                            {{ __('Hora:') }} {{ $event->end_date->format('H:i') }}
+                                            {{ __('common.events.time') }} {{ $event->end_date->format('H:i') }}
                                         </span>
                                     @endif
                                 </dd>
@@ -184,7 +184,7 @@
                             @if($event->duration())
                                 <div>
                                     <dt class="text-sm font-medium text-zinc-500 dark:text-zinc-400">
-                                        {{ __('Duración') }}
+                                        {{ __('common.events.duration') }}
                                     </dt>
                                     <dd class="mt-1 text-sm text-zinc-900 dark:text-white">
                                         {{ trans_choice(':count hora|:count horas', (int)$event->duration(), ['count' => (int)$event->duration()]) }}
@@ -196,7 +196,7 @@
                         @if($event->location)
                             <div>
                                 <dt class="text-sm font-medium text-zinc-500 dark:text-zinc-400">
-                                    {{ __('Ubicación') }}
+                                    {{ __('common.events.location') }}
                                 </dt>
                                 <dd class="mt-1 text-sm text-zinc-900 dark:text-white">
                                     {{ $event->location }}
@@ -206,7 +206,7 @@
                         
                         <div>
                             <dt class="text-sm font-medium text-zinc-500 dark:text-zinc-400">
-                                {{ __('Tipo de evento') }}
+                                {{ __('common.events.event_type') }}
                             </dt>
                             <dd class="mt-1">
                                 <x-ui.badge :color="$eventTypeConfig['color']" :icon="$eventTypeConfig['icon']">
@@ -218,7 +218,7 @@
                         @if($event->program)
                             <div>
                                 <dt class="text-sm font-medium text-zinc-500 dark:text-zinc-400">
-                                    {{ __('Programa') }}
+                                    {{ __('common.events.program') }}
                                 </dt>
                                 <dd class="mt-1">
                                     <x-ui.button 
@@ -245,7 +245,7 @@
                             class="w-full"
                             navigate
                         >
-                            {{ __('Volver al listado') }}
+                            {{ __('common.events.back_to_list') }}
                         </x-ui.button>
                         <x-ui.button 
                             href="{{ route('calendario') }}" 
@@ -254,7 +254,7 @@
                             class="w-full"
                             navigate
                         >
-                            {{ __('Ver calendario') }}
+                            {{ __('common.events.view_calendar') }}
                         </x-ui.button>
                     </div>
                 </x-ui.card>
@@ -267,10 +267,10 @@
         <x-ui.section class="bg-zinc-50 dark:bg-zinc-900">
             <div class="mb-6">
                 <h2 class="text-2xl font-bold text-zinc-900 dark:text-white">
-                    {{ __('Eventos relacionados') }}
+                    {{ __('common.events.related_events') }}
                 </h2>
                 <p class="mt-1 text-zinc-600 dark:text-zinc-400">
-                    {{ __('Otros eventos que pueden interesarte') }}
+                    {{ __('common.events.other_events') }}
                 </p>
             </div>
             

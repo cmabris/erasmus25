@@ -22,7 +22,7 @@
             <div class="mb-8">
                 <x-ui.breadcrumbs 
                     :items="[
-                        ['label' => __('Documentos'), 'href' => route('documentos.index')],
+                        ['label' => __('common.nav.documents'), 'href' => route('documentos.index')],
                     ]" 
                     class="text-white/60 [&_a:hover]:text-white [&_a]:text-white/60 [&_span]:text-white"
                 />
@@ -31,15 +31,15 @@
             <div class="max-w-3xl">
                 <div class="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm">
                     <flux:icon name="folder-open" class="[:where(&)]:size-5" variant="outline" />
-                    {{ __('Documentos Erasmus+') }}
+                    {{ __('common.documents.title') }}
                 </div>
                 
                 <h1 class="text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">
-                    {{ __('Documentos y Recursos') }}
+                    {{ __('common.documents.hero_title') }}
                 </h1>
                 
                 <p class="mt-4 text-lg leading-relaxed text-erasmus-100 sm:text-xl">
-                    {{ __('Accede a todos los documentos oficiales, guías, modelos y formularios relacionados con los programas Erasmus+. Descarga los recursos que necesites para tu movilidad internacional.') }}
+                    {{ __('common.documents.hero_description') }}
                 </p>
             </div>
             
@@ -47,15 +47,15 @@
             <div class="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6">
                 <div class="rounded-xl bg-white/10 px-4 py-4 text-center backdrop-blur-sm sm:px-6">
                     <div class="text-2xl font-bold text-white sm:text-3xl">{{ $this->stats['total'] }}</div>
-                    <div class="mt-1 text-sm text-erasmus-200">{{ __('Documentos') }}</div>
+                    <div class="mt-1 text-sm text-erasmus-200">{{ __('common.documents.documents') }}</div>
                 </div>
                 <div class="rounded-xl bg-white/10 px-4 py-4 text-center backdrop-blur-sm sm:px-6">
                     <div class="text-2xl font-bold text-white sm:text-3xl">{{ $this->stats['categories'] }}</div>
-                    <div class="mt-1 text-sm text-erasmus-200">{{ __('Categorías') }}</div>
+                    <div class="mt-1 text-sm text-erasmus-200">{{ __('common.documents.categories') }}</div>
                 </div>
                 <div class="col-span-2 rounded-xl bg-white/10 px-4 py-4 text-center backdrop-blur-sm sm:col-span-1 sm:px-6">
                     <div class="text-2xl font-bold text-white sm:text-3xl">{{ number_format($this->stats['total_downloads']) }}</div>
-                    <div class="mt-1 text-sm text-erasmus-200">{{ __('Descargas') }}</div>
+                    <div class="mt-1 text-sm text-erasmus-200">{{ __('common.documents.downloads') }}</div>
                 </div>
             </div>
         </div>
@@ -69,7 +69,7 @@
                 <div class="w-full sm:max-w-xs">
                     <x-ui.search-input 
                         wire:model.live.debounce.300ms="search" 
-                        :placeholder="__('Buscar documento...')"
+                        :placeholder="__('common.search.document_placeholder')"
                         size="md"
                     />
                 </div>
@@ -80,14 +80,14 @@
                     @if($this->availableCategories->isNotEmpty())
                         <div class="flex items-center gap-2">
                             <label for="category-filter" class="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                                {{ __('Categoría:') }}
+                                {{ __('common.documents.category') }}
                             </label>
                             <select 
                                 id="category-filter"
                                 wire:model.live="category"
                                 class="rounded-lg border border-zinc-300 bg-white py-2 pl-3 pr-8 text-sm shadow-sm focus:border-erasmus-500 focus:ring-erasmus-500 dark:border-zinc-600 dark:bg-zinc-700 dark:text-white"
                             >
-                                <option value="">{{ __('Todas') }}</option>
+                                <option value="">{{ __('common.documents.all_categories') }}</option>
                                 @foreach($this->availableCategories as $cat)
                                     <option value="{{ $cat->id }}">{{ $cat->name }}</option>
                                 @endforeach
@@ -99,14 +99,14 @@
                     @if($this->availablePrograms->isNotEmpty())
                         <div class="flex items-center gap-2">
                             <label for="program-filter" class="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                                {{ __('Programa:') }}
+                                {{ __('common.documents.program') }}
                             </label>
                             <select 
                                 id="program-filter"
                                 wire:model.live="program"
                                 class="rounded-lg border border-zinc-300 bg-white py-2 pl-3 pr-8 text-sm shadow-sm focus:border-erasmus-500 focus:ring-erasmus-500 dark:border-zinc-600 dark:bg-zinc-700 dark:text-white"
                             >
-                                <option value="">{{ __('Todos') }}</option>
+                                <option value="">{{ __('common.filters.all') }}</option>
                                 @foreach($this->availablePrograms as $prog)
                                     <option value="{{ $prog->id }}">{{ $prog->name }}</option>
                                 @endforeach
@@ -118,14 +118,14 @@
                     @if($this->availableAcademicYears->isNotEmpty())
                         <div class="flex items-center gap-2">
                             <label for="year-filter" class="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                                {{ __('Año:') }}
+                                {{ __('common.documents.year') }}
                             </label>
                             <select 
                                 id="year-filter"
                                 wire:model.live="academicYear"
                                 class="rounded-lg border border-zinc-300 bg-white py-2 pl-3 pr-8 text-sm shadow-sm focus:border-erasmus-500 focus:ring-erasmus-500 dark:border-zinc-600 dark:bg-zinc-700 dark:text-white"
                             >
-                                <option value="">{{ __('Todos') }}</option>
+                                <option value="">{{ __('common.filters.all') }}</option>
                                 @foreach($this->availableAcademicYears as $year)
                                     <option value="{{ $year->id }}">{{ $year->year }}</option>
                                 @endforeach
@@ -136,14 +136,14 @@
                     {{-- Document Type Filter --}}
                     <div class="flex items-center gap-2">
                         <label for="type-filter" class="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                            {{ __('Tipo:') }}
+                            {{ __('common.documents.type') }}
                         </label>
                         <select 
                             id="type-filter"
                             wire:model.live="documentType"
                             class="rounded-lg border border-zinc-300 bg-white py-2 pl-3 pr-8 text-sm shadow-sm focus:border-erasmus-500 focus:ring-erasmus-500 dark:border-zinc-600 dark:bg-zinc-700 dark:text-white"
                         >
-                            <option value="">{{ __('Todos') }}</option>
+                            <option value="">{{ __('common.filters.all') }}</option>
                             @foreach($this->availableDocumentTypes as $typeKey => $typeLabel)
                                 <option value="{{ $typeKey }}">{{ $typeLabel }}</option>
                             @endforeach
@@ -158,7 +158,7 @@
                             class="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm text-zinc-600 transition-colors hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-700"
                         >
                             <flux:icon name="x-mark" class="[:where(&)]:size-4" variant="outline" />
-                            {{ __('Limpiar') }}
+                            {{ __('common.actions.reset') }}
                         </button>
                     @endif
                 </div>
@@ -167,7 +167,7 @@
             {{-- Active filters summary --}}
             @if($search || $category || $program || $academicYear || $documentType)
                 <div class="mt-4 flex flex-wrap items-center gap-2">
-                    <span class="text-sm text-zinc-500 dark:text-zinc-400">{{ __('Filtros activos:') }}</span>
+                    <span class="text-sm text-zinc-500 dark:text-zinc-400">{{ __('common.documents.active_filters') }}</span>
                     @if($search)
                         <span class="inline-flex items-center gap-1 rounded-full bg-erasmus-100 px-2.5 py-1 text-xs font-medium text-erasmus-700 dark:bg-erasmus-900/30 dark:text-erasmus-300">
                             "{{ $search }}"
@@ -233,15 +233,15 @@
         
         @if($this->documents->isEmpty())
             <x-ui.empty-state 
-                :title="__('No se encontraron documentos')"
+                :title="__('common.documents.no_results_title')"
                 :description="$search || $category || $program || $academicYear || $documentType
-                    ? __('No hay documentos que coincidan con los filtros seleccionados. Prueba a modificar los criterios de búsqueda.') 
-                    : __('Actualmente no hay documentos disponibles. Vuelve a consultar más adelante.')"
+                    ? __('common.documents.no_results_filtered') 
+                    : __('common.documents.no_results_empty')"
                 icon="folder-open"
             >
                 @if($search || $category || $program || $academicYear || $documentType)
                     <x-ui.button wire:click="resetFilters" variant="outline" icon="arrow-path">
-                        {{ __('Limpiar filtros') }}
+                        {{ __('common.filters.clear') }}
                     </x-ui.button>
                 @endif
             </x-ui.empty-state>
@@ -277,7 +277,7 @@
                         {{ __('¿Necesitas ayuda?') }}
                     </h2>
                     <p class="mt-2 text-gold-100">
-                        {{ __('Si no encuentras el documento que buscas o necesitas más información, contacta con nosotros.') }}
+                        {{ __('common.documents.contact_info') }}
                     </p>
                 </div>
                 <div class="flex flex-shrink-0 gap-3">
@@ -286,7 +286,7 @@
                         variant="secondary"
                         navigate
                     >
-                        {{ __('Ver programas') }}
+                        {{ __('common.documents.view_programs') }}
                     </x-ui.button>
                     <x-ui.button 
                         href="{{ route('convocatorias.index') }}" 
@@ -294,7 +294,7 @@
                         class="text-white hover:bg-white/10"
                         navigate
                     >
-                        {{ __('Ver convocatorias') }}
+                        {{ __('common.documents.view_calls') }}
                     </x-ui.button>
                 </div>
             </div>

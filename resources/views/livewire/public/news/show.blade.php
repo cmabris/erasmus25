@@ -19,7 +19,7 @@
                     <div class="mb-8">
                         <x-ui.breadcrumbs 
                             :items="[
-                                ['label' => __('Noticias'), 'href' => route('noticias.index')],
+                                ['label' => __('common.nav.news'), 'href' => route('noticias.index')],
                                 ['label' => $newsPost->title],
                             ]" 
                             class="text-white/60 [&_a:hover]:text-white [&_a]:text-white/60 [&_span]:text-white"
@@ -200,7 +200,7 @@
                                     <flux:icon name="map-pin" class="[:where(&)]:size-6 text-erasmus-600 dark:text-erasmus-400" variant="outline" />
                                 </div>
                                 <div>
-                                    <p class="text-sm text-zinc-500 dark:text-zinc-400">{{ __('Ubicación') }}</p>
+                                    <p class="text-sm text-zinc-500 dark:text-zinc-400">{{ __('common.news.location') }}</p>
                                     <p class="mt-1 font-semibold text-zinc-900 dark:text-white">
                                         {{ collect([$newsPost->city, $newsPost->country])->filter()->implode(', ') }}
                                     </p>
@@ -216,7 +216,7 @@
                                     <flux:icon name="building-office" class="[:where(&)]:size-6 text-erasmus-600 dark:text-erasmus-400" variant="outline" />
                                 </div>
                                 <div>
-                                    <p class="text-sm text-zinc-500 dark:text-zinc-400">{{ __('Entidad de acogida') }}</p>
+                                    <p class="text-sm text-zinc-500 dark:text-zinc-400">{{ __('common.news.host_entity') }}</p>
                                     <p class="mt-1 font-semibold text-zinc-900 dark:text-white">
                                         {{ $newsPost->host_entity }}
                                     </p>
@@ -232,9 +232,9 @@
                                     <flux:icon name="user-group" class="[:where(&)]:size-6 text-erasmus-600 dark:text-erasmus-400" variant="outline" />
                                 </div>
                                 <div>
-                                    <p class="text-sm text-zinc-500 dark:text-zinc-400">{{ __('Tipo de movilidad') }}</p>
+                                    <p class="text-sm text-zinc-500 dark:text-zinc-400">{{ __('common.news.mobility_type') }}</p>
                                     <p class="mt-1 font-semibold text-zinc-900 dark:text-white">
-                                        {{ $newsPost->mobility_type === 'alumnado' ? __('Alumnado') : __('Personal') }}
+                                        {{ $newsPost->mobility_type === 'alumnado' ? __('common.news.students') : __('common.news.staff') }}
                                     </p>
                                 </div>
                             </div>
@@ -248,15 +248,15 @@
                                     <flux:icon name="academic-cap" class="[:where(&)]:size-6 text-erasmus-600 dark:text-erasmus-400" variant="outline" />
                                 </div>
                                 <div>
-                                    <p class="text-sm text-zinc-500 dark:text-zinc-400">{{ __('Categoría') }}</p>
+                                    <p class="text-sm text-zinc-500 dark:text-zinc-400">{{ __('common.news.category') }}</p>
                                     <p class="mt-1 font-semibold text-zinc-900 dark:text-white">
                                         @php
                                             $categories = [
-                                                'FCT' => __('FCT'),
-                                                'job_shadowing' => __('Job Shadowing'),
-                                                'intercambio' => __('Intercambio'),
-                                                'curso' => __('Curso'),
-                                                'otro' => __('Otro'),
+                                                'FCT' => __('common.news.fct'),
+                                                'job_shadowing' => __('common.news.job_shadowing'),
+                                                'intercambio' => __('common.news.exchange'),
+                                                'curso' => __('common.news.course'),
+                                                'otro' => __('common.news.other'),
                                             ];
                                         @endphp
                                         {{ $categories[$newsPost->mobility_category] ?? $newsPost->mobility_category }}
@@ -275,7 +275,7 @@
                         <span class="inline-flex items-center justify-center rounded-lg bg-erasmus-50 p-2 dark:bg-erasmus-900/20">
                             <flux:icon name="tag" class="[:where(&)]:size-6 text-erasmus-600 dark:text-erasmus-400" variant="outline" />
                         </span>
-                        {{ __('Etiquetas') }}
+                        {{ __('common.news.tags') }}
                     </h3>
                     <div class="flex flex-wrap gap-2">
                         @foreach($newsPost->tags as $tag)
@@ -292,11 +292,11 @@
     {{-- Related News Section --}}
     @if($this->relatedNews->isNotEmpty())
         <x-ui.section class="bg-zinc-50 dark:bg-zinc-900">
-            <x-slot:title>{{ __('Noticias relacionadas') }}</x-slot:title>
-            <x-slot:description>{{ __('Descubre más experiencias y novedades relacionadas.') }}</x-slot:description>
+            <x-slot:title>{{ __('common.news.related_news') }}</x-slot:title>
+            <x-slot:description>{{ __('common.news.discover_related') }}</x-slot:description>
             <x-slot:actions>
                 <x-ui.button href="{{ route('noticias.index') }}" variant="outline" icon="arrow-right" navigate>
-                    {{ __('Ver todas') }}
+                    {{ __('common.news.view_all') }}
                 </x-ui.button>
             </x-slot:actions>
             
@@ -320,11 +320,11 @@
     {{-- Related Calls Section --}}
     @if($this->relatedCalls->isNotEmpty())
         <x-ui.section>
-            <x-slot:title>{{ __('Convocatorias relacionadas') }}</x-slot:title>
-            <x-slot:description>{{ __('Consulta las convocatorias disponibles del mismo programa.') }}</x-slot:description>
+            <x-slot:title>{{ __('common.news.related_calls') }}</x-slot:title>
+            <x-slot:description>{{ __('common.news.check_related_calls') }}</x-slot:description>
             <x-slot:actions>
                 <x-ui.button href="{{ route('convocatorias.index') }}" variant="outline" icon="arrow-right" navigate>
-                    {{ __('Ver todas') }}
+                    {{ __('common.news.view_all') }}
                 </x-ui.button>
             </x-slot:actions>
             
@@ -341,10 +341,10 @@
         <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
             <div class="text-center">
                 <h2 class="text-2xl font-bold tracking-tight text-white sm:text-3xl">
-                    {{ __('¿Te interesa esta noticia?') }}
+                    {{ __('common.news.interested') }}
                 </h2>
                 <p class="mx-auto mt-3 max-w-2xl text-white/80">
-                    {{ __('Consulta más noticias, programas y convocatorias disponibles.') }}
+                    {{ __('common.news.check_more') }}
                 </p>
                 <div class="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
                     <x-ui.button 
@@ -353,7 +353,7 @@
                         size="lg"
                         navigate
                     >
-                        {{ __('Ver todas las noticias') }}
+                        {{ __('common.news.view_all_news') }}
                     </x-ui.button>
                     @if($newsPost->program)
                         <x-ui.button 
@@ -363,7 +363,7 @@
                             class="text-white hover:bg-white/10"
                             navigate
                         >
-                            {{ __('Ver programa') }}
+                            {{ __('common.news.view_program') }}
                         </x-ui.button>
                     @endif
                     <x-ui.button 
@@ -373,7 +373,7 @@
                         class="text-white hover:bg-white/10"
                         navigate
                     >
-                        {{ __('Ver convocatorias') }}
+                        {{ __('common.news.view_calls') }}
                     </x-ui.button>
                 </div>
             </div>

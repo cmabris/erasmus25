@@ -17,11 +17,11 @@
             <div class="max-w-3xl text-center">
                 <div class="mb-6 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm">
                     <flux:icon name="envelope" class="[:where(&)]:size-5" variant="outline" />
-                    {{ __('Verificación de Suscripción') }}
+                    {{ __('common.newsletter.verification_title') }}
                 </div>
                 
                 <h1 class="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
-                    {{ __('Verifica tu suscripción') }}
+                    {{ __('common.newsletter.verify_subscription') }}
                 </h1>
             </div>
         </div>
@@ -39,7 +39,7 @@
                         </div>
                         
                         <h2 class="mb-4 text-2xl font-bold text-zinc-900 dark:text-white">
-                            {{ __('¡Verificación exitosa!') }}
+                            {{ __('common.newsletter.verification_success') }}
                         </h2>
                         
                         <p class="mb-6 text-lg text-zinc-600 dark:text-zinc-400">
@@ -50,22 +50,22 @@
                             <div class="mb-6 rounded-lg border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-700 dark:bg-zinc-800">
                                 <div class="text-sm text-zinc-600 dark:text-zinc-400">
                                     <div class="mb-2 font-medium text-zinc-900 dark:text-white">
-                                        {{ __('Detalles de tu suscripción:') }}
+                                        {{ __('common.newsletter.subscription_details') }}
                                     </div>
                                     <div class="space-y-1">
                                         <div>
-                                            <span class="font-medium">{{ __('Email:') }}</span>
+                                            <span class="font-medium">{{ __('common.newsletter.email_label') }}</span>
                                             <span>{{ $subscription->email }}</span>
                                         </div>
                                         @if($subscription->name)
                                             <div>
-                                                <span class="font-medium">{{ __('Nombre:') }}</span>
+                                                <span class="font-medium">{{ __('common.newsletter.name_label') }}</span>
                                                 <span>{{ $subscription->name }}</span>
                                             </div>
                                         @endif
                                         @if($subscription->programs && count($subscription->programs) > 0)
                                             <div>
-                                                <span class="font-medium">{{ __('Programas de interés:') }}</span>
+                                                <span class="font-medium">{{ __('common.newsletter.programs_interest_label') }}</span>
                                                 <span>{{ implode(', ', $subscription->programs) }}</span>
                                             </div>
                                         @endif
@@ -82,7 +82,7 @@
                                 navigate
                             >
                                 <flux:icon name="home" class="[:where(&)]:size-4" variant="outline" />
-                                {{ __('Ir a la página principal') }}
+                                {{ __('common.newsletter.go_home') }}
                             </x-ui.button>
                             
                             <x-ui.button 
@@ -92,7 +92,7 @@
                                 navigate
                             >
                                 <flux:icon name="newspaper" class="[:where(&)]:size-4" variant="outline" />
-                                {{ __('Ver noticias') }}
+                                {{ __('common.newsletter.view_news') }}
                             </x-ui.button>
                         </div>
                     </div>
@@ -106,7 +106,7 @@
                         </div>
                         
                         <h2 class="mb-4 text-2xl font-bold text-zinc-900 dark:text-white">
-                            {{ __('Suscripción ya verificada') }}
+                            {{ __('common.newsletter.already_verified') }}
                         </h2>
                         
                         <p class="mb-6 text-lg text-zinc-600 dark:text-zinc-400">
@@ -121,7 +121,7 @@
                                 navigate
                             >
                                 <flux:icon name="home" class="[:where(&)]:size-4" variant="outline" />
-                                {{ __('Ir a la página principal') }}
+                                {{ __('common.newsletter.go_home') }}
                             </x-ui.button>
                         </div>
                     </div>
@@ -135,7 +135,7 @@
                         </div>
                         
                         <h2 class="mb-4 text-2xl font-bold text-zinc-900 dark:text-white">
-                            {{ __('Token inválido') }}
+                            {{ __('common.newsletter.invalid_token') }}
                         </h2>
                         
                         <p class="mb-6 text-lg text-zinc-600 dark:text-zinc-400">
@@ -144,7 +144,7 @@
 
                         <div class="mb-6 rounded-lg border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-700 dark:bg-zinc-800">
                             <p class="text-sm text-zinc-600 dark:text-zinc-400">
-                                {{ __('Si necesitas verificar tu suscripción, por favor utiliza el enlace que recibiste por correo electrónico. Si el problema persiste, puedes suscribirte nuevamente.') }}
+                                {{ __('common.newsletter.invalid_token_message') }}
                             </p>
                         </div>
 
@@ -156,7 +156,7 @@
                                 navigate
                             >
                                 <flux:icon name="envelope" class="[:where(&)]:size-4" variant="outline" />
-                                {{ __('Suscribirse nuevamente') }}
+                                {{ __('common.newsletter.subscribe_again') }}
                             </x-ui.button>
                             
                             <x-ui.button 
@@ -166,7 +166,7 @@
                                 navigate
                             >
                                 <flux:icon name="home" class="[:where(&)]:size-4" variant="outline" />
-                                {{ __('Ir a la página principal') }}
+                                {{ __('common.newsletter.go_home') }}
                             </x-ui.button>
                         </div>
                     </div>
@@ -180,7 +180,7 @@
                         </div>
                         
                         <h2 class="mb-4 text-2xl font-bold text-zinc-900 dark:text-white">
-                            {{ __('Error al verificar') }}
+                            {{ __('common.newsletter.verification_error') }}
                         </h2>
                         
                         <p class="mb-6 text-lg text-zinc-600 dark:text-zinc-400">
@@ -195,7 +195,7 @@
                                 navigate
                             >
                                 <flux:icon name="home" class="[:where(&)]:size-4" variant="outline" />
-                                {{ __('Ir a la página principal') }}
+                                {{ __('common.newsletter.go_home') }}
                             </x-ui.button>
                         </div>
                     </div>

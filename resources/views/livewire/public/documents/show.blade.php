@@ -22,7 +22,7 @@
             <div class="mb-8">
                 <x-ui.breadcrumbs 
                     :items="[
-                        ['label' => __('Documentos'), 'href' => route('documentos.index')],
+                        ['label' => __('common.nav.documents'), 'href' => route('documentos.index')],
                         ['label' => $document->title],
                     ]" 
                     class="text-white/60 [&_a:hover]:text-white [&_a]:text-white/60 [&_span]:text-white"
@@ -64,7 +64,7 @@
                         @if($document->created_at)
                             <time datetime="{{ $document->created_at->toIso8601String() }}" class="inline-flex items-center gap-2">
                                 <flux:icon name="calendar" class="[:where(&)]:size-4" variant="outline" />
-                                {{ __('Publicado el') }} {{ $document->created_at->translatedFormat('d F Y') }}
+                                {{ __('common.documents.published_on') }} {{ $document->created_at->translatedFormat('d F Y') }}
                             </time>
                         @endif
                         @if($document->creator)
@@ -75,7 +75,7 @@
                         @endif
                         <span class="inline-flex items-center gap-2">
                             <flux:icon name="arrow-down-tray" class="[:where(&)]:size-4" variant="outline" />
-                            {{ number_format($document->download_count) }} {{ __('descargas') }}
+                            {{ number_format($document->download_count) }} {{ __('common.documents.downloads_count') }}
                         </span>
                     </div>
                 </div>
@@ -97,7 +97,7 @@
             @if($document->description)
                 <div class="mb-8">
                     <h2 class="mb-4 text-2xl font-bold text-zinc-900 dark:text-white">
-                        {{ __('Descripción') }}
+                        {{ __('common.documents.description') }}
                     </h2>
                     <div class="prose prose-zinc max-w-none dark:prose-invert">
                         <p class="text-lg leading-relaxed text-zinc-700 dark:text-zinc-300">
@@ -111,32 +111,32 @@
             @if($this->fileUrl)
                 <div class="mb-8 rounded-xl border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
                     <h2 class="mb-4 text-xl font-semibold text-zinc-900 dark:text-white">
-                        {{ __('Información del Archivo') }}
+                        {{ __('common.documents.file_info') }}
                     </h2>
                     
                     <div class="mb-6 space-y-3">
                         <div class="flex items-center justify-between border-b border-zinc-100 pb-3 dark:border-zinc-700">
-                            <span class="text-sm font-medium text-zinc-600 dark:text-zinc-400">{{ __('Nombre del archivo:') }}</span>
+                            <span class="text-sm font-medium text-zinc-600 dark:text-zinc-400">{{ __('common.documents.filename') }}</span>
                             <span class="text-sm text-zinc-900 dark:text-white">{{ $this->fileName }}</span>
                         </div>
                         
                         @if($this->fileSize)
                             <div class="flex items-center justify-between border-b border-zinc-100 pb-3 dark:border-zinc-700">
-                                <span class="text-sm font-medium text-zinc-600 dark:text-zinc-400">{{ __('Tamaño:') }}</span>
+                                <span class="text-sm font-medium text-zinc-600 dark:text-zinc-400">{{ __('common.documents.size') }}</span>
                                 <span class="text-sm text-zinc-900 dark:text-white">{{ $this->fileSize }}</span>
                             </div>
                         @endif
                         
                         @if($this->fileMimeType)
                             <div class="flex items-center justify-between border-b border-zinc-100 pb-3 dark:border-zinc-700">
-                                <span class="text-sm font-medium text-zinc-600 dark:text-zinc-400">{{ __('Tipo:') }}</span>
+                                <span class="text-sm font-medium text-zinc-600 dark:text-zinc-400">{{ __('common.documents.file_type') }}</span>
                                 <span class="text-sm text-zinc-900 dark:text-white">{{ $this->fileMimeType }}</span>
                             </div>
                         @endif
                         
                         @if($document->version)
                             <div class="flex items-center justify-between">
-                                <span class="text-sm font-medium text-zinc-600 dark:text-zinc-400">{{ __('Versión:') }}</span>
+                                <span class="text-sm font-medium text-zinc-600 dark:text-zinc-400">{{ __('common.documents.version') }}</span>
                                 <span class="text-sm text-zinc-900 dark:text-white">{{ $document->version }}</span>
                             </div>
                         @endif
@@ -150,7 +150,7 @@
                             icon="arrow-down-tray"
                             class="w-full sm:w-auto"
                         >
-                            {{ __('Descargar Documento') }}
+                            {{ __('common.documents.download_document') }}
                         </x-ui.button>
                     </div>
                 </div>
@@ -159,7 +159,7 @@
                     <div class="text-center">
                         <flux:icon name="exclamation-triangle" class="[:where(&)]:size-12 mx-auto mb-4 text-zinc-400" variant="outline" />
                         <p class="text-zinc-600 dark:text-zinc-400">
-                            {{ __('Este documento no tiene archivo asociado disponible para descarga.') }}
+                            {{ __('common.documents.no_file') }}
                         </p>
                     </div>
                 </div>
@@ -172,10 +172,10 @@
                         <flux:icon name="shield-exclamation" class="[:where(&)]:size-6 mt-0.5 shrink-0 text-amber-600 dark:text-amber-400" variant="outline" />
                         <div class="flex-1">
                             <h3 class="mb-2 font-semibold text-amber-900 dark:text-amber-100">
-                                {{ __('Información de Consentimiento') }}
+                                {{ __('common.documents.consent_info') }}
                             </h3>
                             <p class="mb-4 text-sm text-amber-800 dark:text-amber-200">
-                                {{ __('Este documento contiene información que requiere consentimiento de medios. Por favor, revisa los consentimientos asociados antes de utilizar este documento.') }}
+                                {{ __('common.documents.consent_warning') }}
                             </p>
                             
                             @if($this->mediaConsents->isNotEmpty())
@@ -189,7 +189,7 @@
                                                     </p>
                                                     @if($consent->consent_date)
                                                         <p class="text-xs text-zinc-500 dark:text-zinc-400">
-                                                            {{ __('Consentimiento dado el') }} {{ $consent->consent_date->translatedFormat('d F Y') }}
+                                                            {{ __('common.documents.consent_given_on') }} {{ $consent->consent_date->translatedFormat('d F Y') }}
                                                         </p>
                                                     @endif
                                                 </div>
@@ -210,7 +210,7 @@
             @if($this->relatedDocuments->isNotEmpty())
                 <div class="mb-8">
                     <h2 class="mb-4 text-2xl font-bold text-zinc-900 dark:text-white">
-                        {{ __('Documentos Relacionados') }}
+                        {{ __('common.documents.related_documents') }}
                     </h2>
                     <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                         @foreach($this->relatedDocuments as $relatedDoc)
@@ -231,7 +231,7 @@
             @if($this->relatedCalls->isNotEmpty())
                 <div class="mb-8">
                     <h2 class="mb-4 text-2xl font-bold text-zinc-900 dark:text-white">
-                        {{ __('Convocatorias Relacionadas') }}
+                        {{ __('common.documents.related_calls') }}
                     </h2>
                     <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                         @foreach($this->relatedCalls as $call)
@@ -254,10 +254,10 @@
             <div class="flex flex-col items-center justify-between gap-6 lg:flex-row">
                 <div class="text-center lg:text-left">
                     <h2 class="text-2xl font-bold text-white sm:text-3xl">
-                        {{ __('¿Necesitas más documentos?') }}
+                        {{ __('common.documents.need_more') }}
                     </h2>
                     <p class="mt-2 text-gold-100">
-                        {{ __('Explora nuestra biblioteca completa de documentos y recursos Erasmus+.') }}
+                        {{ __('common.documents.explore_library') }}
                     </p>
                 </div>
                 <div class="flex flex-shrink-0 gap-3">
@@ -266,7 +266,7 @@
                         variant="secondary"
                         navigate
                     >
-                        {{ __('Ver todos los documentos') }}
+                        {{ __('common.documents.view_all_documents') }}
                     </x-ui.button>
                     <x-ui.button 
                         href="{{ route('convocatorias.index') }}" 
@@ -274,7 +274,7 @@
                         class="text-white hover:bg-white/10"
                         navigate
                     >
-                        {{ __('Ver convocatorias') }}
+                        {{ __('common.documents.view_calls') }}
                     </x-ui.button>
                 </div>
             </div>

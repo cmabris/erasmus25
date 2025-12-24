@@ -55,14 +55,14 @@
     
     // Document type configuration
     $documentTypeConfig = match($documentType) {
-        'convocatoria' => ['icon' => 'document-text', 'color' => 'primary', 'label' => __('Convocatoria')],
-        'modelo' => ['icon' => 'document-duplicate', 'color' => 'info', 'label' => __('Modelo')],
-        'seguro' => ['icon' => 'shield-check', 'color' => 'success', 'label' => __('Seguro')],
-        'consentimiento' => ['icon' => 'clipboard-document-check', 'color' => 'warning', 'label' => __('Consentimiento')],
-        'guia' => ['icon' => 'book-open', 'color' => 'info', 'label' => __('Guía')],
-        'faq' => ['icon' => 'question-mark-circle', 'color' => 'info', 'label' => __('FAQ')],
-        'otro' => ['icon' => 'document', 'color' => 'neutral', 'label' => __('Otro')],
-        default => ['icon' => 'document', 'color' => 'neutral', 'label' => __('Documento')],
+        'convocatoria' => ['icon' => 'document-text', 'color' => 'primary', 'label' => __('common.document_types.call')],
+        'modelo' => ['icon' => 'document-duplicate', 'color' => 'info', 'label' => __('common.document_types.template')],
+        'seguro' => ['icon' => 'shield-check', 'color' => 'success', 'label' => __('common.document_types.insurance')],
+        'consentimiento' => ['icon' => 'clipboard-document-check', 'color' => 'warning', 'label' => __('common.document_types.consent')],
+        'guia' => ['icon' => 'book-open', 'color' => 'info', 'label' => __('common.document_types.guide')],
+        'faq' => ['icon' => 'question-mark-circle', 'color' => 'info', 'label' => __('common.document_types.faq')],
+        'otro' => ['icon' => 'document', 'color' => 'neutral', 'label' => __('common.document_types.other')],
+        default => ['icon' => 'document', 'color' => 'neutral', 'label' => __('common.document_types.document')],
     };
     
     // Default icon for document card
@@ -125,7 +125,7 @@
                 </div>
                 
                 <span class="inline-flex items-center gap-1 text-sm font-medium text-erasmus-600 dark:text-erasmus-400">
-                    {{ __('Ver documento') }}
+                    {{ __('common.actions.view_document') }}
                     <flux:icon name="arrow-right" class="[:where(&)]:size-4" variant="outline" />
                 </span>
             </div>

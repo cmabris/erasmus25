@@ -25,7 +25,7 @@
         default => 'right-2.5', // md
     };
     
-    $placeholder = $placeholder ?? __('Buscar...');
+    $placeholder = $placeholder ?? __('common.search.placeholder');
 @endphp
 
 <div {{ $attributes->only('class')->merge(['class' => 'relative']) }} x-data="{ value: @entangle($attributes->wire('model')) }">
@@ -57,7 +57,7 @@
             class="absolute inset-y-0 flex items-center text-zinc-400 hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300 {{ $clearButtonClasses }}"
         >
             <flux:icon name="x-circle" class="{{ $iconSizeClasses }}" variant="solid" />
-            <span class="sr-only">{{ __('Limpiar búsqueda') }}</span>
+            <span class="sr-only">{{ __('common.search.clear') }}</span>
         </button>
     @endif
 </div>

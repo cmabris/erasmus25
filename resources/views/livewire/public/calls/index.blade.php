@@ -22,7 +22,7 @@
             <div class="mb-8">
                 <x-ui.breadcrumbs 
                     :items="[
-                        ['label' => __('Convocatorias'), 'href' => route('convocatorias.index')],
+                        ['label' => __('common.nav.calls'), 'href' => route('convocatorias.index')],
                     ]" 
                     class="text-white/60 [&_a:hover]:text-white [&_a]:text-white/60 [&_span]:text-white"
                 />
@@ -31,15 +31,15 @@
             <div class="max-w-3xl">
                 <div class="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm">
                     <flux:icon name="megaphone" class="[:where(&)]:size-5" variant="outline" />
-                    {{ __('Convocatorias Erasmus+') }}
+                    {{ __('common.calls.title') }}
                 </div>
                 
                 <h1 class="text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">
-                    {{ __('Oportunidades de Movilidad') }}
+                    {{ __('common.calls.hero_title') }}
                 </h1>
                 
                 <p class="mt-4 text-lg leading-relaxed text-erasmus-100 sm:text-xl">
-                    {{ __('Consulta las convocatorias abiertas y cerradas. Encuentra la oportunidad perfecta para tu formación y desarrollo profesional en Europa.') }}
+                    {{ __('common.calls.hero_description') }}
                 </p>
             </div>
             
@@ -47,15 +47,15 @@
             <div class="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6">
                 <div class="rounded-xl bg-white/10 px-4 py-4 text-center backdrop-blur-sm sm:px-6">
                     <div class="text-2xl font-bold text-white sm:text-3xl">{{ $this->stats['total'] }}</div>
-                    <div class="mt-1 text-sm text-erasmus-200">{{ __('Convocatorias') }}</div>
+                    <div class="mt-1 text-sm text-erasmus-200">{{ __('common.calls.calls') }}</div>
                 </div>
                 <div class="rounded-xl bg-white/10 px-4 py-4 text-center backdrop-blur-sm sm:px-6">
                     <div class="text-2xl font-bold text-white sm:text-3xl">{{ $this->stats['abierta'] }}</div>
-                    <div class="mt-1 text-sm text-erasmus-200">{{ __('Abiertas') }}</div>
+                    <div class="mt-1 text-sm text-erasmus-200">{{ __('common.calls.open') }}</div>
                 </div>
                 <div class="col-span-2 rounded-xl bg-white/10 px-4 py-4 text-center backdrop-blur-sm sm:col-span-1 sm:px-6">
                     <div class="text-2xl font-bold text-white sm:text-3xl">{{ $this->stats['cerrada'] }}</div>
-                    <div class="mt-1 text-sm text-erasmus-200">{{ __('Cerradas') }}</div>
+                    <div class="mt-1 text-sm text-erasmus-200">{{ __('common.calls.closed') }}</div>
                 </div>
             </div>
         </div>
@@ -69,7 +69,7 @@
                 <div class="w-full sm:max-w-xs">
                     <x-ui.search-input 
                         wire:model.live.debounce.300ms="search" 
-                        :placeholder="__('Buscar convocatoria...')"
+                        :placeholder="__('common.search.call_placeholder')"
                         size="md"
                     />
                 </div>
@@ -80,14 +80,14 @@
                     @if($this->availablePrograms->isNotEmpty())
                         <div class="flex items-center gap-2">
                             <label for="program-filter" class="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                                {{ __('Programa:') }}
+                                {{ __('common.calls.program') }}
                             </label>
                             <select 
                                 id="program-filter"
                                 wire:model.live="program"
                                 class="rounded-lg border border-zinc-300 bg-white py-2 pl-3 pr-8 text-sm shadow-sm focus:border-erasmus-500 focus:ring-erasmus-500 dark:border-zinc-600 dark:bg-zinc-700 dark:text-white"
                             >
-                                <option value="">{{ __('Todos') }}</option>
+                                <option value="">{{ __('common.filters.all') }}</option>
                                 @foreach($this->availablePrograms as $prog)
                                     <option value="{{ $prog->id }}">{{ $prog->name }}</option>
                                 @endforeach
@@ -99,14 +99,14 @@
                     @if($this->availableAcademicYears->isNotEmpty())
                         <div class="flex items-center gap-2">
                             <label for="year-filter" class="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                                {{ __('Año:') }}
+                                {{ __('common.calls.year') }}
                             </label>
                             <select 
                                 id="year-filter"
                                 wire:model.live="academicYear"
                                 class="rounded-lg border border-zinc-300 bg-white py-2 pl-3 pr-8 text-sm shadow-sm focus:border-erasmus-500 focus:ring-erasmus-500 dark:border-zinc-600 dark:bg-zinc-700 dark:text-white"
                             >
-                                <option value="">{{ __('Todos') }}</option>
+                                <option value="">{{ __('common.filters.all') }}</option>
                                 @foreach($this->availableAcademicYears as $year)
                                     <option value="{{ $year->id }}">{{ $year->year }}</option>
                                 @endforeach
@@ -117,7 +117,7 @@
                     {{-- Type Filter --}}
                     <div class="flex items-center gap-2">
                         <label for="type-filter" class="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                            {{ __('Tipo:') }}
+                            {{ __('common.calls.type') }}
                         </label>
                         <select 
                             id="type-filter"
@@ -133,7 +133,7 @@
                     {{-- Modality Filter --}}
                     <div class="flex items-center gap-2">
                         <label for="modality-filter" class="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                            {{ __('Modalidad:') }}
+                            {{ __('common.calls.modality') }}
                         </label>
                         <select 
                             id="modality-filter"
@@ -149,7 +149,7 @@
                     {{-- Status Filter --}}
                     <div class="flex items-center gap-2">
                         <label for="status-filter" class="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                            {{ __('Estado:') }}
+                            {{ __('common.calls.status') }}
                         </label>
                         <select 
                             id="status-filter"
@@ -170,7 +170,7 @@
                             class="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm text-zinc-600 transition-colors hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-700"
                         >
                             <flux:icon name="x-mark" class="[:where(&)]:size-4" variant="outline" />
-                            {{ __('Limpiar') }}
+                            {{ __('common.actions.reset') }}
                         </button>
                     @endif
                 </div>
@@ -179,7 +179,7 @@
             {{-- Active filters summary --}}
             @if($search || $program || $academicYear || $type || $modality || $status)
                 <div class="mt-3 flex flex-wrap items-center gap-2">
-                    <span class="text-sm text-zinc-500 dark:text-zinc-400">{{ __('Filtros:') }}</span>
+                    <span class="text-sm text-zinc-500 dark:text-zinc-400">{{ __('common.calls.filters') }}</span>
                     @if($search)
                         <span class="inline-flex items-center gap-1 rounded-full bg-erasmus-100 px-2.5 py-1 text-xs font-medium text-erasmus-700 dark:bg-erasmus-900/30 dark:text-erasmus-300">
                             "{{ $search }}"
@@ -249,15 +249,15 @@
         
         @if($this->calls->isEmpty())
             <x-ui.empty-state 
-                :title="__('No se encontraron convocatorias')"
+                :title="__('common.calls.no_results_title')"
                 :description="$search || $program || $academicYear || $type || $modality || $status
-                    ? __('No hay convocatorias que coincidan con los filtros seleccionados. Prueba a modificar los criterios de búsqueda.') 
-                    : __('Actualmente no hay convocatorias disponibles. Vuelve a consultar más adelante.')"
+                    ? __('common.calls.no_results_filtered') 
+                    : __('common.calls.no_results_empty')"
                 icon="megaphone"
             >
                 @if($search || $program || $academicYear || $type || $modality || $status)
                     <x-ui.button wire:click="resetFilters" variant="outline" icon="arrow-path">
-                        {{ __('Limpiar filtros') }}
+                        {{ __('common.filters.clear') }}
                     </x-ui.button>
                 @endif
             </x-ui.empty-state>
@@ -286,10 +286,10 @@
             <div class="flex flex-col items-center justify-between gap-6 lg:flex-row">
                 <div class="text-center lg:text-left">
                     <h2 class="text-2xl font-bold text-white sm:text-3xl">
-                        {{ __('¿Necesitas más información?') }}
+                        {{ __('common.calls.cta_title') }}
                     </h2>
                     <p class="mt-2 text-gold-100">
-                        {{ __('Consulta los programas disponibles o contacta con nosotros para resolver tus dudas.') }}
+                        {{ __('common.calls.cta_description') }}
                     </p>
                 </div>
                 <div class="flex flex-shrink-0 gap-3">
@@ -298,14 +298,14 @@
                         variant="secondary"
                         navigate
                     >
-                        {{ __('Ver programas') }}
+                        {{ __('common.calls.view_programs') }}
                     </x-ui.button>
                     <x-ui.button 
                         href="#" 
                         variant="ghost"
                         class="text-white hover:bg-white/10"
                     >
-                        {{ __('Contactar') }}
+                        {{ __('common.actions.contact_us') }}
                     </x-ui.button>
                 </div>
             </div>

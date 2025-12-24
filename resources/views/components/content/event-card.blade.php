@@ -33,13 +33,13 @@
     
     // Event type configuration
     $eventTypeConfig = match($eventType) {
-        'apertura' => ['icon' => 'play-circle', 'color' => 'success', 'label' => __('Apertura')],
-        'cierre' => ['icon' => 'stop-circle', 'color' => 'danger', 'label' => __('Cierre')],
-        'entrevista' => ['icon' => 'chat-bubble-left-right', 'color' => 'info', 'label' => __('Entrevistas')],
-        'publicacion_provisional' => ['icon' => 'document-text', 'color' => 'warning', 'label' => __('Listado provisional')],
-        'publicacion_definitivo' => ['icon' => 'document-check', 'color' => 'success', 'label' => __('Listado definitivo')],
-        'reunion_informativa' => ['icon' => 'user-group', 'color' => 'primary', 'label' => __('Reunión informativa')],
-        default => ['icon' => 'calendar', 'color' => 'neutral', 'label' => __('Evento')],
+        'apertura' => ['icon' => 'play-circle', 'color' => 'success', 'label' => __('common.events.opening')],
+        'cierre' => ['icon' => 'stop-circle', 'color' => 'danger', 'label' => __('common.events.closing')],
+        'entrevista' => ['icon' => 'chat-bubble-left-right', 'color' => 'info', 'label' => __('common.events.interview')],
+        'publicacion_provisional' => ['icon' => 'document-text', 'color' => 'warning', 'label' => __('common.events.provisional_list')],
+        'publicacion_definitivo' => ['icon' => 'document-check', 'color' => 'success', 'label' => __('common.events.definitive_list')],
+        'reunion_informativa' => ['icon' => 'user-group', 'color' => 'primary', 'label' => __('common.events.info_meeting')],
+        default => ['icon' => 'calendar', 'color' => 'neutral', 'label' => __('common.events.event')],
     };
     
     // Parse dates
@@ -118,7 +118,7 @@
                     <h3 class="mt-1 font-semibold text-zinc-900 dark:text-white">{{ $title }}</h3>
                 </div>
                 @if($isToday)
-                    <x-ui.badge color="success" size="sm">{{ __('Hoy') }}</x-ui.badge>
+                    <x-ui.badge color="success" size="sm">{{ __('common.events.today') }}</x-ui.badge>
                 @endif
             </div>
             
@@ -135,7 +135,7 @@
             
             @if($showCall && $call)
                 <p class="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
-                    {{ __('Convocatoria:') }} {{ $call->title ?? $call }}
+                    {{ __('common.events.call_label') }} {{ $call->title ?? $call }}
                 </p>
             @endif
         </div>
@@ -205,7 +205,7 @@
                         {{ $eventTypeConfig['label'] }}
                     </x-ui.badge>
                     @if($isToday)
-                        <x-ui.badge color="success" size="sm" :dot="true">{{ __('Hoy') }}</x-ui.badge>
+                        <x-ui.badge color="success" size="sm" :dot="true">{{ __('common.events.today') }}</x-ui.badge>
                     @endif
                 </div>
                 
