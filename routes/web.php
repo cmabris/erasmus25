@@ -5,6 +5,7 @@ use App\Livewire\Public\Documents;
 use App\Livewire\Public\Events;
 use App\Livewire\Public\Home;
 use App\Livewire\Public\News;
+use App\Livewire\Public\Newsletter;
 use App\Livewire\Public\Programs;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
@@ -35,6 +36,12 @@ Route::get('/documentos/{document:slug}', Documents\Show::class)->name('document
 Route::get('/calendario', Events\Calendar::class)->name('calendario');
 Route::get('/eventos', Events\Index::class)->name('eventos.index');
 Route::get('/eventos/{event}', Events\Show::class)->name('eventos.show');
+
+// Rutas públicas de newsletter
+Route::get('/newsletter/suscribir', Newsletter\Subscribe::class)->name('newsletter.subscribe');
+Route::get('/newsletter/verificar/{token}', Newsletter\Verify::class)->name('newsletter.verify');
+Route::get('/newsletter/baja', Newsletter\Unsubscribe::class)->name('newsletter.unsubscribe');
+Route::get('/newsletter/baja/{token}', Newsletter\Unsubscribe::class)->name('newsletter.unsubscribe.token');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])

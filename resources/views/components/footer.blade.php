@@ -101,6 +101,12 @@
                                 {{ __('FAQ') }}
                             </a>
                         </li>
+                        <li>
+                            <a href="{{ route('newsletter.subscribe') }}" class="text-sm text-zinc-400 transition-colors hover:text-white" wire:navigate>
+                                <flux:icon name="envelope" class="[:where(&)]:size-4 inline mr-1.5" variant="outline" />
+                                {{ __('Newsletter') }}
+                            </a>
+                        </li>
                     </ul>
                 </div>
 

@@ -375,6 +375,13 @@ return [
             'string' => 'Cada rol debe ser una cadena de texto.',
             'in' => 'El rol seleccionado no es válido.',
         ],
+        'programs' => [
+            'array' => 'Los programas deben ser un conjunto de valores.',
+        ],
+        'programs.*' => [
+            'string' => 'Cada programa debe ser una cadena de texto.',
+            'exists' => 'El programa seleccionado no es válido.',
+        ],
     ],
 
     /*
@@ -444,6 +451,8 @@ return [
         'password_confirmation' => 'confirmación de contraseña',
         'roles' => 'roles',
         'roles.*' => 'rol',
+        'programs' => 'programas',
+        'programs.*' => 'programa',
     ],
 
 ];

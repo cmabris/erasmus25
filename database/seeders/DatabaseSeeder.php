@@ -30,6 +30,8 @@ class DatabaseSeeder extends Seeder
             DocumentsSeeder::class,
             // Seeders de eventos (requieren Programs, Calls y Users)
             ErasmusEventSeeder::class,
+            // Seeder de newsletter (requiere Programs)
+            NewsletterSubscriptionSeeder::class,
         ]);
     }
 }

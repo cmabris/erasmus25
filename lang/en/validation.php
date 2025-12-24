@@ -373,6 +373,13 @@ return [
             'string' => 'Each role must be a string.',
             'in' => 'The selected role is invalid.',
         ],
+        'programs' => [
+            'array' => 'The programs must be an array.',
+        ],
+        'programs.*' => [
+            'string' => 'Each program must be a string.',
+            'exists' => 'The selected program is invalid.',
+        ],
     ],
 
     /*
@@ -441,6 +448,8 @@ return [
         'password_confirmation' => 'password confirmation',
         'roles' => 'roles',
         'roles.*' => 'role',
+        'programs' => 'programs',
+        'programs.*' => 'program',
     ],
 
 ];

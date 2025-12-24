@@ -218,6 +218,39 @@
         </div>
     </x-ui.section>
 
+    {{-- Newsletter Section --}}
+    <x-ui.section class="bg-gradient-to-br from-erasmus-600 via-erasmus-700 to-erasmus-900">
+        <div class="mx-auto max-w-4xl text-center">
+            <div class="mb-6 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm">
+                <flux:icon name="envelope" class="[:where(&)]:size-5" variant="outline" />
+                {{ __('Newsletter') }}
+            </div>
+            
+            <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+                {{ __('Mantente informado') }}
+            </h2>
+            <p class="mx-auto mt-4 max-w-2xl text-lg text-erasmus-100">
+                {{ __('Suscríbete a nuestra newsletter y recibe las últimas noticias, convocatorias abiertas, eventos importantes y novedades del programa Erasmus+.') }}
+            </p>
+            
+            <div class="mt-8">
+                <x-ui.button 
+                    href="{{ route('newsletter.subscribe') }}" 
+                    size="lg" 
+                    variant="secondary"
+                    icon="envelope"
+                    navigate
+                >
+                    {{ __('Suscribirse a la newsletter') }}
+                </x-ui.button>
+            </div>
+            
+            <p class="mt-4 text-sm text-erasmus-200">
+                {{ __('Puedes cancelar tu suscripción en cualquier momento.') }}
+            </p>
+        </div>
+    </x-ui.section>
+
     {{-- CTA Section --}}
     <section class="bg-gradient-to-r from-erasmus-600 to-erasmus-700">
         <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
