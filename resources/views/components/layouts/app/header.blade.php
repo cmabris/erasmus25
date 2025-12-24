@@ -19,6 +19,11 @@
 
             <flux:spacer />
 
+            {{-- Language Switcher --}}
+            <div class="me-2 hidden lg:block">
+                <livewire:language.switcher variant="dropdown" size="sm" />
+            </div>
+
             <flux:navbar class="me-1.5 space-x-0.5 rtl:space-x-reverse py-0!">
                 <flux:tooltip :content="__('Search')" position="bottom">
                     <flux:navbar.item class="!h-10 [&>div>svg]:size-5" icon="magnifying-glass" href="#" :label="__('Search')" />
@@ -105,6 +110,14 @@
             </flux:navlist>
 
             <flux:spacer />
+
+            {{-- Mobile Language Switcher --}}
+            <div class="px-4 py-2 lg:hidden">
+                <label class="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                    {{ __('common.language.select') }}
+                </label>
+                <livewire:language.switcher variant="select" size="md" />
+            </div>
 
             <flux:navlist variant="outline">
                 <flux:navlist.item icon="folder-git-2" href="https://github.com/laravel/livewire-starter-kit" target="_blank">

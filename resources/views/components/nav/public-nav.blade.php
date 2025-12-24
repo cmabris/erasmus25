@@ -50,8 +50,13 @@
                 @endforeach
             </div>
 
-            {{-- Right Side: Auth Links & Mobile Menu Toggle --}}
+            {{-- Right Side: Language Switcher, Auth Links & Mobile Menu Toggle --}}
             <div class="flex items-center gap-3">
+                {{-- Language Switcher (Desktop) --}}
+                <div class="hidden sm:block">
+                    <livewire:language.switcher variant="dropdown" size="md" />
+                </div>
+
                 {{-- Auth Links (Desktop) --}}
                 <div class="hidden items-center gap-2 sm:flex">
                     @auth
@@ -126,6 +131,16 @@
                                         {{ $item['label'] }}
                                     </a>
                                 @endforeach
+                            </div>
+
+                            {{-- Mobile Language Switcher --}}
+                            <div class="mt-4 border-t border-zinc-200 pt-4 dark:border-zinc-700 sm:hidden">
+                                <div class="mb-4">
+                                    <label class="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                                        {{ __('common.language.select') }}
+                                    </label>
+                                    <livewire:language.switcher variant="select" size="md" />
+                                </div>
                             </div>
 
                             {{-- Mobile Auth Links --}}
