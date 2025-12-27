@@ -8,11 +8,13 @@ use App\Models\NewsPost;
 use App\Models\Program;
 use App\Models\Resolution;
 use App\Models\User;
+use Illuminate\Support\Facades\App;
 use Livewire\Livewire;
 
 uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 
 beforeEach(function () {
+    App::setLocale('es');
     $this->program = Program::factory()->create([
         'code' => 'KA121-VET',
         'name' => 'Movilidad Formación Profesional',

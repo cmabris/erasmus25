@@ -5,11 +5,13 @@ use App\Models\ErasmusEvent;
 use App\Models\Program;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\App;
 use Livewire\Livewire;
 
 uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 
 beforeEach(function () {
+    App::setLocale('es');
     $this->program1 = Program::factory()->create([
         'code' => 'KA121-VET',
         'name' => 'Movilidad Formación Profesional',
@@ -39,7 +41,7 @@ it('displays current month by default', function () {
 it('navigates to previous month', function () {
     $component = Livewire::test(Calendar::class);
     $component->call('previous');
-    
+
     $expectedDate = now()->subMonth();
     $this->assertEquals($expectedDate->format('Y-m'), Carbon::parse($component->get('currentDate'))->format('Y-m'));
 });
@@ -47,7 +49,7 @@ it('navigates to previous month', function () {
 it('navigates to next month', function () {
     $component = Livewire::test(Calendar::class);
     $component->call('next');
-    
+
     $expectedDate = now()->addMonth();
     $this->assertEquals($expectedDate->format('Y-m'), Carbon::parse($component->get('currentDate'))->format('Y-m'));
 });
@@ -116,7 +118,7 @@ it('filters events by event type', function () {
 
     $component = Livewire::test(Calendar::class)
         ->set('selectedEventType', 'apertura');
-    
+
     // Verify that the filtered events collection contains event1 but not event2
     $events = $component->get('calendarEvents');
     $this->assertTrue($events->contains('id', $event1->id));
@@ -215,7 +217,7 @@ it('navigates week view correctly', function () {
         ->set('viewMode', 'week')
         ->set('currentDate', now()->format('Y-m-d'))
         ->call('next');
-    
+
     $expectedDate = now()->addWeek();
     $this->assertEquals($expectedDate->format('Y-m-d'), $component->get('currentDate'));
 });
@@ -230,9 +232,8 @@ it('navigates day view correctly', function () {
 
 it('goes to specific date', function () {
     $targetDate = now()->addMonths(3)->format('Y-m-d');
-    
+
     Livewire::test(Calendar::class)
         ->call('goToDate', $targetDate)
         ->assertSet('currentDate', $targetDate);
 });
-

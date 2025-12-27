@@ -5,12 +5,14 @@ use App\Mail\NewsletterVerificationMail;
 use App\Models\NewsletterSubscription;
 use App\Models\Program;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Livewire;
 
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
+    App::setLocale('es');
     // Create test programs
     Program::factory()->create([
         'code' => 'KA1xx',
@@ -270,7 +272,7 @@ describe('Newsletter Subscribe Component - Program Selection', function () {
             ->set('selectedPrograms', ['KA1xx', 'KA121-VET']);
 
         $selectedPrograms = $component->get('selectedPrograms');
-        
+
         expect(in_array('KA1xx', $selectedPrograms, true))->toBeTrue()
             ->and(in_array('KA121-VET', $selectedPrograms, true))->toBeTrue()
             ->and(in_array('KA131-HED', $selectedPrograms, true))->toBeFalse();
@@ -299,4 +301,3 @@ describe('Newsletter Subscribe Component - Success State', function () {
             ->assertSet('subscribed', true);
     });
 });
-

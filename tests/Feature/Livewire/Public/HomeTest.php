@@ -6,9 +6,14 @@ use App\Models\ErasmusEvent;
 use App\Models\NewsPost;
 use App\Models\Program;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\App;
 use Livewire\Livewire;
 
 uses(RefreshDatabase::class);
+
+beforeEach(function () {
+    App::setLocale('es');
+});
 
 describe('Home Page', function () {
     it('can be rendered', function () {

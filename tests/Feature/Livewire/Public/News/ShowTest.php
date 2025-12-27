@@ -7,11 +7,13 @@ use App\Models\NewsPost;
 use App\Models\NewsTag;
 use App\Models\Program;
 use App\Models\User;
+use Illuminate\Support\Facades\App;
 use Livewire\Livewire;
 
 uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 
 beforeEach(function () {
+    App::setLocale('es');
     $this->program = Program::factory()->create([
         'code' => 'KA121-VET',
         'name' => 'Movilidad Formación Profesional',
@@ -231,10 +233,10 @@ it('excludes current news post from related news', function () {
     $relatedNews->tags()->attach($this->tag1->id);
 
     $component = Livewire::test(Show::class, ['newsPost' => $this->newsPost]);
-    
+
     // Verify related news is shown
     $component->assertSee('Noticia Relacionada');
-    
+
     // Verify current news is NOT in related news collection
     $relatedNewsCollection = $component->instance()->relatedNews;
     expect($relatedNewsCollection->pluck('id'))->not->toContain($this->newsPost->id);

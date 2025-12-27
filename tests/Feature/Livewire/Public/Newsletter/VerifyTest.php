@@ -3,10 +3,15 @@
 use App\Livewire\Public\Newsletter\Verify;
 use App\Models\NewsletterSubscription;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
 use Livewire\Livewire;
 
 uses(RefreshDatabase::class);
+
+beforeEach(function () {
+    App::setLocale('es');
+});
 
 describe('Newsletter Verify Component - Successful Verification', function () {
     it('verifies subscription with valid token', function () {
@@ -135,4 +140,3 @@ describe('Newsletter Verify Component - Rendering', function () {
             ->assertSee(__('Verificación de Suscripción'));
     });
 });
-

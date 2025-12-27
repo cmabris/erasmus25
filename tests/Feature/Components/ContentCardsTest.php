@@ -4,7 +4,12 @@ use App\Models\Call;
 use App\Models\ErasmusEvent;
 use App\Models\NewsPost;
 use App\Models\Program;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Blade;
+
+beforeEach(function () {
+    App::setLocale('es');
+});
 
 /*
 |--------------------------------------------------------------------------

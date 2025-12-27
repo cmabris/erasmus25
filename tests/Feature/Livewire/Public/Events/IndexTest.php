@@ -4,12 +4,13 @@ use App\Livewire\Public\Events\Index;
 use App\Models\ErasmusEvent;
 use App\Models\Program;
 use App\Models\User;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\App;
 use Livewire\Livewire;
 
 uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 
 beforeEach(function () {
+    App::setLocale('es');
     // Create programs
     $this->program1 = Program::factory()->create([
         'code' => 'KA121-VET',
@@ -218,7 +219,7 @@ it('paginates events correctly', function () {
 
     $component = Livewire::test(Index::class);
     $events = $component->get('events');
-    
+
     $this->assertEquals(12, $events->count()); // First page shows 12 events
     $this->assertEquals(15, $events->total()); // Total events
 });
@@ -240,4 +241,3 @@ it('updates page when filters change', function () {
         ->set('program', $this->program1->id)
         ->assertSet('program', (string) $this->program1->id);
 });
-

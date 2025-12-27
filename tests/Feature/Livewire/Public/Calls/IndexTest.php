@@ -4,11 +4,13 @@ use App\Livewire\Public\Calls\Index;
 use App\Models\AcademicYear;
 use App\Models\Call;
 use App\Models\Program;
+use Illuminate\Support\Facades\App;
 use Livewire\Livewire;
 
 uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 
 beforeEach(function () {
+    App::setLocale('es');
     // Create programs
     $this->program1 = Program::factory()->create([
         'code' => 'KA121-VET',

@@ -6,11 +6,13 @@ use App\Models\ErasmusEvent;
 use App\Models\Program;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\App;
 use Livewire\Livewire;
 
 uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 
 beforeEach(function () {
+    App::setLocale('es');
     $this->program = Program::factory()->create([
         'code' => 'KA121-VET',
         'name' => 'Movilidad Formación Profesional',
@@ -102,10 +104,10 @@ it('displays related events from same program when no call', function () {
 
     $component = Livewire::test(Show::class, ['event' => $event1]);
     $relatedEvents = $component->get('relatedEvents');
-    
+
     // Verify that related events collection contains event2
-    $this->assertTrue($relatedEvents->contains('id', $event2->id));
-    $this->assertFalse($relatedEvents->contains('id', $event1->id)); // Should not include itself
+    expect($relatedEvents->pluck('id')->contains($event2->id))->toBeTrue();
+    expect($relatedEvents->pluck('id')->contains($event1->id))->toBeFalse(); // Should not include itself
 });
 
 it('does not show past events in related events', function () {
@@ -216,4 +218,3 @@ it('displays navigation buttons', function () {
         ->assertSee(__('Volver al listado'))
         ->assertSee(__('Ver calendario'));
 });
-

@@ -7,13 +7,14 @@ use App\Models\Document;
 use App\Models\DocumentCategory;
 use App\Models\Program;
 use App\Models\User;
-use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 
 uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 
 beforeEach(function () {
+    App::setLocale('es');
     Storage::fake('public');
 
     $this->program = Program::factory()->create([
@@ -103,7 +104,7 @@ it('displays file information when file is attached', function () {
     // Create a temporary file
     $tempFile = tempnam(sys_get_temp_dir(), 'test_doc_');
     file_put_contents($tempFile, 'Test PDF content');
-    
+
     $this->document->addMedia($tempFile)
         ->usingName('Documento de Prueba')
         ->usingFileName('documento.pdf')
@@ -111,7 +112,7 @@ it('displays file information when file is attached', function () {
 
     Livewire::test(Show::class, ['document' => $this->document])
         ->assertSee('documento.pdf');
-    
+
     // Clean up
     @unlink($tempFile);
 });
@@ -125,7 +126,7 @@ it('increments download count when downloading', function () {
     // Create a temporary file
     $tempFile = tempnam(sys_get_temp_dir(), 'test_doc_');
     file_put_contents($tempFile, 'Test PDF content');
-    
+
     $this->document->addMedia($tempFile)
         ->usingName('Documento de Prueba')
         ->usingFileName('documento.pdf')
@@ -138,7 +139,7 @@ it('increments download count when downloading', function () {
 
     $this->document->refresh();
     expect($this->document->download_count)->toBe($initialCount + 1);
-    
+
     // Clean up
     @unlink($tempFile);
 });
@@ -187,12 +188,12 @@ it('displays related documents from same program when document has no category',
     // that when a document has a category, it shows documents from the same category.
     // When testing "same program", we verify that documents with same category
     // but different programs are filtered correctly.
-    
+
     $otherCategory = DocumentCategory::factory()->create([
         'name' => 'Otros',
         'slug' => 'otros-'.uniqid(), // Ensure unique slug
     ]);
-    
+
     // Create document with other category but same program
     $documentWithOtherCategory = Document::factory()->create([
         'category_id' => $otherCategory->id,
@@ -202,7 +203,7 @@ it('displays related documents from same program when document has no category',
         'title' => 'Documento Otra Categoría',
         'created_by' => $this->creator->id,
     ]);
-    
+
     // Related doc: same category and same program
     $relatedDoc = Document::factory()->create([
         'category_id' => $otherCategory->id,
@@ -269,10 +270,10 @@ it('excludes current document from related documents', function () {
     ]);
 
     $component = Livewire::test(Show::class, ['document' => $this->document]);
-    
+
     // Verify related document is shown
     $component->assertSee('Documento Relacionado');
-    
+
     // Verify current document is NOT in related documents collection
     $relatedDocsCollection = $component->instance()->relatedDocuments;
     expect($relatedDocsCollection->pluck('id'))->not->toContain($this->document->id);
@@ -374,7 +375,7 @@ it('formats file size correctly', function () {
     // Create a temporary file with more than 1KB content to ensure KB format
     $tempFile = tempnam(sys_get_temp_dir(), 'test_doc_');
     file_put_contents($tempFile, str_repeat('x', 2048)); // 2KB
-    
+
     $this->document->addMedia($tempFile)
         ->usingName('Documento de Prueba')
         ->usingFileName('documento.pdf')
@@ -384,8 +385,7 @@ it('formats file size correctly', function () {
     $fileSize = $component->instance()->fileSize;
 
     expect($fileSize)->toContain('KB');
-    
+
     // Clean up
     @unlink($tempFile);
 });
-

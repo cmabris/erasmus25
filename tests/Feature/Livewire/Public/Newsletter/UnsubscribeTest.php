@@ -3,10 +3,15 @@
 use App\Livewire\Public\Newsletter\Unsubscribe;
 use App\Models\NewsletterSubscription;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
 use Livewire\Livewire;
 
 uses(RefreshDatabase::class);
+
+beforeEach(function () {
+    App::setLocale('es');
+});
 
 describe('Newsletter Unsubscribe Component - Unsubscribe by Token', function () {
     it('unsubscribes successfully with valid token', function () {
@@ -188,4 +193,3 @@ describe('Newsletter Unsubscribe Component - Rendering', function () {
             ->assertSee(__('Al cancelar tu suscripción'));
     });
 });
-
