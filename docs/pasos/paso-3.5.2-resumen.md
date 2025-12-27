@@ -7,11 +7,13 @@ Desarrollar un sistema completo de gestión (CRUD) de Programas Erasmus+ en el p
 - Formularios de creación y edición
 - Vista de detalle
 - Funcionalidades avanzadas: activar/desactivar, ordenar, subir imágenes, gestionar traducciones
+- **SoftDeletes**: Los programas nunca se eliminan permanentemente, solo se marcan como eliminados
+- **ForceDelete**: Solo super-admin puede eliminar permanentemente, y solo si no hay relaciones
 - Diseño moderno y responsive usando Flux UI y Tailwind CSS v4
 
 ---
 
-## 📋 Pasos Principales (13 Pasos)
+## 📋 Pasos Principales (14 Pasos)
 
 ### ✅ **Fase 1: Estructura Base y Listado** (MVP)
 
@@ -66,6 +68,13 @@ Desarrollar un sistema completo de gestión (CRUD) de Programas Erasmus+ en el p
 9. **Ordenamiento de Programas** (Paso 9)
    - Botones arriba/abajo o drag & drop
    - Actualizar campo `order`
+
+9.5. **Implementar SoftDeletes** (Paso 9.5)
+   - Verificar trait SoftDeletes en modelo
+   - Actualizar Policy con delete, restore, forceDelete
+   - Filtrar eliminados por defecto
+   - Opción de restaurar
+   - Validar relaciones antes de forceDelete
 
 ---
 

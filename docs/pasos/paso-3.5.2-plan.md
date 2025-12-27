@@ -9,6 +9,8 @@ Crear un sistema completo de gestión (CRUD) de Programas Erasmus+ en el panel d
 - Formularios de creación y edición
 - Vista de detalle
 - Funcionalidades avanzadas: activar/desactivar, ordenar, subir imágenes, gestionar traducciones
+- **SoftDeletes**: Los programas nunca se eliminan permanentemente, solo se marcan como eliminados
+- **ForceDelete**: Solo super-admin puede eliminar permanentemente, y solo si no hay relaciones
 - Diseño moderno y responsive usando Flux UI y Tailwind CSS v4
 
 ---
@@ -31,14 +33,18 @@ Crear un sistema completo de gestión (CRUD) de Programas Erasmus+ en el panel d
   - `updatedSearch()` - Búsqueda reactiva
   - `sortBy($field)` - Ordenación
   - `toggleActive($programId)` - Activar/desactivar
-  - `delete($programId)` - Eliminar con confirmación
+  - `delete($programId)` - Eliminar con SoftDeletes (confirmación)
+  - `restore($programId)` - Restaurar programa eliminado
+  - `forceDelete($programId)` - Eliminar permanentemente (solo super-admin, validar relaciones)
   - `render()` - Renderizado con paginación
 - [ ] Implementar autorización con `ProgramPolicy`
 - [ ] Crear vista `livewire/admin/programs/index.blade.php`:
   - Tabla responsive con Flux UI
   - Búsqueda con componente `x-ui.search-input`
   - Filtros (activos/inactivos)
-  - Botones de acción (ver, editar, eliminar, activar/desactivar)
+  - Botones de acción (ver, editar, eliminar con SoftDeletes, restaurar, activar/desactivar)
+  - Filtro para mostrar eliminados (solo admin)
+  - Indicador visual de programas eliminados
   - Paginación
   - Estado vacío con `x-ui.empty-state`
   - Breadcrumbs con `x-ui.breadcrumbs`
@@ -116,7 +122,9 @@ Crear un sistema completo de gestión (CRUD) de Programas Erasmus+ en el panel d
   - `Collection $newsPosts` - Noticias relacionadas
 - [ ] Implementar métodos:
   - `mount(Program $program)` - Cargar programa y relaciones
-  - `delete()` - Eliminar con confirmación
+  - `delete()` - Eliminar con SoftDeletes (confirmación)
+  - `restore()` - Restaurar programa eliminado
+  - `forceDelete()` - Eliminar permanentemente (solo super-admin, validar relaciones)
   - `toggleActive()` - Activar/desactivar
   - `render()` - Renderizado
 - [ ] Implementar autorización con `ProgramPolicy::view()`
@@ -126,7 +134,9 @@ Crear un sistema completo de gestión (CRUD) de Programas Erasmus+ en el panel d
   - Sección de estadísticas (convocatorias, noticias)
   - Listado de convocatorias relacionadas
   - Listado de noticias relacionadas
-  - Botones de acción (editar, eliminar, activar/desactivar)
+  - Botones de acción (editar, eliminar con SoftDeletes, restaurar, activar/desactivar)
+  - Mostrar estado de eliminación si está eliminado
+  - Validar relaciones antes de permitir forceDelete
   - Breadcrumbs
 
 #### **Paso 7: Gestión de Imágenes (Laravel Media Library)**
@@ -153,12 +163,29 @@ Crear un sistema completo de gestión (CRUD) de Programas Erasmus+ en el panel d
 - [ ] Actualizar método `updateOrder()` en componente Index
 - [ ] Validar que el orden sea único o permitir duplicados
 
+#### **Paso 9.5: Implementar SoftDeletes**
+- [ ] Verificar que el modelo `Program` tenga el trait `SoftDeletes`
+- [ ] Verificar que la migración tenga la columna `deleted_at`
+- [ ] Actualizar `ProgramPolicy`:
+  - `delete()` - Permite SoftDelete a usuarios con permiso
+  - `restore()` - Permite restaurar a usuarios con permiso
+  - `forceDelete()` - Solo super-admin, y solo si no hay relaciones (calls, newsPosts)
+- [ ] Actualizar componentes Livewire para manejar SoftDeletes:
+  - Filtrar programas eliminados por defecto
+  - Opción de ver programas eliminados (solo admin)
+  - Botón de restaurar para programas eliminados
+  - Validación antes de forceDelete (verificar relaciones)
+- [ ] Añadir indicadores visuales para programas eliminados
+- [ ] Actualizar consultas para excluir eliminados por defecto
+
 ---
 
 ### ✅ **Fase 4: UX y Optimización**
 
 #### **Paso 10: Mejoras de UX**
-- [ ] Añadir confirmaciones para acciones destructivas (eliminar)
+- [ ] Añadir confirmaciones para acciones destructivas (eliminar, forceDelete)
+- [ ] Mensajes claros sobre SoftDelete vs ForceDelete
+- [ ] Advertencias cuando se intenta forceDelete con relaciones existentes
 - [ ] Implementar notificaciones de éxito/error con Flux UI
 - [ ] Añadir estados de carga (`wire:loading`)
 - [ ] Mejorar responsive design para móviles
@@ -196,7 +223,9 @@ Crear un sistema completo de gestión (CRUD) de Programas Erasmus+ en el panel d
 - [ ] Crear test `Admin\Programs\ShowTest`:
   - Verificar autorización
   - Verificar visualización
-  - Verificar eliminación
+  - Verificar eliminación con SoftDeletes
+  - Verificar restauración
+  - Verificar forceDelete (solo super-admin, validar relaciones)
   - Verificar activar/desactivar
 
 #### **Paso 13: Documentación**
