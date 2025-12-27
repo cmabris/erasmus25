@@ -257,20 +257,29 @@ Para cada policy:
 - [ ] Crear componente Livewire `Admin\Programs\Edit` (formulario edición)
 - [ ] Crear componente Livewire `Admin\Programs\Show` (vista detalle)
 - [ ] Funcionalidades:
-  - Crear, editar, eliminar programas
+  - Crear, editar, eliminar programas (SoftDeletes)
+  - Restaurar programas eliminados
+  - ForceDelete solo para super-admin (validar relaciones)
   - Activar/desactivar programas
   - Ordenar programas
   - Subir imágenes (Laravel Media Library)
   - Gestión de traducciones
+- [ ] **SoftDeletes**: Implementar SoftDeletes en modelo Program
+  - Los programas nunca se eliminan permanentemente por defecto
+  - Solo super-admin puede hacer forceDelete
+  - Validar que no haya relaciones antes de forceDelete
 
 #### 3.5.3. Gestión de Años Académicos (CRUD)
 - [ ] Crear componente Livewire `Admin\AcademicYears\Index`
 - [ ] Crear componente Livewire `Admin\AcademicYears\Create`
 - [ ] Crear componente Livewire `Admin\AcademicYears\Edit`
 - [ ] Funcionalidades:
-  - Crear, editar, eliminar años académicos
+  - Crear, editar, eliminar años académicos (SoftDeletes)
+  - Restaurar años académicos eliminados
+  - ForceDelete solo para super-admin (validar relaciones)
   - Marcar año actual
   - Validar unicidad de años
+- [ ] **SoftDeletes**: Implementar SoftDeletes en modelo AcademicYear
 
 #### 3.5.4. Gestión de Convocatorias (CRUD Completo)
 - [ ] Crear componente Livewire `Admin\Calls\Index` (listado con filtros avanzados)
@@ -278,7 +287,9 @@ Para cada policy:
 - [ ] Crear componente Livewire `Admin\Calls\Edit` (formulario edición)
 - [ ] Crear componente Livewire `Admin\Calls\Show` (vista detalle con fases y resoluciones)
 - [ ] Funcionalidades:
-  - Crear, editar, eliminar convocatorias
+  - Crear, editar, eliminar convocatorias (SoftDeletes)
+  - Restaurar convocatorias eliminadas
+  - ForceDelete solo para super-admin (validar relaciones)
   - Cambiar estado (borrador → abierta → cerrada → archivada)
   - Publicar convocatorias (establecer `published_at`)
   - Gestión de fases (crear, editar, marcar como actual)
@@ -286,6 +297,7 @@ Para cada policy:
   - Subir PDFs de resoluciones (Laravel Media Library)
   - Gestión de destinos (JSON)
   - Configuración de baremo (JSON)
+- [ ] **SoftDeletes**: Implementar SoftDeletes en modelo Call
 
 #### 3.5.5. Gestión de Noticias (CRUD)
 - [ ] Crear componente Livewire `Admin\News\Index` (listado con filtros)
@@ -293,20 +305,26 @@ Para cada policy:
 - [ ] Crear componente Livewire `Admin\News\Edit` (editor de contenido)
 - [ ] Crear componente Livewire `Admin\News\Show` (vista previa)
 - [ ] Funcionalidades:
-  - Crear, editar, eliminar noticias
+  - Crear, editar, eliminar noticias (SoftDeletes)
+  - Restaurar noticias eliminadas
+  - ForceDelete solo para super-admin (validar relaciones)
   - Publicar/despublicar noticias
   - Gestión de etiquetas (many-to-many)
   - Subir imágenes destacadas (Laravel Media Library)
   - Editor de contenido enriquecido
   - Gestión de traducciones
+- [ ] **SoftDeletes**: Implementar SoftDeletes en modelo NewsPost
 
 #### 3.5.6. Gestión de Etiquetas de Noticias
 - [ ] Crear componente Livewire `Admin\NewsTags\Index`
 - [ ] Crear componente Livewire `Admin\NewsTags\Create`
 - [ ] Crear componente Livewire `Admin\NewsTags\Edit`
 - [ ] Funcionalidades:
-  - Crear, editar, eliminar etiquetas
+  - Crear, editar, eliminar etiquetas (SoftDeletes)
+  - Restaurar etiquetas eliminadas
+  - ForceDelete solo para super-admin (validar relaciones)
   - Ver noticias asociadas
+- [ ] **SoftDeletes**: Implementar SoftDeletes en modelo NewsTag
 
 #### 3.5.7. Gestión de Documentos (CRUD)
 - [ ] Crear componente Livewire `Admin\Documents\Index` (listado con filtros)
@@ -314,19 +332,25 @@ Para cada policy:
 - [ ] Crear componente Livewire `Admin\Documents\Edit` (formulario edición)
 - [ ] Crear componente Livewire `Admin\Documents\Show` (vista detalle)
 - [ ] Funcionalidades:
-  - Crear, editar, eliminar documentos
+  - Crear, editar, eliminar documentos (SoftDeletes)
+  - Restaurar documentos eliminados
+  - ForceDelete solo para super-admin (validar relaciones)
   - Subir archivos (Laravel Media Library)
   - Asignar categorías
   - Gestión de consentimientos de medios
   - Gestión de traducciones
+- [ ] **SoftDeletes**: Implementar SoftDeletes en modelo Document
 
 #### 3.5.8. Gestión de Categorías de Documentos
 - [ ] Crear componente Livewire `Admin\DocumentCategories\Index`
 - [ ] Crear componente Livewire `Admin\DocumentCategories\Create`
 - [ ] Crear componente Livewire `Admin\DocumentCategories\Edit`
 - [ ] Funcionalidades:
-  - Crear, editar, eliminar categorías
+  - Crear, editar, eliminar categorías (SoftDeletes)
+  - Restaurar categorías eliminadas
+  - ForceDelete solo para super-admin (validar relaciones)
   - Ver documentos asociados
+- [ ] **SoftDeletes**: Implementar SoftDeletes en modelo DocumentCategory
 
 #### 3.5.9. Gestión de Eventos (CRUD)
 - [ ] Crear componente Livewire `Admin\Events\Index` (vista calendario y listado)
@@ -334,10 +358,13 @@ Para cada policy:
 - [ ] Crear componente Livewire `Admin\Events\Edit` (formulario edición)
 - [ ] Crear componente Livewire `Admin\Events\Show` (vista detalle)
 - [ ] Funcionalidades:
-  - Crear, editar, eliminar eventos
+  - Crear, editar, eliminar eventos (SoftDeletes)
+  - Restaurar eventos eliminados
+  - ForceDelete solo para super-admin (validar relaciones)
   - Vista de calendario interactiva
   - Asociar eventos a convocatorias
   - Subir imágenes (Laravel Media Library)
+- [ ] **SoftDeletes**: Implementar SoftDeletes en modelo ErasmusEvent
 
 #### 3.5.10. Gestión de Usuarios y Roles
 - [ ] Crear componente Livewire `Admin\Users\Index` (listado con tabla)
@@ -345,10 +372,13 @@ Para cada policy:
 - [ ] Crear componente Livewire `Admin\Users\Edit` (formulario edición con roles)
 - [ ] Crear componente Livewire `Admin\Users\Show` (vista detalle)
 - [ ] Funcionalidades:
-  - Crear, editar, eliminar usuarios
+  - Crear, editar, eliminar usuarios (SoftDeletes)
+  - Restaurar usuarios eliminados
+  - ForceDelete solo para super-admin (validar relaciones)
   - Asignar/revocar roles
   - Asignar permisos directos
   - Ver actividad del usuario (audit logs)
+- [ ] **SoftDeletes**: Implementar SoftDeletes en modelo User (si aplica)
 
 #### 3.5.11. Gestión de Roles y Permisos
 - [ ] Crear componente Livewire `Admin\Roles\Index` (listado de roles)
@@ -653,6 +683,15 @@ Para cada policy:
 7. **Accesibilidad**: Asegurar que todos los componentes sean accesibles (WCAG).
 
 8. **Responsive**: Todos los componentes deben ser responsive y funcionar en móviles.
+
+9. **SoftDeletes**: **IMPORTANTE** - Todos los modelos con CRUD deben implementar SoftDeletes:
+   - Los registros nunca se eliminan permanentemente por defecto
+   - Solo se marcan como eliminados (`deleted_at`)
+   - Solo super-admin puede realizar `forceDelete()`
+   - Antes de `forceDelete()`, validar que no existan relaciones con otros modelos
+   - Implementar funcionalidad de restauración en todos los CRUDs
+   - Filtrar registros eliminados por defecto en listados
+   - Opción de ver registros eliminados (solo para administradores)
 
 ---
 
