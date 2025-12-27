@@ -8,7 +8,6 @@ use App\Models\DocumentCategory;
 use App\Models\Program;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class DocumentsSeeder extends Seeder
@@ -235,7 +234,7 @@ class DocumentsSeeder extends Seeder
                 'program_id' => $program?->id,
                 'academic_year_id' => $academicYear?->id,
                 'title' => fake()->randomElement($titles),
-                'slug' => Str::slug(fake()->sentence(3)),
+                'slug' => Str::slug(fake()->sentence(3)).'-'.uniqid(),
                 'description' => fake()->paragraph(2),
                 'document_type' => $documentType,
                 'version' => fake()->boolean(40) ? fake()->randomElement(['1.0', '1.1', '2.0', '2024']) : null,
@@ -263,7 +262,7 @@ class DocumentsSeeder extends Seeder
                 'program_id' => $program?->id,
                 'academic_year_id' => null,
                 'title' => 'Documento Archivado - '.fake()->words(3, true),
-                'slug' => Str::slug('documento-archivado-'.fake()->word()),
+                'slug' => Str::slug('documento-archivado-'.fake()->word()).'-'.uniqid(),
                 'description' => fake()->paragraph(),
                 'document_type' => $documentType,
                 'version' => null,
@@ -334,7 +333,7 @@ class DocumentsSeeder extends Seeder
         return "CONVOCATORIA ERASMUS+\n\n".
                "Este es un documento de ejemplo de convocatoria.\n\n".
                "Información sobre requisitos, plazos y procedimientos.\n\n".
-               "Fecha: ".now()->format('d/m/Y');
+               'Fecha: '.now()->format('d/m/Y');
     }
 
     private function generateModeloContent(): string
@@ -342,7 +341,7 @@ class DocumentsSeeder extends Seeder
         return "MODELO DE DOCUMENTO\n\n".
                "Este es un modelo o plantilla de ejemplo.\n\n".
                "Complete los campos necesarios según sus necesidades.\n\n".
-               "Versión: 1.0";
+               'Versión: 1.0';
     }
 
     private function generateSeguroContent(): string
@@ -350,7 +349,7 @@ class DocumentsSeeder extends Seeder
         return "INFORMACIÓN DE SEGURO\n\n".
                "Documentación sobre cobertura de seguros.\n\n".
                "Información sobre tarifas, coberturas y procedimientos.\n\n".
-               "Actualizado: ".now()->format('d/m/Y');
+               'Actualizado: '.now()->format('d/m/Y');
     }
 
     private function generateConsentimientoContent(): string
@@ -358,7 +357,7 @@ class DocumentsSeeder extends Seeder
         return "FORMULARIO DE CONSENTIMIENTO\n\n".
                "Autorización para el uso de imágenes y datos personales.\n\n".
                "Complete y firme este documento según las instrucciones.\n\n".
-               "Fecha: ".now()->format('d/m/Y');
+               'Fecha: '.now()->format('d/m/Y');
     }
 
     private function generateGuiaContent(): string
@@ -366,7 +365,7 @@ class DocumentsSeeder extends Seeder
         return "GUÍA ERASMUS+\n\n".
                "Manual completo con información detallada.\n\n".
                "Incluye procedimientos, recomendaciones y recursos útiles.\n\n".
-               "Edición: ".now()->year;
+               'Edición: '.now()->year;
     }
 
     private function generateFaqContent(): string
@@ -374,14 +373,13 @@ class DocumentsSeeder extends Seeder
         return "PREGUNTAS FRECUENTES\n\n".
                "Respuestas a las preguntas más comunes.\n\n".
                "Actualizado regularmente con nueva información.\n\n".
-               "Última actualización: ".now()->format('d/m/Y');
+               'Última actualización: '.now()->format('d/m/Y');
     }
 
     private function generateGenericContent(): string
     {
         return "DOCUMENTO ERASMUS+\n\n".
                "Información y recursos relacionados con programas Erasmus+.\n\n".
-               "Fecha: ".now()->format('d/m/Y');
+               'Fecha: '.now()->format('d/m/Y');
     }
 }
-

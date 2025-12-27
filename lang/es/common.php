@@ -588,5 +588,72 @@ return [
         'email_auto' => 'Este es un email automático, por favor no respondas a este mensaje.',
     ],
 
-];
+    // Admin Dashboard
+    'admin' => [
+        'dashboard' => [
+            'welcome_message' => 'Bienvenido al panel de administración. Aquí puedes gestionar todos los aspectos de la aplicación.',
+            'statistics_title' => 'Estadísticas Generales',
+            'quick_actions_title' => 'Accesos Rápidos',
+            'recent_activity_title' => 'Actividad Reciente',
+            'alerts_title' => 'Alertas y Notificaciones',
+            'dev_login_links' => '🔧 Enlaces de Login Rápido (Solo Desarrollo)',
+            'stats' => [
+                'active_programs' => 'Programas Activos',
+                'open_calls' => 'Convocatorias Abiertas',
+                'closed_calls' => 'Convocatorias Cerradas',
+                'news_this_month' => 'Noticias Este Mes',
+                'available_documents' => 'Documentos Disponibles',
+                'upcoming_events' => 'Eventos Próximos',
+            ],
+            'quick_actions' => [
+                'create_call' => 'Nueva Convocatoria',
+                'create_call_description' => 'Crear una nueva convocatoria de movilidad',
+                'create_news' => 'Nueva Noticia',
+                'create_news_description' => 'Publicar una nueva noticia o experiencia',
+                'create_document' => 'Nuevo Documento',
+                'create_document_description' => 'Añadir un nuevo documento o recurso',
+                'create_event' => 'Nuevo Evento',
+                'create_event_description' => 'Crear un nuevo evento en el calendario',
+                'manage_programs' => 'Gestionar Programas',
+                'manage_programs_description' => 'Ver y gestionar todos los programas',
+                'manage_users' => 'Gestionar Usuarios',
+                'manage_users_description' => 'Administrar usuarios y permisos',
+            ],
+            'alerts' => [
+                'call_closing_soon' => 'La convocatoria ":title" cierra en :days días',
+                'call_closing_soon_description' => 'Fecha de cierre: :date',
+                'unpublished_draft' => 'Borrador sin publicar: ":title" (:days días)',
+                'unpublished_draft_description' => 'Este borrador lleva más de 7 días sin publicar',
+                'event_missing_location' => 'Evento sin ubicación: ":title"',
+                'event_missing_location_description' => 'Fecha: :date - Considera añadir una ubicación',
+            ],
+            'activity' => [
+                'no_activity' => 'No hay actividad reciente',
+                'created' => 'creado',
+                'updated' => 'actualizado',
+                'published' => 'publicado',
+                'deleted' => 'eliminado',
+            ],
+            'charts' => [
+                'monthly_activity_title' => 'Actividad Mensual',
+                'calls_by_program_title' => 'Convocatorias por Programa',
+                'calls_by_status_title' => 'Convocatorias por Estado',
+                'calls' => 'Convocatorias',
+                'news' => 'Noticias',
+                'documents' => 'Documentos',
+                'status_open' => 'Abiertas',
+                'status_closed' => 'Cerradas',
+                'status_draft' => 'Borradores',
+            ],
+        ],
+    ],
 
+    // Messages
+    'messages' => [
+        'system' => 'Sistema',
+        'no_data' => 'Sin datos',
+        'by' => 'por',
+        'loading' => 'Cargando...',
+    ],
+
+];

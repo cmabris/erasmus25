@@ -2,6 +2,21 @@
     <div class="flex flex-col gap-6">
         <x-auth-header :title="__('Log in to your account')" :description="__('Enter your email and password below to log in')" />
 
+        <!-- Login Links (Solo en desarrollo) -->
+        @env('local')
+            <div class="rounded-lg border border-amber-200 bg-amber-50 p-4 dark:border-amber-800 dark:bg-amber-900/20">
+                <h3 class="mb-2 text-sm font-semibold text-amber-900 dark:text-amber-200">
+                    {{ __('common.admin.dashboard.dev_login_links') }}
+                </h3>
+                <div class="flex flex-wrap gap-2 text-sm">
+                    <x-login-link email="super-admin@erasmus-murcia.es" label="Super Admin" class="cursor-pointer text-amber-700 underline hover:text-amber-900 dark:text-amber-300 dark:hover:text-amber-100" />
+                    <x-login-link email="admin@erasmus-murcia.es" label="Admin" class="cursor-pointer text-amber-700 underline hover:text-amber-900 dark:text-amber-300 dark:hover:text-amber-100" />
+                    <x-login-link email="editor@erasmus-murcia.es" label="Editor" class="cursor-pointer text-amber-700 underline hover:text-amber-900 dark:text-amber-300 dark:hover:text-amber-100" />
+                    <x-login-link email="viewer@erasmus-murcia.es" label="Viewer" class="cursor-pointer text-amber-700 underline hover:text-amber-900 dark:text-amber-300 dark:hover:text-amber-100" />
+                </div>
+            </div>
+        @endenv
+
         <!-- Session Status -->
         <x-auth-session-status class="text-center" :status="session('status')" />
 

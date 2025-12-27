@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\Admin\Dashboard as AdminDashboard;
 use App\Livewire\Public\Calls;
 use App\Livewire\Public\Documents;
 use App\Livewire\Public\Events;
@@ -43,9 +44,20 @@ Route::get('/newsletter/verificar/{token}', Newsletter\Verify::class)->name('new
 Route::get('/newsletter/baja', Newsletter\Unsubscribe::class)->name('newsletter.unsubscribe');
 Route::get('/newsletter/baja/{token}', Newsletter\Unsubscribe::class)->name('newsletter.unsubscribe.token');
 
+// Dashboard público (placeholder - redirige al admin si tiene permisos)
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
+
+// Rutas de administración
+Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', AdminDashboard::class)->name('dashboard');
+
+    // Las demás rutas de admin se añadirán en pasos posteriores
+    // Route::get('/programas', ...)->name('programs.index');
+    // Route::get('/convocatorias', ...)->name('calls.index');
+    // etc.
+});
 
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');

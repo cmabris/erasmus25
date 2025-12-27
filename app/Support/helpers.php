@@ -12,7 +12,7 @@ if (! function_exists('getCurrentLanguage')) {
     function getCurrentLanguage(): ?Language
     {
         $code = App::getLocale();
-        
+
         try {
             return Language::where('code', $code)
                 ->where('is_active', true)
@@ -39,7 +39,6 @@ if (! function_exists('setLanguage')) {
      *
      * @param  string  $code  Código del idioma (ej: 'es', 'en')
      * @param  bool  $persist  Si se debe persistir en sesión y cookie
-     * @return bool
      */
     function setLanguage(string $code, bool $persist = true): bool
     {
@@ -59,7 +58,7 @@ if (! function_exists('setLanguage')) {
             // Persistir en sesión y cookie si se solicita
             if ($persist) {
                 Session::put('locale', $code);
-                
+
                 // La cookie se establecerá en la respuesta HTTP
                 // usando Cookie::queue() o en el componente Livewire
             }
@@ -95,7 +94,6 @@ if (! function_exists('isLanguageAvailable')) {
      * Verificar si un idioma está disponible.
      *
      * @param  string  $code  Código del idioma
-     * @return bool
      */
     function isLanguageAvailable(string $code): bool
     {
@@ -132,7 +130,6 @@ if (! function_exists('trans_model')) {
      * @param  \Illuminate\Database\Eloquent\Model  $model  Modelo con traducciones
      * @param  string  $field  Campo a traducir
      * @param  string|null  $locale  Código del idioma (null = idioma actual)
-     * @return string|null
      */
     function trans_model($model, string $field, ?string $locale = null): ?string
     {
@@ -165,7 +162,6 @@ if (! function_exists('trans_route')) {
      * @param  string  $name  Nombre de la ruta
      * @param  array  $parameters  Parámetros de la ruta
      * @param  bool  $absolute  URL absoluta
-     * @return string
      */
     function trans_route(string $name, array $parameters = [], bool $absolute = true): string
     {
@@ -175,3 +171,93 @@ if (! function_exists('trans_route')) {
     }
 }
 
+if (! function_exists('format_number')) {
+    /**
+     * Formatear número según el locale actual.
+     *
+     * @param  int|float  $number  Número a formatear
+     * @param  int  $decimals  Número de decimales
+     */
+    function format_number(int|float $number, int $decimals = 0): string
+    {
+        $locale = getCurrentLanguageCode();
+
+        // Si NumberFormatter no está disponible, usar number_format como fallback
+        if (! class_exists(\NumberFormatter::class)) {
+            return number_format($number, $decimals,
+                $locale === 'es' ? ',' : '.',
+                $locale === 'es' ? '.' : ','
+            );
+        }
+
+        try {
+            // Configurar formato según el locale
+            $formatter = new \NumberFormatter($locale, \NumberFormatter::DECIMAL);
+            $formatter->setAttribute(\NumberFormatter::MIN_FRACTION_DIGITS, $decimals);
+            $formatter->setAttribute(\NumberFormatter::MAX_FRACTION_DIGITS, $decimals);
+
+            return $formatter->format($number);
+        } catch (\Exception $e) {
+            // Fallback a number_format si hay algún error
+            return number_format($number, $decimals,
+                $locale === 'es' ? ',' : '.',
+                $locale === 'es' ? '.' : ','
+            );
+        }
+    }
+}
+
+if (! function_exists('format_date')) {
+    /**
+     * Formatear fecha según el locale actual.
+     *
+     * @param  \Carbon\Carbon|\DateTime|string  $date  Fecha a formatear
+     * @param  string  $format  Formato de fecha (por defecto según locale)
+     */
+    function format_date(\Carbon\Carbon|\DateTime|string $date, ?string $format = null): string
+    {
+        if (! $date instanceof \Carbon\Carbon) {
+            $date = \Carbon\Carbon::parse($date);
+        }
+
+        $locale = getCurrentLanguageCode();
+
+        // Formatos por defecto según locale
+        $defaultFormats = [
+            'es' => 'd/m/Y',
+            'en' => 'm/d/Y',
+        ];
+
+        $format = $format ?? $defaultFormats[$locale] ?? 'Y-m-d';
+
+        return $date->translatedFormat($format);
+    }
+}
+
+if (! function_exists('format_datetime')) {
+    /**
+     * Formatear fecha y hora según el locale actual.
+     *
+     * @param  \Carbon\Carbon|\DateTime|string  $date  Fecha a formatear
+     * @param  string  $dateFormat  Formato de fecha (por defecto según locale)
+     * @param  string  $timeFormat  Formato de hora (por defecto 'H:i')
+     */
+    function format_datetime(\Carbon\Carbon|\DateTime|string $date, ?string $dateFormat = null, string $timeFormat = 'H:i'): string
+    {
+        if (! $date instanceof \Carbon\Carbon) {
+            $date = \Carbon\Carbon::parse($date);
+        }
+
+        $locale = getCurrentLanguageCode();
+
+        // Formatos por defecto según locale
+        $defaultFormats = [
+            'es' => 'd/m/Y',
+            'en' => 'm/d/Y',
+        ];
+
+        $dateFormat = $dateFormat ?? $defaultFormats[$locale] ?? 'Y-m-d';
+
+        return $date->translatedFormat("{$dateFormat} {$timeFormat}");
+    }
+}

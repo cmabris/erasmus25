@@ -32,6 +32,8 @@ class DatabaseSeeder extends Seeder
             ErasmusEventSeeder::class,
             // Seeder de newsletter (requiere Programs)
             NewsletterSubscriptionSeeder::class,
+            // Seeder de datos para dashboard (requiere todos los anteriores)
+            DashboardDataSeeder::class,
         ]);
     }
 }

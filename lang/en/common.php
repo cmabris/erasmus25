@@ -588,5 +588,37 @@ return [
         'email_auto' => 'This is an automated email, please do not reply to this message.',
     ],
 
+    // Admin Dashboard
+    'admin' => [
+        'dashboard' => [
+            'welcome_message' => 'Welcome to the administration panel. Here you can manage all aspects of the application.',
+            'statistics_title' => 'General Statistics',
+            'quick_actions_title' => 'Quick Actions',
+            'dev_login_links' => '🔧 Quick Login Links (Development Only)',
+            'stats' => [
+                'active_programs' => 'Active Programs',
+                'open_calls' => 'Open Calls',
+                'closed_calls' => 'Closed Calls',
+                'news_this_month' => 'News This Month',
+                'available_documents' => 'Available Documents',
+                'upcoming_events' => 'Upcoming Events',
+            ],
+            'quick_actions' => [
+                'create_call' => 'New Call',
+                'create_call_description' => 'Create a new mobility call',
+                'create_news' => 'New News',
+                'create_news_description' => 'Publish a new news or experience',
+                'create_document' => 'New Document',
+                'create_document_description' => 'Add a new document or resource',
+                'create_event' => 'New Event',
+                'create_event_description' => 'Create a new calendar event',
+                'manage_programs' => 'Manage Programs',
+                'manage_programs_description' => 'View and manage all programs',
+                'manage_users' => 'Manage Users',
+                'manage_users_description' => 'Administrate users and permissions',
+            ],
+        ],
+    ],
+
 ];
 
