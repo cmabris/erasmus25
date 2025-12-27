@@ -79,9 +79,20 @@ class ProgramPolicy
 
     /**
      * Determine whether the user can permanently delete the model.
+     *
+     * Solo super-admin puede hacer forceDelete, y solo si el programa
+     * no tiene relaciones con otros modelos (calls, newsPosts).
      */
     public function forceDelete(User $user, Program $program): bool
     {
-        return $user->can(Permissions::PROGRAMS_DELETE);
+        // Solo super-admin puede hacer forceDelete
+        if (! $user->hasRole(Roles::SUPER_ADMIN)) {
+            return false;
+        }
+
+        // Verificar que no tenga relaciones antes de permitir forceDelete
+        $hasRelations = $program->calls()->exists() || $program->newsPosts()->exists();
+
+        return ! $hasRelations;
     }
 }
