@@ -28,6 +28,7 @@ Esta carpeta contiene la documentación técnica de la aplicación web "Erasmus+
 - **[Paso 12: Calendario de Eventos](pasos/paso12.md)**: Implementación del calendario de eventos con vista mensual/semanal/diaria, filtros avanzados, integración con convocatorias, seeders con 66 eventos realistas y 60 tests completos.
 - **[Paso 13: Suscripción a Newsletter](pasos/paso13.md)**: Implementación del sistema completo de suscripción a newsletter con formulario público, verificación por email, baja por token/email, seeder con 80 suscripciones y 45+ tests completos.
 - **[Paso 14: Internacionalización Completa](pasos/paso14.md)**: Implementación completa del sistema de internacionalización (i18n) con middleware SetLocale, componente Language Switcher, helpers globales, trait Translatable, traducciones estáticas y dinámicas, internacionalización de todas las vistas públicas (~200 strings), y sistema preparado para añadir nuevos idiomas fácilmente.
+- **[Paso 15: Dashboard de Administración](pasos/paso15.md)**: Implementación completa del Dashboard de Administración con estadísticas en tiempo real, gráficos interactivos (Chart.js), actividad reciente, alertas, optimización con caché, animaciones CSS, internacionalización completa, y 29 tests completos. Incluye corrección de 65 tests existentes relacionados con locale.
 - **[Planificación de Pasos de Desarrollo](planificacion_pasos.md)**: Planificación completa y estructurada de los siguientes pasos en el desarrollo de la aplicación, incluyendo seeders, Form Requests, Policies, área pública, panel de administración, rutas, funcionalidades avanzadas, testing y optimización.
 
 ### Base de Datos
@@ -79,6 +80,10 @@ Esta carpeta contiene la documentación técnica de la aplicación web "Erasmus+
 - **[Componentes de Eventos](events-components.md)**: Documentación técnica de los componentes de calendario y eventos, incluyendo vista mensual/semanal/diaria, filtros avanzados, integración con convocatorias, seeders y tests completos.
 - **[Sistema de Newsletter](newsletter-components.md)**: Documentación técnica del sistema completo de suscripción a newsletter, incluyendo componentes Livewire, email de verificación, scopes del modelo, seeders y tests completos.
 - **[Sistema de Internacionalización (i18n)](i18n-system.md)**: Documentación completa del sistema de internacionalización, incluyendo middleware, componente Language Switcher, helpers, trait Translatable, traducciones estáticas y dinámicas, y guía para añadir nuevos idiomas.
+
+### Panel de Administración
+
+- **[Dashboard de Administración](admin-dashboard.md)**: Documentación técnica completa del Dashboard de Administración, incluyendo estadísticas, gráficos de actividad, alertas, actividad reciente, optimización con caché, y guía de extensibilidad.
 
 ## Información General del Proyecto
 
