@@ -498,3 +498,4 @@ Este diagrama puede visualizarse en:
 - Documentación generada con herramientas como MkDocs o Docusaurus
 
 
+

@@ -74,3 +74,4 @@ rm "$TEMP_MERMAID"
 echo -e "${GREEN}¡Proceso completado!${NC}"
 
 
+

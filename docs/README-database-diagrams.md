@@ -159,3 +159,4 @@ La base de datos incluye:
 - Los campos JSON almacenan estructuras de datos complejas (`destinations`, `scoring_table`, `programs`, `changes`)
 
 
+
