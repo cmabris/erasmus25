@@ -47,11 +47,22 @@ return [
         'view' => 'View',
         'edit' => 'Edit',
         'delete' => 'Delete',
+        'restore' => 'Restore',
+        'permanently_delete' => 'Permanently Delete',
+        'activate' => 'Activate',
+        'deactivate' => 'Deactivate',
         'save' => 'Save',
         'read_more' => 'Read more',
         'view_document' => 'View document',
         'view_program' => 'View program',
         'more_info' => 'More information',
+        'view_program_details' => 'View program details',
+        'edit_program' => 'Edit program',
+        'deactivate_program' => 'Deactivate program',
+        'activate_program' => 'Activate program',
+        'delete_program' => 'Delete program',
+        'restore_program' => 'Restore deleted program',
+        'permanently_delete_program' => 'Permanently delete from system',
         'cancel' => 'Cancel',
         'close' => 'Close',
         'back' => 'Back',
@@ -79,7 +90,17 @@ return [
         'updated' => 'Updated successfully',
         'created' => 'Created successfully',
         'confirm_delete' => 'Are you sure you want to delete this?',
+        'confirm_delete_program' => 'Are you sure you want to delete this program?',
+        'confirm_restore_program' => 'Are you sure you want to restore this program?',
+        'confirm_force_delete_program' => 'Are you sure you want to permanently delete this program?',
         'action_cannot_be_undone' => 'This action cannot be undone',
+        'soft_delete_explanation' => 'This action will mark the program as deleted, but it will not be permanently deleted. You can restore it later.',
+        'updated_successfully' => 'Updated successfully',
+        'deleted_successfully' => 'Deleted successfully',
+        'restored_successfully' => 'Restored successfully',
+        'permanently_deleted_successfully' => 'Permanently deleted',
+        'order_updated_successfully' => 'Order updated successfully',
+        'by' => 'by',
     ],
 
     // Status
@@ -138,6 +159,11 @@ return [
         'clear' => 'Clear filters',
         'apply' => 'Apply filters',
         'active_filters' => 'Active filters',
+    ],
+
+    // Errors
+    'errors' => [
+        'cannot_delete_with_relations' => 'Cannot delete this item because it has relationships with other records.',
     ],
 
     // Time
@@ -590,6 +616,10 @@ return [
 
     // Admin Dashboard
     'admin' => [
+        'nav' => [
+            'content' => 'Content',
+            'management' => 'Management',
+        ],
         'dashboard' => [
             'welcome_message' => 'Welcome to the administration panel. Here you can manage all aspects of the application.',
             'statistics_title' => 'General Statistics',

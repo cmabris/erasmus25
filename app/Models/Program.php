@@ -7,11 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class Program extends Model
+class Program extends Model implements HasMedia
 {
     /** @use HasFactory<\Database\Factories\ProgramFactory> */
     use HasFactory;
+
+    use InteractsWithMedia;
     use SoftDeletes;
 
     /**
@@ -69,5 +74,42 @@ class Program extends Model
     public function newsPosts(): HasMany
     {
         return $this->hasMany(NewsPost::class);
+    }
+
+    /**
+     * Register media collections for the program.
+     */
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('image')
+            ->singleFile()
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp', 'image/gif']);
+    }
+
+    /**
+     * Register media conversions for the program.
+     */
+    public function registerMediaConversions(?Media $media = null): void
+    {
+        // Thumbnail conversion
+        $this->addMediaConversion('thumbnail')
+            ->width(300)
+            ->height(300)
+            ->sharpen(10)
+            ->performOnCollections('image');
+
+        // Medium conversion
+        $this->addMediaConversion('medium')
+            ->width(800)
+            ->height(600)
+            ->sharpen(10)
+            ->performOnCollections('image');
+
+        // Large conversion
+        $this->addMediaConversion('large')
+            ->width(1200)
+            ->height(900)
+            ->sharpen(10)
+            ->performOnCollections('image');
     }
 }

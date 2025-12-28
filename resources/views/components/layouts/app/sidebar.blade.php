@@ -13,8 +13,14 @@
 
             <flux:navlist variant="outline">
                 <flux:navlist.group :heading="__('Platform')" class="grid">
-                    <flux:navlist.item icon="home" :href="route('admin.dashboard')" :current="request()->routeIs('admin.*')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
+                    <flux:navlist.item icon="squares-2x2" :href="route('admin.dashboard')" :current="request()->routeIs('admin.dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
                 </flux:navlist.group>
+
+                @can('viewAny', \App\Models\Program::class)
+                    <flux:navlist.group :heading="__('common.admin.nav.content')" class="grid">
+                        <flux:navlist.item icon="academic-cap" :href="route('admin.programs.index')" :current="request()->routeIs('admin.programs.*')" wire:navigate>{{ __('common.nav.programs') }}</flux:navlist.item>
+                    </flux:navlist.group>
+                @endcan
             </flux:navlist>
 
             <flux:spacer />

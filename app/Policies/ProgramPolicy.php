@@ -63,10 +63,19 @@ class ProgramPolicy
 
     /**
      * Determine whether the user can delete the model.
+     *
+     * No se puede eliminar si tiene relaciones con otros modelos (calls, newsPosts).
      */
     public function delete(User $user, Program $program): bool
     {
-        return $user->can(Permissions::PROGRAMS_DELETE);
+        if (! $user->can(Permissions::PROGRAMS_DELETE)) {
+            return false;
+        }
+
+        // Verificar que no tenga relaciones antes de permitir delete
+        $hasRelations = $program->calls()->exists() || $program->newsPosts()->exists();
+
+        return ! $hasRelations;
     }
 
     /**

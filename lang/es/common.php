@@ -47,6 +47,10 @@ return [
         'view' => 'Ver',
         'edit' => 'Editar',
         'delete' => 'Eliminar',
+        'restore' => 'Restaurar',
+        'permanently_delete' => 'Eliminar permanentemente',
+        'activate' => 'Activar',
+        'deactivate' => 'Desactivar',
         'save' => 'Guardar',
         'cancel' => 'Cancelar',
         'close' => 'Cerrar',
@@ -64,6 +68,13 @@ return [
         'view_document' => 'Ver documento',
         'view_program' => 'Ver programa',
         'more_info' => 'Más información',
+        'view_program_details' => 'Ver detalles del programa',
+        'edit_program' => 'Editar programa',
+        'deactivate_program' => 'Desactivar programa',
+        'activate_program' => 'Activar programa',
+        'delete_program' => 'Eliminar programa',
+        'restore_program' => 'Restaurar programa eliminado',
+        'permanently_delete_program' => 'Eliminar permanentemente del sistema',
     ],
 
     // Mensajes comunes
@@ -78,7 +89,18 @@ return [
         'updated' => 'Actualizado correctamente',
         'created' => 'Creado correctamente',
         'confirm_delete' => '¿Estás seguro de que deseas eliminar esto?',
+        'confirm_delete_program' => '¿Estás seguro de que deseas eliminar este programa?',
+        'confirm_restore_program' => '¿Estás seguro de que deseas restaurar este programa?',
+        'confirm_force_delete_program' => '¿Estás seguro de que deseas eliminar permanentemente este programa?',
         'action_cannot_be_undone' => 'Esta acción no se puede deshacer',
+        'soft_delete_explanation' => 'Esta acción marcará el programa como eliminado, pero no se eliminará permanentemente. Podrás restaurarlo más tarde.',
+        'updated_successfully' => 'Actualizado correctamente',
+        'deleted_successfully' => 'Eliminado correctamente',
+        'restored_successfully' => 'Restaurado correctamente',
+        'permanently_deleted_successfully' => 'Eliminado permanentemente',
+        'order_updated_successfully' => 'Orden actualizado correctamente',
+        'by' => 'por',
+        'system' => 'Sistema',
     ],
 
     // Estados
@@ -138,6 +160,11 @@ return [
         'apply' => 'Aplicar filtros',
         'active_filters' => 'Filtros activos',
         'active' => 'Filtros activos:',
+    ],
+
+    // Errores
+    'errors' => [
+        'cannot_delete_with_relations' => 'No se puede eliminar este elemento porque tiene relaciones con otros registros.',
     ],
 
     // Tiempo
@@ -590,6 +617,10 @@ return [
 
     // Admin Dashboard
     'admin' => [
+        'nav' => [
+            'content' => 'Contenido',
+            'management' => 'Gestión',
+        ],
         'dashboard' => [
             'welcome_message' => 'Bienvenido al panel de administración. Aquí puedes gestionar todos los aspectos de la aplicación.',
             'statistics_title' => 'Estadísticas Generales',
@@ -646,14 +677,6 @@ return [
                 'status_draft' => 'Borradores',
             ],
         ],
-    ],
-
-    // Messages
-    'messages' => [
-        'system' => 'Sistema',
-        'no_data' => 'Sin datos',
-        'by' => 'por',
-        'loading' => 'Cargando...',
     ],
 
 ];

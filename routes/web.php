@@ -53,8 +53,13 @@ Route::view('dashboard', 'dashboard')
 Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', AdminDashboard::class)->name('dashboard');
 
+    // Rutas de Programas
+    Route::get('/programas', \App\Livewire\Admin\Programs\Index::class)->name('programs.index');
+    Route::get('/programas/crear', \App\Livewire\Admin\Programs\Create::class)->name('programs.create');
+    Route::get('/programas/{program}', \App\Livewire\Admin\Programs\Show::class)->name('programs.show');
+    Route::get('/programas/{program}/editar', \App\Livewire\Admin\Programs\Edit::class)->name('programs.edit');
+
     // Las demás rutas de admin se añadirán en pasos posteriores
-    // Route::get('/programas', ...)->name('programs.index');
     // Route::get('/convocatorias', ...)->name('calls.index');
     // etc.
 });
