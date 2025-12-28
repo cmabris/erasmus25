@@ -213,4 +213,3 @@ describe('NewsletterSubscription Helper Methods', function () {
         expect($subscription->hasProgram('KA1xx'))->toBeFalse();
     });
 });
-

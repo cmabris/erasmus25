@@ -77,7 +77,7 @@ it('can have null creator', function () {
     expect($event->creator)->toBeNull();
 });
 
-it('sets program_id to null when program is deleted', function () {
+it('does not set program_id to null when program is soft deleted', function () {
     $program = Program::factory()->create(['code' => 'KA999-TEST', 'slug' => 'ka999-test']);
     $user = User::factory()->create();
     $event = ErasmusEvent::factory()->create([
@@ -85,11 +85,14 @@ it('sets program_id to null when program is deleted', function () {
         'created_by' => $user->id,
     ]);
 
-    $program->delete();
+    $program->delete(); // Soft delete
     $event->refresh();
 
-    expect($event->program_id)->toBeNull()
-        ->and($event->program)->toBeNull();
+    // With SoftDeletes, program_id is not set to null because the program still exists
+    // However, Eloquent excludes soft-deleted records from relationships, so $event->program will be null
+    expect($event->program_id)->toBe($program->id)
+        ->and($event->program)->toBeNull() // Eloquent excludes soft-deleted records
+        ->and($program->fresh()->trashed())->toBeTrue();
 });
 
 it('sets call_id to null when call is deleted', function () {
@@ -124,4 +127,3 @@ it('sets created_by to null when creator user is deleted', function () {
     expect($event->created_by)->toBeNull()
         ->and($event->creator)->toBeNull();
 });
-

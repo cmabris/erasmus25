@@ -147,4 +147,3 @@ it('can have news posts from different programs', function () {
     expect($academicYear->newsPosts)->toHaveCount(2)
         ->and($academicYear->newsPosts->pluck('program_id')->unique())->toHaveCount(2);
 });
-

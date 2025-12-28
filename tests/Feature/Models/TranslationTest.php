@@ -89,4 +89,3 @@ it('maintains translatable reference when model is deleted', function () {
     expect($translation->translatable_type)->toBe(Program::class)
         ->and($translation->translatable_id)->toBe($program->id);
 });
-

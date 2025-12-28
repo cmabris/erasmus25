@@ -58,7 +58,7 @@ describe('ProgramPolicy super-admin access', function () {
 });
 
 describe('ProgramPolicy admin access', function () {
-    it('allows admin to perform all actions', function () {
+    it('allows admin to perform all actions except forceDelete', function () {
         $user = User::factory()->create();
         $user->assignRole(Roles::ADMIN);
         $program = Program::factory()->create();
@@ -69,7 +69,7 @@ describe('ProgramPolicy admin access', function () {
             ->and($user->can('update', $program))->toBeTrue()
             ->and($user->can('delete', $program))->toBeTrue()
             ->and($user->can('restore', $program))->toBeTrue()
-            ->and($user->can('forceDelete', $program))->toBeTrue();
+            ->and($user->can('forceDelete', $program))->toBeFalse(); // Solo super-admin puede hacer forceDelete
     });
 });
 
@@ -149,13 +149,13 @@ describe('ProgramPolicy with direct permissions', function () {
             ->and($user->can('viewAny', Program::class))->toBeFalse();
     });
 
-    it('allows user with direct delete permission to delete and restore', function () {
+    it('allows user with direct delete permission to delete and restore but not forceDelete', function () {
         $user = User::factory()->create();
         $user->givePermissionTo(Permissions::PROGRAMS_DELETE);
         $program = Program::factory()->create();
 
         expect($user->can('delete', $program))->toBeTrue()
             ->and($user->can('restore', $program))->toBeTrue()
-            ->and($user->can('forceDelete', $program))->toBeTrue();
+            ->and($user->can('forceDelete', $program))->toBeFalse(); // Solo super-admin puede hacer forceDelete
     });
 });

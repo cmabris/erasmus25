@@ -147,7 +147,7 @@ it('is deleted in cascade when category is deleted', function () {
     expect(Document::find($document->id))->toBeNull();
 });
 
-it('sets program_id to null when program is deleted', function () {
+it('does not set program_id to null when program is soft deleted', function () {
     $category = DocumentCategory::factory()->create();
     $program = Program::factory()->create();
     $academicYear = AcademicYear::factory()->create();
@@ -159,11 +159,14 @@ it('sets program_id to null when program is deleted', function () {
         'created_by' => $user->id,
     ]);
 
-    $program->delete();
+    $program->delete(); // Soft delete
     $document->refresh();
 
-    expect($document->program_id)->toBeNull()
-        ->and($document->program)->toBeNull();
+    // With SoftDeletes, program_id is not set to null because the program still exists
+    // However, Eloquent excludes soft-deleted records from relationships, so $document->program will be null
+    expect($document->program_id)->toBe($program->id)
+        ->and($document->program)->toBeNull() // Eloquent excludes soft-deleted records
+        ->and($program->fresh()->trashed())->toBeTrue();
 });
 
 it('sets academic_year_id to null when academic year is deleted', function () {

@@ -31,4 +31,3 @@ it('is deleted in cascade when call is deleted', function () {
 
     expect(CallApplication::find($application->id))->toBeNull();
 });
-

@@ -72,4 +72,3 @@ it('is deleted in cascade when call is deleted', function () {
 
     expect(CallPhase::find($phase->id))->toBeNull();
 });
-

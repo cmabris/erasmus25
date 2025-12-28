@@ -16,7 +16,7 @@ it('belongs to a consent document', function () {
         'academic_year_id' => $academicYear->id,
         'created_by' => $user->id,
     ]);
-    
+
     // Create a valid media_id if media table exists, otherwise use a placeholder
     $mediaId = Schema::hasTable('media') ? \DB::table('media')->insertGetId([
         'model_type' => 'App\Models\Test',
@@ -34,7 +34,7 @@ it('belongs to a consent document', function () {
         'created_at' => now(),
         'updated_at' => now(),
     ]) : 999999;
-    
+
     $mediaConsent = MediaConsent::factory()->create([
         'media_id' => $mediaId,
         'consent_document_id' => $document->id,
@@ -62,7 +62,7 @@ it('can have null consent document', function () {
         'created_at' => now(),
         'updated_at' => now(),
     ]) : 999999;
-    
+
     $mediaConsent = MediaConsent::factory()->create([
         'media_id' => $mediaId,
         'consent_document_id' => null,
@@ -80,7 +80,7 @@ it('sets consent_document_id to null when document is deleted', function () {
         'academic_year_id' => $academicYear->id,
         'created_by' => $user->id,
     ]);
-    
+
     // Create a valid media_id if media table exists, otherwise use a placeholder
     $mediaId = Schema::hasTable('media') ? \DB::table('media')->insertGetId([
         'model_type' => 'App\Models\Test',
@@ -98,7 +98,7 @@ it('sets consent_document_id to null when document is deleted', function () {
         'created_at' => now(),
         'updated_at' => now(),
     ]) : 999999;
-    
+
     $mediaConsent = MediaConsent::factory()->create([
         'media_id' => $mediaId,
         'consent_document_id' => $document->id,
@@ -110,4 +110,3 @@ it('sets consent_document_id to null when document is deleted', function () {
     expect($mediaConsent->consent_document_id)->toBeNull()
         ->and($mediaConsent->consentDocument)->toBeNull();
 });
-

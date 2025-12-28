@@ -50,4 +50,3 @@ it('deletes translations in cascade when language is deleted', function () {
     expect(Translation::find($translation1->id))->toBeNull()
         ->and(Translation::find($translation2->id))->toBeNull();
 });
-

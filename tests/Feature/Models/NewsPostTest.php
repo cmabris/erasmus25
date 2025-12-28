@@ -138,7 +138,7 @@ it('can attach and detach tags', function () {
         ->and($newsPost->fresh()->tags->first()->id)->toBe($tag2->id);
 });
 
-it('sets program_id to null when program is deleted', function () {
+it('does not set program_id to null when program is soft deleted', function () {
     $program = Program::factory()->create();
     $academicYear = AcademicYear::factory()->create();
     $user = User::factory()->create();
@@ -148,11 +148,14 @@ it('sets program_id to null when program is deleted', function () {
         'author_id' => $user->id,
     ]);
 
-    $program->delete();
+    $program->delete(); // Soft delete
     $newsPost->refresh();
 
-    expect($newsPost->program_id)->toBeNull()
-        ->and($newsPost->program)->toBeNull();
+    // With SoftDeletes, program_id is not set to null because the program still exists
+    // However, Eloquent excludes soft-deleted records from relationships, so $newsPost->program will be null
+    expect($newsPost->program_id)->toBe($program->id)
+        ->and($newsPost->program)->toBeNull() // Eloquent excludes soft-deleted records
+        ->and($program->fresh()->trashed())->toBeTrue();
 });
 
 it('is deleted in cascade when academic year is deleted', function () {

@@ -26,4 +26,3 @@ it('can have multiple notifications for the same user', function () {
 
     expect(Notification::where('user_id', $user->id)->count())->toBe(5);
 });
-

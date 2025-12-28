@@ -47,4 +47,3 @@ it('can subscribe and unsubscribe', function () {
     expect($subscription->is_active)->toBeFalse()
         ->and($subscription->unsubscribed_at)->not->toBeNull();
 });
-

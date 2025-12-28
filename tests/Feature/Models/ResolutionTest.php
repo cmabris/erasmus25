@@ -134,4 +134,3 @@ it('sets created_by to null when creator user is deleted', function () {
     expect($resolution->created_by)->toBeNull()
         ->and($resolution->creator)->toBeNull();
 });
-

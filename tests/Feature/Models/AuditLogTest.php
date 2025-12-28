@@ -93,4 +93,3 @@ it('maintains model reference when model is deleted', function () {
     expect($auditLog->model_type)->toBe(Program::class)
         ->and($auditLog->model_id)->toBe($program->id);
 });
-

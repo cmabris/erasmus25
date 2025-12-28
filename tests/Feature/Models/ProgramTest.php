@@ -29,7 +29,7 @@ it('has many news posts', function () {
         ->and($program->newsPosts->first())->toBeInstanceOf(NewsPost::class);
 });
 
-it('deletes calls in cascade when program is deleted', function () {
+it('does not delete calls when program is soft deleted', function () {
     $program = Program::factory()->create(['code' => 'KA992', 'name' => 'Programa Test E', 'slug' => 'programa-test-e']);
     $academicYear = AcademicYear::factory()->create(['year' => '2028-2029']);
     $call1 = Call::factory()->create([
@@ -41,13 +41,15 @@ it('deletes calls in cascade when program is deleted', function () {
         'academic_year_id' => $academicYear->id,
     ]);
 
-    $program->delete();
+    $program->delete(); // Soft delete
 
-    expect(Call::find($call1->id))->toBeNull()
-        ->and(Call::find($call2->id))->toBeNull();
+    // With SoftDeletes, calls are not deleted, they still exist
+    expect(Call::find($call1->id))->not->toBeNull()
+        ->and(Call::find($call2->id))->not->toBeNull()
+        ->and($program->fresh()->trashed())->toBeTrue();
 });
 
-it('sets program_id to null when program is deleted (nullOnDelete)', function () {
+it('does not set program_id to null when program is soft deleted', function () {
     $program = Program::factory()->create();
     $academicYear = AcademicYear::factory()->create();
     $newsPost1 = NewsPost::factory()->create([
@@ -59,12 +61,14 @@ it('sets program_id to null when program is deleted (nullOnDelete)', function ()
         'academic_year_id' => $academicYear->id,
     ]);
 
-    $program->delete();
+    $program->delete(); // Soft delete
 
+    // With SoftDeletes, program_id is not set to null because the program still exists
     expect(NewsPost::find($newsPost1->id))->not->toBeNull()
-        ->and(NewsPost::find($newsPost1->id)->program_id)->toBeNull()
+        ->and(NewsPost::find($newsPost1->id)->program_id)->toBe($program->id)
         ->and(NewsPost::find($newsPost2->id))->not->toBeNull()
-        ->and(NewsPost::find($newsPost2->id)->program_id)->toBeNull();
+        ->and(NewsPost::find($newsPost2->id)->program_id)->toBe($program->id)
+        ->and($program->fresh()->trashed())->toBeTrue();
 });
 
 it('can have calls from different academic years', function () {
