@@ -2,11 +2,12 @@
 
 namespace App\Livewire\Admin\Programs;
 
-use App\Http\Requests\UpdateProgramRequest;
+use App\Models\Language;
 use App\Models\Program;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -67,6 +68,16 @@ class Edit extends Component
     public bool $removeExistingImage = false;
 
     /**
+     * Translations data: ['language_code' => ['name' => '', 'description' => '']]
+     */
+    public array $translations = [];
+
+    /**
+     * Selected language for adding/editing translation.
+     */
+    public ?string $selectedLanguage = null;
+
+    /**
      * Mount the component.
      */
     public function mount(Program $program): void
@@ -82,6 +93,33 @@ class Edit extends Component
         $this->description = $program->description ?? '';
         $this->is_active = $program->is_active;
         $this->order = $program->order;
+
+        // Load existing translations
+        $this->loadTranslations();
+    }
+
+    /**
+     * Load existing translations for all languages.
+     */
+    public function loadTranslations(): void
+    {
+        $languages = Language::where('is_active', true)->get();
+        $this->translations = [];
+
+        foreach ($languages as $language) {
+            $this->translations[$language->code] = [
+                'name' => $this->program->translate('name', $language->code) ?? '',
+                'description' => $this->program->translate('description', $language->code) ?? '',
+            ];
+        }
+    }
+
+    /**
+     * Get available languages.
+     */
+    public function getAvailableLanguagesProperty()
+    {
+        return Language::where('is_active', true)->orderBy('code')->get();
     }
 
     /**
@@ -153,7 +191,15 @@ class Edit extends Component
      */
     public function update(): void
     {
-        $validated = $this->validate((new UpdateProgramRequest)->rules());
+        $validated = $this->validate([
+            'code' => ['required', 'string', 'max:255', Rule::unique('programs', 'code')->ignore($this->program->id)],
+            'name' => ['required', 'string', 'max:255'],
+            'slug' => ['nullable', 'string', 'max:255', Rule::unique('programs', 'slug')->ignore($this->program->id)],
+            'description' => ['nullable', 'string'],
+            'is_active' => ['nullable', 'boolean'],
+            'order' => ['nullable', 'integer'],
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,webp,gif', 'max:5120'], // 5MB max
+        ]);
 
         // Remove image from validated data as it's handled separately
         unset($validated['image']);
@@ -178,11 +224,36 @@ class Edit extends Component
                 ->toMediaCollection('image');
         }
 
+        // Save translations
+        $this->saveTranslations();
+
         $this->dispatch('program-updated', [
             'message' => __('common.messages.updated_successfully'),
         ]);
 
         $this->redirect(route('admin.programs.show', $this->program), navigate: true);
+    }
+
+    /**
+     * Save translations for all languages.
+     */
+    public function saveTranslations(): void
+    {
+        foreach ($this->translations as $languageCode => $fields) {
+            if (! empty($fields['name'])) {
+                $this->program->setTranslation('name', $languageCode, $fields['name']);
+            } else {
+                // Delete translation if empty
+                $this->program->deleteTranslation('name', $languageCode);
+            }
+
+            if (! empty($fields['description'])) {
+                $this->program->setTranslation('description', $languageCode, $fields['description']);
+            } else {
+                // Delete translation if empty
+                $this->program->deleteTranslation('description', $languageCode);
+            }
+        }
     }
 
     /**

@@ -210,6 +210,68 @@
                             @endif
                         </div>
                     </x-ui.card>
+
+                    {{-- Translations Card --}}
+                    <x-ui.card>
+                        <div class="space-y-6">
+                            <div>
+                                <flux:heading size="sm">{{ __('Traducciones') }}</flux:heading>
+                                <flux:text class="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+                                    {{ __('Gestiona las traducciones del programa en diferentes idiomas') }}
+                                </flux:text>
+                            </div>
+
+                            @foreach($this->availableLanguages as $language)
+                                @php
+                                    $langCode = $language->code;
+                                    $translationName = $translations[$langCode]['name'] ?? '';
+                                    $translationDescription = $translations[$langCode]['description'] ?? '';
+                                @endphp
+                                
+                                <div class="rounded-lg border border-zinc-200 p-4 dark:border-zinc-700">
+                                    <div class="mb-4 flex items-center gap-2">
+                                        <flux:heading size="xs">{{ $language->name }} ({{ strtoupper($langCode) }})</flux:heading>
+                                        @if($langCode === getCurrentLanguageCode())
+                                            <x-ui.badge color="blue" size="sm">{{ __('Idioma actual') }}</x-ui.badge>
+                                        @endif
+                                    </div>
+
+                                    <div class="space-y-4">
+                                        {{-- Translated Name --}}
+                                        <flux:field>
+                                            <flux:label>{{ __('Nombre traducido') }}</flux:label>
+                                            <flux:input 
+                                                wire:model.live.blur="translations.{{ $langCode }}.name" 
+                                                placeholder="{{ __('Dejar vacío para usar el nombre por defecto') }}"
+                                            />
+                                            <flux:description>
+                                                {{ __('Si está vacío, se usará el nombre en el idioma por defecto') }}
+                                            </flux:description>
+                                        </flux:field>
+
+                                        {{-- Translated Description --}}
+                                        <flux:field>
+                                            <flux:label>{{ __('Descripción traducida') }}</flux:label>
+                                            <flux:textarea 
+                                                wire:model.live.blur="translations.{{ $langCode }}.description" 
+                                                placeholder="{{ __('Dejar vacío para usar la descripción por defecto') }}"
+                                                rows="3"
+                                            />
+                                            <flux:description>
+                                                {{ __('Si está vacío, se usará la descripción en el idioma por defecto') }}
+                                            </flux:description>
+                                        </flux:field>
+                                    </div>
+                                </div>
+                            @endforeach
+
+                            @if($this->availableLanguages->isEmpty())
+                                <flux:text class="text-sm text-zinc-500 dark:text-zinc-400">
+                                    {{ __('No hay idiomas disponibles para traducir') }}
+                                </flux:text>
+                            @endif
+                        </div>
+                    </x-ui.card>
                 </div>
 
                 {{-- Sidebar --}}

@@ -75,6 +75,12 @@ return [
         'delete_program' => 'Eliminar programa',
         'restore_program' => 'Restaurar programa eliminado',
         'permanently_delete_program' => 'Eliminar permanentemente del sistema',
+        'manage_translations' => 'Gestionar traducciones',
+        'translations' => 'Traducciones',
+        'translated_name' => 'Nombre traducido',
+        'translated_description' => 'Descripción traducida',
+        'available_translations' => 'Traducciones Disponibles',
+        'current_language' => 'Idioma actual',
     ],
 
     // Mensajes comunes

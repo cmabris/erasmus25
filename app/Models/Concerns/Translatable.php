@@ -51,7 +51,7 @@ trait Translatable
      * @param  string|null  $locale  Locale code (null = current locale)
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function translations(?string $locale = null)
+    public function getTranslationsForLocale(?string $locale = null)
     {
         $locale = $locale ?? getCurrentLanguageCode();
 

@@ -135,6 +135,41 @@
                     </div>
                 </div>
             </x-ui.card>
+
+            {{-- Translations --}}
+            @if(count($this->availableTranslations) > 0)
+                <x-ui.card>
+                    <div>
+                        <flux:heading size="md" class="mb-4">{{ __('Traducciones Disponibles') }}</flux:heading>
+                        <div class="space-y-4">
+                            @foreach($this->availableTranslations as $translation)
+                                <div class="rounded-lg border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-700 dark:bg-zinc-800">
+                                    <div class="mb-2 flex items-center gap-2">
+                                        <flux:heading size="xs">{{ $translation['language']->name }} ({{ strtoupper($translation['language']->code) }})</flux:heading>
+                                        @if($translation['language']->code === getCurrentLanguageCode())
+                                            <x-ui.badge color="blue" size="sm">{{ __('Idioma actual') }}</x-ui.badge>
+                                        @endif
+                                    </div>
+                                    
+                                    @if($translation['name'])
+                                        <div class="mb-2">
+                                            <p class="text-sm font-medium text-zinc-600 dark:text-zinc-400">{{ __('Nombre') }}:</p>
+                                            <p class="text-zinc-900 dark:text-white">{{ $translation['name'] }}</p>
+                                        </div>
+                                    @endif
+                                    
+                                    @if($translation['description'])
+                                        <div>
+                                            <p class="text-sm font-medium text-zinc-600 dark:text-zinc-400">{{ __('Descripción') }}:</p>
+                                            <p class="text-sm text-zinc-700 dark:text-zinc-300 whitespace-pre-line">{{ $translation['description'] }}</p>
+                                        </div>
+                                    @endif
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </x-ui.card>
+            @endif
         </div>
 
         {{-- Sidebar --}}

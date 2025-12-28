@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Programs;
 
+use App\Models\Language;
 use App\Models\Program;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\View\View;
@@ -183,6 +184,31 @@ class Show extends Component
     public function hasRelationships(): bool
     {
         return $this->program->calls()->exists() || $this->program->newsPosts()->exists();
+    }
+
+    /**
+     * Get available translations for the program.
+     */
+    #[Computed]
+    public function availableTranslations(): array
+    {
+        $languages = Language::where('is_active', true)->get();
+        $translations = [];
+
+        foreach ($languages as $language) {
+            $nameTranslation = $this->program->translate('name', $language->code);
+            $descriptionTranslation = $this->program->translate('description', $language->code);
+
+            if ($nameTranslation || $descriptionTranslation) {
+                $translations[] = [
+                    'language' => $language,
+                    'name' => $nameTranslation,
+                    'description' => $descriptionTranslation,
+                ];
+            }
+        }
+
+        return $translations;
     }
 
     /**
