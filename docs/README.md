@@ -29,6 +29,7 @@ Esta carpeta contiene la documentación técnica de la aplicación web "Erasmus+
 - **[Paso 13: Suscripción a Newsletter](pasos/paso13.md)**: Implementación del sistema completo de suscripción a newsletter con formulario público, verificación por email, baja por token/email, seeder con 80 suscripciones y 45+ tests completos.
 - **[Paso 14: Internacionalización Completa](pasos/paso14.md)**: Implementación completa del sistema de internacionalización (i18n) con middleware SetLocale, componente Language Switcher, helpers globales, trait Translatable, traducciones estáticas y dinámicas, internacionalización de todas las vistas públicas (~200 strings), y sistema preparado para añadir nuevos idiomas fácilmente.
 - **[Paso 15: Dashboard de Administración](pasos/paso15.md)**: Implementación completa del Dashboard de Administración con estadísticas en tiempo real, gráficos interactivos (Chart.js), actividad reciente, alertas, optimización con caché, animaciones CSS, internacionalización completa, y 29 tests completos. Incluye corrección de 65 tests existentes relacionados con locale.
+- **[Paso 16: CRUD de Programas en Panel de Administración](pasos/paso16.md)**: Implementación completa del CRUD de Programas en el panel de administración con componentes Livewire (Index, Create, Edit, Show), gestión de imágenes mediante Laravel Media Library, sistema de traducciones, ordenamiento, SoftDeletes, validación de relaciones, mejoras de UX (notificaciones, tooltips, estados de carga), y 837 tests completos (1955 assertions).
 - **[Planificación de Pasos de Desarrollo](planificacion_pasos.md)**: Planificación completa y estructurada de los siguientes pasos en el desarrollo de la aplicación, incluyendo seeders, Form Requests, Policies, área pública, panel de administración, rutas, funcionalidades avanzadas, testing y optimización.
 
 ### Base de Datos
@@ -84,6 +85,7 @@ Esta carpeta contiene la documentación técnica de la aplicación web "Erasmus+
 ### Panel de Administración
 
 - **[Dashboard de Administración](admin-dashboard.md)**: Documentación técnica completa del Dashboard de Administración, incluyendo estadísticas, gráficos de actividad, alertas, actividad reciente, optimización con caché, y guía de extensibilidad.
+- **[CRUD de Programas](admin-programs-crud.md)**: Documentación técnica completa del sistema CRUD de Programas en el panel de administración, incluyendo componentes Livewire (Index, Create, Edit, Show), gestión de imágenes, traducciones, ordenamiento, SoftDeletes, validación de relaciones, y 837 tests completos.
 
 ## Información General del Proyecto
 
