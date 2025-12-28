@@ -27,6 +27,7 @@ return [
         'settings' => 'Settings',
         'profile' => 'Profile',
         'open_menu' => 'Open menu',
+        'academic_years' => 'Academic Years',
     ],
 
     // Buttons and actions

@@ -59,6 +59,12 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::get('/programas/{program}', \App\Livewire\Admin\Programs\Show::class)->name('programs.show');
     Route::get('/programas/{program}/editar', \App\Livewire\Admin\Programs\Edit::class)->name('programs.edit');
 
+    // Rutas de Años Académicos
+    Route::get('/anios-academicos', \App\Livewire\Admin\AcademicYears\Index::class)->name('academic-years.index');
+    Route::get('/anios-academicos/crear', \App\Livewire\Admin\AcademicYears\Create::class)->name('academic-years.create');
+    Route::get('/anios-academicos/{academic_year}', \App\Livewire\Admin\AcademicYears\Show::class)->name('academic-years.show');
+    Route::get('/anios-academicos/{academic_year}/editar', \App\Livewire\Admin\AcademicYears\Edit::class)->name('academic-years.edit');
+
     // Las demás rutas de admin se añadirán en pasos posteriores
     // Route::get('/convocatorias', ...)->name('calls.index');
     // etc.

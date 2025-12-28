@@ -21,6 +21,12 @@
                         <flux:navlist.item icon="academic-cap" :href="route('admin.programs.index')" :current="request()->routeIs('admin.programs.*')" wire:navigate>{{ __('common.nav.programs') }}</flux:navlist.item>
                     </flux:navlist.group>
                 @endcan
+
+                @can('viewAny', \App\Models\AcademicYear::class)
+                    <flux:navlist.group :heading="__('common.admin.nav.management')" class="grid">
+                        <flux:navlist.item icon="calendar" :href="route('admin.academic-years.index')" :current="request()->routeIs('admin.academic-years.*')" wire:navigate>{{ __('common.nav.academic_years') }}</flux:navlist.item>
+                    </flux:navlist.group>
+                @endcan
             </flux:navlist>
 
             <flux:spacer />

@@ -13,7 +13,13 @@ class UpdateAcademicYearRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        $academicYear = $this->route('academic_year');
+
+        if (! $academicYear instanceof AcademicYear) {
+            return false;
+        }
+
+        return $this->user()?->can('update', $academicYear) ?? false;
     }
 
     /**
@@ -34,6 +40,26 @@ class UpdateAcademicYearRequest extends FormRequest
             'start_date' => ['required', 'date'],
             'end_date' => ['required', 'date', 'after:start_date'],
             'is_current' => ['nullable', 'boolean'],
+        ];
+    }
+
+    /**
+     * Get custom messages for validator errors.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'year.required' => __('El año académico es obligatorio.'),
+            'year.regex' => __('El formato del año académico debe ser YYYY-YYYY (ejemplo: 2024-2025).'),
+            'year.unique' => __('Este año académico ya está registrado.'),
+            'start_date.required' => __('La fecha de inicio es obligatoria.'),
+            'start_date.date' => __('La fecha de inicio debe ser una fecha válida.'),
+            'end_date.required' => __('La fecha de fin es obligatoria.'),
+            'end_date.date' => __('La fecha de fin debe ser una fecha válida.'),
+            'end_date.after' => __('La fecha de fin debe ser posterior a la fecha de inicio.'),
+            'is_current.boolean' => __('El campo año actual debe ser verdadero o falso.'),
         ];
     }
 }
