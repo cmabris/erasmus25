@@ -269,17 +269,20 @@ Para cada policy:
   - Solo super-admin puede hacer forceDelete
   - Validar que no haya relaciones antes de forceDelete
 
-#### 3.5.3. Gestión de Años Académicos (CRUD)
-- [ ] Crear componente Livewire `Admin\AcademicYears\Index`
-- [ ] Crear componente Livewire `Admin\AcademicYears\Create`
-- [ ] Crear componente Livewire `Admin\AcademicYears\Edit`
-- [ ] Funcionalidades:
+#### 3.5.3. Gestión de Años Académicos (CRUD) ✅ COMPLETADO
+- [x] Crear componente Livewire `Admin\AcademicYears\Index`
+- [x] Crear componente Livewire `Admin\AcademicYears\Create`
+- [x] Crear componente Livewire `Admin\AcademicYears\Edit`
+- [x] Crear componente Livewire `Admin\AcademicYears\Show`
+- [x] Funcionalidades:
   - Crear, editar, eliminar años académicos (SoftDeletes)
   - Restaurar años académicos eliminados
-  - ForceDelete solo para super-admin (validar relaciones)
-  - Marcar año actual
+  - ForceDelete solo para administradores (validar relaciones)
+  - Marcar año actual (solo uno puede ser actual)
   - Validar unicidad de años
-- [ ] **SoftDeletes**: Implementar SoftDeletes en modelo AcademicYear
+- [x] **SoftDeletes**: Implementar SoftDeletes en modelo AcademicYear
+- [x] **Optimizaciones**: Caché del año actual (24h TTL), índices de BD, búsqueda optimizada
+- [x] **Tests**: 61 tests completos (149 assertions)
 
 #### 3.5.4. Gestión de Convocatorias (CRUD Completo)
 - [ ] Crear componente Livewire `Admin\Calls\Index` (listado con filtros avanzados)
