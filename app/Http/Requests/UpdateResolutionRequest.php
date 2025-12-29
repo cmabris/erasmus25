@@ -13,7 +13,13 @@ class UpdateResolutionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        $resolution = $this->route('resolution');
+
+        if (! $resolution instanceof Resolution) {
+            return false;
+        }
+
+        return $this->user()?->can('update', $resolution) ?? false;
     }
 
     /**

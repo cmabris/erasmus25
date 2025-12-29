@@ -13,7 +13,13 @@ class UpdateCallPhaseRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        $callPhase = $this->route('call_phase');
+
+        if (! $callPhase instanceof CallPhase) {
+            return false;
+        }
+
+        return $this->user()?->can('update', $callPhase) ?? false;
     }
 
     /**

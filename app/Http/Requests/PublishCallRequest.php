@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Call;
 use Illuminate\Foundation\Http\FormRequest;
 
 class PublishCallRequest extends FormRequest
@@ -11,7 +12,13 @@ class PublishCallRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        $call = $this->route('call');
+
+        if (! $call instanceof Call) {
+            return false;
+        }
+
+        return $this->user()?->can('publish', $call) ?? false;
     }
 
     /**
@@ -23,6 +30,18 @@ class PublishCallRequest extends FormRequest
     {
         return [
             'published_at' => ['nullable', 'date'],
+        ];
+    }
+
+    /**
+     * Get custom messages for validator errors.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'published_at.date' => __('La fecha de publicación debe ser una fecha válida.'),
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Resolution;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -12,7 +13,7 @@ class StoreResolutionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user()?->can('create', Resolution::class) ?? false;
     }
 
     /**
