@@ -284,23 +284,65 @@ Para cada policy:
 - [x] **Optimizaciones**: Caché del año actual (24h TTL), índices de BD, búsqueda optimizada
 - [x] **Tests**: 61 tests completos (149 assertions)
 
-#### 3.5.4. Gestión de Convocatorias (CRUD Completo)
-- [ ] Crear componente Livewire `Admin\Calls\Index` (listado con filtros avanzados)
-- [ ] Crear componente Livewire `Admin\Calls\Create` (formulario creación completo)
-- [ ] Crear componente Livewire `Admin\Calls\Edit` (formulario edición)
-- [ ] Crear componente Livewire `Admin\Calls\Show` (vista detalle con fases y resoluciones)
-- [ ] Funcionalidades:
+#### 3.5.4. Gestión de Convocatorias (CRUD Completo) ✅ COMPLETADO
+- [x] Crear componente Livewire `Admin\Calls\Index` (listado con filtros avanzados)
+- [x] Crear componente Livewire `Admin\Calls\Create` (formulario creación completo)
+- [x] Crear componente Livewire `Admin\Calls\Edit` (formulario edición)
+- [x] Crear componente Livewire `Admin\Calls\Show` (vista detalle con fases y resoluciones)
+- [x] Funcionalidades básicas:
   - Crear, editar, eliminar convocatorias (SoftDeletes)
   - Restaurar convocatorias eliminadas
   - ForceDelete solo para super-admin (validar relaciones)
   - Cambiar estado (borrador → abierta → cerrada → archivada)
   - Publicar convocatorias (establecer `published_at`)
-  - Gestión de fases (crear, editar, marcar como actual)
-  - Gestión de resoluciones (crear, editar, publicar)
-  - Subir PDFs de resoluciones (Laravel Media Library)
+  - Visualización de fases y resoluciones
+  - Marcar fase como actual
+  - Publicar resoluciones
   - Gestión de destinos (JSON)
   - Configuración de baremo (JSON)
-- [ ] **SoftDeletes**: Implementar SoftDeletes en modelo Call
+- [x] **SoftDeletes**: Implementar SoftDeletes en modelo Call
+- [x] **FormRequests**: Actualizados con autorización completa
+- [x] **Vistas**: Componentes completos con Flux UI
+- [x] **Rutas**: Configuradas y funcionando
+- [x] **Navegación**: Integrada en sidebar de administración
+
+#### 3.5.4.1. Gestión Completa de Fases de Convocatorias (CRUD)
+- [ ] Crear componente Livewire `Admin\Calls\Phases\Index` (listado de fases de una convocatoria)
+- [ ] Crear componente Livewire `Admin\Calls\Phases\Create` (formulario creación de fase)
+- [ ] Crear componente Livewire `Admin\Calls\Phases\Edit` (formulario edición de fase)
+- [ ] Crear componente Livewire `Admin\Calls\Phases\Show` (vista detalle de fase)
+- [ ] Funcionalidades:
+  - Crear nuevas fases para una convocatoria
+  - Editar fases existentes
+  - Eliminar fases (SoftDeletes si aplica)
+  - Reordenar fases (campo `order`)
+  - Marcar/desmarcar fase como actual (solo una por convocatoria)
+  - Validar fechas de inicio/fin entre fases
+  - Gestión de tipos de fase (publicacion, solicitudes, provisional, alegaciones, definitivo, renuncias, lista_espera)
+  - Integración con componente Show de convocatoria (modales o navegación)
+- [ ] **Rutas**: Rutas anidadas bajo `/admin/convocatorias/{call}/fases`
+- [ ] **Autorización**: Usar `CallPhasePolicy` existente
+- [ ] **Validación**: Usar `StoreCallPhaseRequest` y `UpdateCallPhaseRequest` existentes
+
+#### 3.5.4.2. Gestión Completa de Resoluciones (CRUD)
+- [ ] Crear componente Livewire `Admin\Calls\Resolutions\Index` (listado de resoluciones de una convocatoria)
+- [ ] Crear componente Livewire `Admin\Calls\Resolutions\Create` (formulario creación de resolución)
+- [ ] Crear componente Livewire `Admin\Calls\Resolutions\Edit` (formulario edición de resolución)
+- [ ] Crear componente Livewire `Admin\Calls\Resolutions\Show` (vista detalle de resolución)
+- [ ] Funcionalidades:
+  - Crear nuevas resoluciones para una convocatoria/fase
+  - Editar resoluciones existentes
+  - Eliminar resoluciones (SoftDeletes si aplica)
+  - Publicar/despublicar resoluciones (establecer `published_at`)
+  - Subir PDFs de resoluciones (Laravel Media Library)
+  - Gestión de tipos de resolución (provisional, definitivo, alegaciones)
+  - Asociar resolución a fase específica
+  - Validar fecha oficial vs fecha de publicación
+  - Integración con componente Show de convocatoria (modales o navegación)
+- [ ] **Rutas**: Rutas anidadas bajo `/admin/convocatorias/{call}/resoluciones`
+- [ ] **Autorización**: Usar `ResolutionPolicy` existente
+- [ ] **Validación**: Usar `StoreResolutionRequest` y `UpdateResolutionRequest` existentes
+- [ ] **Media Library**: Configurar colección 'resolutions' para PDFs
 
 #### 3.5.5. Gestión de Noticias (CRUD)
 - [ ] Crear componente Livewire `Admin\News\Index` (listado con filtros)
@@ -636,7 +678,9 @@ Para cada policy:
 **Duración estimada**: 3-4 semanas
 - Dashboard
 - CRUD de Programas
-- CRUD de Convocatorias
+- CRUD de Convocatorias (3.5.4) ✅
+- CRUD de Fases de Convocatorias (3.5.4.1) - Pendiente
+- CRUD de Resoluciones (3.5.4.2) - Pendiente
 - CRUD de Noticias
 - CRUD de Documentos
 
@@ -695,6 +739,48 @@ Para cada policy:
    - Implementar funcionalidad de restauración en todos los CRUDs
    - Filtrar registros eliminados por defecto en listados
    - Opción de ver registros eliminados (solo para administradores)
+
+10. **Gestión de Fases y Resoluciones (3.5.4.1 y 3.5.4.2)**: **RECOMENDACIÓN DE IMPLEMENTACIÓN**
+    
+    **Opción Recomendada: Rutas Anidadas con Componentes Separados**
+    
+    Laravel y Livewire manejan mejor las relaciones padre-hijo cuando se implementan como rutas anidadas con componentes separados. Esta aproximación ofrece:
+    
+    - **Separación de responsabilidades**: Cada componente tiene su propia lógica y vista
+    - **Mejor rendimiento**: Solo se carga el componente necesario, no toda la página padre
+    - **Navegación clara**: URLs semánticas (`/admin/convocatorias/{call}/fases/{phase}/editar`)
+    - **Reutilización**: Los componentes pueden usarse desde diferentes contextos
+    - **Testing más fácil**: Cada componente se testea independientemente
+    - **Mantenibilidad**: Código más organizado y fácil de mantener
+    
+    **Estructura recomendada**:
+    ```
+    routes/web.php:
+    Route::prefix('admin/convocatorias/{call}')->group(function () {
+        Route::get('/fases', ...)->name('admin.calls.phases.index');
+        Route::get('/fases/crear', ...)->name('admin.calls.phases.create');
+        Route::get('/fases/{phase}', ...)->name('admin.calls.phases.show');
+        Route::get('/fases/{phase}/editar', ...)->name('admin.calls.phases.edit');
+        
+        Route::get('/resoluciones', ...)->name('admin.calls.resolutions.index');
+        Route::get('/resoluciones/crear', ...)->name('admin.calls.resolutions.create');
+        Route::get('/resoluciones/{resolution}', ...)->name('admin.calls.resolutions.show');
+        Route::get('/resoluciones/{resolution}/editar', ...)->name('admin.calls.resolutions.edit');
+    });
+    ```
+    
+    **Alternativa: Modales (Solo para acciones rápidas)**
+    
+    Los modales son útiles para acciones rápidas (marcar como actual, publicar), pero para CRUD completo se recomienda rutas separadas porque:
+    - Los formularios complejos son difíciles de manejar en modales
+    - La validación y manejo de errores es más compleja
+    - No hay historial de navegación (botón atrás)
+    - Difícil de testear completamente
+    
+    **Integración con Show de Convocatoria**:
+    - En `Admin\Calls\Show`, añadir botones que naveguen a las rutas anidadas
+    - Usar `wire:navigate` para transiciones suaves
+    - Mantener breadcrumbs que muestren la jerarquía (Convocatorias > {Call} > Fases > {Phase})
 
 ---
 
