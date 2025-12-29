@@ -250,11 +250,20 @@ class Create extends Component
     public function addDestination(): void
     {
         if ($this->newDestination) {
-            $this->destinations[] = $this->newDestination;
+            // If there's an empty destination at the end, replace it
+            $lastIndex = count($this->destinations) - 1;
+            if ($lastIndex >= 0 && empty(trim($this->destinations[$lastIndex] ?? ''))) {
+                $this->destinations[$lastIndex] = $this->newDestination;
+            } else {
+                $this->destinations[] = $this->newDestination;
+            }
             $this->newDestination = '';
         } else {
-            // Add empty destination if newDestination is empty
-            $this->destinations[] = '';
+            // Add empty destination if newDestination is empty and there's no empty one at the end
+            $lastIndex = count($this->destinations) - 1;
+            if ($lastIndex < 0 || ! empty(trim($this->destinations[$lastIndex] ?? ''))) {
+                $this->destinations[] = '';
+            }
         }
     }
 
@@ -341,8 +350,30 @@ class Create extends Component
         $this->scoringTable = array_values($filteredScoringTable);
         $this->slug = $this->slug ?: Str::slug($this->title);
 
-        // Validate using FormRequest
-        $validated = $this->validate((new StoreCallRequest)->rules());
+        // Prepare data array for validation (map camelCase to snake_case for validation)
+        $data = [
+            'program_id' => $this->program_id,
+            'academic_year_id' => $this->academic_year_id,
+            'title' => $this->title,
+            'slug' => $this->slug,
+            'type' => $this->type,
+            'modality' => $this->modality,
+            'number_of_places' => $this->number_of_places,
+            'destinations' => $this->destinations,
+            'estimated_start_date' => $this->estimated_start_date ?: null,
+            'estimated_end_date' => $this->estimated_end_date ?: null,
+            'requirements' => $this->requirements ?: null,
+            'documentation' => $this->documentation ?: null,
+            'selection_criteria' => $this->selection_criteria ?: null,
+            'scoring_table' => ! empty($this->scoringTable) ? $this->scoringTable : null,
+            'status' => $this->status,
+        ];
+
+        // Validate using FormRequest rules with Validator
+        $rules = (new StoreCallRequest)->rules();
+        $messages = (new StoreCallRequest)->messages();
+
+        $validated = \Illuminate\Support\Facades\Validator::make($data, $rules, $messages)->validate();
 
         // Add created_by
         $validated['created_by'] = auth()->id();

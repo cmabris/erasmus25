@@ -73,6 +73,25 @@ class Call extends Model
                 $call->slug = Str::slug($call->title);
             }
         });
+
+        // Handle cascading deletes when Call is soft deleted
+        static::deleting(function ($call) {
+            if ($call->isForceDeleting()) {
+                // Force delete related records (they don't have SoftDeletes, so delete() is enough)
+                $call->phases()->delete();
+                $call->applications()->delete();
+                $call->resolutions()->delete();
+                // Set call_id to null for events
+                $call->events()->update(['call_id' => null]);
+            } else {
+                // Soft delete - delete related records physically (they don't have SoftDeletes)
+                $call->phases()->delete();
+                $call->applications()->delete();
+                $call->resolutions()->delete();
+                // Set call_id to null for events
+                $call->events()->update(['call_id' => null]);
+            }
+        });
     }
 
     /**
@@ -129,5 +148,13 @@ class Call extends Model
     public function resolutions(): HasMany
     {
         return $this->hasMany(Resolution::class);
+    }
+
+    /**
+     * Get the events for the call.
+     */
+    public function events(): HasMany
+    {
+        return $this->hasMany(ErasmusEvent::class);
     }
 }

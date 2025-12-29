@@ -380,8 +380,51 @@ class Edit extends Component
         $this->scoringTable = array_values($filteredScoringTable);
         $this->slug = $this->slug ?: Str::slug($this->title);
 
-        // Validate using FormRequest
-        $validated = $this->validate((new UpdateCallRequest)->rules());
+        // Prepare data array for validation (map camelCase to snake_case for validation)
+        $data = [
+            'program_id' => $this->program_id,
+            'academic_year_id' => $this->academic_year_id,
+            'title' => $this->title,
+            'slug' => $this->slug,
+            'type' => $this->type,
+            'modality' => $this->modality,
+            'number_of_places' => $this->number_of_places,
+            'destinations' => $this->destinations,
+            'estimated_start_date' => $this->estimated_start_date ?: null,
+            'estimated_end_date' => $this->estimated_end_date ?: null,
+            'requirements' => $this->requirements ?: null,
+            'documentation' => $this->documentation ?: null,
+            'selection_criteria' => $this->selection_criteria ?: null,
+            'scoring_table' => ! empty($this->scoringTable) ? $this->scoringTable : null,
+            'status' => $this->status,
+        ];
+
+        // Validate using FormRequest rules with Validator
+        // Get base rules from UpdateCallRequest
+        $baseRules = [
+            'program_id' => ['required', 'exists:programs,id'],
+            'academic_year_id' => ['required', 'exists:academic_years,id'],
+            'title' => ['required', 'string', 'max:255'],
+            'slug' => ['nullable', 'string', 'max:255', \Illuminate\Validation\Rule::unique('calls', 'slug')->ignore($this->call->id)],
+            'type' => ['required', \Illuminate\Validation\Rule::in(['alumnado', 'personal'])],
+            'modality' => ['required', \Illuminate\Validation\Rule::in(['corta', 'larga'])],
+            'number_of_places' => ['required', 'integer', 'min:1'],
+            'destinations' => ['required', 'array', 'min:1'],
+            'destinations.*' => ['required', 'string', 'max:255'],
+            'estimated_start_date' => ['nullable', 'date'],
+            'estimated_end_date' => ['nullable', 'date', 'after:estimated_start_date'],
+            'requirements' => ['nullable', 'string'],
+            'documentation' => ['nullable', 'string'],
+            'selection_criteria' => ['nullable', 'string'],
+            'scoring_table' => ['nullable', 'array'],
+            'status' => ['nullable', \Illuminate\Validation\Rule::in(['borrador', 'abierta', 'cerrada', 'en_baremacion', 'resuelta', 'archivada'])],
+            'published_at' => ['nullable', 'date'],
+            'closed_at' => ['nullable', 'date'],
+        ];
+
+        $messages = (new UpdateCallRequest)->messages();
+
+        $validated = \Illuminate\Support\Facades\Validator::make($data, $baseRules, $messages)->validate();
 
         // Add updated_by
         $validated['updated_by'] = auth()->id();
