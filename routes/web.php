@@ -70,6 +70,14 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::get('/convocatorias/crear', \App\Livewire\Admin\Calls\Create::class)->name('calls.create');
     Route::get('/convocatorias/{call}', \App\Livewire\Admin\Calls\Show::class)->name('calls.show');
     Route::get('/convocatorias/{call}/editar', \App\Livewire\Admin\Calls\Edit::class)->name('calls.edit');
+
+    // Rutas anidadas de Fases de Convocatorias
+    Route::prefix('convocatorias/{call}')->group(function () {
+        Route::get('/fases', \App\Livewire\Admin\Calls\Phases\Index::class)->name('calls.phases.index');
+        Route::get('/fases/crear', \App\Livewire\Admin\Calls\Phases\Create::class)->name('calls.phases.create');
+        Route::get('/fases/{call_phase}', \App\Livewire\Admin\Calls\Phases\Show::class)->name('calls.phases.show');
+        Route::get('/fases/{call_phase}/editar', \App\Livewire\Admin\Calls\Phases\Edit::class)->name('calls.phases.edit');
+    });
 });
 
 Route::middleware(['auth'])->group(function () {

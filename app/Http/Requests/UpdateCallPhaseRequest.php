@@ -33,7 +33,11 @@ class UpdateCallPhaseRequest extends FormRequest
         $callPhaseId = $this->route('call_phase');
         if ($callPhaseId instanceof CallPhase) {
             $callPhaseId = $callPhaseId->id;
+        } else {
+            $callPhaseId = null;
         }
+
+        $callId = $this->input('call_id');
 
         return [
             'call_id' => ['required', 'exists:calls,id'],
@@ -42,8 +46,76 @@ class UpdateCallPhaseRequest extends FormRequest
             'description' => ['nullable', 'string'],
             'start_date' => ['nullable', 'date'],
             'end_date' => ['nullable', 'date', 'after:start_date'],
-            'is_current' => ['nullable', 'boolean'],
-            'order' => ['nullable', 'integer'],
+            'is_current' => [
+                'nullable',
+                'boolean',
+                function ($attribute, $value, $fail) use ($callId, $callPhaseId) {
+                    if ($value === true && $callId) {
+                        $hasCurrentPhase = CallPhase::where('call_id', $callId)
+                            ->where('is_current', true)
+                            ->when($callPhaseId, fn ($query) => $query->where('id', '!=', $callPhaseId))
+                            ->exists();
+
+                        if ($hasCurrentPhase) {
+                            $fail(__('Ya existe una fase marcada como actual para esta convocatoria. Solo puede haber una fase actual a la vez.'));
+                        }
+                    }
+                },
+            ],
+            'order' => [
+                'nullable',
+                'integer',
+                'min:0',
+                Rule::unique('call_phases', 'order')
+                    ->where('call_id', $callId)
+                    ->whereNull('deleted_at')
+                    ->ignore($callPhaseId),
+            ],
+        ];
+    }
+
+    /**
+     * Get custom messages for validator errors.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'call_id.required' => __('El ID de la convocatoria es obligatorio.'),
+            'call_id.exists' => __('La convocatoria seleccionada no existe o ha sido eliminada.'),
+            'phase_type.required' => __('Debe seleccionar un tipo de fase.'),
+            'phase_type.in' => __('El tipo de fase seleccionado no es válido. Los tipos válidos son: publicación, solicitudes, provisional, alegaciones, definitivo, renuncias o lista de espera.'),
+            'name.required' => __('El nombre de la fase es obligatorio.'),
+            'name.string' => __('El nombre de la fase debe ser un texto válido.'),
+            'name.max' => __('El nombre de la fase no puede exceder los :max caracteres. Por favor, use un nombre más corto.'),
+            'description.string' => __('La descripción debe ser un texto válido.'),
+            'start_date.date' => __('La fecha de inicio debe tener un formato de fecha válido (YYYY-MM-DD).'),
+            'end_date.date' => __('La fecha de fin debe tener un formato de fecha válido (YYYY-MM-DD).'),
+            'end_date.after' => __('La fecha de fin debe ser posterior a la fecha de inicio. Por favor, verifique las fechas ingresadas.'),
+            'is_current.boolean' => __('El campo "es fase actual" debe ser verdadero o falso.'),
+            'order.integer' => __('El orden debe ser un número entero positivo.'),
+            'order.min' => __('El orden debe ser mayor o igual a :min. No se permiten valores negativos.'),
+            'order.unique' => __('Ya existe otra fase con el mismo orden (:order) para esta convocatoria. Por favor, seleccione un orden diferente.', ['order' => $this->input('order')]),
+        ];
+    }
+
+    /**
+     * Get custom attribute names for validator errors.
+     *
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'call_id' => __('convocatoria'),
+            'phase_type' => __('tipo de fase'),
+            'name' => __('nombre'),
+            'description' => __('descripción'),
+            'start_date' => __('fecha de inicio'),
+            'end_date' => __('fecha de fin'),
+            'is_current' => __('fase actual'),
+            'order' => __('orden'),
         ];
     }
 }

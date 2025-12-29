@@ -282,17 +282,30 @@
                 <div>
                     <div class="mb-4 flex items-center justify-between">
                         <flux:heading size="md">{{ __('Fases de la Convocatoria') }}</flux:heading>
-                        @can('create', \App\Models\CallPhase::class)
-                            <flux:button 
-                                href="{{ route('admin.calls.index') }}" 
-                                variant="ghost" 
-                                size="sm"
-                                icon="plus"
-                                wire:navigate
-                            >
-                                {{ __('Añadir Fase') }}
-                            </flux:button>
-                        @endcan
+                        <div class="flex items-center gap-2">
+                            @can('viewAny', \App\Models\CallPhase::class)
+                                <flux:button 
+                                    href="{{ route('admin.calls.phases.index', $call) }}" 
+                                    variant="ghost" 
+                                    size="sm"
+                                    icon="list-bullet"
+                                    wire:navigate
+                                >
+                                    {{ __('Gestionar Fases') }}
+                                </flux:button>
+                            @endcan
+                            @can('create', \App\Models\CallPhase::class)
+                                <flux:button 
+                                    href="{{ route('admin.calls.phases.create', $call) }}" 
+                                    variant="primary" 
+                                    size="sm"
+                                    icon="plus"
+                                    wire:navigate
+                                >
+                                    {{ __('Añadir Fase') }}
+                                </flux:button>
+                            @endcan
+                        </div>
                     </div>
                     @if($call->phases->isEmpty())
                         <div class="rounded-lg border border-zinc-200 bg-zinc-50 p-8 text-center dark:border-zinc-700 dark:bg-zinc-800">
