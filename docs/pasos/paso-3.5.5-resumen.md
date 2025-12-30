@@ -13,7 +13,7 @@ Desarrollar un sistema completo de gestión (CRUD) de Noticias en el panel de ad
 
 ---
 
-## 📋 Pasos Principales (16 Pasos en 8 Fases)
+## 📋 Pasos Principales (17 Pasos en 8 Fases)
 
 ### ✅ **Fase 1: Preparación y Estructura Base** (2 pasos)
 1. **Implementar SoftDeletes en NewsPost** - Añadir SoftDeletes al modelo
@@ -24,28 +24,29 @@ Desarrollar un sistema completo de gestión (CRUD) de Noticias en el panel de ad
 4. **Crear vista Index** - Tabla responsive con acciones y modales
 5. **Configurar rutas y navegación** - Añadir rutas y actualizar sidebar
 
-### ✅ **Fase 3: Componente Create (Crear)** (2 pasos)
+### ✅ **Fase 3: Componente Create (Crear)** (3 pasos)
 6. **Crear componente Create** - Lógica de creación con validación y gestión de etiquetas/imágenes
-7. **Crear vista Create** - Formulario completo con todas las secciones
+7. **Instalar y configurar Tiptap** - Editor de contenido enriquecido con integración Livewire 3
+8. **Crear vista Create** - Formulario completo con todas las secciones y editor Tiptap
 
 ### ✅ **Fase 4: Componente Edit (Editar)** (2 pasos)
-8. **Crear componente Edit** - Lógica de edición con actualización de etiquetas/imágenes
-9. **Crear vista Edit** - Formulario de edición con datos precargados
+9. **Crear componente Edit** - Lógica de edición con actualización de etiquetas/imágenes
+10. **Crear vista Edit** - Formulario de edición con datos precargados y editor Tiptap
 
 ### ✅ **Fase 5: Componente Show (Detalle)** (2 pasos)
-10. **Crear componente Show** - Vista de detalle con información completa
-11. **Crear vista Show** - Presentación de información y acciones
+11. **Crear componente Show** - Vista de detalle con información completa
+12. **Crear vista Show** - Presentación de información y acciones
 
 ### ✅ **Fase 6: Funcionalidades Avanzadas** (3 pasos)
-12. **Gestión de etiquetas** - Seleccionar existentes y crear nuevas desde formulario
-13. **Gestión de imágenes destacadas** - Subir, preview y eliminar usando Media Library
-14. **Publicación/despublicación** - Cambiar estado y establecer `published_at`
+13. **Gestión de etiquetas** - Seleccionar existentes y crear nuevas desde formulario
+14. **Gestión de imágenes destacadas** - Subir, preview y eliminar usando Media Library
+15. **Publicación/despublicación** - Cambiar estado y establecer `published_at`
 
 ### ✅ **Fase 7: Testing** (1 paso)
-15. **Crear tests** - Tests completos para Index, Create, Edit y Show
+16. **Crear tests** - Tests completos para Index, Create, Edit y Show
 
 ### ✅ **Fase 8: Optimizaciones y Ajustes Finales** (1 paso)
-16. **Optimizaciones finales** - Revisar consultas, formatear código, verificar todo
+17. **Optimizaciones finales** - Revisar consultas, formatear código, verificar todo
 
 ---
 
@@ -137,6 +138,8 @@ tests/Feature/Livewire/Admin/News/
 - **Livewire 3** - Componentes reactivos
 - **Flux UI v2** - Componentes UI
 - **Tailwind CSS v4** - Estilos
+- **Tiptap** - Editor de contenido enriquecido (ProseMirror)
+- **Alpine.js** - Interactividad (incluido con Livewire 3)
 - **Laravel Media Library** - Gestión de imágenes
 - **Laravel Permission** - Autorización
 
@@ -167,6 +170,7 @@ Antes de considerar completado, verificar:
 ## 📚 Documentación Relacionada
 
 - [Plan detallado completo](paso-3.5.5-plan.md) - Plan paso a paso con todos los detalles
+- [Comparación Trix vs Tiptap](paso-3.5.5-editor-comparison.md) - Análisis y recomendación del editor
 - [Documentación de CRUD de Programas](admin-programs-crud.md) - Referencia de patrón similar
 - [Documentación de CRUD de Años Académicos](admin-academic-years-crud.md) - Referencia de patrón similar
 - [Documentación de CRUD de Convocatorias](admin-calls-crud.md) - Referencia de patrón similar

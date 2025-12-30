@@ -13,7 +13,7 @@ Desarrollar un sistema completo de gestión (CRUD) de Noticias en el panel de ad
 
 ---
 
-## 📋 Pasos Principales (16 Pasos)
+## 📋 Pasos Principales (17 Pasos)
 
 ### ✅ **Fase 1: Preparación y Estructura Base**
 
@@ -210,8 +210,47 @@ Desarrollar un sistema completo de gestión (CRUD) de Noticias en el panel de ad
 
 ---
 
-#### Paso 7: Crear vista del componente Create
-**Objetivo**: Crear el formulario de creación con todos los campos y editor de contenido.
+#### Paso 7: Instalar y configurar Tiptap
+**Objetivo**: Instalar Tiptap y configurar la integración con Livewire 3 y Alpine.js.
+
+**Tareas**:
+- [ ] Instalar Tiptap y extensiones básicas:
+  ```bash
+  npm install @tiptap/core @tiptap/starter-kit @tiptap/pm
+  ```
+- [ ] Instalar extensiones recomendadas para noticias:
+  ```bash
+  npm install @tiptap/extension-link @tiptap/extension-image @tiptap/extension-placeholder
+  ```
+- [ ] Crear helper JavaScript para Tiptap en `resources/js/app.js`:
+  - [ ] Importar Editor y extensiones
+  - [ ] Crear función Alpine.js `tiptapEditor()` para inicializar el editor
+  - [ ] Configurar integración con `@entangle()` de Livewire
+  - [ ] Configurar toolbar básico (negrita, cursiva, enlaces, etc.)
+- [ ] Importar estilos de Tiptap (opcional, usar Tailwind prose para estilos)
+- [ ] Crear componente Blade reutilizable `components/tiptap-editor.blade.php` (opcional)
+
+**Archivos a modificar**:
+- `package.json` (se actualiza automáticamente con npm install)
+- `resources/js/app.js`
+
+**Archivos a crear** (opcional):
+- `resources/views/components/tiptap-editor.blade.php`
+
+**Verificación**:
+- Verificar que Tiptap se instala correctamente
+- Verificar que el helper JavaScript funciona
+- Verificar que se puede inicializar un editor básico
+
+**Referencias**:
+- [Documentación Tiptap](https://tiptap.dev/)
+- [Guía de integración con PHP/Laravel](https://tiptap.dev/docs/editor/getting-started/install/php)
+- [Comparación Trix vs Tiptap](paso-3.5.5-editor-comparison.md)
+
+---
+
+#### Paso 8: Crear vista del componente Create
+**Objetivo**: Crear el formulario de creación con todos los campos y editor Tiptap.
 
 **Tareas**:
 - [ ] Crear `resources/views/livewire/admin/news/create.blade.php`
@@ -223,7 +262,11 @@ Desarrollar un sistema completo de gestión (CRUD) de Noticias en el panel de ad
     - [ ] Título (input, requerido)
     - [ ] Slug (input, generado automáticamente, editable)
     - [ ] Extracto (textarea)
-    - [ ] Contenido (textarea o editor enriquecido)
+    - [ ] **Contenido con Tiptap**:
+      - [ ] Usar componente Tiptap con `@entangle('content')`
+      - [ ] Toolbar con botones: negrita, cursiva, enlaces, listas, etc.
+      - [ ] Editor con placeholder
+      - [ ] Estilos con Tailwind prose para preview
   - [ ] **Información de movilidad** (opcional):
     - [ ] País (input)
     - [ ] Ciudad (input)
@@ -243,21 +286,23 @@ Desarrollar un sistema completo de gestión (CRUD) de Noticias en el panel de ad
 - [ ] Implementar validación en tiempo real con feedback visual
 - [ ] Implementar botones de acción: "Guardar", "Guardar y publicar", "Cancelar"
 - [ ] Usar componentes Flux UI: `flux:field`, `flux:input`, `flux:textarea`, `flux:select`, `flux:button`
-- [ ] Implementar editor de contenido enriquecido (opcional: usar Trix o similar, o textarea simple)
+- [ ] Integrar Tiptap con Livewire usando Alpine.js y `@entangle()`
 
 **Archivos a crear**:
 - `resources/views/livewire/admin/news/create.blade.php`
 
 **Verificación**:
 - Verificar que el formulario se renderiza correctamente
+- Verificar que Tiptap se inicializa correctamente
+- Verificar que el contenido se sincroniza con Livewire
 - Verificar que la validación funciona
-- Verificar que se puede crear una noticia
+- Verificar que se puede crear una noticia con contenido enriquecido
 
 ---
 
 ### ✅ **Fase 4: Componente Edit (Editar)**
 
-#### Paso 8: Crear componente Livewire Admin\News\Edit
+#### Paso 9: Crear componente Livewire Admin\News\Edit
 **Objetivo**: Crear el componente para editar noticias existentes.
 
 **Tareas**:
@@ -292,7 +337,7 @@ Desarrollar un sistema completo de gestión (CRUD) de Noticias en el panel de ad
 
 ---
 
-#### Paso 9: Crear vista del componente Edit
+#### Paso 10: Crear vista del componente Edit
 **Objetivo**: Crear el formulario de edición similar al de creación pero con datos precargados.
 
 **Tareas**:
@@ -316,7 +361,7 @@ Desarrollar un sistema completo de gestión (CRUD) de Noticias en el panel de ad
 
 ### ✅ **Fase 5: Componente Show (Detalle)**
 
-#### Paso 10: Crear componente Livewire Admin\News\Show
+#### Paso 11: Crear componente Livewire Admin\News\Show
 **Objetivo**: Crear la vista de detalle de una noticia con información completa.
 
 **Tareas**:
@@ -341,7 +386,7 @@ Desarrollar un sistema completo de gestión (CRUD) de Noticias en el panel de ad
 
 ---
 
-#### Paso 11: Crear vista del componente Show
+#### Paso 12: Crear vista del componente Show
 **Objetivo**: Crear la vista de detalle con información completa y acciones.
 
 **Tareas**:
@@ -374,7 +419,7 @@ Desarrollar un sistema completo de gestión (CRUD) de Noticias en el panel de ad
 
 ### ✅ **Fase 6: Funcionalidades Avanzadas**
 
-#### Paso 12: Implementar gestión de etiquetas en formularios
+#### Paso 13: Implementar gestión de etiquetas en formularios
 **Objetivo**: Permitir seleccionar etiquetas existentes y crear nuevas etiquetas desde el formulario.
 
 **Tareas**:
@@ -398,7 +443,7 @@ Desarrollar un sistema completo de gestión (CRUD) de Noticias en el panel de ad
 
 ---
 
-#### Paso 13: Implementar gestión de imágenes destacadas
+#### Paso 14: Implementar gestión de imágenes destacadas
 **Objetivo**: Permitir subir, previsualizar y eliminar imágenes destacadas usando Laravel Media Library.
 
 **Tareas**:
@@ -429,7 +474,7 @@ Desarrollar un sistema completo de gestión (CRUD) de Noticias en el panel de ad
 
 ---
 
-#### Paso 14: Implementar publicación/despublicación
+#### Paso 15: Implementar publicación/despublicación
 **Objetivo**: Permitir publicar y despublicar noticias cambiando el estado y estableciendo `published_at`.
 
 **Tareas**:
@@ -457,7 +502,7 @@ Desarrollar un sistema completo de gestión (CRUD) de Noticias en el panel de ad
 
 ### ✅ **Fase 7: Testing**
 
-#### Paso 15: Crear tests para los componentes
+#### Paso 16: Crear tests para los componentes
 **Objetivo**: Crear tests completos para todos los componentes del CRUD.
 
 **Tareas**:
@@ -506,7 +551,7 @@ Desarrollar un sistema completo de gestión (CRUD) de Noticias en el panel de ad
 
 ### ✅ **Fase 8: Optimizaciones y Ajustes Finales**
 
-#### Paso 16: Optimizaciones y ajustes finales
+#### Paso 17: Optimizaciones y ajustes finales
 **Objetivo**: Optimizar consultas, añadir índices si es necesario, y realizar ajustes finales.
 
 **Tareas**:
@@ -547,14 +592,24 @@ Desarrollar un sistema completo de gestión (CRUD) de Noticias en el panel de ad
 - Permitir preview antes de guardar
 - Permitir eliminar imagen existente en edición
 
+### Editor de Contenido (Tiptap)
+- **Tiptap**: Editor de contenido enriquecido basado en ProseMirror
+- Integración con Livewire 3 usando Alpine.js y `@entangle()`
+- Extensiones: StarterKit (básico), Link, Image, Placeholder
+- Toolbar con botones: negrita, cursiva, enlaces, listas, etc.
+- Guardar contenido como HTML en el campo `content` del modelo
+- Ver [Comparación Trix vs Tiptap](paso-3.5.5-editor-comparison.md) para detalles
+
 ### Publicación
 - Publicar una noticia implica cambiar estado a 'publicado' y establecer `published_at`
 - Despublicar implica cambiar estado a 'borrador' y establecer `published_at` a null
 - Verificar autorización con `NewsPostPolicy::publish()`
 
 ### Editor de Contenido
-- Por ahora usar textarea simple
-- En el futuro se puede implementar editor enriquecido (Trix, TinyMCE, etc.)
+- **Tiptap** será el editor de contenido enriquecido utilizado
+- Integración con Livewire 3 usando Alpine.js y `@entangle()`
+- Ver [Comparación Trix vs Tiptap](paso-3.5.5-editor-comparison.md) para más detalles
+- Extensiones recomendadas: StarterKit, Link, Image, Placeholder
 
 ### Traducciones
 - El modelo NewsPost tiene campos que pueden necesitar traducciones (title, excerpt, content)
