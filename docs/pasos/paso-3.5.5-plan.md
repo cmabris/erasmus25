@@ -1,0 +1,590 @@
+# Plan Detallado: Paso 3.5.5 - CRUD de Gestión de Noticias en Panel de Administración
+
+## 🎯 Objetivo
+
+Desarrollar un sistema completo de gestión (CRUD) de Noticias en el panel de administración con:
+- Listado moderno con tabla interactiva y filtros avanzados
+- Formularios de creación y edición con editor de contenido enriquecido
+- Vista de detalle con información completa
+- Funcionalidades avanzadas: publicar/despublicar, gestión de etiquetas (many-to-many), subir imágenes destacadas, gestión de traducciones
+- **SoftDeletes**: Las noticias nunca se eliminan permanentemente, solo se marcan como eliminadas
+- **ForceDelete**: Solo super-admin puede eliminar permanentemente, y solo si no hay relaciones
+- Diseño moderno y responsive usando Flux UI y Tailwind CSS v4
+
+---
+
+## 📋 Pasos Principales (16 Pasos)
+
+### ✅ **Fase 1: Preparación y Estructura Base**
+
+#### Paso 1: Implementar SoftDeletes en el modelo NewsPost
+**Objetivo**: Añadir SoftDeletes al modelo NewsPost para que las noticias no se eliminen permanentemente.
+
+**Tareas**:
+- [ ] Añadir `use SoftDeletes` al modelo `NewsPost`
+- [ ] Añadir `deleted_at` al array `$fillable` si es necesario (no, es automático)
+- [ ] Verificar que la migración ya tiene la columna `deleted_at` (si no, crear migración)
+- [ ] Actualizar relaciones para incluir `withTrashed()` cuando sea necesario
+
+**Archivos a modificar**:
+- `app/Models/NewsPost.php`
+
+**Verificación**:
+- Verificar que el modelo puede hacer soft delete y restore
+- Verificar que las relaciones funcionan correctamente con soft deletes
+
+---
+
+#### Paso 2: Adaptar FormRequests existentes
+**Objetivo**: Actualizar los FormRequests para incluir validación de imágenes, etiquetas y autorización.
+
+**Tareas**:
+- [ ] Actualizar `StoreNewsPostRequest`:
+  - [ ] Añadir validación de imagen destacada (`featured_image`)
+  - [ ] Añadir validación de etiquetas (`tags` - array de IDs)
+  - [ ] Añadir autorización usando `NewsPostPolicy`
+  - [ ] Añadir mensajes de error personalizados
+- [ ] Actualizar `UpdateNewsPostRequest`:
+  - [ ] Añadir validación de imagen destacada (opcional en update)
+  - [ ] Añadir validación de etiquetas (`tags` - array de IDs)
+  - [ ] Añadir autorización usando `NewsPostPolicy`
+  - [ ] Añadir mensajes de error personalizados
+
+**Archivos a modificar**:
+- `app/Http/Requests/StoreNewsPostRequest.php`
+- `app/Http/Requests/UpdateNewsPostRequest.php`
+
+**Verificación**:
+- Verificar que las validaciones funcionan correctamente
+- Verificar que la autorización se aplica correctamente
+
+---
+
+### ✅ **Fase 2: Componente Index (Listado)**
+
+#### Paso 3: Crear componente Livewire Admin\News\Index
+**Objetivo**: Crear el componente de listado con tabla interactiva, búsqueda, filtros y paginación.
+
+**Tareas**:
+- [ ] Crear clase `App\Livewire\Admin\News\Index`
+- [ ] Implementar propiedades públicas:
+  - [ ] `$search` (búsqueda por título, excerpt, contenido)
+  - [ ] `$showDeleted` (filtrar eliminados: '0' o '1')
+  - [ ] `$programFilter` (filtro por programa)
+  - [ ] `$academicYearFilter` (filtro por año académico)
+  - [ ] `$statusFilter` (filtro por estado: borrador, en_revision, publicado, archivado)
+  - [ ] `$sortField` (campo de ordenación)
+  - [ ] `$sortDirection` (dirección: asc/desc)
+  - [ ] `$perPage` (elementos por página)
+  - [ ] Modales de confirmación (delete, restore, forceDelete)
+- [ ] Implementar métodos:
+  - [ ] `mount()` - Autorización con `NewsPostPolicy::viewAny()`
+  - [ ] `newsPosts()` (computed) - Query con filtros, búsqueda, ordenación y paginación
+  - [ ] `sortBy()` - Cambiar ordenación
+  - [ ] `confirmDelete()` - Confirmar eliminación (soft delete)
+  - [ ] `delete()` - Eliminar noticia (soft delete con validación de relaciones)
+  - [ ] `confirmRestore()` - Confirmar restauración
+  - [ ] `restore()` - Restaurar noticia eliminada
+  - [ ] `confirmForceDelete()` - Confirmar eliminación permanente
+  - [ ] `forceDelete()` - Eliminar permanentemente (solo super-admin, validar relaciones)
+  - [ ] `publish()` - Publicar noticia (cambiar estado y establecer `published_at`)
+  - [ ] `unpublish()` - Despublicar noticia
+  - [ ] `resetFilters()` - Resetear filtros
+  - [ ] `updatedSearch()` - Resetear página al buscar
+  - [ ] `canCreate()`, `canViewDeleted()`, `canDeleteNewsPost()` - Métodos de autorización
+- [ ] Implementar eager loading para optimizar consultas:
+  - [ ] `with(['program', 'academicYear', 'author', 'tags'])`
+  - [ ] `withCount(['tags'])` para contar etiquetas
+
+**Archivos a crear**:
+- `app/Livewire/Admin/News/Index.php`
+
+**Verificación**:
+- Verificar que el listado muestra todas las noticias correctamente
+- Verificar que los filtros funcionan
+- Verificar que la búsqueda funciona
+- Verificar que la paginación funciona
+
+---
+
+#### Paso 4: Crear vista del componente Index
+**Objetivo**: Crear la vista Blade con tabla responsive, filtros y acciones.
+
+**Tareas**:
+- [ ] Crear `resources/views/livewire/admin/news/index.blade.php`
+- [ ] Implementar header con título, descripción y botón "Crear Noticia"
+- [ ] Implementar breadcrumbs
+- [ ] Implementar sección de filtros:
+  - [ ] Búsqueda (input con wire:model.live.debounce)
+  - [ ] Filtro por programa (select)
+  - [ ] Filtro por año académico (select)
+  - [ ] Filtro por estado (select)
+  - [ ] Filtro "Mostrar eliminados" (solo si tiene permisos)
+  - [ ] Botón "Resetear filtros"
+- [ ] Implementar tabla responsive:
+  - [ ] Columnas: Imagen destacada (thumbnail), Título, Programa, Año Académico, Estado, Etiquetas, Autor, Fecha publicación, Acciones
+  - [ ] Ordenación por columnas (click en header)
+  - [ ] Badges para estados (con colores según estado)
+  - [ ] Badges para etiquetas
+  - [ ] Imagen destacada con thumbnail (si existe)
+  - [ ] Botones de acción: Ver, Editar, Eliminar, Restaurar, Publicar/Despublicar
+- [ ] Implementar modales de confirmación:
+  - [ ] Modal de confirmación de eliminación
+  - [ ] Modal de confirmación de restauración
+  - [ ] Modal de confirmación de eliminación permanente
+- [ ] Implementar estado vacío (cuando no hay noticias)
+- [ ] Implementar loading states con `wire:loading`
+- [ ] Implementar notificaciones con `wire:listen` para eventos de éxito/error
+- [ ] Usar componentes Flux UI: `flux:button`, `flux:field`, `flux:badge`, `flux:modal`
+- [ ] Usar componentes reutilizables: `x-ui.card`, `x-ui.search-input`, `x-ui.empty-state`
+
+**Archivos a crear**:
+- `resources/views/livewire/admin/news/index.blade.php`
+
+**Verificación**:
+- Verificar que la vista se renderiza correctamente
+- Verificar que los filtros funcionan
+- Verificar que las acciones funcionan
+- Verificar que es responsive
+
+---
+
+#### Paso 5: Configurar rutas y navegación
+**Objetivo**: Añadir rutas para el CRUD de noticias y actualizar la navegación del panel de administración.
+
+**Tareas**:
+- [ ] Añadir rutas en `routes/web.php`:
+  - [ ] `GET /admin/noticias` → `Admin\News\Index` (nombre: `admin.news.index`)
+  - [ ] `GET /admin/noticias/crear` → `Admin\News\Create` (nombre: `admin.news.create`)
+  - [ ] `GET /admin/noticias/{news_post}` → `Admin\News\Show` (nombre: `admin.news.show`)
+  - [ ] `GET /admin/noticias/{news_post}/editar` → `Admin\News\Edit` (nombre: `admin.news.edit`)
+- [ ] Actualizar sidebar de administración para incluir enlace a "Noticias"
+- [ ] Añadir traducciones necesarias en archivos de idioma
+
+**Archivos a modificar**:
+- `routes/web.php`
+- `resources/views/components/layouts/admin-sidebar.blade.php` (o similar)
+- `lang/es/common.php` y `lang/en/common.php` (si es necesario)
+
+**Verificación**:
+- Verificar que las rutas funcionan correctamente
+- Verificar que la navegación muestra el enlace correctamente
+
+---
+
+### ✅ **Fase 3: Componente Create (Crear)**
+
+#### Paso 6: Crear componente Livewire Admin\News\Create
+**Objetivo**: Crear el componente para crear nuevas noticias con formulario completo.
+
+**Tareas**:
+- [ ] Crear clase `App\Livewire\Admin\News\Create`
+- [ ] Implementar propiedades públicas:
+  - [ ] Campos del formulario: `program_id`, `academic_year_id`, `title`, `slug`, `excerpt`, `content`, `country`, `city`, `host_entity`, `mobility_type`, `mobility_category`, `status`, `published_at`
+  - [ ] `selectedTags` (array de IDs de etiquetas seleccionadas)
+  - [ ] `availableTags` (computed - todas las etiquetas disponibles)
+  - [ ] `featuredImage` (temporal para preview)
+  - [ ] `featuredImageUrl` (URL temporal para preview)
+- [ ] Implementar métodos:
+  - [ ] `mount()` - Autorización con `NewsPostPolicy::create()`
+  - [ ] `updatedTitle()` - Generar slug automáticamente cuando cambia el título
+  - [ ] `updatedSlug()` - Validar slug en tiempo real
+  - [ ] `updatedFeaturedImage()` - Manejar subida de imagen y preview
+  - [ ] `removeFeaturedImage()` - Eliminar imagen temporal
+  - [ ] `store()` - Validar y crear noticia:
+    - [ ] Validar con `StoreNewsPostRequest`
+    - [ ] Establecer `author_id` automáticamente al usuario actual
+    - [ ] Crear noticia
+    - [ ] Sincronizar etiquetas (`sync()`)
+    - [ ] Subir imagen destacada si existe
+    - [ ] Redirigir a `admin.news.show` con mensaje de éxito
+- [ ] Implementar validación en tiempo real para campos clave
+
+**Archivos a crear**:
+- `app/Livewire/Admin/News/Create.php`
+
+**Verificación**:
+- Verificar que se puede crear una noticia correctamente
+- Verificar que las etiquetas se asocian correctamente
+- Verificar que la imagen se sube correctamente
+
+---
+
+#### Paso 7: Crear vista del componente Create
+**Objetivo**: Crear el formulario de creación con todos los campos y editor de contenido.
+
+**Tareas**:
+- [ ] Crear `resources/views/livewire/admin/news/create.blade.php`
+- [ ] Implementar header con título y breadcrumbs
+- [ ] Implementar formulario con secciones:
+  - [ ] **Información básica**:
+    - [ ] Programa (select, opcional)
+    - [ ] Año académico (select, requerido)
+    - [ ] Título (input, requerido)
+    - [ ] Slug (input, generado automáticamente, editable)
+    - [ ] Extracto (textarea)
+    - [ ] Contenido (textarea o editor enriquecido)
+  - [ ] **Información de movilidad** (opcional):
+    - [ ] País (input)
+    - [ ] Ciudad (input)
+    - [ ] Entidad de acogida (input)
+    - [ ] Tipo de movilidad (select: alumnado/personal)
+    - [ ] Categoría de movilidad (select: FCT, job_shadowing, intercambio, curso, otro)
+  - [ ] **Estado y publicación**:
+    - [ ] Estado (select: borrador, en_revision, publicado, archivado)
+    - [ ] Fecha de publicación (date picker, opcional)
+  - [ ] **Etiquetas**:
+    - [ ] Select múltiple o checkboxes para seleccionar etiquetas existentes
+    - [ ] Opción para crear nueva etiqueta (modal o inline)
+  - [ ] **Imagen destacada**:
+    - [ ] Input file para subir imagen
+    - [ ] Preview de imagen subida
+    - [ ] Botón para eliminar imagen
+- [ ] Implementar validación en tiempo real con feedback visual
+- [ ] Implementar botones de acción: "Guardar", "Guardar y publicar", "Cancelar"
+- [ ] Usar componentes Flux UI: `flux:field`, `flux:input`, `flux:textarea`, `flux:select`, `flux:button`
+- [ ] Implementar editor de contenido enriquecido (opcional: usar Trix o similar, o textarea simple)
+
+**Archivos a crear**:
+- `resources/views/livewire/admin/news/create.blade.php`
+
+**Verificación**:
+- Verificar que el formulario se renderiza correctamente
+- Verificar que la validación funciona
+- Verificar que se puede crear una noticia
+
+---
+
+### ✅ **Fase 4: Componente Edit (Editar)**
+
+#### Paso 8: Crear componente Livewire Admin\News\Edit
+**Objetivo**: Crear el componente para editar noticias existentes.
+
+**Tareas**:
+- [ ] Crear clase `App\Livewire\Admin\News\Edit`
+- [ ] Implementar propiedades públicas similares a Create:
+  - [ ] `public NewsPost $newsPost` (modelo a editar)
+  - [ ] Campos del formulario (precargados con datos del modelo)
+  - [ ] `selectedTags` (precargado con etiquetas actuales)
+  - [ ] `featuredImage` (nuevo archivo si se reemplaza)
+  - [ ] `featuredImageUrl` (URL de imagen existente o nueva)
+  - [ ] `removeFeaturedImage` (flag para eliminar imagen existente)
+- [ ] Implementar métodos:
+  - [ ] `mount(NewsPost $news_post)` - Autorización y precargar datos
+  - [ ] `updatedTitle()` - Generar slug automáticamente
+  - [ ] `updatedSlug()` - Validar slug en tiempo real
+  - [ ] `updatedFeaturedImage()` - Manejar nueva imagen
+  - [ ] `removeFeaturedImage()` - Marcar para eliminar imagen existente
+  - [ ] `update()` - Validar y actualizar noticia:
+    - [ ] Validar con `UpdateNewsPostRequest`
+    - [ ] Actualizar noticia
+    - [ ] Sincronizar etiquetas
+    - [ ] Manejar imagen destacada (subir nueva o eliminar existente)
+    - [ ] Redirigir a `admin.news.show` con mensaje de éxito
+
+**Archivos a crear**:
+- `app/Livewire/Admin/News/Edit.php`
+
+**Verificación**:
+- Verificar que se puede editar una noticia correctamente
+- Verificar que las etiquetas se actualizan correctamente
+- Verificar que la imagen se puede reemplazar o eliminar
+
+---
+
+#### Paso 9: Crear vista del componente Edit
+**Objetivo**: Crear el formulario de edición similar al de creación pero con datos precargados.
+
+**Tareas**:
+- [ ] Crear `resources/views/livewire/admin/news/edit.blade.php`
+- [ ] Reutilizar estructura similar a Create pero:
+  - [ ] Mostrar imagen destacada existente si existe
+  - [ ] Precargar todos los campos con datos del modelo
+  - [ ] Precargar etiquetas seleccionadas
+  - [ ] Mostrar información adicional: fecha de creación, última actualización, autor, revisor (si existe)
+- [ ] Implementar opción para eliminar imagen existente
+- [ ] Implementar botones de acción: "Guardar", "Guardar y publicar", "Cancelar", "Eliminar"
+
+**Archivos a crear**:
+- `resources/views/livewire/admin/news/edit.blade.php`
+
+**Verificación**:
+- Verificar que el formulario se renderiza con datos correctos
+- Verificar que se puede editar una noticia
+
+---
+
+### ✅ **Fase 5: Componente Show (Detalle)**
+
+#### Paso 10: Crear componente Livewire Admin\News\Show
+**Objetivo**: Crear la vista de detalle de una noticia con información completa.
+
+**Tareas**:
+- [ ] Crear clase `App\Livewire\Admin\News\Show`
+- [ ] Implementar propiedades públicas:
+  - [ ] `public NewsPost $newsPost` (modelo a mostrar)
+- [ ] Implementar métodos:
+  - [ ] `mount(NewsPost $news_post)` - Autorización y cargar noticia con relaciones
+  - [ ] `delete()` - Eliminar noticia (soft delete)
+  - [ ] `restore()` - Restaurar noticia eliminada
+  - [ ] `publish()` - Publicar noticia
+  - [ ] `unpublish()` - Despublicar noticia
+  - [ ] `forceDelete()` - Eliminar permanentemente (solo super-admin)
+- [ ] Implementar eager loading: `with(['program', 'academicYear', 'author', 'reviewer', 'tags'])`
+
+**Archivos a crear**:
+- `app/Livewire/Admin/News/Show.php`
+
+**Verificación**:
+- Verificar que se muestra toda la información correctamente
+- Verificar que las acciones funcionan
+
+---
+
+#### Paso 11: Crear vista del componente Show
+**Objetivo**: Crear la vista de detalle con información completa y acciones.
+
+**Tareas**:
+- [ ] Crear `resources/views/livewire/admin/news/show.blade.php`
+- [ ] Implementar header con título, breadcrumbs y botones de acción:
+  - [ ] "Editar"
+  - [ ] "Publicar/Despublicar" (según estado)
+  - [ ] "Eliminar" (con modal de confirmación)
+  - [ ] "Restaurar" (si está eliminada)
+  - [ ] "Eliminar permanentemente" (solo super-admin, si está eliminada)
+- [ ] Implementar secciones de información:
+  - [ ] **Información básica**: Título, slug, extracto, contenido
+  - [ ] **Imagen destacada**: Mostrar imagen con diferentes tamaños (thumbnail, medium, large)
+  - [ ] **Metadatos**: Programa, año académico, estado, fecha de publicación
+  - [ ] **Información de movilidad**: País, ciudad, entidad de acogida, tipo, categoría
+  - [ ] **Etiquetas**: Lista de etiquetas con badges
+  - [ ] **Autoría**: Autor, revisor (si existe), fechas de creación y actualización
+  - [ ] **Estadísticas**: Número de etiquetas, fecha de publicación
+- [ ] Implementar modales de confirmación para acciones destructivas
+- [ ] Usar componentes Flux UI para diseño moderno
+
+**Archivos a crear**:
+- `resources/views/livewire/admin/news/show.blade.php`
+
+**Verificación**:
+- Verificar que se muestra toda la información correctamente
+- Verificar que las acciones funcionan
+
+---
+
+### ✅ **Fase 6: Funcionalidades Avanzadas**
+
+#### Paso 12: Implementar gestión de etiquetas en formularios
+**Objetivo**: Permitir seleccionar etiquetas existentes y crear nuevas etiquetas desde el formulario.
+
+**Tareas**:
+- [ ] En componentes Create y Edit:
+  - [ ] Implementar select múltiple o checkboxes para etiquetas existentes
+  - [ ] Implementar funcionalidad para crear nueva etiqueta (modal o inline)
+  - [ ] Usar `StoreNewsTagRequest` para validar nueva etiqueta
+  - [ ] Actualizar lista de etiquetas disponibles después de crear nueva
+- [ ] Implementar búsqueda/filtro de etiquetas en el select (opcional, con Alpine.js)
+
+**Archivos a modificar**:
+- `app/Livewire/Admin/News/Create.php`
+- `app/Livewire/Admin/News/Edit.php`
+- `resources/views/livewire/admin/news/create.blade.php`
+- `resources/views/livewire/admin/news/edit.blade.php`
+
+**Verificación**:
+- Verificar que se pueden seleccionar etiquetas existentes
+- Verificar que se puede crear una nueva etiqueta
+- Verificar que las etiquetas se asocian correctamente
+
+---
+
+#### Paso 13: Implementar gestión de imágenes destacadas
+**Objetivo**: Permitir subir, previsualizar y eliminar imágenes destacadas usando Laravel Media Library.
+
+**Tareas**:
+- [ ] En componentes Create y Edit:
+  - [ ] Implementar input file para subir imagen
+  - [ ] Implementar preview de imagen antes de guardar
+  - [ ] Implementar opción para eliminar imagen existente (en Edit)
+  - [ ] Validar tipo y tamaño de imagen
+  - [ ] Subir imagen a colección 'featured' usando Media Library
+  - [ ] Generar conversiones (thumbnail, medium, large)
+- [ ] En componente Show:
+  - [ ] Mostrar imagen destacada con diferentes tamaños
+  - [ ] Mostrar thumbnail en listado (Index)
+
+**Archivos a modificar**:
+- `app/Livewire/Admin/News/Create.php`
+- `app/Livewire/Admin/News/Edit.php`
+- `resources/views/livewire/admin/news/create.blade.php`
+- `resources/views/livewire/admin/news/edit.blade.php`
+- `resources/views/livewire/admin/news/show.blade.php`
+- `resources/views/livewire/admin/news/index.blade.php`
+
+**Verificación**:
+- Verificar que se puede subir una imagen
+- Verificar que se muestra el preview
+- Verificar que se puede eliminar una imagen
+- Verificar que las conversiones se generan correctamente
+
+---
+
+#### Paso 14: Implementar publicación/despublicación
+**Objetivo**: Permitir publicar y despublicar noticias cambiando el estado y estableciendo `published_at`.
+
+**Tareas**:
+- [ ] En componente Index:
+  - [ ] Implementar botón "Publicar" para noticias no publicadas
+  - [ ] Implementar botón "Despublicar" para noticias publicadas
+  - [ ] Método `publish()`: cambiar estado a 'publicado' y establecer `published_at` a ahora
+  - [ ] Método `unpublish()`: cambiar estado a 'borrador' y establecer `published_at` a null
+- [ ] En componente Show:
+  - [ ] Implementar botones de publicación/despublicación
+- [ ] Verificar autorización con `NewsPostPolicy::publish()`
+
+**Archivos a modificar**:
+- `app/Livewire/Admin/News/Index.php`
+- `app/Livewire/Admin/News/Show.php`
+- `resources/views/livewire/admin/news/index.blade.php`
+- `resources/views/livewire/admin/news/show.blade.php`
+
+**Verificación**:
+- Verificar que se puede publicar una noticia
+- Verificar que se puede despublicar una noticia
+- Verificar que `published_at` se establece correctamente
+
+---
+
+### ✅ **Fase 7: Testing**
+
+#### Paso 15: Crear tests para los componentes
+**Objetivo**: Crear tests completos para todos los componentes del CRUD.
+
+**Tareas**:
+- [ ] Crear `tests/Feature/Livewire/Admin/News/IndexTest.php`:
+  - [ ] Test de autorización (solo usuarios con permisos pueden ver)
+  - [ ] Test de listado de noticias
+  - [ ] Test de búsqueda
+  - [ ] Test de filtros (programa, año académico, estado, eliminados)
+  - [ ] Test de ordenación
+  - [ ] Test de paginación
+  - [ ] Test de eliminación (soft delete)
+  - [ ] Test de restauración
+  - [ ] Test de eliminación permanente (solo super-admin)
+  - [ ] Test de publicación/despublicación
+- [ ] Crear `tests/Feature/Livewire/Admin/News/CreateTest.php`:
+  - [ ] Test de autorización
+  - [ ] Test de creación de noticia
+  - [ ] Test de validación de campos requeridos
+  - [ ] Test de generación automática de slug
+  - [ ] Test de asociación de etiquetas
+  - [ ] Test de subida de imagen destacada
+  - [ ] Test de establecimiento automático de `author_id`
+- [ ] Crear `tests/Feature/Livewire/Admin/News/EditTest.php`:
+  - [ ] Test de autorización
+  - [ ] Test de edición de noticia
+  - [ ] Test de validación
+  - [ ] Test de actualización de etiquetas
+  - [ ] Test de reemplazo de imagen destacada
+  - [ ] Test de eliminación de imagen destacada
+- [ ] Crear `tests/Feature/Livewire/Admin/News/ShowTest.php`:
+  - [ ] Test de autorización
+  - [ ] Test de visualización de noticia
+  - [ ] Test de acciones (eliminar, restaurar, publicar, etc.)
+
+**Archivos a crear**:
+- `tests/Feature/Livewire/Admin/News/IndexTest.php`
+- `tests/Feature/Livewire/Admin/News/CreateTest.php`
+- `tests/Feature/Livewire/Admin/News/EditTest.php`
+- `tests/Feature/Livewire/Admin/News/ShowTest.php`
+
+**Verificación**:
+- Ejecutar todos los tests y verificar que pasan
+- Verificar cobertura de código
+
+---
+
+### ✅ **Fase 8: Optimizaciones y Ajustes Finales**
+
+#### Paso 16: Optimizaciones y ajustes finales
+**Objetivo**: Optimizar consultas, añadir índices si es necesario, y realizar ajustes finales.
+
+**Tareas**:
+- [ ] Revisar y optimizar consultas (eager loading, índices)
+- [ ] Verificar que todas las traducciones están presentes
+- [ ] Verificar que el diseño es responsive
+- [ ] Verificar accesibilidad (WCAG)
+- [ ] Ejecutar Laravel Pint para formatear código
+- [ ] Ejecutar todos los tests
+- [ ] Revisar y actualizar documentación si es necesario
+
+**Archivos a revisar**:
+- Todos los archivos creados/modificados
+
+**Verificación**:
+- Verificar que todo funciona correctamente
+- Verificar que el código está formateado correctamente
+- Verificar que todos los tests pasan
+
+---
+
+## 📝 Notas Importantes
+
+### SoftDeletes
+- Las noticias **nunca** se eliminan permanentemente por defecto
+- Solo se marcan como eliminadas (`deleted_at`)
+- Solo super-admin puede realizar `forceDelete()`
+- Antes de `forceDelete()`, validar que no existan relaciones (aunque en este caso no hay relaciones que dependan de noticias)
+
+### Gestión de Etiquetas
+- Las etiquetas se gestionan mediante relación many-to-many
+- Se pueden seleccionar etiquetas existentes o crear nuevas desde el formulario
+- Usar `sync()` para actualizar etiquetas
+
+### Imágenes Destacadas
+- Usar Laravel Media Library con colección 'featured'
+- Generar conversiones automáticamente (thumbnail, medium, large)
+- Permitir preview antes de guardar
+- Permitir eliminar imagen existente en edición
+
+### Publicación
+- Publicar una noticia implica cambiar estado a 'publicado' y establecer `published_at`
+- Despublicar implica cambiar estado a 'borrador' y establecer `published_at` a null
+- Verificar autorización con `NewsPostPolicy::publish()`
+
+### Editor de Contenido
+- Por ahora usar textarea simple
+- En el futuro se puede implementar editor enriquecido (Trix, TinyMCE, etc.)
+
+### Traducciones
+- El modelo NewsPost tiene campos que pueden necesitar traducciones (title, excerpt, content)
+- Por ahora no implementar gestión de traducciones (se hará en un paso posterior)
+- Los campos se guardan en el idioma actual
+
+---
+
+## ✅ Checklist Final
+
+Antes de considerar el paso 3.5.5 completado, verificar:
+
+- [ ] SoftDeletes implementado en NewsPost
+- [ ] FormRequests actualizados con validación completa
+- [ ] Componente Index creado y funcionando
+- [ ] Componente Create creado y funcionando
+- [ ] Componente Edit creado y funcionando
+- [ ] Componente Show creado y funcionando
+- [ ] Rutas configuradas correctamente
+- [ ] Navegación actualizada
+- [ ] Gestión de etiquetas funcionando
+- [ ] Gestión de imágenes destacadas funcionando
+- [ ] Publicación/despublicación funcionando
+- [ ] Tests completos y pasando
+- [ ] Código formateado con Pint
+- [ ] Diseño responsive
+- [ ] Accesibilidad verificada
+
+---
+
+**Fecha de Creación**: Diciembre 2025  
+**Estado**: 📋 Plan detallado completado - Listo para implementación
+

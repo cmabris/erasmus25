@@ -372,6 +372,10 @@ Para cada policy:
   - Gestión de traducciones
 - [ ] **SoftDeletes**: Implementar SoftDeletes en modelo NewsPost
 
+**Documentación:**
+- [Plan detallado](pasos/paso-3.5.5-plan.md) - Plan paso a paso completo (16 pasos en 8 fases)
+- [Resumen ejecutivo](pasos/paso-3.5.5-resumen.md) - Resumen de objetivos y estructura
+
 #### 3.5.6. Gestión de Etiquetas de Noticias
 - [ ] Crear componente Livewire `Admin\NewsTags\Index`
 - [ ] Crear componente Livewire `Admin\NewsTags\Create`
