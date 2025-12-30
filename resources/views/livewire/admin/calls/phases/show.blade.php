@@ -340,7 +340,7 @@
                                 @if($callPhase->is_current)
                                     <flux:button 
                                         wire:click="unmarkAsCurrent"
-                                        variant="warning"
+                                        variant="filled"
                                         icon="x-circle"
                                         class="w-full"
                                         wire:loading.attr="disabled"

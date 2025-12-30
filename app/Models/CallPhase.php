@@ -61,4 +61,23 @@ class CallPhase extends Model
     {
         return $this->hasMany(Resolution::class);
     }
+
+    /**
+     * Boot the model.
+     */
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        // Handle cascading deletes when CallPhase is soft deleted
+        static::deleting(function ($callPhase) {
+            if ($callPhase->isForceDeleting()) {
+                // Force delete - let database constraints handle it
+                return;
+            }
+
+            // Soft delete - delete related resolutions physically (they don't have SoftDeletes)
+            $callPhase->resolutions()->delete();
+        });
+    }
 }

@@ -221,7 +221,7 @@ Crear un sistema completo de gestión (CRUD) de Fases de Convocatorias en el pan
 ### **Fase 6: Testing**
 
 #### **Paso 11: Tests de Componentes Livewire**
-- [ ] Crear `tests/Feature/Livewire/Admin/Calls/Phases/IndexTest.php`:
+- [x] Crear `tests/Feature/Livewire/Admin/Calls/Phases/IndexTest.php`:
   - Test de autorización
   - Test de listado con filtros
   - Test de búsqueda
@@ -231,29 +231,29 @@ Crear un sistema completo de gestión (CRUD) de Fases de Convocatorias en el pan
   - Test de eliminación (SoftDelete)
   - Test de restauración
   - Test de forceDelete (solo super-admin)
-- [ ] Crear `tests/Feature/Livewire/Admin/Calls/Phases/CreateTest.php`:
+- [x] Crear `tests/Feature/Livewire/Admin/Calls/Phases/CreateTest.php`:
   - Test de autorización
   - Test de creación exitosa
   - Test de validación de campos requeridos
   - Test de auto-generación de orden
   - Test de marcar como actual (desmarca otras)
   - Test de validación de fechas
-- [ ] Crear `tests/Feature/Livewire/Admin/Calls/Phases/EditTest.php`:
+- [x] Crear `tests/Feature/Livewire/Admin/Calls/Phases/EditTest.php`:
   - Test de autorización
   - Test de edición exitosa
   - Test de validación
   - Test de actualización de relaciones
-- [ ] Crear `tests/Feature/Livewire/Admin/Calls/Phases/ShowTest.php`:
+- [x] Crear `tests/Feature/Livewire/Admin/Calls/Phases/ShowTest.php`:
   - Test de autorización
   - Test de visualización de información
   - Test de marcar como actual
   - Test de eliminación y restauración
 
 #### **Paso 12: Tests de FormRequests**
-- [ ] Verificar que los FormRequests validen correctamente
-- [ ] Verificar autorización en FormRequests
-- [ ] Verificar mensajes de error personalizados
-- [ ] Verificar validación de unicidad de fase actual
+- [x] Verificar que los FormRequests validen correctamente
+- [x] Verificar autorización en FormRequests (cubierto en tests de componentes Livewire)
+- [x] Verificar mensajes de error personalizados
+- [x] Verificar validación de unicidad de fase actual
 
 ---
 

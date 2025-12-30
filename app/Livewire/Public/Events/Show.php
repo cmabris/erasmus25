@@ -70,10 +70,11 @@ class Show extends Component
         // If event has a call, find events from the same call
         if ($this->event->call_id) {
             $query->where('call_id', $this->event->call_id);
-        } 
+        }
         // Otherwise, if event has a program, find events from the same program
         elseif ($this->event->program_id) {
-            $query->where('program_id', $this->event->program_id);
+            $query->where('program_id', $this->event->program_id)
+                ->whereNull('call_id'); // Only events without call_id to avoid mixing
         }
 
         return $query
@@ -95,4 +96,3 @@ class Show extends Component
             ]);
     }
 }
-

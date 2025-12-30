@@ -7,7 +7,7 @@
                     {{ __('Editar Fase') }}
                 </h1>
                 <p class="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
-                    {{ __('Modifica la información de la fase: :name', ['name' => $callPhase->name]) }}
+                    {{ __('Modifica la información de la fase: :name', ['name' => $this->callPhase->name ?? __('Fase')]) }}
                 </p>
             </div>
             <flux:button 
@@ -28,7 +28,7 @@
                 ['label' => __('Convocatorias'), 'href' => route('admin.calls.index'), 'icon' => 'document-text'],
                 ['label' => $call->title, 'href' => route('admin.calls.show', $call), 'icon' => 'document'],
                 ['label' => __('Fases'), 'href' => route('admin.calls.phases.index', $call), 'icon' => 'list-bullet'],
-                ['label' => $callPhase->name, 'href' => route('admin.calls.phases.show', [$call, $callPhase]), 'icon' => 'list-bullet'],
+                ['label' => $this->callPhase->name ?? __('Fase'), 'href' => isset($this->callPhase->id) ? route('admin.calls.phases.show', [$call, $this->callPhase]) : route('admin.calls.phases.index', $call), 'icon' => 'list-bullet'],
                 ['label' => __('common.actions.edit'), 'icon' => 'pencil'],
             ]"
         />
@@ -159,7 +159,7 @@
 
                     {{-- Relations Info Card --}}
                     @php
-                        $resolutionsCount = $callPhase->resolutions()->count();
+                        $resolutionsCount = $this->callPhase->resolutions()->count();
                         $hasRelations = $resolutionsCount > 0;
                     @endphp
                     @if($hasRelations)
@@ -228,7 +228,7 @@
                                 <flux:description>
                                     {{ __('Marca esta fase como la fase actual del proceso') }}
                                 </flux:description>
-                                @if($is_current && !$callPhase->is_current && $this->hasCurrentPhase())
+                                @if($is_current && !$this->callPhase->is_current && $this->hasCurrentPhase())
                                     <flux:callout variant="warning" class="mt-2">
                                         <flux:callout.heading>{{ __('Atención') }}</flux:callout.heading>
                                         <flux:callout.text>
@@ -250,17 +250,19 @@
                                 <flux:heading size="sm">{{ __('Información') }}</flux:heading>
                             </div>
                             <div class="space-y-2 text-sm">
-                                <div>
-                                    <span class="text-zinc-500 dark:text-zinc-400">{{ __('Creada') }}:</span>
-                                    <span class="ml-2 font-medium text-zinc-900 dark:text-white">
-                                        {{ $callPhase->created_at->format('d/m/Y H:i') }}
-                                    </span>
-                                </div>
-                                @if($callPhase->updated_at && $callPhase->updated_at->ne($callPhase->created_at))
+                                @if($this->callPhase->created_at)
+                                    <div>
+                                        <span class="text-zinc-500 dark:text-zinc-400">{{ __('Creada') }}:</span>
+                                        <span class="ml-2 font-medium text-zinc-900 dark:text-white">
+                                            {{ $this->callPhase->created_at->format('d/m/Y H:i') }}
+                                        </span>
+                                    </div>
+                                @endif
+                                @if($this->callPhase->updated_at && $this->callPhase->updated_at->ne($this->callPhase->created_at))
                                     <div>
                                         <span class="text-zinc-500 dark:text-zinc-400">{{ __('Actualizada') }}:</span>
                                         <span class="ml-2 font-medium text-zinc-900 dark:text-white">
-                                            {{ $callPhase->updated_at->format('d/m/Y H:i') }}
+                                            {{ $this->callPhase->updated_at->format('d/m/Y H:i') }}
                                         </span>
                                     </div>
                                 @endif
@@ -294,7 +296,7 @@
 
                                 <flux:button 
                                     type="button"
-                                    href="{{ route('admin.calls.phases.show', [$call, $callPhase]) }}" 
+                                    href="{{ route('admin.calls.phases.index', $call) }}" 
                                     variant="ghost"
                                     wire:navigate
                                     class="w-full"

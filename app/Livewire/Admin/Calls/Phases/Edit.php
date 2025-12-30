@@ -26,7 +26,7 @@ class Edit extends Component
     /**
      * Call ID (pre-filled).
      */
-    public int $call_id;
+    public ?int $call_id = null;
 
     /**
      * Phase type.
@@ -74,14 +74,14 @@ class Edit extends Component
         $this->callPhase = $call_phase;
 
         // Load phase data
-        $this->call_id = $call_phase->call_id;
-        $this->phase_type = $call_phase->phase_type;
-        $this->name = $call_phase->name;
+        $this->call_id = $call->id;
+        $this->phase_type = $call_phase->phase_type ?? 'publicacion';
+        $this->name = $call_phase->name ?? '';
         $this->description = $call_phase->description;
         $this->start_date = $call_phase->start_date?->format('Y-m-d');
         $this->end_date = $call_phase->end_date?->format('Y-m-d');
-        $this->is_current = $call_phase->is_current;
-        $this->order = $call_phase->order;
+        $this->is_current = $call_phase->is_current ?? false;
+        $this->order = $call_phase->order ?? 0;
     }
 
     /**

@@ -88,19 +88,26 @@ it('displays related events from same call', function () {
 });
 
 it('displays related events from same program when no call', function () {
+    // Ensure event1 has NO call_id and has program_id
     $event1 = ErasmusEvent::factory()->create([
         'program_id' => $this->program->id,
+        'call_id' => null, // Explicitly set to null
         'title' => 'Evento Principal',
         'is_public' => true,
         'start_date' => now()->addDays(5),
     ]);
 
+    // Ensure event2 has the same program_id and NO call_id
     $event2 = ErasmusEvent::factory()->create([
         'program_id' => $this->program->id,
+        'call_id' => null, // Explicitly set to null
         'title' => 'Evento Relacionado',
         'is_public' => true,
         'start_date' => now()->addDays(10),
     ]);
+
+    // Refresh event1 to ensure it has the correct relationships loaded
+    $event1->refresh();
 
     $component = Livewire::test(Show::class, ['event' => $event1]);
     $relatedEvents = $component->get('relatedEvents');
