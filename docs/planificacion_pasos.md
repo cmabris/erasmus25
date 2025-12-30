@@ -306,11 +306,23 @@ Para cada policy:
 - [x] **Rutas**: Configuradas y funcionando
 - [x] **Navegación**: Integrada en sidebar de administración
 
-#### 3.5.4.1. Gestión Completa de Fases de Convocatorias (CRUD)
-- [ ] Crear componente Livewire `Admin\Calls\Phases\Index` (listado de fases de una convocatoria)
-- [ ] Crear componente Livewire `Admin\Calls\Phases\Create` (formulario creación de fase)
-- [ ] Crear componente Livewire `Admin\Calls\Phases\Edit` (formulario edición de fase)
-- [ ] Crear componente Livewire `Admin\Calls\Phases\Show` (vista detalle de fase)
+#### 3.5.4.1. Gestión Completa de Fases de Convocatorias (CRUD) ✅ COMPLETADO
+- [x] Crear componente Livewire `Admin\Calls\Phases\Index` (listado de fases de una convocatoria)
+- [x] Crear componente Livewire `Admin\Calls\Phases\Create` (formulario creación de fase)
+- [x] Crear componente Livewire `Admin\Calls\Phases\Edit` (formulario edición de fase)
+- [x] Crear componente Livewire `Admin\Calls\Phases\Show` (vista detalle de fase)
+- [x] Funcionalidades básicas:
+  - Crear, editar, eliminar fases (SoftDeletes)
+  - Restaurar fases eliminadas
+  - ForceDelete solo para super-admin (validar relaciones)
+  - Reordenar fases (mover arriba/abajo)
+  - Marcar fase como actual (solo una por convocatoria)
+  - Validación de solapamiento de fechas
+- [x] **SoftDeletes**: Implementar SoftDeletes en modelo CallPhase con cascade delete manual
+- [x] **FormRequests**: Actualizados con autorización completa y validación de fase actual
+- [x] **Rutas**: Configuradas como rutas anidadas bajo `/admin/convocatorias/{call}/fases`
+- [x] **Optimizaciones**: Índices de BD, eager loading, withCount
+- [x] **Tests**: 76 tests completos (203 assertions)
 - [ ] Funcionalidades:
   - Crear nuevas fases para una convocatoria
   - Editar fases existentes
