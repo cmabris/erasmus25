@@ -136,6 +136,7 @@ class Index extends Component
                 'call' => fn ($query) => $query->select('id', 'title', 'program_id', 'academic_year_id'),
                 'callPhase' => fn ($query) => $query->select('id', 'call_id', 'name', 'phase_type'),
                 'creator' => fn ($query) => $query->select('id', 'name', 'email'),
+                'media' => fn ($query) => $query->where('collection_name', 'resolutions'),
             ])
             ->orderBy($this->sortField, $this->sortDirection)
             ->orderBy('created_at', 'desc')
@@ -285,6 +286,11 @@ class Index extends Component
 
         $this->authorize('forceDelete', $resolution);
 
+        // Note: Resolutions don't have critical relationships that would prevent deletion
+        // They are child entities of Calls and CallPhases, so they can be safely deleted
+        // If in the future there are relationships (e.g., notifications, audit logs),
+        // they should be validated here
+
         $resolutionTitle = $resolution->title;
         $resolution->forceDelete();
 
@@ -393,9 +399,15 @@ class Index extends Component
 
     /**
      * Check if resolution has PDF.
+     * Uses eager loaded media to avoid N+1 queries.
      */
     public function hasPdf(Resolution $resolution): bool
     {
+        // Use eager loaded media if available, otherwise fallback to query
+        if ($resolution->relationLoaded('media')) {
+            return $resolution->media->where('collection_name', 'resolutions')->isNotEmpty();
+        }
+
         return $resolution->hasMedia('resolutions');
     }
 

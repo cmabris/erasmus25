@@ -49,6 +49,7 @@ class Show extends Component
             ])->select('id', 'title', 'program_id', 'academic_year_id', 'status'),
             'callPhase' => fn ($query) => $query->select('id', 'call_id', 'name', 'phase_type', 'order'),
             'creator' => fn ($query) => $query->select('id', 'name', 'email'),
+            'media' => fn ($query) => $query->where('collection_name', 'resolutions'),
         ]);
     }
 
@@ -132,6 +133,11 @@ class Show extends Component
     public function forceDelete(): void
     {
         $this->authorize('forceDelete', $this->resolution);
+
+        // Note: Resolutions don't have critical relationships that would prevent deletion
+        // They are child entities of Calls and CallPhases, so they can be safely deleted
+        // If in the future there are relationships (e.g., notifications, audit logs),
+        // they should be validated here
 
         $resolutionTitle = $this->resolution->title;
         $this->resolution->forceDelete();
