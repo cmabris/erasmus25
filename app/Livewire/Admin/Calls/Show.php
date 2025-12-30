@@ -195,6 +195,26 @@ class Show extends Component
     }
 
     /**
+     * Unpublish resolution.
+     */
+    public function unpublishResolution(int $resolutionId): void
+    {
+        $resolution = Resolution::findOrFail($resolutionId);
+
+        $this->authorize('publish', $resolution);
+
+        $resolution->published_at = null;
+        $resolution->save();
+
+        // Reload the call to refresh the view
+        $this->call->refresh();
+
+        $this->dispatch('resolution-unpublished', [
+            'message' => __('Resolución despublicada correctamente'),
+        ]);
+    }
+
+    /**
      * Delete the call (soft delete).
      */
     public function delete(): void

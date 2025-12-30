@@ -77,6 +77,12 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
         Route::get('/fases/crear', \App\Livewire\Admin\Calls\Phases\Create::class)->name('calls.phases.create');
         Route::get('/fases/{call_phase}', \App\Livewire\Admin\Calls\Phases\Show::class)->name('calls.phases.show');
         Route::get('/fases/{call_phase}/editar', \App\Livewire\Admin\Calls\Phases\Edit::class)->name('calls.phases.edit');
+
+        // Rutas anidadas de Resoluciones de Convocatorias
+        Route::get('/resoluciones', \App\Livewire\Admin\Calls\Resolutions\Index::class)->name('calls.resolutions.index');
+        Route::get('/resoluciones/crear', \App\Livewire\Admin\Calls\Resolutions\Create::class)->name('calls.resolutions.create');
+        Route::get('/resoluciones/{resolution}', \App\Livewire\Admin\Calls\Resolutions\Show::class)->name('calls.resolutions.show');
+        Route::get('/resoluciones/{resolution}/editar', \App\Livewire\Admin\Calls\Resolutions\Edit::class)->name('calls.resolutions.edit');
     });
 });
 

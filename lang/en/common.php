@@ -369,6 +369,92 @@ return [
         'published' => 'Published:',
     ],
 
+    // Resolutions (CRUD)
+    'resolutions' => [
+        'title' => 'Resolutions',
+        'title_singular' => 'Resolution',
+        'title_plural' => 'Resolutions',
+        'create' => 'Create Resolution',
+        'edit' => 'Edit Resolution',
+        'show' => 'View Resolution',
+        'index' => 'Call Resolutions',
+        'manage' => 'Manage Resolutions',
+        'add' => 'Add Resolution',
+        'delete' => 'Delete Resolution',
+        'restore' => 'Restore Resolution',
+        'publish' => 'Publish Resolution',
+        'unpublish' => 'Unpublish Resolution',
+        'published' => 'Published',
+        'unpublished' => 'Unpublished',
+        'draft' => 'Draft',
+        'deleted' => 'Deleted',
+        'types' => [
+            'provisional' => 'Provisional',
+            'definitivo' => 'Definitive',
+            'alegaciones' => 'Appeals',
+        ],
+        'fields' => [
+            'call_phase_id' => 'Phase',
+            'type' => 'Resolution Type',
+            'title' => 'Title',
+            'description' => 'Description',
+            'evaluation_procedure' => 'Evaluation Procedure',
+            'official_date' => 'Official Date',
+            'published_at' => 'Publication Date',
+            'pdf' => 'Resolution PDF',
+            'pdf_file' => 'PDF File',
+        ],
+        'messages' => [
+            'created' => 'The resolution ":title" has been created successfully.',
+            'updated' => 'The resolution ":title" has been updated successfully.',
+            'deleted' => 'The resolution ":title" has been deleted successfully. You can restore it from the deleted section.',
+            'restored' => 'The resolution ":title" has been restored successfully.',
+            'force_deleted' => 'The resolution ":title" has been permanently deleted from the system. This action cannot be undone.',
+            'published' => 'The resolution ":title" has been published successfully.',
+            'unpublished' => 'The resolution ":title" has been unpublished successfully.',
+        ],
+        'descriptions' => [
+            'call_phase_id' => 'Select the call phase to which this resolution belongs',
+            'type' => 'Select the resolution type',
+            'title' => 'Descriptive title of the resolution',
+            'description' => 'Optional description of the resolution',
+            'evaluation_procedure' => 'Evaluation procedure used (optional)',
+            'official_date' => 'Official date of the resolution',
+            'published_at' => 'Publication date (optional, leave empty to publish manually later)',
+            'pdf' => 'Accepted formats: PDF. Maximum size: 10MB',
+        ],
+        'filters' => [
+            'type' => 'Resolution Type',
+            'published' => 'Publication Status',
+            'phase' => 'Phase',
+            'all_types' => 'All',
+            'all_published' => 'All',
+            'published_only' => 'Published',
+            'unpublished_only' => 'Unpublished',
+            'all_phases' => 'All',
+        ],
+        'empty' => [
+            'title' => 'No resolutions',
+            'description' => 'No resolutions found matching the applied filters.',
+            'no_pdf' => 'No PDF associated',
+            'no_pdf_description' => 'This resolution does not have an associated PDF document',
+        ],
+        'confirm' => [
+            'delete' => 'Are you sure you want to delete this resolution? This action can be reversed.',
+            'restore' => 'Are you sure you want to restore this resolution?',
+            'force_delete' => 'Are you sure you want to permanently delete this resolution? This action cannot be undone.',
+        ],
+        'info' => [
+            'call_info' => 'Call Information',
+            'phase_info' => 'Phase Information',
+            'resolution_info' => 'Resolution Information',
+            'created_by' => 'Created by',
+            'created_at' => 'Created',
+            'updated_at' => 'Updated',
+            'deleted_at' => 'Deleted',
+        ],
+    ],
+
     // Events
     'events' => [
         'event_info' => 'Event information',
@@ -658,4 +744,3 @@ return [
     ],
 
 ];
-

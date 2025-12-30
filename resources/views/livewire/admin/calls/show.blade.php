@@ -378,17 +378,30 @@
                 <div>
                     <div class="mb-4 flex items-center justify-between">
                         <flux:heading size="md">{{ __('Resoluciones') }}</flux:heading>
-                        @can('create', \App\Models\Resolution::class)
-                            <flux:button 
-                                href="{{ route('admin.calls.index') }}" 
-                                variant="ghost" 
-                                size="sm"
-                                icon="plus"
-                                wire:navigate
-                            >
-                                {{ __('Añadir Resolución') }}
-                            </flux:button>
-                        @endcan
+                        <div class="flex items-center gap-2">
+                            @can('viewAny', \App\Models\Resolution::class)
+                                <flux:button 
+                                    href="{{ route('admin.calls.resolutions.index', $call) }}" 
+                                    variant="ghost" 
+                                    size="sm"
+                                    icon="list-bullet"
+                                    wire:navigate
+                                >
+                                    {{ __('Gestionar Resoluciones') }}
+                                </flux:button>
+                            @endcan
+                            @can('create', \App\Models\Resolution::class)
+                                <flux:button 
+                                    href="{{ route('admin.calls.resolutions.create', $call) }}" 
+                                    variant="primary" 
+                                    size="sm"
+                                    icon="plus"
+                                    wire:navigate
+                                >
+                                    {{ __('Añadir Resolución') }}
+                                </flux:button>
+                            @endcan
+                        </div>
                     </div>
                     @if($call->resolutions->isEmpty())
                         <div class="rounded-lg border border-zinc-200 bg-zinc-50 p-8 text-center dark:border-zinc-700 dark:bg-zinc-800">
@@ -421,22 +434,45 @@
                                                     <span>{{ __('Fecha oficial') }}: {{ $resolution->official_date->format('d/m/Y') }}</span>
                                                 @endif
                                                 @if($resolution->published_at)
-                                                    <span>{{ __('Publicada') }}: {{ $resolution->published_at->format('d/m/Y H:i') }}</span>
+                                                    <span>{{ __('Publicada') }}: {{ $resolution->published_at->format('d/m/Y') }}</span>
                                                 @endif
                                             </div>
                                         </div>
                                         <div class="flex items-center gap-2">
-                                            @if(!$resolution->published_at)
+                                            @can('publish', $resolution)
+                                                @if($resolution->published_at)
+                                                    <flux:button 
+                                                        wire:click="unpublishResolution({{ $resolution->id }})"
+                                                        variant="ghost" 
+                                                        size="sm"
+                                                        icon="eye-slash"
+                                                        :label="__('Despublicar')"
+                                                        wire:loading.attr="disabled"
+                                                        wire:target="unpublishResolution({{ $resolution->id }})"
+                                                    />
+                                                @else
+                                                    <flux:button 
+                                                        wire:click="publishResolution({{ $resolution->id }})"
+                                                        variant="ghost" 
+                                                        size="sm"
+                                                        icon="paper-airplane"
+                                                        :label="__('Publicar')"
+                                                        wire:loading.attr="disabled"
+                                                        wire:target="publishResolution({{ $resolution->id }})"
+                                                    />
+                                                @endif
+                                            @endcan
+                                            @can('view', $resolution)
                                                 <flux:button 
-                                                    wire:click="publishResolution({{ $resolution->id }})"
+                                                    href="{{ route('admin.calls.resolutions.show', [$call, $resolution]) }}" 
                                                     variant="ghost" 
                                                     size="sm"
-                                                    icon="paper-airplane"
-                                                    :label="__('Publicar')"
-                                                    wire:loading.attr="disabled"
-                                                    wire:target="publishResolution({{ $resolution->id }})"
-                                                />
-                                            @endif
+                                                    icon="eye"
+                                                    wire:navigate
+                                                >
+                                                    {{ __('common.actions.view') }}
+                                                </flux:button>
+                                            @endcan
                                         </div>
                                     </div>
                                 </div>
@@ -701,4 +737,5 @@
     <x-ui.toast event="call-delete-error" variant="error" />
     <x-ui.toast event="phase-updated" variant="success" />
     <x-ui.toast event="resolution-published" variant="success" />
+    <x-ui.toast event="resolution-unpublished" variant="success" />
 </div>
