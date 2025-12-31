@@ -659,6 +659,144 @@ Este plan está organizado para completar primero el CRUD completo con textarea 
 
 ---
 
+## 🔧 **Mejoras en Gestión de Imágenes Destacadas** (5 Fases)
+
+**Nota**: Estas fases son mejoras adicionales al CRUD básico y se desarrollan después de completar los pasos principales. Se documentan aquí para mantener el contexto completo del desarrollo.
+
+**Objetivo**: Mejorar la gestión de imágenes destacadas incluyendo:
+- Verificación y corrección de guardado de imágenes
+- Generación automática de conversiones (thumbnail, medium, large)
+- Visualización correcta en todas las vistas (Index, Show, Edit)
+- Implementación de soft delete para imágenes (eliminar sin borrar archivo físico) usando `custom_properties`
+- Opción de restaurar imágenes eliminadas
+
+### 📄 Documentación Detallada
+Ver [Plan Detallado de Mejoras de Imágenes](paso-3.5.5-imagenes-plan.md) para información completa.
+
+### ✅ **Fase 1: Diagnóstico y Verificación** (En Progreso)
+
+#### Fase 1.1: Verificar guardado de imágenes
+**Objetivo**: Confirmar que las imágenes se están guardando correctamente.
+
+**Tareas**:
+- [ ] Verificar que `addMedia()` se está ejecutando correctamente en Create y Edit
+- [ ] Verificar que el archivo físico se guarda en `storage/app/public/media`
+- [ ] Verificar que el registro se crea en la tabla `media`
+- [ ] Verificar que la relación `collection_name = 'featured'` es correcta
+
+**Archivos a revisar**:
+- `app/Livewire/Admin/News/Create.php` (método `store()`)
+- `app/Livewire/Admin/News/Edit.php` (método `update()`)
+- `storage/app/public/media/` (directorio de archivos)
+- Tabla `media` en base de datos
+
+---
+
+#### Fase 1.2: Verificar generación de conversiones
+**Objetivo**: Confirmar que las conversiones (thumbnail, medium, large) se generan automáticamente.
+
+**Tareas**:
+- [ ] Verificar que las conversiones se generan al guardar la imagen
+- [ ] Verificar que las conversiones existen físicamente en el disco
+- [ ] Verificar que `getFirstMediaUrl('featured', 'thumbnail')` retorna la URL correcta
+- [ ] Si no se generan automáticamente, ejecutar comando para regenerar
+
+**Archivos a revisar**:
+- `app/Models/NewsPost.php` (método `registerMediaConversions()`)
+- `storage/app/public/media/` (buscar carpetas de conversiones)
+
+**Comandos de verificación**:
+```bash
+# Regenerar conversiones manualmente (si es necesario)
+php artisan media-library:regenerate
+```
+
+---
+
+### ⏳ **Fase 2: Corrección de Visualización** (Pendiente)
+
+#### Fase 2.1: Corregir visualización en Index
+- [ ] Verificar que `getFirstMediaUrl('featured', 'thumbnail')` funciona correctamente
+- [ ] Agregar fallback si la conversión no existe
+- [ ] Verificar que las imágenes se cargan correctamente
+
+#### Fase 2.2: Verificar visualización en Show
+- [ ] Verificar que `hasFeaturedImage()` retorna `true` cuando hay imagen
+- [ ] Verificar que `getFeaturedImageUrl('large')` retorna la URL correcta
+- [ ] Verificar que la imagen se muestra con el tamaño correcto
+
+#### Fase 2.3: Mejorar visualización en Edit
+- [ ] Verificar que `hasExistingFeaturedImage()` funciona correctamente
+- [ ] Mejorar la presentación de la imagen actual
+- [ ] Agregar botón para eliminar imagen actual con confirmación
+
+---
+
+### ⏳ **Fase 3: Implementar Soft Delete para Media** (Pendiente)
+
+**Nota**: Usaremos la **Opción B** (más simple) - `custom_properties` para marcar como eliminado.
+
+#### Fase 3.1: Implementar métodos de soft delete usando custom_properties
+- [ ] Crear método `softDeleteFeaturedImage()` en modelo NewsPost
+- [ ] Crear método `restoreFeaturedImage()` en modelo NewsPost
+- [ ] Crear método `forceDeleteFeaturedImage()` para eliminación permanente
+- [ ] Modificar consultas para excluir imágenes marcadas como eliminadas
+
+#### Fase 3.2: Actualizar componente Edit para usar soft delete
+- [ ] Modificar método `toggleRemoveFeaturedImage()` para usar soft delete
+- [ ] Agregar método `restoreFeaturedImage()` en componente Edit
+- [ ] Actualizar vista para mostrar opción de restaurar si hay imagen eliminada
+
+#### Fase 3.3: Actualizar consultas para excluir imágenes eliminadas
+- [ ] Modificar `getFirstMedia()` para excluir imágenes eliminadas
+- [ ] Modificar `hasMedia()` para excluir imágenes eliminadas
+- [ ] Actualizar métodos en Show, Edit e Index
+
+---
+
+### ⏳ **Fase 4: Mejoras Adicionales** (Pendiente)
+
+#### Fase 4.1: Agregar comando para regenerar conversiones
+- [ ] Verificar que el comando `php artisan media-library:regenerate` funciona
+- [ ] Documentar uso del comando
+
+#### Fase 4.2: Optimizar carga de imágenes
+- [ ] Verificar eager loading de media en consultas del Index
+- [ ] Considerar usar lazy loading para imágenes en el frontend
+
+#### Fase 4.3: Agregar validación de tamaño de imagen
+- [ ] Verificar que la validación de tamaño funciona (5MB máximo)
+- [ ] Considerar agregar validación de dimensiones (ancho/alto máximo)
+
+---
+
+### ⏳ **Fase 5: Testing y Verificación** (Pendiente)
+
+#### Fase 5.1: Probar guardado de imágenes
+- [ ] Crear nueva noticia con imagen
+- [ ] Verificar que la imagen se guarda correctamente
+- [ ] Verificar que las conversiones se generan
+- [ ] Verificar que la imagen se muestra en Index, Show y Edit
+
+#### Fase 5.2: Probar edición de imágenes
+- [ ] Editar noticia existente y cambiar imagen
+- [ ] Verificar que la imagen anterior se mantiene (soft delete)
+- [ ] Verificar que la nueva imagen se guarda correctamente
+
+#### Fase 5.3: Probar eliminación y restauración
+- [ ] Eliminar imagen desde Edit
+- [ ] Verificar que el archivo físico no se elimina
+- [ ] Verificar que la imagen no se muestra en las vistas
+- [ ] Restaurar imagen eliminada
+- [ ] Verificar que la imagen vuelve a mostrarse
+
+#### Fase 5.4: Probar eliminación permanente
+- [ ] Eliminar imagen permanentemente
+- [ ] Verificar que el archivo físico se elimina del servidor
+- [ ] Verificar que el registro se elimina de la base de datos
+
+---
+
 ## ✅ Checklist Final
 
 Antes de considerar el paso 3.5.5 completado, verificar:
