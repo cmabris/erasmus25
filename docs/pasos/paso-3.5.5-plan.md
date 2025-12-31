@@ -13,7 +13,14 @@ Desarrollar un sistema completo de gestión (CRUD) de Noticias en el panel de ad
 
 ---
 
-## 📋 Pasos Principales (17 Pasos)
+## 📋 Pasos Principales (18 Pasos)
+
+**Nota sobre el orden de desarrollo:**
+Este plan está organizado para completar primero el CRUD completo con textarea simple, y luego integrar Tiptap al final. Esto permite:
+- Desarrollar y probar el CRUD completo más rápido
+- No bloquearse si hay problemas con Tiptap
+- Separar la lógica de negocio de la mejora del editor
+- Integrar Tiptap como mejora final una vez que todo funciona
 
 ### ✅ **Fase 1: Preparación y Estructura Base**
 
@@ -210,47 +217,8 @@ Desarrollar un sistema completo de gestión (CRUD) de Noticias en el panel de ad
 
 ---
 
-#### Paso 7: Instalar y configurar Tiptap
-**Objetivo**: Instalar Tiptap y configurar la integración con Livewire 3 y Alpine.js.
-
-**Tareas**:
-- [ ] Instalar Tiptap y extensiones básicas:
-  ```bash
-  npm install @tiptap/core @tiptap/starter-kit @tiptap/pm
-  ```
-- [ ] Instalar extensiones recomendadas para noticias:
-  ```bash
-  npm install @tiptap/extension-link @tiptap/extension-image @tiptap/extension-placeholder
-  ```
-- [ ] Crear helper JavaScript para Tiptap en `resources/js/app.js`:
-  - [ ] Importar Editor y extensiones
-  - [ ] Crear función Alpine.js `tiptapEditor()` para inicializar el editor
-  - [ ] Configurar integración con `@entangle()` de Livewire
-  - [ ] Configurar toolbar básico (negrita, cursiva, enlaces, etc.)
-- [ ] Importar estilos de Tiptap (opcional, usar Tailwind prose para estilos)
-- [ ] Crear componente Blade reutilizable `components/tiptap-editor.blade.php` (opcional)
-
-**Archivos a modificar**:
-- `package.json` (se actualiza automáticamente con npm install)
-- `resources/js/app.js`
-
-**Archivos a crear** (opcional):
-- `resources/views/components/tiptap-editor.blade.php`
-
-**Verificación**:
-- Verificar que Tiptap se instala correctamente
-- Verificar que el helper JavaScript funciona
-- Verificar que se puede inicializar un editor básico
-
-**Referencias**:
-- [Documentación Tiptap](https://tiptap.dev/)
-- [Guía de integración con PHP/Laravel](https://tiptap.dev/docs/editor/getting-started/install/php)
-- [Comparación Trix vs Tiptap](paso-3.5.5-editor-comparison.md)
-
----
-
-#### Paso 8: Crear vista del componente Create
-**Objetivo**: Crear el formulario de creación con todos los campos y editor Tiptap.
+#### Paso 7: Crear vista del componente Create
+**Objetivo**: Crear el formulario de creación con todos los campos. **Nota**: Por ahora usaremos textarea simple para el contenido. Tiptap se integrará al final (Paso 18).
 
 **Tareas**:
 - [ ] Crear `resources/views/livewire/admin/news/create.blade.php`
@@ -262,11 +230,10 @@ Desarrollar un sistema completo de gestión (CRUD) de Noticias en el panel de ad
     - [ ] Título (input, requerido)
     - [ ] Slug (input, generado automáticamente, editable)
     - [ ] Extracto (textarea)
-    - [ ] **Contenido con Tiptap**:
-      - [ ] Usar componente Tiptap con `@entangle('content')`
-      - [ ] Toolbar con botones: negrita, cursiva, enlaces, listas, etc.
-      - [ ] Editor con placeholder
-      - [ ] Estilos con Tailwind prose para preview
+    - [ ] **Contenido** (textarea simple por ahora, se reemplazará con Tiptap en Paso 18):
+      - [ ] Textarea grande para contenido
+      - [ ] Placeholder descriptivo
+      - [ ] Validación visual
   - [ ] **Información de movilidad** (opcional):
     - [ ] País (input)
     - [ ] Ciudad (input)
@@ -278,7 +245,7 @@ Desarrollar un sistema completo de gestión (CRUD) de Noticias en el panel de ad
     - [ ] Fecha de publicación (date picker, opcional)
   - [ ] **Etiquetas**:
     - [ ] Select múltiple o checkboxes para seleccionar etiquetas existentes
-    - [ ] Opción para crear nueva etiqueta (modal o inline)
+    - [ ] Opción para crear nueva etiqueta (modal o inline) - se implementará en Paso 13
   - [ ] **Imagen destacada**:
     - [ ] Input file para subir imagen
     - [ ] Preview de imagen subida
@@ -286,17 +253,18 @@ Desarrollar un sistema completo de gestión (CRUD) de Noticias en el panel de ad
 - [ ] Implementar validación en tiempo real con feedback visual
 - [ ] Implementar botones de acción: "Guardar", "Guardar y publicar", "Cancelar"
 - [ ] Usar componentes Flux UI: `flux:field`, `flux:input`, `flux:textarea`, `flux:select`, `flux:button`
-- [ ] Integrar Tiptap con Livewire usando Alpine.js y `@entangle()`
 
 **Archivos a crear**:
 - `resources/views/livewire/admin/news/create.blade.php`
 
 **Verificación**:
 - Verificar que el formulario se renderiza correctamente
-- Verificar que Tiptap se inicializa correctamente
-- Verificar que el contenido se sincroniza con Livewire
 - Verificar que la validación funciona
-- Verificar que se puede crear una noticia con contenido enriquecido
+- Verificar que se puede crear una noticia con todos los campos
+- Verificar que las etiquetas se asocian correctamente
+- Verificar que la imagen se sube correctamente
+
+**Nota**: El contenido se guarda como texto plano por ahora. En el Paso 18 se reemplazará el textarea con Tiptap para contenido enriquecido.
 
 ---
 
@@ -338,7 +306,7 @@ Desarrollar un sistema completo de gestión (CRUD) de Noticias en el panel de ad
 ---
 
 #### Paso 10: Crear vista del componente Edit
-**Objetivo**: Crear el formulario de edición similar al de creación pero con datos precargados.
+**Objetivo**: Crear el formulario de edición similar al de creación pero con datos precargados. **Nota**: Por ahora usaremos textarea simple para el contenido. Tiptap se integrará al final (Paso 18).
 
 **Tareas**:
 - [ ] Crear `resources/views/livewire/admin/news/edit.blade.php`
@@ -347,6 +315,10 @@ Desarrollar un sistema completo de gestión (CRUD) de Noticias en el panel de ad
   - [ ] Precargar todos los campos con datos del modelo
   - [ ] Precargar etiquetas seleccionadas
   - [ ] Mostrar información adicional: fecha de creación, última actualización, autor, revisor (si existe)
+  - [ ] **Contenido** (textarea simple por ahora, se reemplazará con Tiptap en Paso 18):
+    - [ ] Textarea grande con contenido precargado
+    - [ ] Placeholder descriptivo
+    - [ ] Validación visual
 - [ ] Implementar opción para eliminar imagen existente
 - [ ] Implementar botones de acción: "Guardar", "Guardar y publicar", "Cancelar", "Eliminar"
 
@@ -356,6 +328,9 @@ Desarrollar un sistema completo de gestión (CRUD) de Noticias en el panel de ad
 **Verificación**:
 - Verificar que el formulario se renderiza con datos correctos
 - Verificar que se puede editar una noticia
+- Verificar que el contenido se carga y guarda correctamente
+
+**Nota**: El contenido se edita como texto plano por ahora. En el Paso 18 se reemplazará el textarea con Tiptap para contenido enriquecido.
 
 ---
 
@@ -573,6 +548,66 @@ Desarrollar un sistema completo de gestión (CRUD) de Noticias en el panel de ad
 
 ---
 
+### ✅ **Fase 9: Integración de Tiptap (Editor de Contenido Enriquecido)**
+
+#### Paso 18: Instalar, configurar e integrar Tiptap
+**Objetivo**: Instalar Tiptap y reemplazar los textareas simples con el editor de contenido enriquecido en los formularios Create y Edit.
+
+**Tareas**:
+- [ ] Instalar Tiptap y extensiones básicas:
+  ```bash
+  npm install @tiptap/core @tiptap/starter-kit @tiptap/pm
+  ```
+- [ ] Instalar extensiones recomendadas para noticias:
+  ```bash
+  npm install @tiptap/extension-link @tiptap/extension-image @tiptap/extension-placeholder
+  ```
+- [ ] Crear helper JavaScript para Tiptap en `resources/js/app.js`:
+  - [ ] Importar Editor y extensiones
+  - [ ] Crear función Alpine.js `tiptapEditor()` para inicializar el editor
+  - [ ] Configurar integración con `@entangle()` de Livewire
+  - [ ] Configurar toolbar básico (negrita, cursiva, enlaces, listas, etc.)
+- [ ] Importar estilos de Tiptap (opcional, usar Tailwind prose para estilos)
+- [ ] Crear componente Blade reutilizable `components/tiptap-editor.blade.php` (opcional)
+- [ ] **Reemplazar textarea en Create**:
+  - [ ] Modificar `resources/views/livewire/admin/news/create.blade.php`
+  - [ ] Reemplazar textarea de contenido con componente Tiptap
+  - [ ] Configurar `@entangle('content')` para sincronización
+  - [ ] Añadir toolbar con botones básicos
+- [ ] **Reemplazar textarea en Edit**:
+  - [ ] Modificar `resources/views/livewire/admin/news/edit.blade.php`
+  - [ ] Reemplazar textarea de contenido con componente Tiptap
+  - [ ] Precargar contenido HTML existente en el editor
+  - [ ] Configurar `@entangle('content')` para sincronización
+  - [ ] Añadir toolbar con botones básicos
+- [ ] Verificar que el contenido HTML se guarda correctamente
+- [ ] Verificar que el contenido HTML se carga correctamente en edición
+
+**Archivos a modificar**:
+- `package.json` (se actualiza automáticamente con npm install)
+- `resources/js/app.js`
+- `resources/views/livewire/admin/news/create.blade.php`
+- `resources/views/livewire/admin/news/edit.blade.php`
+
+**Archivos a crear** (opcional):
+- `resources/views/components/tiptap-editor.blade.php`
+
+**Verificación**:
+- Verificar que Tiptap se instala correctamente
+- Verificar que el helper JavaScript funciona
+- Verificar que se puede inicializar un editor básico
+- Verificar que el contenido se sincroniza correctamente con Livewire
+- Verificar que se puede crear una noticia con contenido enriquecido
+- Verificar que se puede editar una noticia y el contenido HTML se carga correctamente
+- Verificar que el contenido HTML se guarda y muestra correctamente
+
+**Referencias**:
+- [Documentación Tiptap](https://tiptap.dev/)
+- [Guía de integración con PHP/Laravel](https://tiptap.dev/docs/editor/getting-started/install/php)
+- [Comparación Trix vs Tiptap](paso-3.5.5-editor-comparison.md)
+
+---
+
 ## 📝 Notas Importantes
 
 ### SoftDeletes
@@ -593,6 +628,9 @@ Desarrollar un sistema completo de gestión (CRUD) de Noticias en el panel de ad
 - Permitir eliminar imagen existente en edición
 
 ### Editor de Contenido (Tiptap)
+- **Estrategia de desarrollo**: Primero completar el CRUD con textarea simple, luego integrar Tiptap
+- **Fase inicial**: Los formularios Create y Edit usan textarea simple para el campo `content`
+- **Fase final (Paso 18)**: Se reemplazará el textarea con Tiptap para contenido enriquecido
 - **Tiptap**: Editor de contenido enriquecido basado en ProseMirror
 - Integración con Livewire 3 usando Alpine.js y `@entangle()`
 - Extensiones: StarterKit (básico), Link, Image, Placeholder
@@ -606,6 +644,9 @@ Desarrollar un sistema completo de gestión (CRUD) de Noticias en el panel de ad
 - Verificar autorización con `NewsPostPolicy::publish()`
 
 ### Editor de Contenido
+- **Estrategia**: Completar CRUD primero con textarea simple, luego integrar Tiptap (Paso 18)
+- **Fase inicial**: Textarea simple para desarrollo rápido y pruebas
+- **Fase final**: Tiptap se integrará en el Paso 18 como mejora del editor
 - **Tiptap** será el editor de contenido enriquecido utilizado
 - Integración con Livewire 3 usando Alpine.js y `@entangle()`
 - Ver [Comparación Trix vs Tiptap](paso-3.5.5-editor-comparison.md) para más detalles
@@ -637,6 +678,7 @@ Antes de considerar el paso 3.5.5 completado, verificar:
 - [ ] Código formateado con Pint
 - [ ] Diseño responsive
 - [ ] Accesibilidad verificada
+- [ ] **Tiptap integrado** (Paso 18 - opcional pero recomendado)
 
 ---
 
