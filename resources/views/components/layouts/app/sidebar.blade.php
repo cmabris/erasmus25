@@ -33,6 +33,12 @@
                         <flux:navlist.item icon="document-text" :href="route('admin.calls.index')" :current="request()->routeIs('admin.calls.*')" wire:navigate>{{ __('common.nav.calls') }}</flux:navlist.item>
                     </flux:navlist.group>
                 @endcan
+
+                @can('viewAny', \App\Models\NewsPost::class)
+                    <flux:navlist.group :heading="__('common.admin.nav.content')" class="grid">
+                        <flux:navlist.item icon="newspaper" :href="route('admin.news.index')" :current="request()->routeIs('admin.news.*')" wire:navigate>{{ __('common.nav.news') }}</flux:navlist.item>
+                    </flux:navlist.group>
+                @endcan
             </flux:navlist>
 
             <flux:spacer />

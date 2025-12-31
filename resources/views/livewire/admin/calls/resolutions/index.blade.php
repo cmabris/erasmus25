@@ -315,7 +315,7 @@
                                                             wire:click="publish({{ $resolution->id }})"
                                                             variant="ghost" 
                                                             size="sm"
-                                                            icon="eye"
+                                                            icon="paper-airplane"
                                                             :label="__('Publicar')"
                                                             :tooltip="__('Publicar resolución')"
                                                             wire:loading.attr="disabled"

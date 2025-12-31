@@ -71,6 +71,12 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::get('/convocatorias/{call}', \App\Livewire\Admin\Calls\Show::class)->name('calls.show');
     Route::get('/convocatorias/{call}/editar', \App\Livewire\Admin\Calls\Edit::class)->name('calls.edit');
 
+    // Rutas de Noticias
+    Route::get('/noticias', \App\Livewire\Admin\News\Index::class)->name('news.index');
+    Route::get('/noticias/crear', \App\Livewire\Admin\News\Create::class)->name('news.create');
+    Route::get('/noticias/{news_post}', \App\Livewire\Admin\News\Show::class)->name('news.show');
+    Route::get('/noticias/{news_post}/editar', \App\Livewire\Admin\News\Edit::class)->name('news.edit');
+
     // Rutas anidadas de Fases de Convocatorias
     Route::prefix('convocatorias/{call}')->group(function () {
         Route::get('/fases', \App\Livewire\Admin\Calls\Phases\Index::class)->name('calls.phases.index');

@@ -321,7 +321,7 @@
                                     <flux:button 
                                         wire:click="publish"
                                         variant="ghost"
-                                        icon="eye"
+                                        icon="paper-airplane"
                                         wire:loading.attr="disabled"
                                         wire:target="publish"
                                         class="w-full"
