@@ -11,6 +11,7 @@ use App\Models\Program;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
@@ -29,7 +30,7 @@ class Edit extends Component
     /**
      * Program ID (optional).
      */
-    public int $program_id = 0;
+    public ?int $program_id = null;
 
     /**
      * Academic year ID (required).
@@ -148,7 +149,7 @@ class Edit extends Component
         $this->newsPost = $news_post;
 
         // Load news post data
-        $this->program_id = $news_post->program_id ?? 0;
+        $this->program_id = $news_post->program_id;
         $this->academic_year_id = $news_post->academic_year_id ?? 0;
         $this->title = $news_post->title;
         $this->slug = $news_post->slug ?? '';
@@ -269,7 +270,18 @@ class Edit extends Component
     {
         $this->authorize('create', NewsTag::class);
 
-        $validated = $this->validate((new StoreNewsTagRequest)->rules());
+        // Map component properties to FormRequest expected names
+        $rules = (new StoreNewsTagRequest)->rules();
+        $customAttributes = [
+            'name' => 'newTagName',
+            'slug' => 'newTagSlug',
+        ];
+
+        // Use validate with custom attribute names
+        $validated = validator([
+            'name' => $this->newTagName,
+            'slug' => $this->newTagSlug ?: null,
+        ], $rules, [], $customAttributes)->validate();
 
         $tag = NewsTag::create($validated);
 
@@ -301,25 +313,32 @@ class Edit extends Component
      */
     public function update(): void
     {
+        // Convert program_id from 0 to null before validation (to pass exists validation)
+        if ($this->program_id === 0) {
+            $this->program_id = null;
+        }
+
         // Get rules from FormRequest and exclude fields not in component
         $rules = (new UpdateNewsPostRequest)->rules();
         unset($rules['author_id'], $rules['reviewed_by'], $rules['reviewed_at'], $rules['featured_image'], $rules['tags'], $rules['tags.*']);
 
+        // Fix slug validation: UpdateNewsPostRequest tries to get ID from route, but in Livewire we need to pass it manually
+        $rules['slug'] = ['nullable', 'string', 'max:255', Rule::unique('news_posts', 'slug')->ignore($this->newsPost->id)];
+
         $validated = $this->validate($rules);
 
-        // Convert program_id and academic_year_id from 0 to null if needed
-        if ($validated['program_id'] === 0) {
-            $validated['program_id'] = null;
-        }
-        if ($validated['academic_year_id'] === 0) {
-            $validated['academic_year_id'] = null;
-        }
+        // Always use program_id from component (may be null)
+        $validated['program_id'] = $this->program_id;
 
-        // Convert empty strings to null for optional fields
+        // Ensure all optional fields are included in validated data
         $optionalFields = ['country', 'city', 'host_entity', 'mobility_type', 'mobility_category', 'excerpt'];
         foreach ($optionalFields as $field) {
-            if (isset($validated[$field]) && $validated[$field] === '') {
+            // Always include the field from component property
+            $value = $this->{$field} ?? null;
+            if ($value === '') {
                 $validated[$field] = null;
+            } else {
+                $validated[$field] = $value;
             }
         }
 

@@ -24,7 +24,7 @@ class Create extends Component
     /**
      * Program ID (optional).
      */
-    public int $program_id = 0;
+    public ?int $program_id = null;
 
     /**
      * Academic year ID (required).
@@ -206,7 +206,22 @@ class Create extends Component
     {
         $this->authorize('create', NewsTag::class);
 
-        $validated = $this->validate((new StoreNewsTagRequest)->rules());
+        // Map component properties to FormRequest expected names
+        $rules = (new StoreNewsTagRequest)->rules();
+        $customAttributes = [
+            'name' => 'newTagName',
+            'slug' => 'newTagSlug',
+        ];
+
+        // Temporarily set properties with expected names for validation
+        $originalName = $this->newTagName;
+        $originalSlug = $this->newTagSlug;
+
+        // Use validate with custom attribute names
+        $validated = validator([
+            'name' => $this->newTagName,
+            'slug' => $this->newTagSlug ?: null,
+        ], $rules, [], $customAttributes)->validate();
 
         $tag = NewsTag::create($validated);
 
@@ -246,14 +261,6 @@ class Create extends Component
 
         // Set author_id automatically to current user
         $validated['author_id'] = auth()->id();
-
-        // Convert program_id and academic_year_id from 0 to null if needed
-        if ($validated['program_id'] === 0) {
-            $validated['program_id'] = null;
-        }
-        if ($validated['academic_year_id'] === 0) {
-            $validated['academic_year_id'] = null;
-        }
 
         // Convert empty strings to null for optional fields
         $optionalFields = ['country', 'city', 'host_entity', 'mobility_type', 'mobility_category', 'excerpt'];
