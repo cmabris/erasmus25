@@ -206,16 +206,24 @@
                                 <tr class="transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800/50">
                                     <td class="px-4 py-4 whitespace-nowrap">
                                         @php
-                                            $featuredImage = $newsPost->getFirstMediaUrl('featured', 'thumbnail');
+                                            // Intentar obtener thumbnail, si no existe usar imagen original, si no hay imagen mostrar placeholder
+                                            $featuredImage = $newsPost->getFirstMediaUrl('featured', 'thumbnail') 
+                                                ?? $newsPost->getFirstMediaUrl('featured') 
+                                                ?? null;
                                         @endphp
                                         @if($featuredImage)
                                             <img 
                                                 src="{{ $featuredImage }}" 
                                                 alt="{{ $newsPost->title }}"
-                                                class="h-12 w-12 rounded-lg object-cover"
+                                                class="h-12 w-12 rounded-lg object-cover border border-zinc-200 dark:border-zinc-700"
+                                                loading="lazy"
+                                                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
                                             />
+                                            <div class="hidden h-12 w-12 items-center justify-center rounded-lg bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700">
+                                                <flux:icon name="photo" class="[:where(&)]:size-6 text-zinc-400" variant="outline" />
+                                            </div>
                                         @else
-                                            <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-zinc-100 dark:bg-zinc-800">
+                                            <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700">
                                                 <flux:icon name="photo" class="[:where(&)]:size-6 text-zinc-400" variant="outline" />
                                             </div>
                                         @endif

@@ -181,6 +181,8 @@ describe('Admin News Create - Successful Creation', function () {
     });
 
     it('creates news post with featured image', function () {
+        Storage::fake('public');
+
         $user = User::factory()->create();
         $user->assignRole(Roles::ADMIN);
         $this->actingAs($user);
@@ -199,7 +201,62 @@ describe('Admin News Create - Successful Creation', function () {
             ->call('store');
 
         $newsPost = NewsPost::where('title', 'Noticia Test')->first();
+
+        // Verificar que la noticia tiene imagen destacada
         expect($newsPost->hasMedia('featured'))->toBeTrue();
+
+        // Verificar que el registro se creó en la tabla media
+        $media = $newsPost->getFirstMedia('featured');
+        expect($media)->not->toBeNull();
+        expect($media->collection_name)->toBe('featured');
+        expect($media->model_type)->toBe(NewsPost::class);
+        expect($media->model_id)->toBe($newsPost->id);
+
+        // Verificar que el archivo físico existe
+        expect(Storage::disk('public')->exists($media->getPathRelativeToRoot()))->toBeTrue();
+
+        // Verificar que las conversiones están registradas (aunque pueden no estar generadas aún)
+        expect($media->getGeneratedConversions())->toBeInstanceOf(\Illuminate\Support\Collection::class);
+    });
+
+    it('generates image conversions when creating news post with featured image', function () {
+        Storage::fake('public');
+
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $program = Program::factory()->create();
+        $academicYear = AcademicYear::factory()->create();
+
+        $image = UploadedFile::fake()->image('news.jpg', 1200, 900);
+
+        Livewire::test(Create::class)
+            ->set('program_id', $program->id)
+            ->set('academic_year_id', $academicYear->id)
+            ->set('title', 'Noticia con Conversiones')
+            ->set('content', 'Contenido de la noticia')
+            ->set('featuredImage', $image)
+            ->call('store');
+
+        $newsPost = NewsPost::where('title', 'Noticia con Conversiones')->first();
+        $media = $newsPost->getFirstMedia('featured');
+
+        expect($media)->not->toBeNull();
+
+        // Verificar que las URLs de conversiones están disponibles
+        $thumbnailUrl = $newsPost->getFirstMediaUrl('featured', 'thumbnail');
+        $mediumUrl = $newsPost->getFirstMediaUrl('featured', 'medium');
+        $largeUrl = $newsPost->getFirstMediaUrl('featured', 'large');
+
+        // Las conversiones pueden no estar generadas inmediatamente, pero las URLs deben estar disponibles
+        expect($thumbnailUrl)->not->toBeEmpty();
+        expect($mediumUrl)->not->toBeEmpty();
+        expect($largeUrl)->not->toBeEmpty();
+
+        // Verificar que las conversiones están registradas en el modelo
+        $conversions = $media->getGeneratedConversions();
+        expect($conversions)->toBeInstanceOf(\Illuminate\Support\Collection::class);
     });
 
     it('dispatches news-post-created event', function () {

@@ -666,6 +666,238 @@ describe('Admin News Edit - Image Management', function () {
             ->set('featuredImage', UploadedFile::fake()->image('new-news.jpg'))
             ->assertSet('removeFeaturedImage', false);
     });
+
+    it('soft deletes existing image when removing it', function () {
+        Storage::fake('public');
+
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $program = Program::factory()->create();
+        $academicYear = AcademicYear::factory()->create();
+        $newsPost = NewsPost::factory()->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+        ]);
+
+        $image = UploadedFile::fake()->image('news.jpg', 800, 600);
+        $media = $newsPost->addMedia($image->getRealPath())
+            ->usingName($newsPost->title)
+            ->toMediaCollection('featured');
+
+        $filePath = $media->getPath();
+
+        // Verificar que la imagen existe físicamente
+        expect(Storage::disk('public')->exists($media->getPathRelativeToRoot()))->toBeTrue();
+
+        // Eliminar la imagen (soft delete)
+        Livewire::test(Edit::class, ['news_post' => $newsPost])
+            ->set('removeFeaturedImage', true)
+            ->call('update');
+
+        $newsPost->refresh();
+
+        // Verificar que la imagen no se muestra (soft deleted)
+        expect($newsPost->hasMedia('featured'))->toBeFalse();
+        expect($newsPost->getFirstMedia('featured'))->toBeNull();
+
+        // Verificar que el archivo físico NO se eliminó
+        expect(Storage::disk('public')->exists($media->getPathRelativeToRoot()))->toBeTrue();
+
+        // Verificar que la imagen está marcada como eliminada
+        $allMedia = $newsPost->getMediaWithDeleted('featured');
+        $deletedMedia = $allMedia->first();
+        expect($deletedMedia)->not->toBeNull();
+        expect($newsPost->isMediaSoftDeleted($deletedMedia))->toBeTrue();
+    });
+
+    it('can restore soft-deleted image', function () {
+        Storage::fake('public');
+
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $program = Program::factory()->create();
+        $academicYear = AcademicYear::factory()->create();
+        $newsPost = NewsPost::factory()->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+        ]);
+
+        $image = UploadedFile::fake()->image('news.jpg', 800, 600);
+        $media = $newsPost->addMedia($image->getRealPath())
+            ->usingName($newsPost->title)
+            ->toMediaCollection('featured');
+
+        // Soft delete la imagen
+        $newsPost->softDeleteFeaturedImage();
+
+        // Verificar que está eliminada
+        expect($newsPost->hasMedia('featured'))->toBeFalse();
+        expect($newsPost->hasSoftDeletedFeaturedImages())->toBeTrue();
+
+        // Restaurar la imagen
+        Livewire::test(Edit::class, ['news_post' => $newsPost])
+            ->call('restoreFeaturedImage');
+
+        $newsPost->refresh();
+
+        // Verificar que la imagen está restaurada
+        expect($newsPost->hasMedia('featured'))->toBeTrue();
+        expect($newsPost->getFirstMedia('featured'))->not->toBeNull();
+        expect($newsPost->hasSoftDeletedFeaturedImages())->toBeFalse();
+    });
+
+    it('can select image from modal and restore it', function () {
+        Storage::fake('public');
+
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $program = Program::factory()->create();
+        $academicYear = AcademicYear::factory()->create();
+        $newsPost = NewsPost::factory()->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+        ]);
+
+        // Crear primera imagen y soft-deletearla
+        $firstImage = UploadedFile::fake()->image('first-news.jpg', 800, 600);
+        $firstMedia = $newsPost->addMedia($firstImage->getRealPath())
+            ->usingName('First Image')
+            ->toMediaCollection('featured');
+        $newsPost->softDeleteFeaturedImage();
+
+        // Crear segunda imagen (actual)
+        $secondImage = UploadedFile::fake()->image('second-news.jpg', 800, 600);
+        $secondMedia = $newsPost->addMedia($secondImage->getRealPath())
+            ->usingName('Second Image')
+            ->toMediaCollection('featured');
+
+        // Verificar que hay imágenes eliminadas
+        expect($newsPost->hasSoftDeletedFeaturedImages())->toBeTrue();
+
+        // Abrir modal de selección
+        $component = Livewire::test(Edit::class, ['news_post' => $newsPost])
+            ->call('openSelectImageModal')
+            ->assertSet('showSelectImageModal', true);
+
+        // Verificar que hay imágenes disponibles usando getAvailableImagesProperty
+        $availableImages = $component->instance()->getAvailableImagesProperty();
+        expect($availableImages)->not->toBeEmpty();
+        expect($availableImages->count())->toBe(2); // Current + deleted
+
+        // Seleccionar la primera imagen (eliminada) para restaurarla
+        $component->set('selectedImageId', $firstMedia->id)
+            ->call('selectImage')
+            ->assertSet('showSelectImageModal', false);
+
+        $newsPost->refresh();
+
+        // Verificar que la primera imagen está restaurada y es la actual
+        expect($newsPost->hasMedia('featured'))->toBeTrue();
+        $currentMedia = $newsPost->getFirstMedia('featured');
+        expect($currentMedia->id)->toBe($firstMedia->id);
+        expect($newsPost->isMediaSoftDeleted($currentMedia))->toBeFalse();
+    });
+
+    it('can force delete soft-deleted image permanently', function () {
+        Storage::fake('public');
+
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $program = Program::factory()->create();
+        $academicYear = AcademicYear::factory()->create();
+        $newsPost = NewsPost::factory()->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+        ]);
+
+        $image = UploadedFile::fake()->image('news.jpg', 800, 600);
+        $media = $newsPost->addMedia($image->getRealPath())
+            ->usingName($newsPost->title)
+            ->toMediaCollection('featured');
+
+        $filePath = $media->getPathRelativeToRoot();
+
+        // Verificar que el archivo existe
+        expect(Storage::disk('public')->exists($filePath))->toBeTrue();
+
+        // Soft delete la imagen
+        $newsPost->softDeleteFeaturedImage();
+
+        // Verificar que está soft-deleted
+        expect($newsPost->hasMedia('featured'))->toBeFalse();
+        expect($newsPost->hasSoftDeletedFeaturedImages())->toBeTrue();
+
+        // Force delete la imagen
+        Livewire::test(Edit::class, ['news_post' => $newsPost])
+            ->call('confirmForceDeleteImage', $media->id)
+            ->assertSet('showForceDeleteImageModal', true)
+            ->call('forceDeleteImage')
+            ->assertSet('showForceDeleteImageModal', false);
+
+        $newsPost->refresh();
+
+        // Verificar que la imagen fue eliminada permanentemente
+        $allMedia = $newsPost->getMediaWithDeleted('featured');
+        expect($allMedia->firstWhere('id', $media->id))->toBeNull();
+
+        // Verificar que el archivo físico fue eliminado
+        expect(Storage::disk('public')->exists($filePath))->toBeFalse();
+    });
+
+    it('shows available images in selection modal', function () {
+        Storage::fake('public');
+
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $program = Program::factory()->create();
+        $academicYear = AcademicYear::factory()->create();
+        $newsPost = NewsPost::factory()->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+        ]);
+
+        // Crear primera imagen y soft-deletearla
+        $firstImage = UploadedFile::fake()->image('first-news.jpg', 800, 600);
+        $firstMedia = $newsPost->addMedia($firstImage->getRealPath())
+            ->usingName('First Image')
+            ->toMediaCollection('featured');
+        $newsPost->softDeleteFeaturedImage();
+
+        // Crear segunda imagen (actual)
+        $secondImage = UploadedFile::fake()->image('second-news.jpg', 800, 600);
+        $secondMedia = $newsPost->addMedia($secondImage->getRealPath())
+            ->usingName('Second Image')
+            ->toMediaCollection('featured');
+
+        // Abrir modal y verificar imágenes disponibles
+        $component = Livewire::test(Edit::class, ['news_post' => $newsPost])
+            ->call('openSelectImageModal');
+
+        $availableImages = $component->instance()->getAvailableImagesProperty();
+
+        expect($availableImages)->not->toBeEmpty();
+        expect($availableImages->count())->toBe(2);
+
+        // Verificar que la imagen actual está marcada como tal
+        $currentImage = $availableImages->firstWhere('is_current', true);
+        expect($currentImage)->not->toBeNull();
+        expect($currentImage['id'])->toBe($secondMedia->id);
+
+        // Verificar que la imagen eliminada está marcada como tal
+        $deletedImage = $availableImages->firstWhere('is_deleted', true);
+        expect($deletedImage)->not->toBeNull();
+        expect($deletedImage['id'])->toBe($firstMedia->id);
+    });
 });
 
 describe('Admin News Edit - Delete', function () {

@@ -104,14 +104,22 @@
             @if($this->hasFeaturedImage())
                 <x-ui.card>
                     <div class="space-y-4">
-                        <img 
-                            src="{{ $this->getFeaturedImageUrl('large') }}" 
-                            alt="{{ $newsPost->title }}"
-                            class="w-full rounded-lg object-cover"
-                        />
                         @php
+                            // Intentar obtener large, si no existe usar medium, si no existe usar original
+                            $largeImageUrl = $this->getFeaturedImageUrl('large');
+                            $mediumImageUrl = $this->getFeaturedImageUrl('medium');
+                            $originalImageUrl = $this->getFeaturedImageUrl();
+                            $imageUrl = $largeImageUrl ?? $mediumImageUrl ?? $originalImageUrl;
                             $media = $newsPost->getFirstMedia('featured');
                         @endphp
+                        @if($imageUrl)
+                            <img 
+                                src="{{ $imageUrl }}" 
+                                alt="{{ $newsPost->title }}"
+                                class="w-full rounded-lg object-cover border border-zinc-200 dark:border-zinc-700"
+                                loading="lazy"
+                            />
+                        @endif
                         @if($media)
                             <div class="flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-400">
                                 <div class="flex items-center gap-2">

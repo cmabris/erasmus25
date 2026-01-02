@@ -298,12 +298,22 @@
                             @if($this->hasExistingFeaturedImage() && !$removeFeaturedImage && !$featuredImage)
                                 <flux:field>
                                     <flux:label>{{ __('Imagen Actual') }}</flux:label>
-                                    <div class="flex items-center gap-4 p-4 bg-zinc-50 dark:bg-zinc-900 rounded-lg">
-                                        <img 
-                                            src="{{ $featuredImageUrl }}" 
-                                            alt="{{ $newsPost->title }}"
-                                            class="h-20 w-20 rounded-lg object-cover border border-zinc-200 dark:border-zinc-700"
-                                        />
+                                    <div class="flex items-center gap-4 p-4 bg-zinc-50 dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-700">
+                                        @php
+                                            // Intentar obtener medium para preview, si no existe usar original
+                                            $previewUrl = $newsPost->getFirstMediaUrl('featured', 'medium') 
+                                                ?? $newsPost->getFirstMediaUrl('featured') 
+                                                ?? $featuredImageUrl;
+                                            $media = $newsPost->getFirstMedia('featured');
+                                        @endphp
+                                        @if($previewUrl)
+                                            <img 
+                                                src="{{ $previewUrl }}" 
+                                                alt="{{ $newsPost->title }}"
+                                                class="h-20 w-20 rounded-lg object-cover border border-zinc-200 dark:border-zinc-700"
+                                                loading="lazy"
+                                            />
+                                        @endif
                                         <div class="flex-1">
                                             <p class="text-sm font-medium text-zinc-900 dark:text-zinc-100">
                                                 {{ __('Imagen destacada actual') }}
@@ -311,21 +321,39 @@
                                             <p class="text-xs text-zinc-500 dark:text-zinc-400">
                                                 {{ __('La imagen se mostrará en la vista pública de la noticia') }}
                                             </p>
+                                            @if($media)
+                                                <p class="text-xs text-zinc-400 dark:text-zinc-500 mt-1">
+                                                    {{ number_format($media->size / 1024, 2) }} KB
+                                                </p>
+                                            @endif
                                         </div>
                                         <div class="flex gap-2">
                                             <flux:button 
                                                 type="button"
                                                 variant="ghost"
                                                 size="sm"
-                                                href="{{ $featuredImageUrl }}"
+                                                icon="eye"
+                                                href="{{ $previewUrl }}"
                                                 target="_blank"
                                             >
                                                 {{ __('Ver') }}
                                             </flux:button>
+                                            @if($this->hasSoftDeletedFeaturedImages() || $this->hasExistingFeaturedImage())
+                                                <flux:button 
+                                                    type="button"
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    icon="photo"
+                                                    wire:click="openSelectImageModal"
+                                                >
+                                                    {{ __('Seleccionar') }}
+                                                </flux:button>
+                                            @endif
                                             <flux:button 
                                                 type="button"
                                                 variant="ghost"
                                                 size="sm"
+                                                icon="trash"
                                                 wire:click="toggleRemoveFeaturedImage"
                                             >
                                                 {{ __('Eliminar') }}
@@ -335,12 +363,35 @@
                                 </flux:field>
                             @endif
 
+                            {{-- Soft-Deleted Image (Restore Option) --}}
+                            @if($this->hasSoftDeletedFeaturedImages() && !$this->hasExistingFeaturedImage() && !$removeFeaturedImage && !$featuredImage)
+                                <flux:field>
+                                    <flux:label>{{ __('Imagen Eliminada') }}</flux:label>
+                                    <flux:callout variant="warning" class="mb-4">
+                                        <flux:callout.text>
+                                            {{ __('Hay una imagen destacada eliminada que puede ser restaurada.') }}
+                                        </flux:callout.text>
+                                    </flux:callout>
+                                    <flux:button 
+                                        type="button"
+                                        variant="ghost"
+                                        size="sm"
+                                        icon="arrow-path"
+                                        wire:click="restoreFeaturedImage"
+                                    >
+                                        {{ __('Restaurar Imagen') }}
+                                    </flux:button>
+                                </flux:field>
+                            @endif
+
                             {{-- Upload de Nueva Imagen --}}
-                            @if(!$removeFeaturedImage)
+                            @if($removeFeaturedImage || !$this->hasExistingFeaturedImage() || $featuredImage)
                                 <flux:field>
                                     <flux:label>
-                                        @if($this->hasExistingFeaturedImage() && !$featuredImage)
+                                        @if($this->hasExistingFeaturedImage() && !$removeFeaturedImage && !$featuredImage)
                                             {{ __('Reemplazar imagen') }}
+                                        @elseif($removeFeaturedImage)
+                                            {{ __('Subir nueva imagen') }}
                                         @else
                                             {{ __('Seleccionar imagen') }}
                                         @endif
@@ -601,6 +652,156 @@
             </form>
         </flux:modal>
     @endcan
+
+    {{-- Select Image Modal --}}
+    <flux:modal name="select-image" wire:model.self="showSelectImageModal">
+        <form wire:submit="selectImage">
+            <flux:heading>{{ __('Seleccionar Imagen Destacada') }}</flux:heading>
+            <flux:text>
+                {{ __('Selecciona una imagen de las disponibles o cancela para mantener la actual.') }}
+            </flux:text>
+
+            @php
+                $availableImages = $this->availableImages;
+            @endphp
+            @if($availableImages->isEmpty())
+                <flux:callout variant="info" class="mt-4">
+                    <flux:callout.text>
+                        {{ __('No hay imágenes disponibles para seleccionar.') }}
+                    </flux:callout.text>
+                </flux:callout>
+            @else
+                <div class="mt-6 space-y-4 max-h-[60vh] overflow-y-auto">
+                    @foreach($availableImages as $image)
+                        <label class="flex items-start gap-4 p-4 rounded-lg border-2 cursor-pointer transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800 {{ $selectedImageId == $image['id'] ? 'border-erasmus-500 bg-erasmus-50 dark:bg-erasmus-900/20' : 'border-zinc-200 dark:border-zinc-700' }}">
+                            <input 
+                                type="radio" 
+                                wire:model="selectedImageId" 
+                                value="{{ $image['id'] }}"
+                                class="mt-1"
+                            />
+                            <div class="flex-1">
+                                <div class="flex items-start gap-4">
+                                    @if(!empty($image['url']))
+                                        <img 
+                                            src="{{ $image['url'] }}" 
+                                            alt="{{ $image['name'] }}"
+                                            class="h-32 w-32 rounded-lg object-cover border border-zinc-200 dark:border-zinc-700"
+                                            loading="lazy"
+                                            onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'128\' height=\'128\'%3E%3Crect fill=\'%23e4e4e7\' width=\'128\' height=\'128\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' text-anchor=\'middle\' dy=\'.3em\' fill=\'%23999\' font-family=\'sans-serif\' font-size=\'12\'%3EImagen no disponible%3C/text%3E%3C/svg%3E';"
+                                        />
+                                    @else
+                                        <div class="h-32 w-32 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
+                                            <flux:icon name="photo" class="[:where(&)]:size-8 text-zinc-400" variant="outline" />
+                                        </div>
+                                    @endif
+                                    <div class="flex-1">
+                                        <div class="flex items-center gap-2 mb-2">
+                                            <p class="font-medium text-zinc-900 dark:text-white">
+                                                {{ $image['name'] }}
+                                            </p>
+                                            @if($image['is_current'])
+                                                <x-ui.badge variant="success" size="sm">
+                                                    {{ __('Actual') }}
+                                                </x-ui.badge>
+                                            @elseif($image['is_deleted'])
+                                                <x-ui.badge variant="warning" size="sm">
+                                                    {{ __('Eliminada') }}
+                                                </x-ui.badge>
+                                            @endif
+                                        </div>
+                                        <p class="text-sm text-zinc-500 dark:text-zinc-400">
+                                            {{ number_format($image['size'] / 1024, 2) }} KB
+                                        </p>
+                                        @if($image['is_deleted'])
+                                            <p class="text-xs text-zinc-400 dark:text-zinc-500 mt-1">
+                                                {{ __('Esta imagen será restaurada al seleccionarla') }}
+                                            </p>
+                                            <div class="mt-2">
+                                                <flux:button 
+                                                    type="button"
+                                                    variant="danger"
+                                                    size="xs"
+                                                    icon="trash"
+                                                    wire:click="confirmForceDeleteImage({{ $image['id'] }})"
+                                                    wire:loading.attr="disabled"
+                                                    wire:target="confirmForceDeleteImage"
+                                                >
+                                                    {{ __('Eliminar permanentemente') }}
+                                                </flux:button>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </label>
+                    @endforeach
+                </div>
+            @endif
+
+            <div class="flex justify-end gap-2 mt-6">
+                <flux:button 
+                    type="button" 
+                    wire:click="cancelSelectImage" 
+                    variant="ghost"
+                >
+                    {{ __('common.actions.cancel') }}
+                </flux:button>
+                <flux:button 
+                    type="submit" 
+                    variant="primary"
+                    wire:loading.attr="disabled"
+                    wire:target="selectImage"
+                    :disabled="$availableImages->isEmpty() || !$selectedImageId"
+                >
+                    <span wire:loading.remove wire:target="selectImage">
+                        {{ __('Seleccionar') }}
+                    </span>
+                    <span wire:loading wire:target="selectImage">
+                        {{ __('Seleccionando...') }}
+                    </span>
+                </flux:button>
+            </div>
+        </form>
+    </flux:modal>
+
+    {{-- Force Delete Image Modal --}}
+    <flux:modal name="force-delete-image" wire:model.self="showForceDeleteImageModal">
+        <form wire:submit="forceDeleteImage">
+            <flux:heading>{{ __('Eliminar Imagen Permanentemente') }}</flux:heading>
+            <flux:text>
+                {{ __('¿Estás seguro de que deseas eliminar permanentemente esta imagen?') }}
+            </flux:text>
+            <flux:callout variant="danger" class="mt-4">
+                <flux:callout.heading>{{ __('⚠️ Acción Irreversible') }}</flux:callout.heading>
+                <flux:callout.text>
+                    {{ __('Esta acción eliminará permanentemente la imagen y su archivo físico del servidor. Esta acción NO se puede deshacer.') }}
+                </flux:callout.text>
+            </flux:callout>
+            <div class="flex justify-end gap-2 mt-6">
+                <flux:button 
+                    type="button" 
+                    wire:click="$set('showForceDeleteImageModal', false)" 
+                    variant="ghost"
+                >
+                    {{ __('common.actions.cancel') }}
+                </flux:button>
+                <flux:button 
+                    type="submit" 
+                    variant="danger"
+                    wire:loading.attr="disabled"
+                    wire:target="forceDeleteImage"
+                >
+                    <span wire:loading.remove wire:target="forceDeleteImage">
+                        {{ __('Eliminar Permanentemente') }}
+                    </span>
+                    <span wire:loading wire:target="forceDeleteImage">
+                        {{ __('Eliminando...') }}
+                    </span>
+                </flux:button>
+            </div>
+        </form>
+    </flux:modal>
 
     {{-- Toast Notifications --}}
     <x-ui.toast event="news-post-updated" variant="success" />
