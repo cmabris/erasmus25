@@ -142,10 +142,8 @@
                 <x-ui.card>
                     <div>
                         <flux:heading size="md" class="mb-4">{{ __('Contenido') }}</flux:heading>
-                        <div class="prose prose-sm max-w-none dark:prose-invert">
-                            <div class="text-zinc-700 dark:text-zinc-300 whitespace-pre-line">
-                                {{ $newsPost->content }}
-                            </div>
+                        <div class="prose prose-sm max-w-none dark:prose-invert prose-headings:font-bold prose-p:text-zinc-700 dark:prose-p:text-zinc-300 prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-strong:font-bold prose-em:italic prose-ul:list-disc prose-ol:list-decimal prose-img:rounded-lg prose-img:my-4 prose-blockquote:border-l-4 prose-blockquote:border-zinc-300 prose-blockquote:pl-4 prose-blockquote:italic dark:prose-blockquote:border-zinc-600 prose-hr:my-4 prose-table:w-full prose-table:my-4 prose-th:bg-zinc-100 dark:prose-th:bg-zinc-800 prose-th:font-bold">
+                            {!! $newsPost->content !!}
                         </div>
                     </div>
                 </x-ui.card>

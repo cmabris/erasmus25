@@ -550,38 +550,40 @@ Este plan está organizado para completar primero el CRUD completo con textarea 
 
 ### ✅ **Fase 9: Integración de Tiptap (Editor de Contenido Enriquecido)**
 
-#### Paso 18: Instalar, configurar e integrar Tiptap
+#### ✅ Paso 18: Instalar, configurar e integrar Tiptap (COMPLETADO)
 **Objetivo**: Instalar Tiptap y reemplazar los textareas simples con el editor de contenido enriquecido en los formularios Create y Edit.
 
 **Tareas**:
-- [ ] Instalar Tiptap y extensiones básicas:
+- [x] Instalar Tiptap y extensiones básicas:
   ```bash
   npm install @tiptap/core @tiptap/starter-kit @tiptap/pm
   ```
-- [ ] Instalar extensiones recomendadas para noticias:
+- [x] Instalar extensiones recomendadas para noticias:
   ```bash
   npm install @tiptap/extension-link @tiptap/extension-image @tiptap/extension-placeholder
   ```
-- [ ] Crear helper JavaScript para Tiptap en `resources/js/app.js`:
-  - [ ] Importar Editor y extensiones
-  - [ ] Crear función Alpine.js `tiptapEditor()` para inicializar el editor
-  - [ ] Configurar integración con `@entangle()` de Livewire
-  - [ ] Configurar toolbar básico (negrita, cursiva, enlaces, listas, etc.)
-- [ ] Importar estilos de Tiptap (opcional, usar Tailwind prose para estilos)
-- [ ] Crear componente Blade reutilizable `components/tiptap-editor.blade.php` (opcional)
-- [ ] **Reemplazar textarea en Create**:
-  - [ ] Modificar `resources/views/livewire/admin/news/create.blade.php`
-  - [ ] Reemplazar textarea de contenido con componente Tiptap
-  - [ ] Configurar `@entangle('content')` para sincronización
-  - [ ] Añadir toolbar con botones básicos
-- [ ] **Reemplazar textarea en Edit**:
-  - [ ] Modificar `resources/views/livewire/admin/news/edit.blade.php`
-  - [ ] Reemplazar textarea de contenido con componente Tiptap
-  - [ ] Precargar contenido HTML existente en el editor
-  - [ ] Configurar `@entangle('content')` para sincronización
-  - [ ] Añadir toolbar con botones básicos
-- [ ] Verificar que el contenido HTML se guarda correctamente
-- [ ] Verificar que el contenido HTML se carga correctamente en edición
+- [x] Crear helper JavaScript para Tiptap en `resources/js/app.js`:
+  - [x] Importar Editor y extensiones
+  - [x] Crear función Alpine.js `tiptapEditor()` usando `Alpine.data()` (enfoque de Rick de Graaf)
+  - [x] Configurar integración con `$wire.entangle()` de Livewire
+  - [x] Configurar toolbar completo (negrita, cursiva, tachado, títulos H1-H3, listas, enlaces, undo/redo)
+  - [x] Implementar métodos para todos los botones del toolbar
+  - [x] Usar `updatedAt` para reactividad de Alpine
+- [x] Importar estilos de Tiptap (usando Tailwind prose para estilos)
+- [x] Crear componente Blade reutilizable `components/tiptap-editor.blade.php`
+- [x] **Reemplazar textarea en Create**:
+  - [x] Modificar `resources/views/livewire/admin/news/create.blade.php`
+  - [x] Reemplazar textarea de contenido con componente Tiptap
+  - [x] Configurar `wire:model="content"` para sincronización
+  - [x] Añadir toolbar completo con todos los botones
+- [x] **Reemplazar textarea en Edit**:
+  - [x] Modificar `resources/views/livewire/admin/news/edit.blade.php`
+  - [x] Reemplazar textarea de contenido con componente Tiptap
+  - [x] Precargar contenido HTML existente en el editor
+  - [x] Configurar `wire:model="content"` para sincronización
+  - [x] Añadir toolbar completo con todos los botones
+- [x] Verificar que el contenido HTML se guarda correctamente
+- [x] Verificar que el contenido HTML se carga correctamente en edición
 
 **Archivos a modificar**:
 - `package.json` (se actualiza automáticamente con npm install)
@@ -597,9 +599,11 @@ Este plan está organizado para completar primero el CRUD completo con textarea 
 - Verificar que el helper JavaScript funciona
 - Verificar que se puede inicializar un editor básico
 - Verificar que el contenido se sincroniza correctamente con Livewire
-- Verificar que se puede crear una noticia con contenido enriquecido
-- Verificar que se puede editar una noticia y el contenido HTML se carga correctamente
-- Verificar que el contenido HTML se guarda y muestra correctamente
+- ✅ Verificar que se puede crear una noticia con contenido enriquecido
+- ✅ Verificar que se puede editar una noticia y el contenido HTML se carga correctamente
+- ✅ Verificar que el contenido HTML se guarda y muestra correctamente
+
+**Nota de implementación**: Se siguió el enfoque de Rick de Graaf (https://rickdegraaf.com/blog/mastering-tiptap-getting-started) usando `Alpine.data()` y `$wire.entangle()` para evitar problemas de sincronización con Livewire.
 
 **Referencias**:
 - [Documentación Tiptap](https://tiptap.dev/)
@@ -816,7 +820,7 @@ Antes de considerar el paso 3.5.5 completado, verificar:
 - [ ] Código formateado con Pint
 - [ ] Diseño responsive
 - [ ] Accesibilidad verificada
-- [ ] **Tiptap integrado** (Paso 18 - opcional pero recomendado)
+- [x] **Tiptap integrado** (Paso 18 - ✅ COMPLETADO)
 
 ---
 

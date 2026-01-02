@@ -118,23 +118,14 @@
                             </flux:field>
 
                             {{-- Content --}}
-                            <flux:field>
-                                <flux:label>
-                                    {{ __('Contenido') }} <span class="text-red-500">*</span>
-                                </flux:label>
-                                <flux:textarea 
-                                    wire:model.live.blur="content" 
-                                    placeholder="{{ __('Escribe aquí el contenido completo de la noticia...') }}"
-                                    rows="12"
-                                    required
-                                />
-                                <flux:description>
-                                    {{ __('Contenido completo de la noticia. Por ahora se usa texto plano. Se implementará editor enriquecido más adelante.') }}
-                                </flux:description>
-                                @error('content')
-                                    <flux:error>{{ $message }}</flux:error>
-                                @enderror
-                            </flux:field>
+                            <x-tiptap-editor
+                                wire:model="content"
+                                :label="__('Contenido')"
+                                :required="true"
+                                :placeholder="__('Escribe aquí el contenido completo de la noticia...')"
+                                :description="__('Contenido completo de la noticia con formato enriquecido.')"
+                                :error="$errors->first('content')"
+                            />
                         </div>
                     </x-ui.card>
 
