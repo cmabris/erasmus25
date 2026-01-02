@@ -17,6 +17,7 @@ return [
         'programs' => 'Programas',
         'calls' => 'Convocatorias',
         'news' => 'Noticias',
+        'news_tags' => 'Etiquetas de Noticias',
         'documents' => 'Documentos',
         'calendar' => 'Calendario',
         'dashboard' => 'Panel',

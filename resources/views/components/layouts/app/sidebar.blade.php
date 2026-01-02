@@ -37,6 +37,9 @@
                 @can('viewAny', \App\Models\NewsPost::class)
                     <flux:navlist.group :heading="__('common.admin.nav.content')" class="grid">
                         <flux:navlist.item icon="newspaper" :href="route('admin.news.index')" :current="request()->routeIs('admin.news.*')" wire:navigate>{{ __('common.nav.news') }}</flux:navlist.item>
+                        @can('viewAny', \App\Models\NewsTag::class)
+                            <flux:navlist.item icon="tag" :href="route('admin.news-tags.index')" :current="request()->routeIs('admin.news-tags.*')" wire:navigate>{{ __('common.nav.news_tags') }}</flux:navlist.item>
+                        @endcan
                     </flux:navlist.group>
                 @endcan
             </flux:navlist>

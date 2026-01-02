@@ -17,6 +17,7 @@ return [
         'programs' => 'Programs',
         'calls' => 'Calls',
         'news' => 'News',
+        'news_tags' => 'News Tags',
         'documents' => 'Documents',
         'calendar' => 'Calendar',
         'dashboard' => 'Dashboard',

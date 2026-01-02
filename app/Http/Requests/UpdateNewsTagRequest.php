@@ -2,17 +2,24 @@
 
 namespace App\Http\Requests;
 
+use App\Models\NewsTag;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StoreNewsTagRequest extends FormRequest
+class UpdateNewsTagRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return $this->user()?->can('create', \App\Models\NewsTag::class) ?? false;
+        $newsTag = $this->route('news_tag');
+
+        if (! $newsTag instanceof NewsTag) {
+            return false;
+        }
+
+        return $this->user()?->can('update', $newsTag) ?? false;
     }
 
     /**
@@ -22,9 +29,15 @@ class StoreNewsTagRequest extends FormRequest
      */
     public function rules(): array
     {
+        // Get the news tag ID from route parameter (supports route model binding)
+        $newsTagId = $this->route('news_tag');
+        if ($newsTagId instanceof NewsTag) {
+            $newsTagId = $newsTagId->id;
+        }
+
         return [
-            'name' => ['required', 'string', 'max:255', Rule::unique('news_tags', 'name')],
-            'slug' => ['nullable', 'string', 'max:255', Rule::unique('news_tags', 'slug')],
+            'name' => ['required', 'string', 'max:255', Rule::unique('news_tags', 'name')->ignore($newsTagId)],
+            'slug' => ['nullable', 'string', 'max:255', Rule::unique('news_tags', 'slug')->ignore($newsTagId)],
         ];
     }
 

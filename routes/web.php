@@ -77,6 +77,12 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::get('/noticias/{news_post}', \App\Livewire\Admin\News\Show::class)->name('news.show');
     Route::get('/noticias/{news_post}/editar', \App\Livewire\Admin\News\Edit::class)->name('news.edit');
 
+    // Rutas de Etiquetas de Noticias
+    Route::get('/etiquetas', \App\Livewire\Admin\NewsTags\Index::class)->name('news-tags.index');
+    Route::get('/etiquetas/crear', \App\Livewire\Admin\NewsTags\Create::class)->name('news-tags.create');
+    Route::get('/etiquetas/{news_tag}', \App\Livewire\Admin\NewsTags\Show::class)->name('news-tags.show');
+    Route::get('/etiquetas/{news_tag}/editar', \App\Livewire\Admin\NewsTags\Edit::class)->name('news-tags.edit');
+
     // Rutas anidadas de Fases de Convocatorias
     Route::prefix('convocatorias/{call}')->group(function () {
         Route::get('/fases', \App\Livewire\Admin\Calls\Phases\Index::class)->name('calls.phases.index');
