@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard for /Users/carlos/Qsync/proyectosHerd/erasmus25/app/Livewire/Admin/News</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="../../../_css/bootstrap.min.css?v=12.5.1" rel="stylesheet" type="text/css">
+  <link href="../../../_css/billboard.min.css?v=12.5.1" rel="stylesheet" type="text/css">
+  <link href="../../../_css/style.css?v=12.5.1" rel="stylesheet" type="text/css">
+  <link href="../../../_css/custom.css" rel="stylesheet" type="text/css">
+ </head>
+ <body>
+  <header>
+   <div class="container-fluid">
+    <div class="row">
+     <div class="col-md-12">
+      <nav aria-label="breadcrumb">
+       <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="../../../index.html">/Users/carlos/Qsync/proyectosHerd/erasmus25/app</a></li>
+         <li class="breadcrumb-item"><a href="../../index.html">Livewire</a></li>
+         <li class="breadcrumb-item"><a href="../index.html">Admin</a></li>
+         <li class="breadcrumb-item"><a href="index.html">News</a></li>
+         <li class="breadcrumb-item active">(Dashboard)</li>
+
+       </ol>
+      </nav>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="container-fluid">
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Classes</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="classesCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="classComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3 style="margin-top: 2rem;">Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3 style="margin-top: 2rem;">Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right">Coverage</th>
+         <th class="text-right">Complexity</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-12">
+     <h2 style="margin-top: 3rem;">Methods</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="methodsCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="methodComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3 style="margin-top: 2rem;">Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Edit.php.html#427"><abbr title="App\Livewire\Admin\News\Edit::cancelSelectImage">cancelSelectImage</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Show.php.html#49"><abbr title="App\Livewire\Admin\News\Show::featuredImageUrl">featuredImageUrl</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Show.php.html#58"><abbr title="App\Livewire\Admin\News\Show::getFeaturedImageUrl">getFeaturedImageUrl</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Show.php.html#75"><abbr title="App\Livewire\Admin\News\Show::togglePublish">togglePublish</abbr></a></td><td class="text-right">66%</td></tr>
+       <tr><td><a href="Edit.php.html#298"><abbr title="App\Livewire\Admin\News\Edit::getAvailableImagesProperty">getAvailableImagesProperty</abbr></a></td><td class="text-right">73%</td></tr>
+       <tr><td><a href="Index.php.html#159"><abbr title="App\Livewire\Admin\News\Index::sortBy">sortBy</abbr></a></td><td class="text-right">80%</td></tr>
+       <tr><td><a href="Edit.php.html#459"><abbr title="App\Livewire\Admin\News\Edit::forceDeleteImage">forceDeleteImage</abbr></a></td><td class="text-right">88%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3 style="margin-top: 2rem;">Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right">Coverage</th>
+         <th class="text-right">Complexity</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Edit.php.html#298"><abbr title="App\Livewire\Admin\News\Edit::getAvailableImagesProperty">getAvailableImagesProperty</abbr></a></td><td class="text-right">73,5%</td><td class="text-right">12</td><td class="text-right">14</td></tr>
+       <tr><td><a href="Edit.php.html#459"><abbr title="App\Livewire\Admin\News\Edit::forceDeleteImage">forceDeleteImage</abbr></a></td><td class="text-right">88,9%</td><td class="text-right">3</td><td class="text-right">3</td></tr>
+       <tr><td><a href="Index.php.html#159"><abbr title="App\Livewire\Admin\News\Index::sortBy">sortBy</abbr></a></td><td class="text-right">80,0%</td><td class="text-right">3</td><td class="text-right">3</td></tr>
+       <tr><td><a href="Show.php.html#75"><abbr title="App\Livewire\Admin\News\Show::togglePublish">togglePublish</abbr></a></td><td class="text-right">66,7%</td><td class="text-right">2</td><td class="text-right">2</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <footer>
+    <hr/>
+    <p>
+     <small>Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 12.5.1</a> using <a href="https://www.php.net/" target="_top">PHP 8.3.29</a> and <a href="https://phpunit.de/">PHPUnit 12.4.4</a> at Fri Jan 2 18:25:42 UTC 2026.</small>
+    </p>
+   </footer>
+  </div>
+  <script src="../../../_js/billboard.pkgd.min.js?v=12.5.1" type="text/javascript"></script>
+  <script type="application/json" id="complexity_class">[[92.5925925925926,59,"Edit.php.html#21","App\\Livewire\\Admin\\News\\Edit","60.41"],[95.3125,18,"Show.php.html#11","App\\Livewire\\Admin\\News\\Show","18"],[96.42857142857143,35,"Index.php.html#16","App\\Livewire\\Admin\\News\\Index","35"],[100,25,"Create.php.html#19","App\\Livewire\\Admin\\News\\Create","25"]]</script>
+  <script type="application/json" id="complexity_method">[[0,1,"Edit.php.html#427","App\\Livewire\\Admin\\News\\Edit::cancelSelectImage","2"],[0,1,"Show.php.html#49","App\\Livewire\\Admin\\News\\Show::featuredImageUrl","2"],[0,1,"Show.php.html#58","App\\Livewire\\Admin\\News\\Show::getFeaturedImageUrl","2"],[66.66666666666666,2,"Show.php.html#75","App\\Livewire\\Admin\\News\\Show::togglePublish","2.15"],[73.52941176470588,12,"Edit.php.html#298","App\\Livewire\\Admin\\News\\Edit::getAvailableImagesProperty","14.67"],[80,3,"Index.php.html#159","App\\Livewire\\Admin\\News\\Index::sortBy","3.07"],[88.88888888888889,3,"Edit.php.html#459","App\\Livewire\\Admin\\News\\Edit::forceDeleteImage","3.01"],[90.47619047619048,5,"Edit.php.html#380","App\\Livewire\\Admin\\News\\Edit::selectImage","5.02"],[90.9090909090909,2,"Index.php.html#183","App\\Livewire\\Admin\\News\\Index::delete","2.00"],[90.9090909090909,2,"Index.php.html#216","App\\Livewire\\Admin\\News\\Index::restore","2.00"],[90.9090909090909,2,"Index.php.html#249","App\\Livewire\\Admin\\News\\Index::forceDelete","2.00"],[100,1,"Create.php.html#124","App\\Livewire\\Admin\\News\\Create::mount","1"],[100,1,"Create.php.html#132","App\\Livewire\\Admin\\News\\Create::programs","1"],[100,1,"Create.php.html#143","App\\Livewire\\Admin\\News\\Create::academicYears","1"],[100,1,"Create.php.html#154","App\\Livewire\\Admin\\News\\Create::availableTags","1"],[100,3,"Create.php.html#166","App\\Livewire\\Admin\\News\\Create::updatedTitle","3"],[100,2,"Create.php.html#181","App\\Livewire\\Admin\\News\\Create::updatedSlug","2"],[100,2,"Create.php.html#193","App\\Livewire\\Admin\\News\\Create::updatedFeaturedImage","2"],[100,2,"Create.php.html#205","App\\Livewire\\Admin\\News\\Create::createTag","2"],[100,3,"Create.php.html#244","App\\Livewire\\Admin\\News\\Create::updatedNewTagName","3"],[100,8,"Create.php.html#254","App\\Livewire\\Admin\\News\\Create::store","8"],[100,1,"Create.php.html#307","App\\Livewire\\Admin\\News\\Create::render","1"],[100,1,"Edit.php.html#166","App\\Livewire\\Admin\\News\\Edit::mount","1"],[100,1,"Edit.php.html#197","App\\Livewire\\Admin\\News\\Edit::programs","1"],[100,1,"Edit.php.html#208","App\\Livewire\\Admin\\News\\Edit::academicYears","1"],[100,1,"Edit.php.html#219","App\\Livewire\\Admin\\News\\Edit::availableTags","1"],[100,4,"Edit.php.html#231","App\\Livewire\\Admin\\News\\Edit::updatedTitle","4"],[100,2,"Edit.php.html#246","App\\Livewire\\Admin\\News\\Edit::updatedSlug","2"],[100,2,"Edit.php.html#258","App\\Livewire\\Admin\\News\\Edit::updatedFeaturedImage","2"],[100,2,"Edit.php.html#271","App\\Livewire\\Admin\\News\\Edit::toggleRemoveFeaturedImage","2"],[100,1,"Edit.php.html#282","App\\Livewire\\Admin\\News\\Edit::hasExistingFeaturedImage","1"],[100,1,"Edit.php.html#290","App\\Livewire\\Admin\\News\\Edit::hasSoftDeletedFeaturedImages","1"],[100,1,"Edit.php.html#368","App\\Livewire\\Admin\\News\\Edit::openSelectImageModal","1"],[100,2,"Edit.php.html#436","App\\Livewire\\Admin\\News\\Edit::restoreFeaturedImage","2"],[100,1,"Edit.php.html#450","App\\Livewire\\Admin\\News\\Edit::confirmForceDeleteImage","1"],[100,2,"Edit.php.html#480","App\\Livewire\\Admin\\News\\Edit::createTag","2"],[100,3,"Edit.php.html#515","App\\Livewire\\Admin\\News\\Edit::updatedNewTagName","3"],[100,11,"Edit.php.html#525","App\\Livewire\\Admin\\News\\Edit::update","11"],[100,1,"Edit.php.html#604","App\\Livewire\\Admin\\News\\Edit::delete","1"],[100,1,"Edit.php.html#620","App\\Livewire\\Admin\\News\\Edit::render","1"],[100,1,"Index.php.html#103","App\\Livewire\\Admin\\News\\Index::mount","1"],[100,1,"Index.php.html#111","App\\Livewire\\Admin\\News\\Index::newsPosts","1"],[100,1,"Index.php.html#137","App\\Livewire\\Admin\\News\\Index::programs","1"],[100,1,"Index.php.html#148","App\\Livewire\\Admin\\News\\Index::academicYears","1"],[100,1,"Index.php.html#174","App\\Livewire\\Admin\\News\\Index::confirmDelete","1"],[100,1,"Index.php.html#207","App\\Livewire\\Admin\\News\\Index::confirmRestore","1"],[100,1,"Index.php.html#240","App\\Livewire\\Admin\\News\\Index::confirmForceDelete","1"],[100,1,"Index.php.html#273","App\\Livewire\\Admin\\News\\Index::publish","1"],[100,1,"Index.php.html#294","App\\Livewire\\Admin\\News\\Index::unpublish","1"],[100,1,"Index.php.html#315","App\\Livewire\\Admin\\News\\Index::resetFilters","1"],[100,1,"Index.php.html#325","App\\Livewire\\Admin\\News\\Index::updatedSearch","1"],[100,1,"Index.php.html#333","App\\Livewire\\Admin\\News\\Index::updatedFilterProgram","1"],[100,1,"Index.php.html#338","App\\Livewire\\Admin\\News\\Index::updatedFilterAcademicYear","1"],[100,1,"Index.php.html#343","App\\Livewire\\Admin\\News\\Index::updatedFilterStatus","1"],[100,1,"Index.php.html#348","App\\Livewire\\Admin\\News\\Index::updatedShowDeleted","1"],[100,1,"Index.php.html#356","App\\Livewire\\Admin\\News\\Index::canCreate","1"],[100,1,"Index.php.html#364","App\\Livewire\\Admin\\News\\Index::canViewDeleted","1"],[100,1,"Index.php.html#372","App\\Livewire\\Admin\\News\\Index::canDeleteNewsPost","1"],[100,1,"Index.php.html#380","App\\Livewire\\Admin\\News\\Index::canPublishNewsPost","1"],[100,6,"Index.php.html#388","App\\Livewire\\Admin\\News\\Index::getStatusColor","6"],[100,1,"Index.php.html#402","App\\Livewire\\Admin\\News\\Index::render","1"],[100,1,"Show.php.html#32","App\\Livewire\\Admin\\News\\Show::mount","1"],[100,1,"Show.php.html#66","App\\Livewire\\Admin\\News\\Show::hasFeaturedImage","1"],[100,1,"Show.php.html#87","App\\Livewire\\Admin\\News\\Show::publish","1"],[100,1,"Show.php.html#107","App\\Livewire\\Admin\\News\\Show::unpublish","1"],[100,1,"Show.php.html#127","App\\Livewire\\Admin\\News\\Show::delete","1"],[100,1,"Show.php.html#145","App\\Livewire\\Admin\\News\\Show::restore","1"],[100,1,"Show.php.html#164","App\\Livewire\\Admin\\News\\Show::forceDelete","1"],[100,1,"Show.php.html#182","App\\Livewire\\Admin\\News\\Show::canPublish","1"],[100,5,"Show.php.html#190","App\\Livewire\\Admin\\News\\Show::getStatusColor","5"],[100,1,"Show.php.html#203","App\\Livewire\\Admin\\News\\Show::render","1"]]</script>
+  <script type="text/javascript" defer>
+  const barLabels = [
+    '0%',
+    '0-10%',
+    '10-20%',
+    '20-30%',
+    '30-40%',
+    '40-50%',
+    '50-60%',
+    '60-70%',
+    '70-80%',
+    '80-90%',
+    '90-100%',
+    '100%'
+  ];
+  const barConfig = (name, fullName, values) => ({
+    axis: {
+      x: {
+        type: "category",
+        categories: barLabels,
+      },
+      y: {
+        label: {
+          text: `#${name}`,
+          position: 'outer-top',
+        },
+      },
+    },
+    bindto: `#${name}CoverageDistribution`,
+    data: {
+      columns: [
+        [fullName].concat(values),
+      ],
+      colors: {
+        [fullName]: "rgba(69, 114, 167, 0.75)",
+      },
+      type: "bar",
+    },
+    bar: {
+      width: {
+        ratio: 0.9,
+      },
+    },
+    grid: {
+      focus: {
+        show: false,
+      },
+      x: {
+        show: true,
+      },
+      y: {
+        show: true,
+      },
+    },
+    legend: {
+      show: false,
+    },
+    tooltip: {
+      contents: function (data) {
+        return `<table class="bb-tooltip"><tbody>
+            <tr><th colspan="2">Coverage ${barLabels[data[0].x]}</th></tr>
+            <tr><td class="value">${data[0].value} ${name}</td></tr>
+          </tbody></table>`;
+      },
+      grouped: false,
+    },
+  });
+  bb.generate(
+    barConfig('classes', "Class Coverage", [0,0,0,0,0,0,0,0,0,0,3,1])
+  );
+  bb.generate(
+    barConfig('methods', "Method Coverage", [3,0,0,0,0,0,0,1,1,2,4,60])
+  );
+
+  const scatterConfig = (name, complexityData) => ({
+    axis: {
+      x: {
+        label: {
+          text: 'Code Coverage (in percent)',
+          position: 'outer-right',
+        },
+        tick: {
+          values: [0, 20, 40, 60, 80, 100],
+        },
+      },
+      y: {
+        label: {
+          text: 'Cyclomatic Complexity',
+          position: 'outer-top',
+        },
+        min: 0,
+        padding: {
+          bottom: 0,
+          top: 5,
+        },
+      },
+    },
+    bindto: `#${name}Complexity`,
+    data: {
+      columns: [
+        ["complexity_x"].concat(complexityData.map(d => d[0])),
+        ["complexity"].concat(complexityData.map(d => d[1])),
+      ],
+      onclick: function(data, element) {
+        window.location = complexityData[data.index][2];
+      },
+      type: "scatter",
+      xs: {
+        "complexity": "complexity_x",
+      },
+    },
+    grid: {
+      focus: {
+        show: true,
+        y: true,
+      },
+      x: {
+        show: true,
+      },
+      y: {
+        show: true,
+      },
+    },
+    legend: {
+      show: false,
+    },
+    tooltip: {
+      contents: function (data) {
+        const coverage = Math.round(data[0].x);
+        const complexity = data[0].value;
+        const targetName = complexityData[data[0].index][3];
+        const crap = complexityData[data[0].index][4];
+        return `<table class="bb-tooltip"><tbody>
+            <tr><th colspan="2">${targetName}</th></tr>
+            <tr class="bb-tooltip-name-complexity"><td>Coverage</td><td class="name">${coverage}%</td></tr>
+            <tr class="bb-tooltip-name-complexity"><td>Complexity</td><td class="value">${complexity}</td></tr>
+            <tr class="bb-tooltip-name-complexity"><td>Crap</td><td class="value">${crap}</td></tr>
+          </tbody></table>`;
+      },
+      grouped: false,
+    },
+  });
+  const classComplexityData = JSON.parse(document.getElementById('complexity_class').textContent);
+  bb.generate(
+    scatterConfig("class", classComplexityData)
+  );
+  const methodComplexityData = JSON.parse(document.getElementById('complexity_method').textContent);
+  bb.generate(
+    scatterConfig("method", methodComplexityData),
+  );
+  </script>
+ </body>
+</html>
