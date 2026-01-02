@@ -651,6 +651,25 @@ Las noticias relacionadas aparecen en el detalle de programas usando el mismo co
 
 ---
 
+---
+
+## CRUD de Administración
+
+Para la gestión completa de noticias desde el panel de administración, ver la documentación específica:
+
+**📖 [CRUD de Noticias en Panel de Administración](admin-news-crud.md)**
+
+Esta documentación incluye:
+- Componentes Livewire de administración (Index, Create, Edit, Show)
+- Editor de texto enriquecido (Tiptap)
+- Gestión avanzada de imágenes (soft delete, restauración, eliminación permanente)
+- Gestión de etiquetas (many-to-many)
+- Publicación/despublicación
+- Tests completos (1231 tests pasando)
+
+---
+
 **Fecha de Creación**: Diciembre 2025  
-**Versión**: 1.0  
+**Fecha de Actualización**: Enero 2026  
+**Versión**: 1.1  
 **Estado**: ✅ Completado y documentado

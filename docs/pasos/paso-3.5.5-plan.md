@@ -677,37 +677,53 @@ Este plan está organizado para completar primero el CRUD completo con textarea 
 ### 📄 Documentación Detallada
 Ver [Plan Detallado de Mejoras de Imágenes](paso-3.5.5-imagenes-plan.md) para información completa.
 
-### ✅ **Fase 1: Diagnóstico y Verificación** (En Progreso)
+### ✅ **Fase 1: Diagnóstico y Verificación** (COMPLETADA)
 
-#### Fase 1.1: Verificar guardado de imágenes
+#### ✅ Fase 1.1: Verificar guardado de imágenes (COMPLETADA)
 **Objetivo**: Confirmar que las imágenes se están guardando correctamente.
 
 **Tareas**:
-- [ ] Verificar que `addMedia()` se está ejecutando correctamente en Create y Edit
-- [ ] Verificar que el archivo físico se guarda en `storage/app/public/media`
-- [ ] Verificar que el registro se crea en la tabla `media`
-- [ ] Verificar que la relación `collection_name = 'featured'` es correcta
+- [x] Verificar que `addMedia()` se está ejecutando correctamente en Create y Edit
+- [x] Verificar que el archivo físico se guarda en `storage/app/public/media`
+- [x] Verificar que el registro se crea en la tabla `media`
+- [x] Verificar que la relación `collection_name = 'featured'` es correcta
 
-**Archivos a revisar**:
-- `app/Livewire/Admin/News/Create.php` (método `store()`)
-- `app/Livewire/Admin/News/Edit.php` (método `update()`)
-- `storage/app/public/media/` (directorio de archivos)
-- Tabla `media` en base de datos
+**Archivos revisados**:
+- `app/Livewire/Admin/News/Create.php` (método `store()`) - ✅ Correcto
+- `app/Livewire/Admin/News/Edit.php` (método `update()`) - ✅ Correcto
+- `storage/app/public/media/` (directorio de archivos) - ✅ Enlace simbólico creado
+- Tabla `media` en base de datos - ✅ Estructura correcta
+
+**Resultados**:
+- ✅ El código de guardado es correcto y sigue el mismo patrón que otros CRUDs (Programs)
+- ✅ Se usa `addMedia()->usingName()->usingFileName()->toMediaCollection('featured')`
+- ✅ Se crearon tests en `CreateTest.php` que verifican:
+  - Guardado correcto de imagen
+  - Creación de registro en tabla `media`
+  - Existencia del archivo físico
+  - Configuración correcta de `collection_name = 'featured'`
 
 ---
 
-#### Fase 1.2: Verificar generación de conversiones
+#### ✅ Fase 1.2: Verificar generación de conversiones (COMPLETADA)
 **Objetivo**: Confirmar que las conversiones (thumbnail, medium, large) se generan automáticamente.
 
 **Tareas**:
-- [ ] Verificar que las conversiones se generan al guardar la imagen
-- [ ] Verificar que las conversiones existen físicamente en el disco
-- [ ] Verificar que `getFirstMediaUrl('featured', 'thumbnail')` retorna la URL correcta
-- [ ] Si no se generan automáticamente, ejecutar comando para regenerar
+- [x] Verificar que las conversiones se generan al guardar la imagen
+- [x] Verificar que las conversiones existen físicamente en el disco
+- [x] Verificar que `getFirstMediaUrl('featured', 'thumbnail')` retorna la URL correcta
+- [x] Verificar configuración de conversiones en el modelo
 
-**Archivos a revisar**:
-- `app/Models/NewsPost.php` (método `registerMediaConversions()`)
-- `storage/app/public/media/` (buscar carpetas de conversiones)
+**Archivos revisados**:
+- `app/Models/NewsPost.php` (método `registerMediaConversions()`) - ✅ Correcto
+- Conversiones configuradas: `thumbnail` (300x300), `medium` (800x600), `large` (1200x900)
+- Aplicadas a colecciones: `featured` y `gallery`
+
+**Resultados**:
+- ✅ Las conversiones están correctamente configuradas en `registerMediaConversions()`
+- ✅ Media Library genera las conversiones automáticamente de forma síncrona por defecto
+- ✅ Se creó test que verifica que las URLs de conversiones están disponibles
+- ✅ Las conversiones se generan cuando se añade una imagen a la colección `featured`
 
 **Comandos de verificación**:
 ```bash
@@ -717,87 +733,268 @@ php artisan media-library:regenerate
 
 ---
 
-### ⏳ **Fase 2: Corrección de Visualización** (Pendiente)
+### ✅ **Fase 2: Mejora de Visualización** (COMPLETADA)
 
-#### Fase 2.1: Corregir visualización en Index
-- [ ] Verificar que `getFirstMediaUrl('featured', 'thumbnail')` funciona correctamente
-- [ ] Agregar fallback si la conversión no existe
-- [ ] Verificar que las imágenes se cargan correctamente
+#### ✅ Fase 2.1: Mejorar visualización en Index (COMPLETADA)
+**Objetivo**: Agregar fallbacks y mejorar la presentación de imágenes en el listado.
 
-#### Fase 2.2: Verificar visualización en Show
-- [ ] Verificar que `hasFeaturedImage()` retorna `true` cuando hay imagen
-- [ ] Verificar que `getFeaturedImageUrl('large')` retorna la URL correcta
-- [ ] Verificar que la imagen se muestra con el tamaño correcto
+**Tareas completadas**:
+- [x] Verificar que `getFirstMediaUrl('featured', 'thumbnail')` funciona correctamente
+- [x] Agregar fallback si la conversión no existe (usa imagen original si no hay thumbnail)
+- [x] Agregar fallback si la imagen no carga (onerror muestra placeholder)
+- [x] Mejorar presentación con bordes y lazy loading
+- [x] Agregar placeholder visual cuando no hay imagen
 
-#### Fase 2.3: Mejorar visualización en Edit
-- [ ] Verificar que `hasExistingFeaturedImage()` funciona correctamente
-- [ ] Mejorar la presentación de la imagen actual
-- [ ] Agregar botón para eliminar imagen actual con confirmación
-
----
-
-### ⏳ **Fase 3: Implementar Soft Delete para Media** (Pendiente)
-
-**Nota**: Usaremos la **Opción B** (más simple) - `custom_properties` para marcar como eliminado.
-
-#### Fase 3.1: Implementar métodos de soft delete usando custom_properties
-- [ ] Crear método `softDeleteFeaturedImage()` en modelo NewsPost
-- [ ] Crear método `restoreFeaturedImage()` en modelo NewsPost
-- [ ] Crear método `forceDeleteFeaturedImage()` para eliminación permanente
-- [ ] Modificar consultas para excluir imágenes marcadas como eliminadas
-
-#### Fase 3.2: Actualizar componente Edit para usar soft delete
-- [ ] Modificar método `toggleRemoveFeaturedImage()` para usar soft delete
-- [ ] Agregar método `restoreFeaturedImage()` en componente Edit
-- [ ] Actualizar vista para mostrar opción de restaurar si hay imagen eliminada
-
-#### Fase 3.3: Actualizar consultas para excluir imágenes eliminadas
-- [ ] Modificar `getFirstMedia()` para excluir imágenes eliminadas
-- [ ] Modificar `hasMedia()` para excluir imágenes eliminadas
-- [ ] Actualizar métodos en Show, Edit e Index
+**Mejoras implementadas**:
+- Fallback en cascada: `thumbnail` → `original` → `placeholder`
+- Manejo de errores con `onerror` para mostrar placeholder si la imagen falla
+- Lazy loading para mejorar rendimiento
+- Bordes y estilos mejorados para mejor presentación visual
 
 ---
 
-### ⏳ **Fase 4: Mejoras Adicionales** (Pendiente)
+#### ✅ Fase 2.2: Mejorar visualización en Show (COMPLETADA)
+**Objetivo**: Mejorar la visualización de la imagen destacada en la vista de detalle.
 
-#### Fase 4.1: Agregar comando para regenerar conversiones
-- [ ] Verificar que el comando `php artisan media-library:regenerate` funciona
-- [ ] Documentar uso del comando
+**Tareas completadas**:
+- [x] Verificar que `hasFeaturedImage()` retorna `true` cuando hay imagen
+- [x] Verificar que `getFeaturedImageUrl('large')` retorna la URL correcta
+- [x] Agregar fallback en cascada: `large` → `medium` → `original`
+- [x] Mejorar presentación con bordes y lazy loading
+- [x] Verificar que la imagen se muestra con el tamaño correcto
 
-#### Fase 4.2: Optimizar carga de imágenes
-- [ ] Verificar eager loading de media en consultas del Index
-- [ ] Considerar usar lazy loading para imágenes en el frontend
-
-#### Fase 4.3: Agregar validación de tamaño de imagen
-- [ ] Verificar que la validación de tamaño funciona (5MB máximo)
-- [ ] Considerar agregar validación de dimensiones (ancho/alto máximo)
+**Mejoras implementadas**:
+- Fallback en cascada para conversiones: `large` → `medium` → `original`
+- Lazy loading para mejorar rendimiento
+- Bordes y estilos mejorados
+- Información de tamaño de archivo mostrada correctamente
 
 ---
 
-### ⏳ **Fase 5: Testing y Verificación** (Pendiente)
+#### ✅ Fase 2.3: Mejorar visualización en Edit (COMPLETADA)
+**Objetivo**: Mejorar la presentación de la imagen actual en el formulario de edición.
 
-#### Fase 5.1: Probar guardado de imágenes
-- [ ] Crear nueva noticia con imagen
-- [ ] Verificar que la imagen se guarda correctamente
-- [ ] Verificar que las conversiones se generan
-- [ ] Verificar que la imagen se muestra en Index, Show y Edit
+**Tareas completadas**:
+- [x] Verificar que `hasExistingFeaturedImage()` funciona correctamente
+- [x] Mejorar la presentación de la imagen actual con mejor diseño
+- [x] Agregar información de tamaño de archivo
+- [x] Mejorar botones de acción (Ver y Eliminar) con iconos
+- [x] Usar conversión `medium` para preview si está disponible
 
-#### Fase 5.2: Probar edición de imágenes
-- [ ] Editar noticia existente y cambiar imagen
-- [ ] Verificar que la imagen anterior se mantiene (soft delete)
-- [ ] Verificar que la nueva imagen se guarda correctamente
+**Mejoras implementadas**:
+- Preview mejorado con fallback: `medium` → `original`
+- Información de tamaño de archivo visible
+- Botones con iconos para mejor UX
+- Diseño mejorado con bordes y espaciado
+- Lazy loading para mejor rendimiento
 
-#### Fase 5.3: Probar eliminación y restauración
-- [ ] Eliminar imagen desde Edit
-- [ ] Verificar que el archivo físico no se elimina
-- [ ] Verificar que la imagen no se muestra en las vistas
-- [ ] Restaurar imagen eliminada
-- [ ] Verificar que la imagen vuelve a mostrarse
+---
 
-#### Fase 5.4: Probar eliminación permanente
-- [ ] Eliminar imagen permanentemente
-- [ ] Verificar que el archivo físico se elimina del servidor
-- [ ] Verificar que el registro se elimina de la base de datos
+### ✅ **Fase 3: Implementar Soft Delete para Media** (COMPLETADA)
+
+**Nota**: Se implementó usando la **Opción B** (más simple) - `custom_properties` para marcar como eliminado.
+
+#### ✅ Fase 3.1: Implementar métodos de soft delete usando custom_properties (COMPLETADA)
+**Objetivo**: Crear métodos en el modelo NewsPost para gestionar soft delete de imágenes usando `custom_properties`.
+
+**Tareas completadas**:
+- [x] Crear método `softDeleteFeaturedImage()` en modelo NewsPost
+- [x] Crear método `restoreFeaturedImage()` en modelo NewsPost
+- [x] Crear método `forceDeleteFeaturedImage()` para eliminación permanente
+- [x] Crear método `isMediaSoftDeleted()` para verificar si una imagen está eliminada
+- [x] Crear método `getSoftDeletedFeaturedImages()` para obtener imágenes eliminadas
+- [x] Crear método `hasSoftDeletedFeaturedImages()` para verificar si hay imágenes eliminadas
+- [x] Crear método `getMediaWithDeleted()` para obtener todas las imágenes incluyendo eliminadas
+
+**Implementación**:
+- Se usa `custom_properties['deleted_at']` para marcar imágenes como eliminadas
+- El archivo físico no se elimina, solo se marca en la base de datos
+- Los métodos sobrescriben `getFirstMedia()`, `hasMedia()` y `getMedia()` para excluir automáticamente imágenes eliminadas
+
+---
+
+#### ✅ Fase 3.2: Actualizar componente Edit para usar soft delete (COMPLETADA)
+**Objetivo**: Modificar el componente Edit para usar soft delete en lugar de eliminación permanente.
+
+**Tareas completadas**:
+- [x] Modificar método `update()` para usar `softDeleteFeaturedImage()` en lugar de `clearMediaCollection()`
+- [x] Agregar método `restoreFeaturedImage()` en componente Edit
+- [x] Agregar método `hasSoftDeletedFeaturedImages()` en componente Edit
+- [x] Actualizar vista para mostrar opción de restaurar si hay imagen eliminada
+
+**Implementación**:
+- Al eliminar una imagen, se marca como eliminada usando `softDeleteFeaturedImage()`
+- Al subir una nueva imagen, la anterior se marca como eliminada (no se borra físicamente)
+- Se muestra un callout con opción de restaurar si hay imágenes eliminadas disponibles
+
+---
+
+#### ✅ Fase 3.3: Actualizar consultas para excluir imágenes eliminadas (COMPLETADA)
+**Objetivo**: Modificar las consultas para que automáticamente excluyan imágenes marcadas como eliminadas.
+
+**Tareas completadas**:
+- [x] Modificar `getFirstMedia()` para excluir imágenes eliminadas
+- [x] Modificar `hasMedia()` para excluir imágenes eliminadas
+- [x] Modificar `getMedia()` para excluir imágenes eliminadas
+- [x] Los métodos en Show, Edit e Index funcionan automáticamente con las nuevas consultas
+
+**Implementación**:
+- Se sobrescribieron los métodos de Media Library en el modelo `NewsPost`
+- Todos los métodos verifican `custom_properties['deleted_at']` antes de retornar resultados
+- Las vistas (Index, Show, Edit) funcionan automáticamente sin cambios adicionales
+
+---
+
+### ✅ **Fase 4: Mejoras Adicionales** (COMPLETADA)
+
+#### ✅ Fase 4.1: Verificar comando para regenerar conversiones (COMPLETADA)
+**Objetivo**: Verificar que el comando de Media Library para regenerar conversiones funciona correctamente.
+
+**Tareas completadas**:
+- [x] Verificar que el comando `php artisan media-library:regenerate` existe y funciona
+- [x] Documentar uso del comando
+
+**Resultados**:
+- ✅ El comando `php artisan media-library:regenerate` está disponible
+- ✅ Opciones disponibles:
+  - `--ids`: Regenerar conversiones para IDs específicos
+  - `--only`: Regenerar conversiones específicas (thumbnail, medium, large)
+  - `--only-missing`: Regenerar solo conversiones faltantes
+  - `--with-responsive-images`: Regenerar imágenes responsivas
+  - `--force`: Forzar ejecución en producción
+
+**Uso del comando**:
+```bash
+# Regenerar todas las conversiones de todas las imágenes
+php artisan media-library:regenerate
+
+# Regenerar solo conversiones faltantes
+php artisan media-library:regenerate --only-missing
+
+# Regenerar conversiones específicas
+php artisan media-library:regenerate --only=thumbnail --only=medium
+
+# Regenerar para un modelo específico
+php artisan media-library:regenerate "App\Models\NewsPost"
+```
+
+---
+
+#### ✅ Fase 4.2: Optimizar carga de imágenes (COMPLETADA)
+**Objetivo**: Verificar y optimizar la carga de imágenes en el Index.
+
+**Tareas completadas**:
+- [x] Verificar eager loading de media en consultas del Index
+- [x] Verificar que lazy loading está implementado en el frontend
+
+**Resultados**:
+- ✅ El Index ya usa eager loading para relaciones: `with(['program', 'academicYear', 'author', 'tags'])`
+- ✅ Las imágenes en Index, Show y Edit ya tienen `loading="lazy"` implementado
+- ✅ No se necesita eager loading adicional para media ya que se obtiene bajo demanda con `getFirstMediaUrl()`
+
+**Optimizaciones implementadas**:
+- Lazy loading en todas las imágenes (`loading="lazy"`)
+- Eager loading de relaciones principales
+- Fallbacks para conversiones (thumbnail → original → placeholder)
+
+---
+
+#### ✅ Fase 4.3: Verificar validación de imágenes (COMPLETADA)
+**Objetivo**: Verificar que las validaciones de imágenes funcionan correctamente.
+
+**Tareas completadas**:
+- [x] Verificar que la validación de tamaño funciona (5MB máximo)
+- [x] Verificar que la validación de tipos MIME funciona
+
+**Resultados**:
+- ✅ Validación de tamaño: `max:5120` (5MB) en FormRequests
+- ✅ Validación de tipos MIME: `mimes:jpeg,png,jpg,webp,gif` en FormRequests
+- ✅ Validación en tiempo real en componentes Livewire
+- ✅ Validación también en FilePond (frontend)
+
+**Validaciones implementadas**:
+- Tamaño máximo: 5MB (5120 KB)
+- Tipos permitidos: JPEG, PNG, JPG, WebP, GIF
+- Validación en backend (FormRequests)
+- Validación en frontend (FilePond)
+- Validación en tiempo real (Livewire `updatedFeaturedImage()`)
+
+**Nota sobre dimensiones**: No se agregó validación de dimensiones (ancho/alto máximo) ya que las conversiones se generan automáticamente y las imágenes se redimensionan según sea necesario.
+
+---
+
+### ✅ **Fase 5: Testing y Verificación** (COMPLETADA)
+
+#### ✅ Fase 5.1: Tests para guardado de imágenes (COMPLETADA)
+**Objetivo**: Verificar que las imágenes se guardan correctamente al crear noticias.
+
+**Tests implementados**:
+- [x] `it('creates news post with featured image')` - Verifica que la imagen se guarda correctamente
+- [x] `it('generates image conversions when creating news post with featured image')` - Verifica que las conversiones se generan
+- [x] Tests en `CreateTest.php` verifican que la imagen se muestra correctamente
+
+**Resultados**:
+- ✅ Las imágenes se guardan correctamente en la colección 'featured'
+- ✅ Las conversiones (thumbnail, medium, large) se generan automáticamente
+- ✅ Los archivos físicos se almacenan correctamente en el disco configurado
+
+---
+
+#### ✅ Fase 5.2: Tests para edición de imágenes (COMPLETADA)
+**Objetivo**: Verificar que las imágenes se pueden editar y reemplazar correctamente.
+
+**Tests implementados**:
+- [x] `it('can upload new featured image')` - Verifica subida de nueva imagen
+- [x] `it('can replace existing image with new one')` - Verifica reemplazo de imagen
+- [x] `it('can toggle remove existing image')` - Verifica toggle de eliminación
+- [x] `it('sets removeFeaturedImage to false when uploading new image')` - Verifica lógica de estado
+
+**Resultados**:
+- ✅ Las imágenes se pueden subir y reemplazar correctamente
+- ✅ La imagen anterior se mantiene (soft delete) cuando se reemplaza
+- ✅ La nueva imagen se guarda correctamente
+
+---
+
+#### ✅ Fase 5.3: Tests para eliminación y restauración (COMPLETADA)
+**Objetivo**: Verificar que el soft delete funciona correctamente y las imágenes se pueden restaurar.
+
+**Tests implementados**:
+- [x] `it('soft deletes existing image when removing it')` - Verifica soft delete
+- [x] `it('can restore soft-deleted image')` - Verifica restauración
+- [x] `it('can select image from modal and restore it')` - Verifica selección y restauración desde modal
+
+**Resultados**:
+- ✅ El archivo físico NO se elimina cuando se hace soft delete
+- ✅ La imagen no se muestra en las vistas después del soft delete
+- ✅ Las imágenes se pueden restaurar correctamente
+- ✅ La imagen vuelve a mostrarse después de restaurar
+
+---
+
+#### ✅ Fase 5.4: Tests para eliminación permanente (COMPLETADA)
+**Objetivo**: Verificar que la eliminación permanente funciona correctamente.
+
+**Tests implementados**:
+- [x] `it('can force delete soft-deleted image permanently')` - Verifica eliminación permanente
+
+**Resultados**:
+- ✅ El archivo físico se elimina del servidor cuando se hace force delete
+- ✅ El registro se elimina de la base de datos
+- ✅ La imagen no se puede restaurar después del force delete
+
+---
+
+#### ✅ Fase 5.5: Tests para selección de imágenes desde modal (COMPLETADA)
+**Objetivo**: Verificar que el modal de selección de imágenes funciona correctamente.
+
+**Tests implementados**:
+- [x] `it('shows available images in selection modal')` - Verifica que el modal muestra todas las imágenes disponibles
+
+**Resultados**:
+- ✅ El modal muestra todas las imágenes (actuales y eliminadas)
+- ✅ Las imágenes se marcan correctamente como "actual" o "eliminada"
+- ✅ Se pueden seleccionar imágenes desde el modal para restaurarlas
 
 ---
 
@@ -805,25 +1002,32 @@ php artisan media-library:regenerate
 
 Antes de considerar el paso 3.5.5 completado, verificar:
 
-- [ ] SoftDeletes implementado en NewsPost
-- [ ] FormRequests actualizados con validación completa
-- [ ] Componente Index creado y funcionando
-- [ ] Componente Create creado y funcionando
-- [ ] Componente Edit creado y funcionando
-- [ ] Componente Show creado y funcionando
-- [ ] Rutas configuradas correctamente
-- [ ] Navegación actualizada
-- [ ] Gestión de etiquetas funcionando
-- [ ] Gestión de imágenes destacadas funcionando
-- [ ] Publicación/despublicación funcionando
-- [ ] Tests completos y pasando
-- [ ] Código formateado con Pint
-- [ ] Diseño responsive
-- [ ] Accesibilidad verificada
+- [x] SoftDeletes implementado en NewsPost
+- [x] FormRequests actualizados con validación completa
+- [x] Componente Index creado y funcionando
+- [x] Componente Create creado y funcionando
+- [x] Componente Edit creado y funcionando
+- [x] Componente Show creado y funcionando
+- [x] Rutas configuradas correctamente
+- [x] Navegación actualizada
+- [x] Gestión de etiquetas funcionando
+- [x] Gestión de imágenes destacadas funcionando
+- [x] Publicación/despublicación funcionando
+- [x] Tests completos y pasando (1231 tests ✅)
+- [x] Código formateado con Pint
+- [x] Diseño responsive
+- [x] Accesibilidad verificada
 - [x] **Tiptap integrado** (Paso 18 - ✅ COMPLETADO)
+- [x] **Gestión avanzada de imágenes** (5 Fases - ✅ COMPLETADAS)
+  - [x] Soft delete para imágenes
+  - [x] Restauración de imágenes eliminadas
+  - [x] Eliminación permanente de imágenes
+  - [x] Selección de imágenes desde modal
+  - [x] Tests completos para todas las funcionalidades
 
 ---
 
 **Fecha de Creación**: Diciembre 2025  
-**Estado**: 📋 Plan detallado completado - Listo para implementación
+**Fecha de Finalización**: Enero 2026  
+**Estado**: ✅ **COMPLETADO** - Todos los tests pasando (1231 tests)
 

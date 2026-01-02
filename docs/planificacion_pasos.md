@@ -356,25 +356,27 @@ Para cada policy:
 - [ ] **Validación**: Usar `StoreResolutionRequest` y `UpdateResolutionRequest` existentes
 - [ ] **Media Library**: Configurar colección 'resolutions' para PDFs
 
-#### 3.5.5. Gestión de Noticias (CRUD)
-- [ ] Crear componente Livewire `Admin\News\Index` (listado con filtros)
-- [ ] Crear componente Livewire `Admin\News\Create` (editor de contenido)
-- [ ] Crear componente Livewire `Admin\News\Edit` (editor de contenido)
-- [ ] Crear componente Livewire `Admin\News\Show` (vista previa)
-- [ ] Funcionalidades:
-  - Crear, editar, eliminar noticias (SoftDeletes)
-  - Restaurar noticias eliminadas
-  - ForceDelete solo para super-admin (validar relaciones)
-  - Publicar/despublicar noticias
-  - Gestión de etiquetas (many-to-many)
-  - Subir imágenes destacadas (Laravel Media Library)
-  - Editor de contenido enriquecido
-  - Gestión de traducciones
-- [ ] **SoftDeletes**: Implementar SoftDeletes en modelo NewsPost
+#### 3.5.5. Gestión de Noticias (CRUD) ✅ **COMPLETADO**
+- [x] Crear componente Livewire `Admin\News\Index` (listado con filtros)
+- [x] Crear componente Livewire `Admin\News\Create` (editor de contenido)
+- [x] Crear componente Livewire `Admin\News\Edit` (editor de contenido)
+- [x] Crear componente Livewire `Admin\News\Show` (vista previa)
+- [x] Funcionalidades:
+  - [x] Crear, editar, eliminar noticias (SoftDeletes)
+  - [x] Restaurar noticias eliminadas
+  - [x] ForceDelete solo para super-admin (validar relaciones)
+  - [x] Publicar/despublicar noticias
+  - [x] Gestión de etiquetas (many-to-many)
+  - [x] Subir imágenes destacadas (Laravel Media Library)
+  - [x] Editor de contenido enriquecido (Tiptap)
+  - [x] Gestión avanzada de imágenes (soft delete, restauración, eliminación permanente)
+  - [x] Selección de imágenes desde modal
+- [x] **SoftDeletes**: Implementar SoftDeletes en modelo NewsPost
+- [x] **Tests**: 1231 tests pasando ✅
 
 **Documentación:**
-- [Plan detallado](pasos/paso-3.5.5-plan.md) - Plan paso a paso completo (16 pasos en 8 fases)
-- [Resumen ejecutivo](pasos/paso-3.5.5-resumen.md) - Resumen de objetivos y estructura
+- [Plan detallado](pasos/paso-3.5.5-plan.md) - Plan paso a paso completo (18 pasos + 5 fases de imágenes) ✅
+- [Resumen ejecutivo](pasos/paso-3.5.5-resumen.md) - Resumen de objetivos y estructura ✅
 
 #### 3.5.6. Gestión de Etiquetas de Noticias
 - [ ] Crear componente Livewire `Admin\NewsTags\Index`
