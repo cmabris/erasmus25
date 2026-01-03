@@ -69,8 +69,17 @@ class Edit extends Component
     {
         $validated = $this->validate((new UpdateNewsTagRequest)->rules());
 
-        // Generate slug if not provided
-        if (empty($validated['slug']) && ! empty($validated['name'])) {
+        // Siempre usar el slug del componente si está presente y no está vacío
+        // (puede haber sido modificado manualmente)
+        // IMPORTANTE: Livewire validate() puede no incluir campos nullable en validated
+        // Por eso siempre usamos $this->slug del componente directamente
+        // Similar a cómo News/Edit maneja campos opcionales
+        // Asegurarse de que el slug siempre se incluya si está presente en el componente
+        $slugValue = trim($this->slug ?? '');
+        if (! empty($slugValue)) {
+            $validated['slug'] = $slugValue;
+        } elseif (empty($validated['slug'] ?? null) && ! empty($validated['name'])) {
+            // Si el slug está vacío, generar desde el nombre
             $validated['slug'] = Str::slug($validated['name']);
         }
 
