@@ -379,14 +379,21 @@ Para cada policy:
 - [Resumen ejecutivo](pasos/paso-3.5.5-resumen.md) - Resumen de objetivos y estructura ✅
 
 #### 3.5.6. Gestión de Etiquetas de Noticias
-- [ ] Crear componente Livewire `Admin\NewsTags\Index`
-- [ ] Crear componente Livewire `Admin\NewsTags\Create`
-- [ ] Crear componente Livewire `Admin\NewsTags\Edit`
-- [ ] Funcionalidades:
+- [x] Crear componente Livewire `Admin\NewsTags\Index`
+- [x] Crear componente Livewire `Admin\NewsTags\Create`
+- [x] Crear componente Livewire `Admin\NewsTags\Edit`
+- [x] Crear componente Livewire `Admin\NewsTags\Show`
+- [x] Funcionalidades:
   - Crear, editar, eliminar etiquetas (SoftDeletes)
   - Restaurar etiquetas eliminadas
   - ForceDelete solo para super-admin (validar relaciones)
   - Ver noticias asociadas
+- [x] **SoftDeletes**: Implementar SoftDeletes en modelo NewsTag
+- [x] **Tests**: 59 tests pasando (129 assertions) ✅
+
+**Documentación:**
+- [Plan detallado](pasos/paso-3.5.6-plan.md) - Plan paso a paso completo (12 pasos, 7 fases) ✅
+- [Resumen ejecutivo](pasos/paso-3.5.6-resumen.md) - Resumen de objetivos y estructura ✅
 - [ ] **SoftDeletes**: Implementar SoftDeletes en modelo NewsTag
 
 #### 3.5.7. Gestión de Documentos (CRUD)
