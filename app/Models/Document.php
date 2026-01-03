@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -16,6 +18,7 @@ class Document extends Model implements HasMedia
     use HasFactory;
 
     use InteractsWithMedia;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -102,6 +105,14 @@ class Document extends Model implements HasMedia
     public function updater(): BelongsTo
     {
         return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    /**
+     * Get the media consents that reference this document.
+     */
+    public function mediaConsents(): HasMany
+    {
+        return $this->hasMany(MediaConsent::class, 'consent_document_id');
     }
 
     /**

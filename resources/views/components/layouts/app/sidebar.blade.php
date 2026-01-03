@@ -40,6 +40,9 @@
                         @can('viewAny', \App\Models\NewsTag::class)
                             <flux:navlist.item icon="tag" :href="route('admin.news-tags.index')" :current="request()->routeIs('admin.news-tags.*')" wire:navigate>{{ __('common.nav.news_tags') }}</flux:navlist.item>
                         @endcan
+                        @can('viewAny', \App\Models\Document::class)
+                            <flux:navlist.item icon="document" :href="route('admin.documents.index')" :current="request()->routeIs('admin.documents.*')" wire:navigate>{{ __('common.nav.documents') }}</flux:navlist.item>
+                        @endcan
                     </flux:navlist.group>
                 @endcan
             </flux:navlist>
