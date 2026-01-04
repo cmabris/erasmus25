@@ -19,6 +19,7 @@ return [
         'news' => 'News',
         'news_tags' => 'News Tags',
         'documents' => 'Documents',
+        'document_categories' => 'Document Categories',
         'calendar' => 'Calendar',
         'dashboard' => 'Dashboard',
         'dashboard_panel' => 'Dashboard',

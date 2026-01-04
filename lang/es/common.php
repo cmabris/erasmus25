@@ -19,6 +19,7 @@ return [
         'news' => 'Noticias',
         'news_tags' => 'Etiquetas de Noticias',
         'documents' => 'Documentos',
+        'document_categories' => 'Categorías de Documentos',
         'calendar' => 'Calendario',
         'dashboard' => 'Panel',
         'dashboard_panel' => 'Panel de control',

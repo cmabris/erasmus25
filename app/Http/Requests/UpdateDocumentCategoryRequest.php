@@ -2,17 +2,24 @@
 
 namespace App\Http\Requests;
 
+use App\Models\DocumentCategory;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StoreDocumentCategoryRequest extends FormRequest
+class UpdateDocumentCategoryRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return $this->user()?->can('create', \App\Models\DocumentCategory::class) ?? false;
+        $documentCategory = $this->route('document_category');
+
+        if (! $documentCategory instanceof DocumentCategory) {
+            return false;
+        }
+
+        return $this->user()?->can('update', $documentCategory) ?? false;
     }
 
     /**
@@ -22,9 +29,15 @@ class StoreDocumentCategoryRequest extends FormRequest
      */
     public function rules(): array
     {
+        // Get the document category ID from route parameter (supports route model binding)
+        $documentCategoryId = $this->route('document_category');
+        if ($documentCategoryId instanceof DocumentCategory) {
+            $documentCategoryId = $documentCategoryId->id;
+        }
+
         return [
-            'name' => ['required', 'string', 'max:255', Rule::unique('document_categories', 'name')],
-            'slug' => ['nullable', 'string', 'max:255', Rule::unique('document_categories', 'slug')],
+            'name' => ['required', 'string', 'max:255', Rule::unique('document_categories', 'name')->ignore($documentCategoryId)],
+            'slug' => ['nullable', 'string', 'max:255', Rule::unique('document_categories', 'slug')->ignore($documentCategoryId)],
             'description' => ['nullable', 'string'],
             'order' => ['nullable', 'integer'],
         ];

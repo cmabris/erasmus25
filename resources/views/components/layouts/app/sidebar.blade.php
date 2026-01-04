@@ -43,6 +43,9 @@
                         @can('viewAny', \App\Models\Document::class)
                             <flux:navlist.item icon="document" :href="route('admin.documents.index')" :current="request()->routeIs('admin.documents.*')" wire:navigate>{{ __('common.nav.documents') }}</flux:navlist.item>
                         @endcan
+                        @can('viewAny', \App\Models\DocumentCategory::class)
+                            <flux:navlist.item icon="folder" :href="route('admin.document-categories.index')" :current="request()->routeIs('admin.document-categories.*')" wire:navigate>{{ __('common.nav.document_categories') }}</flux:navlist.item>
+                        @endcan
                     </flux:navlist.group>
                 @endcan
             </flux:navlist>

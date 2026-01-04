@@ -89,6 +89,12 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::get('/documentos/{document}', \App\Livewire\Admin\Documents\Show::class)->name('documents.show');
     Route::get('/documentos/{document}/editar', \App\Livewire\Admin\Documents\Edit::class)->name('documents.edit');
 
+    // Rutas de Categorías de Documentos
+    Route::get('/categorias', \App\Livewire\Admin\DocumentCategories\Index::class)->name('document-categories.index');
+    Route::get('/categorias/crear', \App\Livewire\Admin\DocumentCategories\Create::class)->name('document-categories.create');
+    Route::get('/categorias/{document_category}', \App\Livewire\Admin\DocumentCategories\Show::class)->name('document-categories.show');
+    Route::get('/categorias/{document_category}/editar', \App\Livewire\Admin\DocumentCategories\Edit::class)->name('document-categories.edit');
+
     // Rutas anidadas de Fases de Convocatorias
     Route::prefix('convocatorias/{call}')->group(function () {
         Route::get('/fases', \App\Livewire\Admin\Calls\Phases\Index::class)->name('calls.phases.index');
