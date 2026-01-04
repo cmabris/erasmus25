@@ -10,6 +10,7 @@ use App\Models\Program;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
@@ -177,7 +178,7 @@ class Edit extends Component
     public function updatedSlug(): void
     {
         $this->validateOnly('slug', [
-            'slug' => ['nullable', 'string', 'max:255', 'unique:documents,slug,'.$this->document->id],
+            'slug' => ['nullable', 'string', 'max:255', Rule::unique('documents', 'slug')->ignore($this->document->id)],
         ]);
     }
 
@@ -213,13 +214,43 @@ class Edit extends Component
         $rules = (new UpdateDocumentRequest)->rules();
         $messages = (new UpdateDocumentRequest)->messages();
 
-        $validated = \Illuminate\Support\Facades\Validator::make($data, $rules, $messages)->validate();
+        // Fix slug validation: UpdateDocumentRequest tries to get ID from route, but in Livewire we need to pass it manually
+        $rules['slug'] = ['nullable', 'string', 'max:255', Rule::unique('documents', 'slug')->ignore($this->document->id)];
+
+        try {
+            $validated = \Illuminate\Support\Facades\Validator::make($data, $rules, $messages)->validate();
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Map validation errors from snake_case to camelCase component properties
+            $errors = $e->errors();
+            $mappedErrors = [];
+            foreach ($errors as $key => $messages) {
+                // Map snake_case keys to camelCase component properties
+                $componentKey = match ($key) {
+                    'category_id' => 'categoryId',
+                    'program_id' => 'programId',
+                    'academic_year_id' => 'academicYearId',
+                    'document_type' => 'documentType',
+                    'is_active' => 'isActive',
+                    default => $key,
+                };
+                $mappedErrors[$componentKey] = $messages;
+            }
+            throw \Illuminate\Validation\ValidationException::withMessages($mappedErrors);
+        }
 
         // Remove file from validated data as it's handled separately
         unset($validated['file']);
 
         // Set updated_by automatically to current user
         $validated['updated_by'] = auth()->id();
+
+        // Ensure nullable fields are explicitly set (including null values)
+        // Laravel's validator may not include null values in validated array
+        $validated['program_id'] = $this->programId;
+        $validated['academic_year_id'] = $this->academicYearId;
+        $validated['description'] = $this->description ?: null;
+        $validated['version'] = $this->version ?: null;
+        $validated['slug'] = $this->slug ?: null;
 
         // Update the document
         $this->document->update($validated);

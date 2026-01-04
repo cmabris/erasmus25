@@ -99,6 +99,9 @@ class Show extends Component
      */
     public function delete(): void
     {
+        // Reload count to ensure it's up to date
+        $this->document->loadCount('mediaConsents');
+        
         // Check if document has relationships using the loaded count
         $hasRelations = ($this->document->media_consents_count ?? 0) > 0;
 
@@ -149,6 +152,9 @@ class Show extends Component
     {
         $this->authorize('forceDelete', $this->document);
 
+        // Reload count to ensure it's up to date
+        $this->document->loadCount('mediaConsents');
+        
         // Check relations one more time using the loaded count
         $hasRelations = ($this->document->media_consents_count ?? 0) > 0;
 

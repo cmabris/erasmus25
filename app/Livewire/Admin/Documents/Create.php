@@ -172,7 +172,26 @@ class Create extends Component
         $rules = (new StoreDocumentRequest)->rules();
         $messages = (new StoreDocumentRequest)->messages();
 
-        $validated = \Illuminate\Support\Facades\Validator::make($data, $rules, $messages)->validate();
+        try {
+            $validated = \Illuminate\Support\Facades\Validator::make($data, $rules, $messages)->validate();
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Map validation errors from snake_case to camelCase component properties
+            $errors = $e->errors();
+            $mappedErrors = [];
+            foreach ($errors as $key => $messages) {
+                // Map snake_case keys to camelCase component properties
+                $componentKey = match ($key) {
+                    'category_id' => 'categoryId',
+                    'program_id' => 'programId',
+                    'academic_year_id' => 'academicYearId',
+                    'document_type' => 'documentType',
+                    'is_active' => 'isActive',
+                    default => $key,
+                };
+                $mappedErrors[$componentKey] = $messages;
+            }
+            throw \Illuminate\Validation\ValidationException::withMessages($mappedErrors);
+        }
 
         // Remove file from validated data as it's handled separately
         unset($validated['file']);

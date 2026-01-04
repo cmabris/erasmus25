@@ -104,7 +104,8 @@ it('sets consent_document_id to null when document is deleted', function () {
         'consent_document_id' => $document->id,
     ]);
 
-    $document->delete();
+    // nullOnDelete() only works with permanent deletes (forceDelete), not soft deletes
+    $document->forceDelete();
     $mediaConsent->refresh();
 
     expect($mediaConsent->consent_document_id)->toBeNull()
