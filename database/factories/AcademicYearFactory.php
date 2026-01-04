@@ -16,13 +16,15 @@ class AcademicYearFactory extends Factory
      */
     public function definition(): array
     {
-        $startYear = fake()->numberBetween(2020, 2030);
-        $endYear = $startYear + 1;
+        // Use a wider range to reduce collisions in parallel tests
+        // Generate a unique year combination with wider range to reduce collisions
+        $startYear = fake()->numberBetween(2000, 2100);
+        $yearString = "{$startYear}-".($startYear + 1);
 
         return [
-            'year' => "{$startYear}-{$endYear}",
+            'year' => $yearString,
             'start_date' => fake()->dateTimeBetween("-{$startYear}-09-01", "-{$startYear}-09-15"),
-            'end_date' => fake()->dateTimeBetween("{$endYear}-06-15", "{$endYear}-06-30"),
+            'end_date' => fake()->dateTimeBetween(($startYear + 1).'-06-15', ($startYear + 1).'-06-30'),
             'is_current' => false,
         ];
     }

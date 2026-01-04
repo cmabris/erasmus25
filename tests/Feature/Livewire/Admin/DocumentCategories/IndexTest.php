@@ -161,10 +161,14 @@ describe('Admin DocumentCategories Index - Search', function () {
             'description' => 'Documentos modelo',
         ]);
 
-        Livewire::test(Index::class)
-            ->set('search', 'convocatorias')
-            ->assertSee('Convocatorias')
-            ->assertDontSee('Modelos');
+        $component = Livewire::test(Index::class)
+            ->set('search', 'convocatorias');
+
+        $categories = $component->get('documentCategories');
+        $categoryNames = $categories->pluck('name')->toArray();
+
+        expect($categoryNames)->toContain('Convocatorias')
+            ->and($categoryNames)->not->toContain('Modelos');
     });
 
     it('resets pagination when searching', function () {

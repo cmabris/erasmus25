@@ -341,20 +341,19 @@ Crear un sistema completo de gestión (CRUD) de Eventos Erasmus+ en el panel de 
   - Cargar solo eventos necesarios para la vista actual
 
 #### **Paso 14: Mejoras de UX**
-- [ ] Añadir validación en tiempo real en formularios
-- [ ] Añadir feedback visual al guardar/actualizar
-- [ ] Implementar confirmaciones antes de acciones destructivas
-- [ ] Añadir tooltips informativos
-- [ ] Mejorar responsive design en móviles
-- [ ] Añadir shortcuts de teclado (opcional)
-- [ ] Implementar drag & drop para imágenes (opcional)
+- [x] Añadir validación en tiempo real en formularios
+- [x] Añadir feedback visual al guardar/actualizar
+- [x] Implementar confirmaciones antes de acciones destructivas
+- [x] Añadir tooltips informativos
+- [x] Mejorar responsive design en móviles
+- [x] Implementar Filepond para subida de imágenes con drag & drop
 
 ---
 
 ### **Fase 8: Testing**
 
 #### **Paso 15: Tests de Componentes**
-- [ ] Crear test `Admin\Events\IndexTest`:
+- [x] Crear test `Admin\Events\IndexTest`:
   - Test de autorización
   - Test de listado con filtros
   - Test de ordenación
@@ -362,29 +361,29 @@ Crear un sistema completo de gestión (CRUD) de Eventos Erasmus+ en el panel de 
   - Test de eliminación/restauración/force delete
   - Test de vista calendario
   - Test de navegación de calendario
-- [ ] Crear test `Admin\Events\CreateTest`:
+- [x] Crear test `Admin\Events\CreateTest`:
   - Test de autorización
   - Test de creación exitosa
   - Test de validación de campos
   - Test de subida de imagen
   - Test de asociación con programa/convocatoria
-- [ ] Crear test `Admin\Events\EditTest`:
+- [x] Crear test `Admin\Events\EditTest`:
   - Test de autorización
   - Test de actualización exitosa
   - Test de validación
   - Test de gestión de imágenes
-- [ ] Crear test `Admin\Events\ShowTest`:
+- [x] Crear test `Admin\Events\ShowTest`:
   - Test de autorización
   - Test de visualización
   - Test de acciones (eliminar, restaurar, etc.)
   - Test de cambio de visibilidad
 
 #### **Paso 16: Tests de Integración**
-- [ ] Test de flujo completo: crear → editar → eliminar → restaurar
-- [ ] Test de asociación con convocatorias
-- [ ] Test de filtros combinados
-- [ ] Test de calendario con múltiples eventos
-- [ ] Test de permisos por rol
+- [x] Test de flujo completo: crear → editar → eliminar → restaurar
+- [x] Test de asociación con convocatorias
+- [x] Test de filtros combinados
+- [x] Test de calendario con múltiples eventos
+- [x] Test de permisos por rol
 
 ---
 
