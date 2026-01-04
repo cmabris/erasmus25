@@ -116,6 +116,9 @@
                             <flux:field>
                                 <flux:label>
                                     {{ __('Tipo de Documento') }} <span class="text-red-500">*</span>
+                                    <flux:tooltip content="{{ __('El tipo de documento ayuda a categorizar y organizar los documentos. Los tipos disponibles son: Convocatoria, Modelo, Seguro, Consentimiento, Guía, FAQ u Otro.') }}" position="top">
+                                        <flux:icon name="information-circle" class="[:where(&)]:size-4 ml-1 text-zinc-400 hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300" variant="outline" />
+                                    </flux:tooltip>
                                 </flux:label>
                                 <select 
                                     wire:model.live.blur="documentType" 
