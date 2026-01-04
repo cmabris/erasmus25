@@ -132,7 +132,7 @@ it('can have null updater', function () {
     expect($document->updater)->toBeNull();
 });
 
-it('is deleted in cascade when category is deleted', function () {
+it('is not deleted when category is soft deleted', function () {
     $category = DocumentCategory::factory()->create();
     $academicYear = AcademicYear::factory()->create();
     $user = User::factory()->create();
@@ -142,7 +142,26 @@ it('is deleted in cascade when category is deleted', function () {
         'created_by' => $user->id,
     ]);
 
+    // Con SoftDeletes, delete() no activa cascadeOnDelete
+    // El cascadeOnDelete solo funciona con forceDelete()
     $category->delete();
+
+    // El documento NO se elimina porque el cascadeOnDelete solo funciona con forceDelete
+    expect(Document::find($document->id))->not->toBeNull();
+});
+
+it('is deleted in cascade when category is force deleted', function () {
+    $category = DocumentCategory::factory()->create();
+    $academicYear = AcademicYear::factory()->create();
+    $user = User::factory()->create();
+    $document = Document::factory()->create([
+        'category_id' => $category->id,
+        'academic_year_id' => $academicYear->id,
+        'created_by' => $user->id,
+    ]);
+
+    // forceDelete() activa el cascadeOnDelete de la base de datos
+    $category->forceDelete();
 
     expect(Document::find($document->id))->toBeNull();
 });

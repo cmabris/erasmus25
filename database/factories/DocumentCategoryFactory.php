@@ -17,7 +17,7 @@ class DocumentCategoryFactory extends Factory
      */
     public function definition(): array
     {
-        $name = fake()->randomElement([
+        $baseNames = [
             'Convocatorias',
             'Modelos',
             'Seguros',
@@ -25,7 +25,12 @@ class DocumentCategoryFactory extends Factory
             'Guías',
             'FAQ',
             'Otros',
-        ]);
+        ];
+
+        // Usar un nombre base aleatorio y añadir un sufijo único para evitar duplicados
+        $baseName = fake()->randomElement($baseNames);
+        $uniqueSuffix = fake()->unique()->numberBetween(1, 999999);
+        $name = $baseName.' '.$uniqueSuffix;
 
         return [
             'name' => $name,

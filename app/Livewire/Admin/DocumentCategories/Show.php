@@ -56,6 +56,10 @@ class Show extends Component
      */
     public function delete(): void
     {
+        // Refresh the count to ensure we have the latest data
+        $this->documentCategory->refresh();
+        $this->documentCategory->loadCount(['documents']);
+
         // Check if document category has relationships using the loaded count
         $hasRelations = ($this->documentCategory->documents_count ?? 0) > 0;
 
@@ -102,6 +106,10 @@ class Show extends Component
     public function forceDelete(): void
     {
         $this->authorize('forceDelete', $this->documentCategory);
+
+        // Refresh the count to ensure we have the latest data
+        $this->documentCategory->refresh();
+        $this->documentCategory->loadCount(['documents']);
 
         // Check relations one more time using the loaded count
         $hasRelations = ($this->documentCategory->documents_count ?? 0) > 0;

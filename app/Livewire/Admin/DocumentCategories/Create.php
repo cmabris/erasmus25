@@ -73,6 +73,11 @@ class Create extends Component
             $validated['slug'] = Str::slug($validated['name']);
         }
 
+        // Set order to 0 if not provided (database default)
+        if (! isset($validated['order']) || $validated['order'] === null) {
+            $validated['order'] = 0;
+        }
+
         $documentCategory = DocumentCategory::create($validated);
 
         $this->dispatch('document-category-created', [

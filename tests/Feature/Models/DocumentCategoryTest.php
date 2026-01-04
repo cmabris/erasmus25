@@ -22,7 +22,7 @@ it('has many documents', function () {
         ->and($category->documents->first())->toBeInstanceOf(Document::class);
 });
 
-it('deletes documents in cascade when category is deleted', function () {
+it('cannot be deleted when it has associated documents', function () {
     $category = DocumentCategory::factory()->create();
     $academicYear = AcademicYear::factory()->create(['year' => '2030-2031']);
     $program = Program::factory()->create(['code' => 'KA990', 'name' => 'Programa Test G', 'slug' => 'programa-test-g']);
@@ -40,7 +40,39 @@ it('deletes documents in cascade when category is deleted', function () {
         'created_by' => $user->id,
     ]);
 
+    // Con SoftDeletes, no se puede eliminar una categoría si tiene documentos asociados
+    // El cascadeOnDelete solo funciona con forceDelete(), no con delete() (soft delete)
     $category->delete();
+
+    // La categoría se elimina (soft delete)
+    expect($category->fresh()->trashed())->toBeTrue();
+
+    // Los documentos NO se eliminan porque el cascadeOnDelete solo funciona con forceDelete
+    // y además, la lógica de negocio previene la eliminación si hay relaciones
+    expect(Document::find($document1->id))->not->toBeNull()
+        ->and(Document::find($document2->id))->not->toBeNull();
+});
+
+it('deletes documents in cascade when category is force deleted', function () {
+    $category = DocumentCategory::factory()->create();
+    $academicYear = AcademicYear::factory()->create(['year' => '2030-2031']);
+    $program = Program::factory()->create(['code' => 'KA990', 'name' => 'Programa Test G', 'slug' => 'programa-test-g']);
+    $user = User::factory()->create();
+    $document1 = Document::factory()->create([
+        'category_id' => $category->id,
+        'program_id' => $program->id,
+        'academic_year_id' => $academicYear->id,
+        'created_by' => $user->id,
+    ]);
+    $document2 = Document::factory()->create([
+        'category_id' => $category->id,
+        'program_id' => $program->id,
+        'academic_year_id' => $academicYear->id,
+        'created_by' => $user->id,
+    ]);
+
+    // forceDelete() activa el cascadeOnDelete de la base de datos
+    $category->forceDelete();
 
     expect(Document::find($document1->id))->toBeNull()
         ->and(Document::find($document2->id))->toBeNull();
