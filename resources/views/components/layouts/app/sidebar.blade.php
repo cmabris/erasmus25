@@ -46,6 +46,9 @@
                         @can('viewAny', \App\Models\DocumentCategory::class)
                             <flux:navlist.item icon="folder" :href="route('admin.document-categories.index')" :current="request()->routeIs('admin.document-categories.*')" wire:navigate>{{ __('common.nav.document_categories') }}</flux:navlist.item>
                         @endcan
+                        @can('viewAny', \App\Models\ErasmusEvent::class)
+                            <flux:navlist.item icon="calendar" :href="route('admin.events.index')" :current="request()->routeIs('admin.events.*')" wire:navigate>{{ __('common.nav.events') }}</flux:navlist.item>
+                        @endcan
                     </flux:navlist.group>
                 @endcan
             </flux:navlist>

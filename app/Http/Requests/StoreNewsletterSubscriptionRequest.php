@@ -46,4 +46,3 @@ class StoreNewsletterSubscriptionRequest extends FormRequest
         ];
     }
 }
-

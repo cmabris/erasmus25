@@ -7,11 +7,18 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class ErasmusEvent extends Model
+class ErasmusEvent extends Model implements HasMedia
 {
     /** @use HasFactory<\Database\Factories\ErasmusEventFactory> */
     use HasFactory;
+
+    use InteractsWithMedia;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -223,5 +230,214 @@ class ErasmusEvent extends Model
         }
 
         return "{$start} a las {$startTime}";
+    }
+
+    // ============================================
+    // MEDIA LIBRARY
+    // ============================================
+
+    /**
+     * Register media collections for the event.
+     */
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('images')
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp', 'image/gif']);
+    }
+
+    /**
+     * Register media conversions for the event.
+     */
+    public function registerMediaConversions(?Media $media = null): void
+    {
+        // Thumbnail conversion
+        $this->addMediaConversion('thumbnail')
+            ->width(300)
+            ->height(300)
+            ->sharpen(10)
+            ->performOnCollections('images');
+
+        // Medium conversion
+        $this->addMediaConversion('medium')
+            ->width(800)
+            ->height(600)
+            ->sharpen(10)
+            ->performOnCollections('images');
+
+        // Large conversion
+        $this->addMediaConversion('large')
+            ->width(1200)
+            ->height(900)
+            ->sharpen(10)
+            ->performOnCollections('images');
+    }
+
+    // ============================================
+    // MEDIA SOFT DELETE METHODS
+    // ============================================
+
+    /**
+     * Get the first media item from the images collection, excluding soft-deleted ones.
+     */
+    public function getFirstMedia(string $collectionName = 'default', array $filters = []): ?Media
+    {
+        $media = $this->getMedia($collectionName, $filters)->first();
+
+        return $media;
+    }
+
+    /**
+     * Check if the model has media in the given collection, excluding soft-deleted ones.
+     */
+    public function hasMedia(string $collectionName = 'default'): bool
+    {
+        return $this->getMedia($collectionName)->isNotEmpty();
+    }
+
+    /**
+     * Get all media items from the given collection, excluding soft-deleted ones.
+     */
+    public function getMedia(string $collectionName = 'default', callable|array $filters = []): \Illuminate\Support\Collection
+    {
+        // Use the trait's media() relationship to get all media
+        $allMedia = $this->media()
+            ->where('collection_name', $collectionName)
+            ->get();
+
+        // Apply filters if provided (basic implementation)
+        if (! empty($filters)) {
+            if (is_callable($filters)) {
+                $allMedia = $allMedia->filter($filters);
+            } elseif (is_array($filters)) {
+                foreach ($filters as $key => $value) {
+                    $allMedia = $allMedia->where($key, $value);
+                }
+            }
+        }
+
+        // Filter out soft-deleted media
+        return $allMedia->reject(fn ($item) => $this->isMediaSoftDeleted($item));
+    }
+
+    /**
+     * Get all media items from the given collection, including soft-deleted ones.
+     */
+    public function getMediaWithDeleted(string $collectionName = 'default', callable|array $filters = []): \Illuminate\Support\Collection
+    {
+        // Get all media without filtering soft-deleted ones
+        $allMedia = $this->media()
+            ->where('collection_name', $collectionName)
+            ->get();
+
+        // Apply filters if provided
+        if (! empty($filters)) {
+            if (is_callable($filters)) {
+                $allMedia = $allMedia->filter($filters);
+            } elseif (is_array($filters)) {
+                foreach ($filters as $key => $value) {
+                    $allMedia = $allMedia->where($key, $value);
+                }
+            }
+        }
+
+        return $allMedia;
+    }
+
+    /**
+     * Check if a media item is soft-deleted.
+     */
+    public function isMediaSoftDeleted(Media $media): bool
+    {
+        $customProperties = $media->custom_properties ?? [];
+
+        return isset($customProperties['deleted_at']) && $customProperties['deleted_at'] !== null;
+    }
+
+    /**
+     * Soft delete a specific media item by ID (mark as deleted without removing the file).
+     */
+    public function softDeleteMediaById(int $mediaId): bool
+    {
+        // Get all media including soft-deleted ones
+        $allMedia = $this->getMediaWithDeleted('images');
+        $media = $allMedia->firstWhere('id', $mediaId);
+
+        if (! $media) {
+            return false;
+        }
+
+        // Mark as deleted using custom_properties
+        $customProperties = $media->custom_properties ?? [];
+        $customProperties['deleted_at'] = now()->toIso8601String();
+        $media->custom_properties = $customProperties;
+        $media->save();
+
+        return true;
+    }
+
+    /**
+     * Restore a soft-deleted media item by ID.
+     */
+    public function restoreMediaById(int $mediaId): bool
+    {
+        // Get all media including soft-deleted ones
+        $allMedia = $this->getMediaWithDeleted('images');
+        $media = $allMedia->firstWhere('id', $mediaId);
+
+        if (! $media) {
+            return false;
+        }
+
+        // Check if it's actually soft-deleted
+        if (! $this->isMediaSoftDeleted($media)) {
+            return false;
+        }
+
+        // Remove deleted_at from custom_properties
+        $customProperties = $media->custom_properties ?? [];
+        unset($customProperties['deleted_at']);
+        $media->custom_properties = $customProperties;
+        $media->save();
+
+        return true;
+    }
+
+    /**
+     * Force delete a specific media item by ID (permanent deletion).
+     */
+    public function forceDeleteMediaById(int $mediaId): bool
+    {
+        // Get all media including soft-deleted ones
+        $allMedia = $this->getMediaWithDeleted('images');
+        $media = $allMedia->firstWhere('id', $mediaId);
+
+        if (! $media) {
+            return false;
+        }
+
+        // Permanently delete the media item and its file
+        $media->delete();
+
+        return true;
+    }
+
+    /**
+     * Get all soft-deleted media items from the images collection.
+     */
+    public function getSoftDeletedImages(): \Illuminate\Support\Collection
+    {
+        // Get all media including soft-deleted ones
+        $allMedia = $this->getMediaWithDeleted('images');
+
+        // Filter only soft-deleted ones
+        return $allMedia->filter(fn ($item) => $this->isMediaSoftDeleted($item));
+    }
+
+    /**
+     * Check if there are any soft-deleted images.
+     */
+    public function hasSoftDeletedImages(): bool
+    {
+        return $this->getSoftDeletedImages()->isNotEmpty();
     }
 }
