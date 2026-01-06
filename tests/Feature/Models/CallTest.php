@@ -200,7 +200,7 @@ it('deletes resolutions in cascade when call is deleted', function () {
         ->and(Resolution::find($resolution2->id))->toBeNull();
 });
 
-it('sets created_by to null when creator user is deleted', function () {
+it('sets created_by to null when creator user is force deleted', function () {
     $program = Program::factory()->create();
     $academicYear = AcademicYear::factory()->create();
     $user = User::factory()->create();
@@ -210,14 +210,15 @@ it('sets created_by to null when creator user is deleted', function () {
         'created_by' => $user->id,
     ]);
 
-    $user->delete();
+    // Force delete to trigger foreign key constraint
+    $user->forceDelete();
     $call->refresh();
 
     expect($call->created_by)->toBeNull()
         ->and($call->creator)->toBeNull();
 });
 
-it('sets updated_by to null when updater user is deleted', function () {
+it('sets updated_by to null when updater user is force deleted', function () {
     $program = Program::factory()->create();
     $academicYear = AcademicYear::factory()->create();
     $user = User::factory()->create();
@@ -227,7 +228,8 @@ it('sets updated_by to null when updater user is deleted', function () {
         'updated_by' => $user->id,
     ]);
 
-    $user->delete();
+    // Force delete to trigger foreign key constraint
+    $user->forceDelete();
     $call->refresh();
 
     expect($call->updated_by)->toBeNull()

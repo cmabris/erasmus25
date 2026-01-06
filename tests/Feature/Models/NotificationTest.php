@@ -11,11 +11,12 @@ it('belongs to a user', function () {
         ->and($notification->user->id)->toBe($user->id);
 });
 
-it('is deleted in cascade when user is deleted', function () {
+it('is deleted in cascade when user is force deleted', function () {
     $user = User::factory()->create();
     $notification = Notification::factory()->create(['user_id' => $user->id]);
 
-    $user->delete();
+    // Force delete to trigger foreign key cascade delete
+    $user->forceDelete();
 
     expect(Notification::find($notification->id))->toBeNull();
 });

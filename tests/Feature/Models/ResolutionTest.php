@@ -113,7 +113,7 @@ it('is deleted in cascade when call phase is deleted', function () {
     expect(Resolution::find($resolution->id))->toBeNull();
 });
 
-it('sets created_by to null when creator user is deleted', function () {
+it('sets created_by to null when creator user is force deleted', function () {
     $program = Program::factory()->create();
     $academicYear = AcademicYear::factory()->create();
     $call = Call::factory()->create([
@@ -128,7 +128,8 @@ it('sets created_by to null when creator user is deleted', function () {
         'created_by' => $user->id,
     ]);
 
-    $user->delete();
+    // Force delete to trigger foreign key constraint
+    $user->forceDelete();
     $resolution->refresh();
 
     expect($resolution->created_by)->toBeNull()

@@ -205,7 +205,7 @@ it('sets academic_year_id to null when academic year is deleted', function () {
         ->and($document->academicYear)->toBeNull();
 });
 
-it('sets created_by to null when creator user is deleted', function () {
+it('sets created_by to null when creator user is force deleted', function () {
     $category = DocumentCategory::factory()->create();
     $academicYear = AcademicYear::factory()->create();
     $user = User::factory()->create();
@@ -215,14 +215,15 @@ it('sets created_by to null when creator user is deleted', function () {
         'created_by' => $user->id,
     ]);
 
-    $user->delete();
+    // Force delete to trigger foreign key constraint
+    $user->forceDelete();
     $document->refresh();
 
     expect($document->created_by)->toBeNull()
         ->and($document->creator)->toBeNull();
 });
 
-it('sets updated_by to null when updater user is deleted', function () {
+it('sets updated_by to null when updater user is force deleted', function () {
     $category = DocumentCategory::factory()->create();
     $academicYear = AcademicYear::factory()->create();
     $creator = User::factory()->create();
@@ -234,7 +235,8 @@ it('sets updated_by to null when updater user is deleted', function () {
         'updated_by' => $updater->id,
     ]);
 
-    $updater->delete();
+    // Force delete to trigger foreign key constraint
+    $updater->forceDelete();
     $document->refresh();
 
     expect($document->updated_by)->toBeNull()

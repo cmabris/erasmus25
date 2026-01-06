@@ -63,7 +63,7 @@ it('can reference different model types polymorphically', function () {
         ->and($auditLog2->model)->toBeInstanceOf(Call::class);
 });
 
-it('sets user_id to null when user is deleted', function () {
+it('sets user_id to null when user is force deleted', function () {
     $user = User::factory()->create();
     $program = Program::factory()->create();
     $auditLog = AuditLog::factory()->create([
@@ -72,7 +72,8 @@ it('sets user_id to null when user is deleted', function () {
         'model_id' => $program->id,
     ]);
 
-    $user->delete();
+    // Force delete to trigger foreign key constraint
+    $user->forceDelete();
     $auditLog->refresh();
 
     expect($auditLog->user_id)->toBeNull()

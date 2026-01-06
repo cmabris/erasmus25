@@ -173,7 +173,7 @@ it('is deleted in cascade when academic year is deleted', function () {
     expect(NewsPost::find($newsPost->id))->toBeNull();
 });
 
-it('sets author_id to null when author user is deleted', function () {
+it('sets author_id to null when author user is force deleted', function () {
     $academicYear = AcademicYear::factory()->create();
     $user = User::factory()->create();
     $newsPost = NewsPost::factory()->create([
@@ -181,14 +181,15 @@ it('sets author_id to null when author user is deleted', function () {
         'author_id' => $user->id,
     ]);
 
-    $user->delete();
+    // Force delete to trigger foreign key constraint
+    $user->forceDelete();
     $newsPost->refresh();
 
     expect($newsPost->author_id)->toBeNull()
         ->and($newsPost->author)->toBeNull();
 });
 
-it('sets reviewed_by to null when reviewer user is deleted', function () {
+it('sets reviewed_by to null when reviewer user is force deleted', function () {
     $academicYear = AcademicYear::factory()->create();
     $author = User::factory()->create();
     $reviewer = User::factory()->create();
@@ -198,7 +199,8 @@ it('sets reviewed_by to null when reviewer user is deleted', function () {
         'reviewed_by' => $reviewer->id,
     ]);
 
-    $reviewer->delete();
+    // Force delete to trigger foreign key constraint
+    $reviewer->forceDelete();
     $newsPost->refresh();
 
     expect($newsPost->reviewed_by)->toBeNull()

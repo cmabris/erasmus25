@@ -35,6 +35,7 @@ class ErasmusEvent extends Model implements HasMedia
         'end_date',
         'location',
         'is_public',
+        'is_all_day',
         'created_by',
     ];
 
@@ -49,6 +50,7 @@ class ErasmusEvent extends Model implements HasMedia
             'start_date' => 'datetime',
             'end_date' => 'datetime',
             'is_public' => 'boolean',
+            'is_all_day' => 'boolean',
         ];
     }
 
@@ -206,6 +208,12 @@ class ErasmusEvent extends Model implements HasMedia
      */
     public function isAllDay(): bool
     {
+        // First check the is_all_day field if it exists
+        if (isset($this->is_all_day)) {
+            return (bool) $this->is_all_day;
+        }
+
+        // Fallback to checking times if field doesn't exist
         return $this->start_date->format('H:i') === '00:00' &&
             (! $this->end_date || $this->end_date->format('H:i') === '00:00');
     }

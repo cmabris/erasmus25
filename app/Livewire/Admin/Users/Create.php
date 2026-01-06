@@ -109,8 +109,10 @@ class Create extends Component
      */
     public function store(): void
     {
-        // Validate using StoreUserRequest
-        $validated = $this->validate((new StoreUserRequest)->rules());
+        // Validate using StoreUserRequest rules and messages
+        $rules = (new StoreUserRequest)->rules();
+        $messages = (new StoreUserRequest)->messages();
+        $validated = $this->validate($rules, $messages);
 
         // Create user
         $user = User::create([

@@ -623,7 +623,9 @@ describe('Admin Events Create - Date Handling', function () {
             ->assertDispatched('event-created');
 
         $event = ErasmusEvent::where('title', 'Evento Todo El Día')->first();
-        expect($event->isAllDay())->toBeTrue();
+        expect($event)->not->toBeNull()
+            ->and($event->is_all_day)->toBeTrue()
+            ->and($event->isAllDay())->toBeTrue();
     });
 
     it('sets times to 00:00 when all day is checked', function () {

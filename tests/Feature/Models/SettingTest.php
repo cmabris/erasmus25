@@ -21,13 +21,14 @@ it('can have null updater', function () {
     expect($setting->updater)->toBeNull();
 });
 
-it('sets updated_by to null when updater user is deleted', function () {
+it('sets updated_by to null when updater user is force deleted', function () {
     $user = User::factory()->create();
     $setting = Setting::factory()->create([
         'updated_by' => $user->id,
     ]);
 
-    $user->delete();
+    // Force delete to trigger foreign key constraint
+    $user->forceDelete();
     $setting->refresh();
 
     expect($setting->updated_by)->toBeNull()

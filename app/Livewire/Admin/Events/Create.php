@@ -331,6 +331,30 @@ class Create extends Component
      */
     public function store(): void
     {
+        // If all day is checked, adjust dates before validation
+        if ($this->is_all_day) {
+            if ($this->start_date) {
+                $date = Carbon::parse($this->start_date);
+                $this->start_date = $date->format('Y-m-d').'T00:00';
+            }
+
+            if ($this->end_date) {
+                $date = Carbon::parse($this->end_date);
+                // For all-day events, if end_date is same day as start_date, set it to next day at 00:00
+                if ($this->start_date) {
+                    $startDate = Carbon::parse($this->start_date);
+                    $endDate = Carbon::parse($this->end_date);
+                    if ($endDate->isSameDay($startDate)) {
+                        $this->end_date = $endDate->copy()->addDay()->format('Y-m-d').'T00:00';
+                    } else {
+                        $this->end_date = $endDate->format('Y-m-d').'T00:00';
+                    }
+                } else {
+                    $this->end_date = $date->format('Y-m-d').'T00:00';
+                }
+            }
+        }
+
         // Use filtered rules that only include component properties
         $validated = $this->validate($this->getComponentRules());
 
@@ -348,6 +372,9 @@ class Create extends Component
         if (isset($validated['end_date']) && $validated['end_date']) {
             $validated['end_date'] = Carbon::parse($validated['end_date'])->format('Y-m-d H:i:s');
         }
+
+        // Add is_all_day to validated data
+        $validated['is_all_day'] = $this->is_all_day;
 
         // Create the event
         $event = ErasmusEvent::create($validated);

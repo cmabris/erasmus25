@@ -116,13 +116,14 @@ it('sets call_id to null when call is deleted', function () {
         ->and($event->call)->toBeNull();
 });
 
-it('sets created_by to null when creator user is deleted', function () {
+it('sets created_by to null when creator user is force deleted', function () {
     $user = User::factory()->create();
     $event = ErasmusEvent::factory()->create([
         'created_by' => $user->id,
     ]);
 
-    $user->delete();
+    // Force delete to trigger foreign key constraint
+    $user->forceDelete();
     $event->refresh();
 
     expect($event->created_by)->toBeNull()
