@@ -28,6 +28,12 @@
                     </flux:navlist.group>
                 @endcan
 
+                @can('viewAny', \App\Models\User::class)
+                    <flux:navlist.group :heading="__('common.admin.nav.system')" class="grid">
+                        <flux:navlist.item icon="user-group" :href="route('admin.users.index')" :current="request()->routeIs('admin.users.*')" wire:navigate>{{ __('common.nav.users') }}</flux:navlist.item>
+                    </flux:navlist.group>
+                @endcan
+
                 @can('viewAny', \App\Models\Call::class)
                     <flux:navlist.group :heading="__('common.admin.nav.content')" class="grid">
                         <flux:navlist.item icon="document-text" :href="route('admin.calls.index')" :current="request()->routeIs('admin.calls.*')" wire:navigate>{{ __('common.nav.calls') }}</flux:navlist.item>

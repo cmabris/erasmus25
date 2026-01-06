@@ -14,7 +14,13 @@ class UpdateUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        $user = $this->route('user');
+
+        if (! $user instanceof User) {
+            return false;
+        }
+
+        return $this->user()?->can('update', $user) ?? false;
     }
 
     /**
@@ -34,6 +40,27 @@ class UpdateUserRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')->ignore($userId)],
             'password' => ['nullable', 'string', Password::defaults(), 'confirmed'],
+        ];
+    }
+
+    /**
+     * Get custom messages for validator errors.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'name.required' => __('El nombre del usuario es obligatorio.'),
+            'name.string' => __('El nombre del usuario debe ser un texto válido.'),
+            'name.max' => __('El nombre del usuario no puede tener más de :max caracteres.'),
+            'email.required' => __('El correo electrónico es obligatorio.'),
+            'email.string' => __('El correo electrónico debe ser un texto válido.'),
+            'email.email' => __('El correo electrónico debe ser una dirección de correo válida.'),
+            'email.max' => __('El correo electrónico no puede tener más de :max caracteres.'),
+            'email.unique' => __('Este correo electrónico ya está registrado.'),
+            'password.string' => __('La contraseña debe ser un texto válido.'),
+            'password.confirmed' => __('Las contraseñas no coinciden.'),
         ];
     }
 }

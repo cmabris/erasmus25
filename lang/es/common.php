@@ -31,6 +31,7 @@ return [
         'profile' => 'Perfil',
         'open_menu' => 'Abrir menú',
         'academic_years' => 'Años Académicos',
+        'users' => 'Usuarios',
     ],
 
     // Botones y acciones
@@ -737,6 +738,7 @@ return [
         'nav' => [
             'content' => 'Contenido',
             'management' => 'Gestión',
+            'system' => 'Sistema',
         ],
         'dashboard' => [
             'welcome_message' => 'Bienvenido al panel de administración. Aquí puedes gestionar todos los aspectos de la aplicación.',

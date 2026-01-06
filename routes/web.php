@@ -114,6 +114,12 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
         Route::get('/resoluciones/{resolution}', \App\Livewire\Admin\Calls\Resolutions\Show::class)->name('calls.resolutions.show');
         Route::get('/resoluciones/{resolution}/editar', \App\Livewire\Admin\Calls\Resolutions\Edit::class)->name('calls.resolutions.edit');
     });
+
+    // Rutas de Usuarios
+    Route::get('/usuarios', \App\Livewire\Admin\Users\Index::class)->name('users.index');
+    Route::get('/usuarios/crear', \App\Livewire\Admin\Users\Create::class)->name('users.create');
+    Route::get('/usuarios/{user}', \App\Livewire\Admin\Users\Show::class)->name('users.show');
+    Route::get('/usuarios/{user}/editar', \App\Livewire\Admin\Users\Edit::class)->name('users.edit');
 });
 
 Route::middleware(['auth'])->group(function () {

@@ -30,6 +30,7 @@ return [
         'profile' => 'Profile',
         'open_menu' => 'Open menu',
         'academic_years' => 'Academic Years',
+        'users' => 'Users',
     ],
 
     // Buttons and actions
@@ -714,6 +715,7 @@ return [
         'nav' => [
             'content' => 'Content',
             'management' => 'Management',
+            'system' => 'System',
         ],
         'dashboard' => [
             'welcome_message' => 'Welcome to the administration panel. Here you can manage all aspects of the application.',
