@@ -162,12 +162,7 @@
                                 <tr class="transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800/50">
                                     <td class="px-4 py-4 whitespace-nowrap">
                                         <div class="flex items-center gap-3">
-                                            {{-- Avatar --}}
-                                            <span class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-lg">
-                                                <span class="flex h-full w-full items-center justify-center rounded-lg bg-erasmus-100 text-erasmus-800 dark:bg-erasmus-900/30 dark:text-erasmus-300 font-semibold text-sm">
-                                                    {{ $user->initials() }}
-                                                </span>
-                                            </span>
+                                            <x-ui.user-avatar :user="$user" size="sm" />
                                             <div class="flex-1 min-w-0">
                                                 <div class="flex items-center gap-2">
                                                     <div class="text-sm font-medium text-zinc-900 dark:text-white">
@@ -191,15 +186,7 @@
                                         {{ $user->email }}
                                     </td>
                                     <td class="px-4 py-4">
-                                        <div class="flex flex-wrap gap-1">
-                                            @forelse($user->roles as $role)
-                                                <x-ui.badge :variant="$this->getRoleBadgeVariant($role->name)" size="sm">
-                                                    {{ $this->getRoleDisplayName($role->name) }}
-                                                </x-ui.badge>
-                                            @empty
-                                                <span class="text-xs text-zinc-400 dark:text-zinc-500">-</span>
-                                            @endforelse
-                                        </div>
+                                        <x-ui.user-roles :user="$user" size="sm" :show-empty="false" />
                                     </td>
                                     <td class="px-4 py-4 whitespace-nowrap text-sm text-zinc-500 dark:text-zinc-400">
                                         @if($user->audit_logs_count > 0)

@@ -3,12 +3,7 @@
     <div class="mb-6 animate-fade-in">
         <div class="flex items-center justify-between gap-4">
             <div class="flex items-center gap-4">
-                {{-- Avatar --}}
-                <span class="relative flex h-16 w-16 shrink-0 overflow-hidden rounded-lg">
-                    <span class="flex h-full w-full items-center justify-center rounded-lg bg-erasmus-100 text-erasmus-800 dark:bg-erasmus-900/30 dark:text-erasmus-300 font-semibold text-xl">
-                        {{ $user->initials() }}
-                    </span>
-                </span>
+                <x-ui.user-avatar :user="$user" size="lg" />
                 <div>
                     <div class="flex items-center gap-3">
                         <h1 class="text-3xl font-bold text-zinc-900 dark:text-white">
@@ -134,30 +129,14 @@
                     {{-- Roles --}}
                     <div class="mb-4">
                         <p class="mb-2 text-sm font-medium text-zinc-600 dark:text-zinc-400">{{ __('Roles Asignados') }}</p>
-                        <div class="flex flex-wrap gap-2">
-                            @forelse($user->roles as $role)
-                                <x-ui.badge :variant="$this->getRoleBadgeVariant($role->name)" size="sm">
-                                    {{ $this->getRoleDisplayName($role->name) }}
-                                </x-ui.badge>
-                            @empty
-                                <span class="text-sm text-zinc-400 dark:text-zinc-500">{{ __('Sin roles asignados') }}</span>
-                            @endforelse
-                        </div>
+                        <x-ui.user-roles :user="$user" size="sm" :show-empty="true" />
                     </div>
 
                     {{-- Direct Permissions --}}
-                    @if($user->permissions->isNotEmpty())
-                        <div>
-                            <p class="mb-2 text-sm font-medium text-zinc-600 dark:text-zinc-400">{{ __('Permisos Directos') }}</p>
-                            <div class="flex flex-wrap gap-2">
-                                @foreach($user->permissions as $permission)
-                                    <x-ui.badge variant="info" size="sm">
-                                        {{ $permission->name }}
-                                    </x-ui.badge>
-                                @endforeach
-                            </div>
-                        </div>
-                    @endif
+                    <div>
+                        <p class="mb-2 text-sm font-medium text-zinc-600 dark:text-zinc-400">{{ __('Permisos Directos') }}</p>
+                        <x-ui.user-permissions :user="$user" size="sm" :show-empty="true" />
+                    </div>
 
                     @if($user->id === auth()->id())
                         <flux:callout variant="info" class="mt-4">
@@ -237,42 +216,7 @@
                     @else
                         <div class="space-y-3">
                             @foreach($this->auditLogs as $log)
-                                <div class="rounded-lg border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-700 dark:bg-zinc-800">
-                                    <div class="flex items-start justify-between gap-4">
-                                        <div class="flex-1 min-w-0">
-                                            <div class="flex items-center gap-2 mb-2">
-                                                <x-ui.badge :variant="$this->getActionBadgeVariant($log->action)" size="sm">
-                                                    {{ $this->getActionDisplayName($log->action) }}
-                                                </x-ui.badge>
-                                                <span class="text-sm text-zinc-600 dark:text-zinc-400">
-                                                    {{ $this->getModelDisplayName($log->model_type) }}
-                                                </span>
-                                            </div>
-                                            @if($log->model)
-                                                @php
-                                                    $modelUrl = $this->getModelUrl($log->model_type, $log->model_id);
-                                                @endphp
-                                                @if($modelUrl)
-                                                    <a href="{{ $modelUrl }}" wire:navigate class="font-medium text-zinc-900 dark:text-white hover:text-erasmus-600 dark:hover:text-erasmus-400">
-                                                        {{ $this->getModelTitle($log->model) }}
-                                                    </a>
-                                                @else
-                                                    <p class="font-medium text-zinc-900 dark:text-white">
-                                                        {{ $this->getModelTitle($log->model) }}
-                                                    </p>
-                                                @endif
-                                            @endif
-                                            @if($log->changes)
-                                                <p class="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-                                                    {{ $this->formatChanges($log->changes) }}
-                                                </p>
-                                            @endif
-                                            <p class="mt-2 text-xs text-zinc-500 dark:text-zinc-400">
-                                                {{ $log->created_at->format('d/m/Y H:i') }} ({{ $log->created_at->diffForHumans() }})
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
+                                <x-ui.audit-log-entry :log="$log" />
                             @endforeach
                         </div>
 
