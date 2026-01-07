@@ -32,6 +32,7 @@ return [
         'open_menu' => 'Abrir menú',
         'academic_years' => 'Años Académicos',
         'users' => 'Usuarios',
+        'roles' => 'Roles y Permisos',
     ],
 
     // Botones y acciones

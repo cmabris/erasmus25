@@ -120,6 +120,12 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::get('/usuarios/crear', \App\Livewire\Admin\Users\Create::class)->name('users.create');
     Route::get('/usuarios/{user}', \App\Livewire\Admin\Users\Show::class)->name('users.show');
     Route::get('/usuarios/{user}/editar', \App\Livewire\Admin\Users\Edit::class)->name('users.edit');
+
+    // Rutas de Roles
+    Route::get('/roles', \App\Livewire\Admin\Roles\Index::class)->name('roles.index');
+    Route::get('/roles/crear', \App\Livewire\Admin\Roles\Create::class)->name('roles.create');
+    Route::get('/roles/{role}', \App\Livewire\Admin\Roles\Show::class)->name('roles.show');
+    Route::get('/roles/{role}/editar', \App\Livewire\Admin\Roles\Edit::class)->name('roles.edit');
 });
 
 Route::middleware(['auth'])->group(function () {

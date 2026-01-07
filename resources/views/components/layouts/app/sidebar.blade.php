@@ -31,6 +31,9 @@
                 @can('viewAny', \App\Models\User::class)
                     <flux:navlist.group :heading="__('common.admin.nav.system')" class="grid">
                         <flux:navlist.item icon="user-group" :href="route('admin.users.index')" :current="request()->routeIs('admin.users.*')" wire:navigate>{{ __('common.nav.users') }}</flux:navlist.item>
+                        @can('viewAny', \Spatie\Permission\Models\Role::class)
+                            <flux:navlist.item icon="shield-check" :href="route('admin.roles.index')" :current="request()->routeIs('admin.roles.*')" wire:navigate>{{ __('common.nav.roles') }}</flux:navlist.item>
+                        @endcan
                     </flux:navlist.group>
                 @endcan
 
