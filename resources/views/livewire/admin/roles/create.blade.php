@@ -198,12 +198,12 @@
                                 <div class="flex items-center justify-between">
                                     <span class="text-zinc-600 dark:text-zinc-400">{{ __('Permisos seleccionados:') }}</span>
                                     <span class="font-semibold text-zinc-900 dark:text-white">
-                                        {{ count($permissions) }}
+                                        {{ count($this->permissions) }}
                                     </span>
                                 </div>
-                                @if(count($permissions) > 0)
+                                @if(count($this->permissions) > 0)
                                     <div class="mt-3 max-h-48 space-y-1 overflow-y-auto">
-                                        @foreach($permissions as $permissionName)
+                                        @foreach($this->permissions as $permissionName)
                                             <div class="rounded bg-zinc-100 px-2 py-1 text-xs dark:bg-zinc-800">
                                                 {{ $permissionName }}
                                             </div>
