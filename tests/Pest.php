@@ -17,6 +17,22 @@ pest()->extend(Tests\TestCase::class)
 
 /*
 |--------------------------------------------------------------------------
+| Global Test Setup
+|--------------------------------------------------------------------------
+|
+| This closure runs before each test in Feature tests to ensure a clean state.
+|
+*/
+
+beforeEach(function () {
+    // Clear translation-related caches to avoid interference between parallel tests
+    \Illuminate\Support\Facades\Cache::forget('translations.active_languages');
+    \Illuminate\Support\Facades\Cache::forget('translations.active_programs');
+    \Illuminate\Support\Facades\Cache::forget('translations.all_settings');
+})->in('Feature');
+
+/*
+|--------------------------------------------------------------------------
 | Expectations
 |--------------------------------------------------------------------------
 |

@@ -8,6 +8,7 @@ use App\Models\Setting;
 use App\Models\Translation;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
@@ -227,19 +228,26 @@ class Index extends Component
 
     /**
      * Get active languages.
+     * Uses computed property for caching.
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
+    #[Computed]
     public function getLanguages()
     {
-        return Language::where('is_active', true)
-            ->orderBy('is_default', 'desc')
-            ->orderBy('name', 'asc')
-            ->get();
+        return Cache::remember(
+            'translations.active_languages',
+            now()->addHours(1),
+            fn () => Language::where('is_active', true)
+                ->orderBy('is_default', 'desc')
+                ->orderBy('name', 'asc')
+                ->get()
+        );
     }
 
     /**
      * Get translatable options based on selected model type.
+     * Uses cache to avoid repeated queries.
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
@@ -249,17 +257,31 @@ class Index extends Component
             return collect();
         }
 
-        return match ($this->filterModel) {
-            Program::class => Program::query()
-                ->where('is_active', true)
-                ->orderBy('order', 'asc')
-                ->orderBy('name', 'asc')
-                ->get(),
-            Setting::class => Setting::query()
-                ->orderBy('key', 'asc')
-                ->get(),
-            default => collect(),
+        $cacheKey = match ($this->filterModel) {
+            Program::class => 'translations.active_programs',
+            Setting::class => 'translations.all_settings',
+            default => null,
         };
+
+        if (! $cacheKey) {
+            return collect();
+        }
+
+        return Cache::remember(
+            $cacheKey,
+            now()->addMinutes(30),
+            fn () => match ($this->filterModel) {
+                Program::class => Program::query()
+                    ->where('is_active', true)
+                    ->orderBy('order', 'asc')
+                    ->orderBy('name', 'asc')
+                    ->get(),
+                Setting::class => Setting::query()
+                    ->orderBy('key', 'asc')
+                    ->get(),
+                default => collect(),
+            }
+        );
     }
 
     /**

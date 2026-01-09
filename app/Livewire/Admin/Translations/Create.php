@@ -8,7 +8,9 @@ use App\Models\Program;
 use App\Models\Setting;
 use App\Models\Translation;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
+use Livewire\Attributes\Computed;
 use Livewire\Component;
 
 class Create extends Component
@@ -112,39 +114,61 @@ class Create extends Component
 
     /**
      * Get active languages.
+     * Uses computed property for caching.
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
+    #[Computed]
     public function getLanguages()
     {
-        return Language::where('is_active', true)
-            ->orderBy('is_default', 'desc')
-            ->orderBy('name', 'asc')
-            ->get();
+        return \Illuminate\Support\Facades\Cache::remember(
+            'translations.active_languages',
+            now()->addHours(1),
+            fn () => Language::where('is_active', true)
+                ->orderBy('is_default', 'desc')
+                ->orderBy('name', 'asc')
+                ->get()
+        );
     }
 
     /**
      * Get translatable options based on selected model type.
+     * Uses cache to avoid repeated queries.
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
+    #[Computed]
     public function getTranslatableOptions()
     {
         if (! $this->translatableType) {
             return collect();
         }
 
-        return match ($this->translatableType) {
-            Program::class => Program::query()
-                ->where('is_active', true)
-                ->orderBy('order', 'asc')
-                ->orderBy('name', 'asc')
-                ->get(),
-            Setting::class => Setting::query()
-                ->orderBy('key', 'asc')
-                ->get(),
-            default => collect(),
+        $cacheKey = match ($this->translatableType) {
+            Program::class => 'translations.active_programs',
+            Setting::class => 'translations.all_settings',
+            default => null,
         };
+
+        if (! $cacheKey) {
+            return collect();
+        }
+
+        return Cache::remember(
+            $cacheKey,
+            now()->addMinutes(30),
+            fn () => match ($this->translatableType) {
+                Program::class => Program::query()
+                    ->where('is_active', true)
+                    ->orderBy('order', 'asc')
+                    ->orderBy('name', 'asc')
+                    ->get(),
+                Setting::class => Setting::query()
+                    ->orderBy('key', 'asc')
+                    ->get(),
+                default => collect(),
+            }
+        );
     }
 
     /**
@@ -221,11 +245,86 @@ class Create extends Component
         ];
 
         // Validate using FormRequest rules and messages
-        $rules = (new StoreTranslationRequest)->rules();
+        // We need to manually construct rules that work with Validator::make()
+        $rules = [
+            'translatable_type' => [
+                'required',
+                'string',
+                \Illuminate\Validation\Rule::in([Program::class, Setting::class]),
+            ],
+            'translatable_id' => [
+                'required',
+                'integer',
+                function ($attribute, $value, $fail) use ($data) {
+                    $translatableType = $data['translatable_type'] ?? null;
+                    if (! $translatableType) {
+                        return;
+                    }
+
+                    $table = match ($translatableType) {
+                        Program::class => 'programs',
+                        Setting::class => 'settings',
+                        default => null,
+                    };
+
+                    if ($table && ! \Illuminate\Support\Facades\DB::table($table)->where('id', $value)->exists()) {
+                        $fail(__('El registro seleccionado no existe.'));
+                    }
+                },
+            ],
+            'language_id' => ['required', 'integer', 'exists:languages,id'],
+            'field' => [
+                'required',
+                'string',
+                'max:255',
+                function ($attribute, $value, $fail) use ($data) {
+                    $translatableType = $data['translatable_type'] ?? null;
+                    if (! $translatableType) {
+                        return;
+                    }
+
+                    $validFields = match ($translatableType) {
+                        Program::class => ['name', 'description'],
+                        Setting::class => ['value'],
+                        default => [],
+                    };
+
+                    if (! empty($validFields) && ! in_array($value, $validFields, true)) {
+                        $fail(__('El campo seleccionado no es válido para este modelo.'));
+                    }
+                },
+            ],
+            'value' => [
+                'required',
+                'string',
+                function ($attribute, $value, $fail) use ($data) {
+                    $translatableType = $data['translatable_type'] ?? null;
+                    $translatableId = $data['translatable_id'] ?? null;
+                    $languageId = $data['language_id'] ?? null;
+                    $field = $data['field'] ?? null;
+
+                    if (! $translatableType || ! $translatableId || ! $languageId || ! $field) {
+                        return;
+                    }
+
+                    $exists = Translation::where('translatable_type', $translatableType)
+                        ->where('translatable_id', $translatableId)
+                        ->where('language_id', $languageId)
+                        ->where('field', $field)
+                        ->exists();
+
+                    if ($exists) {
+                        $fail(__('Ya existe una traducción para esta combinación de modelo, idioma y campo.'));
+                    }
+                },
+            ],
+        ];
+
         $messages = (new StoreTranslationRequest)->messages();
 
         try {
-            $validated = \Illuminate\Support\Facades\Validator::make($data, $rules, $messages)->validate();
+            $validator = \Illuminate\Support\Facades\Validator::make($data, $rules, $messages);
+            $validated = $validator->validate();
         } catch (\Illuminate\Validation\ValidationException $e) {
             // Map validation errors from snake_case to camelCase component properties
             $errors = $e->errors();
