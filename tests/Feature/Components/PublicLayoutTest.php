@@ -1,8 +1,12 @@
 <?php
 
+use App\Models\Setting;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Blade;
+
+uses(RefreshDatabase::class);
 
 beforeEach(function () {
     App::setLocale('es');
@@ -70,6 +74,14 @@ describe('Public Navigation', function () {
     });
 
     it('renders logo with link to home', function () {
+        // Crear el setting center_name para el test
+        \App\Models\Setting::factory()->create([
+            'key' => 'center_name',
+            'value' => 'Centro Murcia',
+            'type' => 'string',
+            'group' => 'general',
+        ]);
+
         $html = Blade::render('<x-nav.public-nav />');
 
         expect($html)
@@ -136,6 +148,14 @@ describe('Public Navigation', function () {
 
 describe('Footer', function () {
     it('renders full footer by default', function () {
+        // Crear el setting center_name para el test
+        Setting::factory()->create([
+            'key' => 'center_name',
+            'value' => 'Centro Murcia',
+            'type' => 'string',
+            'group' => 'general',
+        ]);
+
         $html = Blade::render('<x-footer />');
 
         expect($html)

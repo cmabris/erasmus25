@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin\Settings;
 
 use App\Models\Setting;
+use App\Support\Permissions;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\View\View;
@@ -231,7 +232,13 @@ class Index extends Component
      */
     public function canEdit(): bool
     {
-        return auth()->user()?->can('update', Setting::class) ?? false;
+        $user = auth()->user();
+        if (! $user) {
+            return false;
+        }
+
+        // Simply check if user has the permission
+        return $user->can(Permissions::SETTINGS_EDIT);
     }
 
     /**
