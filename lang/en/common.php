@@ -711,6 +711,52 @@ return [
         'email_auto' => 'This is an automated email, please do not reply to this message.',
     ],
 
+    // Settings
+    'settings' => [
+        'title' => 'System Settings',
+        'edit_title' => 'Edit Setting',
+        'groups' => [
+            'general' => 'General',
+            'email' => 'Email',
+            'rgpd' => 'RGPD',
+            'media' => 'Media',
+            'seo' => 'SEO',
+        ],
+        'types' => [
+            'string' => 'Text',
+            'integer' => 'Number',
+            'boolean' => 'Boolean',
+            'json' => 'JSON',
+        ],
+        'fields' => [
+            'key' => 'Key',
+            'value' => 'Value',
+            'type' => 'Type',
+            'group' => 'Group',
+            'description' => 'Description',
+            'updated_by' => 'Updated by',
+            'last_updated' => 'Last Updated',
+        ],
+        'messages' => [
+            'no_settings' => 'No settings',
+            'no_settings_description' => 'No settings found matching the applied filters.',
+            'search_placeholder' => 'Search by key, value or description...',
+            'all_groups' => 'All groups',
+            'configurations_count' => 'configurations',
+            'read_only_info' => 'This information cannot be modified',
+            'value_description' => 'The configuration value according to its type',
+            'description_label' => 'Configuration description (translatable)',
+            'translations_label' => 'Manage translations of description and value (only for text type) in different languages',
+            'view_full_value' => 'View full value',
+            'view_json_complete' => 'View complete JSON',
+            'value_required' => 'The value is required',
+            'value_integer_invalid' => 'The value must be a valid integer',
+            'value_boolean_invalid' => 'The value must be a boolean (yes/no)',
+            'value_json_invalid' => 'The value must be valid JSON. Check the syntax',
+            'value_string_invalid' => 'The value must be valid text',
+        ],
+    ],
+
     // Admin Dashboard
     'admin' => [
         'nav' => [

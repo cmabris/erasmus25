@@ -126,6 +126,10 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::get('/roles/crear', \App\Livewire\Admin\Roles\Create::class)->name('roles.create');
     Route::get('/roles/{role}', \App\Livewire\Admin\Roles\Show::class)->name('roles.show');
     Route::get('/roles/{role}/editar', \App\Livewire\Admin\Roles\Edit::class)->name('roles.edit');
+
+    // Rutas de Configuración del Sistema
+    Route::get('/configuracion', \App\Livewire\Admin\Settings\Index::class)->name('settings.index');
+    Route::get('/configuracion/{setting}/editar', \App\Livewire\Admin\Settings\Edit::class)->name('settings.edit');
 });
 
 Route::middleware(['auth'])->group(function () {

@@ -22,6 +22,20 @@ class SettingsSeeder extends Seeder
                 'description' => 'Nombre del sitio web',
             ],
             [
+                'key' => 'center_name',
+                'value' => 'Erasmus+ Centro (Murcia)',
+                'type' => 'string',
+                'group' => 'general',
+                'description' => 'Nombre del centro que se muestra en el logo',
+            ],
+            [
+                'key' => 'center_logo',
+                'value' => null,
+                'type' => 'string',
+                'group' => 'general',
+                'description' => 'URL o ruta de la imagen del logotipo del centro (JPG, PNG, SVG)',
+            ],
+            [
                 'key' => 'site_description',
                 'value' => 'Portal centralizado de información Erasmus+ para Educación Escolar, Formación Profesional y Educación Superior',
                 'type' => 'string',

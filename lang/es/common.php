@@ -734,6 +734,52 @@ return [
         'email_auto' => 'Este es un email automático, por favor no respondas a este mensaje.',
     ],
 
+    // Settings
+    'settings' => [
+        'title' => 'Configuración del Sistema',
+        'edit_title' => 'Editar Configuración',
+        'groups' => [
+            'general' => 'General',
+            'email' => 'Email',
+            'rgpd' => 'RGPD',
+            'media' => 'Media',
+            'seo' => 'SEO',
+        ],
+        'types' => [
+            'string' => 'Texto',
+            'integer' => 'Número',
+            'boolean' => 'Booleano',
+            'json' => 'JSON',
+        ],
+        'fields' => [
+            'key' => 'Clave',
+            'value' => 'Valor',
+            'type' => 'Tipo',
+            'group' => 'Grupo',
+            'description' => 'Descripción',
+            'updated_by' => 'Actualizado por',
+            'last_updated' => 'Última Actualización',
+        ],
+        'messages' => [
+            'no_settings' => 'No hay configuraciones',
+            'no_settings_description' => 'No se encontraron configuraciones que coincidan con los filtros aplicados.',
+            'search_placeholder' => 'Buscar por clave, valor o descripción...',
+            'all_groups' => 'Todos los grupos',
+            'configurations_count' => 'configuraciones',
+            'read_only_info' => 'Esta información no se puede modificar',
+            'value_description' => 'El valor de la configuración según su tipo',
+            'description_label' => 'Descripción de la configuración (traducible)',
+            'translations_label' => 'Gestiona las traducciones de la descripción y el valor (solo para tipo texto) en diferentes idiomas',
+            'view_full_value' => 'Ver valor completo',
+            'view_json_complete' => 'Ver JSON completo',
+            'value_required' => 'El valor es obligatorio',
+            'value_integer_invalid' => 'El valor debe ser un número entero válido',
+            'value_boolean_invalid' => 'El valor debe ser un booleano (sí/no)',
+            'value_json_invalid' => 'El valor debe ser un JSON válido. Verifique la sintaxis',
+            'value_string_invalid' => 'El valor debe ser un texto válido',
+        ],
+    ],
+
     // Admin Dashboard
     'admin' => [
         'nav' => [

@@ -34,6 +34,9 @@
                         @can('viewAny', \Spatie\Permission\Models\Role::class)
                             <flux:navlist.item icon="shield-check" :href="route('admin.roles.index')" :current="request()->routeIs('admin.roles.*')" wire:navigate>{{ __('common.nav.roles') }}</flux:navlist.item>
                         @endcan
+                        @can('viewAny', \App\Models\Setting::class)
+                            <flux:navlist.item icon="cog-6-tooth" :href="route('admin.settings.index')" :current="request()->routeIs('admin.settings.*')" wire:navigate>{{ __('common.nav.settings') }}</flux:navlist.item>
+                        @endcan
                     </flux:navlist.group>
                 @endcan
 
@@ -64,13 +67,12 @@
 
             <flux:spacer />
 
+            @php
+                $centerName = \App\Models\Setting::get('center_name', 'Erasmus+ Centro (Murcia)');
+            @endphp
             <flux:navlist variant="outline">
-                <flux:navlist.item icon="folder-git-2" href="https://github.com/laravel/livewire-starter-kit" target="_blank">
-                {{ __('Repository') }}
-                </flux:navlist.item>
-
-                <flux:navlist.item icon="book-open-text" href="https://laravel.com/docs/starter-kits#livewire" target="_blank">
-                {{ __('Documentation') }}
+                <flux:navlist.item icon="information-circle" href="{{ route('home') }}" wire:navigate>
+                {{ $centerName }}
                 </flux:navlist.item>
             </flux:navlist>
 

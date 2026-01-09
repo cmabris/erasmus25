@@ -33,6 +33,52 @@ if (! function_exists('getCurrentLanguageCode')) {
     }
 }
 
+if (! function_exists('setting')) {
+    /**
+     * Obtener el valor de una configuración del sistema.
+     *
+     * @param  string  $key  Clave de la configuración
+     * @param  mixed  $default  Valor por defecto si no existe
+     * @return mixed
+     */
+    function setting(string $key, $default = null)
+    {
+        return \Illuminate\Support\Facades\Cache::remember(
+            "setting.{$key}",
+            now()->addHours(24),
+            function () use ($key, $default) {
+                $setting = \App\Models\Setting::where('key', $key)->first();
+
+                if (! $setting) {
+                    return $default;
+                }
+
+                $value = $setting->value;
+
+                // If this is center_logo and the value is a storage path, convert to public URL
+                if ($key === 'center_logo' && $value) {
+                    // If it's already a full URL, return it
+                    if (filter_var($value, FILTER_VALIDATE_URL)) {
+                        return $value;
+                    }
+
+                    // If it's a storage path (logos/xxx.jpg), return the public URL
+                    if (str_starts_with($value, 'logos/')) {
+                        return \Illuminate\Support\Facades\Storage::disk('public')->url($value);
+                    }
+
+                    // If it's a public path starting with /, return as is
+                    if (str_starts_with($value, '/')) {
+                        return $value;
+                    }
+                }
+
+                return $value ?? $default;
+            }
+        );
+    }
+}
+
 if (! function_exists('setLanguage')) {
     /**
      * Establecer el idioma de la aplicación.

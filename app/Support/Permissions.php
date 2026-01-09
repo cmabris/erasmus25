@@ -5,21 +5,21 @@ namespace App\Support;
 /**
  * Constantes para los permisos del sistema.
  *
- * Los permisos están organizados por módulo:
- * - programs: Gestión de programas Erasmus+
- * - calls: Gestión de convocatorias
- * - news: Gestión de noticias
- * - documents: Gestión de documentos
- * - events: Gestión de eventos
- * - users: Gestión de usuarios
+ * Los permisos est?n organizados por m?dulo:
+ * - programs: Gesti?n de programas Erasmus+
+ * - calls: Gesti?n de convocatorias
+ * - news: Gesti?n de noticias
+ * - documents: Gesti?n de documentos
+ * - events: Gesti?n de eventos
+ * - users: Gesti?n de usuarios
  *
- * Cada módulo tiene permisos específicos:
+ * Cada m?dulo tiene permisos espec?ficos:
  * - view: Ver listados y detalles
  * - create: Crear nuevos registros
  * - edit: Editar registros existentes
  * - delete: Eliminar registros
  * - publish: Publicar contenido (solo para calls y news)
- * - *: Todos los permisos del módulo
+ * - *: Todos los permisos del m?dulo
  */
 class Permissions
 {
@@ -93,6 +93,13 @@ class Permissions
 
     public const USERS_ALL = 'users.*';
 
+    // Permisos de Configuraci?n
+    public const SETTINGS_VIEW = 'settings.view';
+
+    public const SETTINGS_EDIT = 'settings.edit';
+
+    public const SETTINGS_ALL = 'settings.*';
+
     /**
      * Obtener todos los permisos disponibles.
      *
@@ -144,11 +151,16 @@ class Permissions
             self::USERS_EDIT,
             self::USERS_DELETE,
             self::USERS_ALL,
+
+            // Configuraci?n
+            self::SETTINGS_VIEW,
+            self::SETTINGS_EDIT,
+            self::SETTINGS_ALL,
         ];
     }
 
     /**
-     * Obtener permisos por módulo.
+     * Obtener permisos por m?dulo.
      *
      * @return array<string, array<string>>
      */
@@ -199,6 +211,11 @@ class Permissions
                 self::USERS_DELETE,
                 self::USERS_ALL,
             ],
+            'settings' => [
+                self::SETTINGS_VIEW,
+                self::SETTINGS_EDIT,
+                self::SETTINGS_ALL,
+            ],
         ];
     }
 
@@ -215,6 +232,7 @@ class Permissions
             self::NEWS_VIEW,
             self::DOCUMENTS_VIEW,
             self::EVENTS_VIEW,
+            self::SETTINGS_VIEW,
         ];
     }
 }

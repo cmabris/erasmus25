@@ -119,13 +119,12 @@
                 <livewire:language.switcher variant="select" size="md" />
             </div>
 
+            @php
+                $centerName = \App\Models\Setting::get('center_name', 'Erasmus+ Centro (Murcia)');
+            @endphp
             <flux:navlist variant="outline">
-                <flux:navlist.item icon="folder-git-2" href="https://github.com/laravel/livewire-starter-kit" target="_blank">
-                    {{ __('Repository') }}
-                </flux:navlist.item>
-
-                <flux:navlist.item icon="book-open-text" href="https://laravel.com/docs/starter-kits#livewire" target="_blank">
-                    {{ __('Documentation') }}
+                <flux:navlist.item icon="information-circle" href="{{ route('home') }}" wire:navigate>
+                {{ $centerName }}
                 </flux:navlist.item>
             </flux:navlist>
         </flux:sidebar>

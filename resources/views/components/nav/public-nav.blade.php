@@ -23,12 +23,27 @@
             {{-- Logo --}}
             <div class="flex items-center">
                 <a href="{{ route('home') }}" class="flex items-center gap-3" wire:navigate>
-                    <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-erasmus-600 to-erasmus-700 text-white shadow-md lg:h-12 lg:w-12">
-                        <span class="text-lg font-bold lg:text-xl">E+</span>
-                    </div>
+                    @php
+                        $centerLogo = \App\Models\Setting::get('center_logo');
+                        $centerName = \App\Models\Setting::get('center_name', 'Erasmus+ Centro (Murcia)');
+                    @endphp
+                    @if($centerLogo)
+                        <img 
+                            src="{{ $centerLogo }}" 
+                            alt="{{ $centerName }}"
+                            class="h-10 w-auto max-w-[150px] object-contain lg:h-12 lg:max-w-[180px]"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                        />
+                        <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-erasmus-600 to-erasmus-700 text-white shadow-md lg:h-12 lg:w-12" style="display: none;">
+                            <span class="text-lg font-bold lg:text-xl">E+</span>
+                        </div>
+                    @else
+                        <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-erasmus-600 to-erasmus-700 text-white shadow-md lg:h-12 lg:w-12">
+                            <span class="text-lg font-bold lg:text-xl">E+</span>
+                        </div>
+                    @endif
                     <div class="hidden sm:block">
-                        <p class="text-base font-semibold text-zinc-900 dark:text-white lg:text-lg">Erasmus+</p>
-                        <p class="text-xs text-zinc-500 dark:text-zinc-400">Centro Murcia</p>
+                        <p class="text-base font-semibold text-zinc-900 dark:text-white lg:text-lg">{{ $centerName }}</p>
                     </div>
                 </a>
             </div>
