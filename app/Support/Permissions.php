@@ -100,6 +100,17 @@ class Permissions
 
     public const SETTINGS_ALL = 'settings.*';
 
+    // Permisos de Traducciones
+    public const TRANSLATIONS_VIEW = 'translations.view';
+
+    public const TRANSLATIONS_CREATE = 'translations.create';
+
+    public const TRANSLATIONS_EDIT = 'translations.edit';
+
+    public const TRANSLATIONS_DELETE = 'translations.delete';
+
+    public const TRANSLATIONS_ALL = 'translations.*';
+
     /**
      * Obtener todos los permisos disponibles.
      *
@@ -156,6 +167,13 @@ class Permissions
             self::SETTINGS_VIEW,
             self::SETTINGS_EDIT,
             self::SETTINGS_ALL,
+
+            // Traducciones
+            self::TRANSLATIONS_VIEW,
+            self::TRANSLATIONS_CREATE,
+            self::TRANSLATIONS_EDIT,
+            self::TRANSLATIONS_DELETE,
+            self::TRANSLATIONS_ALL,
         ];
     }
 
@@ -216,6 +234,13 @@ class Permissions
                 self::SETTINGS_EDIT,
                 self::SETTINGS_ALL,
             ],
+            'translations' => [
+                self::TRANSLATIONS_VIEW,
+                self::TRANSLATIONS_CREATE,
+                self::TRANSLATIONS_EDIT,
+                self::TRANSLATIONS_DELETE,
+                self::TRANSLATIONS_ALL,
+            ],
         ];
     }
 
@@ -233,6 +258,7 @@ class Permissions
             self::DOCUMENTS_VIEW,
             self::EVENTS_VIEW,
             self::SETTINGS_VIEW,
+            self::TRANSLATIONS_VIEW,
         ];
     }
 }

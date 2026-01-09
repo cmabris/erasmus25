@@ -37,6 +37,9 @@
                         @can('viewAny', \App\Models\Setting::class)
                             <flux:navlist.item icon="cog-6-tooth" :href="route('admin.settings.index')" :current="request()->routeIs('admin.settings.*')" wire:navigate>{{ __('common.nav.settings') }}</flux:navlist.item>
                         @endcan
+                        @can('viewAny', \App\Models\Translation::class)
+                            <flux:navlist.item icon="language" :href="route('admin.translations.index')" :current="request()->routeIs('admin.translations.*')" wire:navigate>{{ __('common.nav.translations') }}</flux:navlist.item>
+                        @endcan
                     </flux:navlist.group>
                 @endcan
 

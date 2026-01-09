@@ -32,6 +32,7 @@ return [
         'academic_years' => 'Academic Years',
         'users' => 'Users',
         'roles' => 'Roles and Permissions',
+        'translations' => 'Translations',
     ],
 
     // Buttons and actions

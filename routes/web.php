@@ -130,6 +130,12 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     // Rutas de Configuración del Sistema
     Route::get('/configuracion', \App\Livewire\Admin\Settings\Index::class)->name('settings.index');
     Route::get('/configuracion/{setting}/editar', \App\Livewire\Admin\Settings\Edit::class)->name('settings.edit');
+
+    // Rutas de Traducciones
+    Route::get('/traducciones', \App\Livewire\Admin\Translations\Index::class)->name('translations.index');
+    Route::get('/traducciones/crear', \App\Livewire\Admin\Translations\Create::class)->name('translations.create');
+    Route::get('/traducciones/{translation}', \App\Livewire\Admin\Translations\Show::class)->name('translations.show');
+    Route::get('/traducciones/{translation}/editar', \App\Livewire\Admin\Translations\Edit::class)->name('translations.edit');
 });
 
 Route::middleware(['auth'])->group(function () {
