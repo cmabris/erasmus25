@@ -484,6 +484,10 @@ Para cada policy:
   - Filtrar por modelo, usuario, acción, fecha
   - Ver cambios antes/después (JSON)
 
+**Documentación:**
+- [Plan detallado](pasos/paso-3.5.14-plan.md) - Plan paso a paso completo (12 pasos, 6 fases) ✅
+- [Resumen ejecutivo](pasos/paso-3.5.14-resumen.md) - Resumen de objetivos y estructura ✅
+
 #### 3.5.15. Gestión de Suscripciones Newsletter
 - [ ] Crear componente Livewire `Admin\Newsletter\Index` (listado de suscriptores)
 - [ ] Crear componente Livewire `Admin\Newsletter\Show` (detalle de suscriptor)
