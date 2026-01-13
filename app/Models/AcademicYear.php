@@ -7,12 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Cache;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class AcademicYear extends Model
 {
     /** @use HasFactory<\Database\Factories\AcademicYearFactory> */
     use HasFactory;
 
+    use LogsActivity;
     use SoftDeletes;
 
     /**
@@ -176,5 +179,16 @@ class AcademicYear extends Model
         static::restored(function () {
             static::clearCurrentCache();
         });
+    }
+
+    /**
+     * Get the activity log options for the model.
+     */
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['year', 'start_date', 'end_date', 'is_current'])
+            ->logOnlyDirty()
+            ->dontLogIfAttributesChangedOnly(['updated_at']);
     }
 }

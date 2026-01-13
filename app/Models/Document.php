@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -18,6 +20,7 @@ class Document extends Model implements HasMedia
     use HasFactory;
 
     use InteractsWithMedia;
+    use LogsActivity;
     use SoftDeletes;
 
     /**
@@ -145,5 +148,25 @@ class Document extends Model implements HasMedia
     {
         // For PDFs, we could add thumbnail generation if needed
         // For now, we'll keep it simple and just store the files
+    }
+
+    /**
+     * Get the activity log options for the model.
+     */
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly([
+                'category_id',
+                'program_id',
+                'academic_year_id',
+                'title',
+                'description',
+                'document_type',
+                'version',
+                'is_active',
+            ])
+            ->logOnlyDirty()
+            ->dontLogIfAttributesChangedOnly(['updated_at', 'slug', 'download_count', 'created_by', 'updated_by']);
     }
 }

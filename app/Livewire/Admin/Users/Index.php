@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Admin\Users;
 
-use App\Models\AuditLog;
 use App\Models\User;
 use App\Support\Roles;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -12,6 +11,7 @@ use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Spatie\Activitylog\Models\Activity;
 use Spatie\Permission\Models\Role;
 
 class Index extends Component
@@ -116,7 +116,6 @@ class Index extends Component
                 });
             })
             ->with(['roles', 'permissions']) // Eager load to avoid N+1 queries
-            ->withCount('auditLogs') // Count without loading all records
             ->orderBy($this->sortField, $this->sortDirection)
             ->orderBy('name', 'asc') // Secondary sort for consistent pagination
             ->paginate($this->perPage);
@@ -287,13 +286,8 @@ class Index extends Component
 
         $this->authorize('forceDelete', $user);
 
-        // Check if user has audit logs (optional validation)
-        $hasAuditLogs = AuditLog::where('user_id', $user->id)->exists();
-
-        if ($hasAuditLogs) {
-            // We can still delete, but we'll set user_id to null in audit logs
-            AuditLog::where('user_id', $user->id)->update(['user_id' => null]);
-        }
+        // Note: Activity logs can keep reference to deleted user (causer_id/causer_type)
+        // This is optional - we can leave activities as historical record
 
         $user->forceDelete();
 

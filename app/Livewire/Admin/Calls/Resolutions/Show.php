@@ -60,8 +60,22 @@ class Show extends Component
     {
         $this->authorize('publish', $this->resolution);
 
+        $wasPublished = $this->resolution->published_at !== null;
+
         $this->resolution->published_at = now();
         $this->resolution->save();
+
+        // Log activity
+        activity()
+            ->performedOn($this->resolution)
+            ->causedBy(auth()->user())
+            ->withProperties([
+                'ip_address' => request()->ip(),
+                'user_agent' => request()->userAgent(),
+                'was_published' => $wasPublished,
+                'published_at' => $this->resolution->published_at->toIso8601String(),
+            ])
+            ->log('published');
 
         // Reload the resolution to refresh the view
         $this->resolution->refresh();
@@ -79,8 +93,21 @@ class Show extends Component
     {
         $this->authorize('publish', $this->resolution);
 
+        $wasPublished = $this->resolution->published_at !== null;
+
         $this->resolution->published_at = null;
         $this->resolution->save();
+
+        // Log activity
+        activity()
+            ->performedOn($this->resolution)
+            ->causedBy(auth()->user())
+            ->withProperties([
+                'ip_address' => request()->ip(),
+                'user_agent' => request()->userAgent(),
+                'was_published' => $wasPublished,
+            ])
+            ->log('unpublished');
 
         // Reload the resolution to refresh the view
         $this->resolution->refresh();
@@ -117,6 +144,16 @@ class Show extends Component
         $this->authorize('restore', $this->resolution);
 
         $this->resolution->restore();
+
+        // Log activity
+        activity()
+            ->performedOn($this->resolution)
+            ->causedBy(auth()->user())
+            ->withProperties([
+                'ip_address' => request()->ip(),
+                'user_agent' => request()->userAgent(),
+            ])
+            ->log('restored');
 
         // Reload the resolution to refresh the view
         $this->resolution->refresh();

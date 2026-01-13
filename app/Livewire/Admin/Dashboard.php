@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Admin;
 
-use App\Models\AuditLog;
 use App\Models\Call;
 use App\Models\Document;
 use App\Models\ErasmusEvent;
@@ -13,6 +12,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
 use Livewire\Component;
+use Spatie\Activitylog\Models\Activity;
 
 class Dashboard extends Component
 {
@@ -235,29 +235,29 @@ class Dashboard extends Component
     {
         $activities = collect();
 
-        // Try to get activities from AuditLog first
-        $auditLogs = AuditLog::query()
-            ->with(['user', 'model'])
+        // Get activities from Spatie Activitylog
+        $activityLogs = Activity::query()
+            ->with(['causer', 'subject'])
             ->orderBy('created_at', 'desc')
             ->limit(10)
             ->get();
 
-        foreach ($auditLogs as $log) {
-            if ($log->model) {
+        foreach ($activityLogs as $activity) {
+            if ($activity->subject) {
                 $activities->push([
-                    'type' => $this->getActivityType($log->model_type),
-                    'action' => $log->action,
-                    'title' => $this->getModelTitle($log->model),
-                    'user' => $log->user?->name ?? __('common.messages.system'),
-                    'date' => $log->created_at,
-                    'url' => $this->getModelUrl($log->model_type, $log->model_id),
-                    'icon' => $this->getActivityIcon($log->model_type),
-                    'color' => $this->getActivityColor($log->action),
+                    'type' => $this->getActivityType($activity->subject_type),
+                    'action' => $activity->description,
+                    'title' => $this->getModelTitle($activity->subject),
+                    'user' => $activity->causer?->name ?? __('common.messages.system'),
+                    'date' => $activity->created_at,
+                    'url' => $this->getModelUrl($activity->subject_type, $activity->subject_id),
+                    'icon' => $this->getActivityIcon($activity->subject_type),
+                    'color' => $this->getActivityColor($activity->description),
                 ]);
             }
         }
 
-        // If we don't have enough activities from AuditLog, supplement with direct queries
+        // If we don't have enough activities from Activity, supplement with direct queries
         if ($activities->count() < 8) {
             $activities = $this->supplementActivities($activities);
         }
@@ -405,10 +405,12 @@ class Dashboard extends Component
      */
     protected function getActivityColor(string $action): string
     {
-        return match ($action) {
-            'create', 'publish' => 'success',
-            'update' => 'info',
-            'delete', 'archive' => 'danger',
+        $actionLower = strtolower($action);
+
+        return match ($actionLower) {
+            'created', 'publish', 'published', 'restore', 'restored' => 'success',
+            'updated' => 'info',
+            'deleted', 'archive', 'archived' => 'danger',
             default => 'neutral',
         };
     }

@@ -8,12 +8,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Call extends Model
 {
     /** @use HasFactory<\Database\Factories\CallFactory> */
     use HasFactory;
 
+    use LogsActivity;
     use SoftDeletes;
 
     /**
@@ -156,5 +159,29 @@ class Call extends Model
     public function events(): HasMany
     {
         return $this->hasMany(ErasmusEvent::class);
+    }
+
+    /**
+     * Get the activity log options for the model.
+     */
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly([
+                'program_id',
+                'academic_year_id',
+                'title',
+                'type',
+                'modality',
+                'number_of_places',
+                'destinations',
+                'estimated_start_date',
+                'estimated_end_date',
+                'status',
+                'published_at',
+                'closed_at',
+            ])
+            ->logOnlyDirty()
+            ->dontLogIfAttributesChangedOnly(['updated_at', 'slug', 'created_by', 'updated_by']);
     }
 }

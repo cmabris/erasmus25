@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Admin\Users;
 
-use App\Models\AuditLog;
 use App\Models\User;
 use App\Support\Roles;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -11,6 +10,7 @@ use Illuminate\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Spatie\Activitylog\Models\Activity;
 
 class Show extends Component
 {
@@ -23,9 +23,9 @@ class Show extends Component
     public User $user;
 
     /**
-     * Number of audit logs per page.
+     * Number of activities per page.
      */
-    public int $auditLogsPerPage = 10;
+    public int $activitiesPerPage = 10;
 
     /**
      * Modal states.
@@ -53,7 +53,7 @@ class Show extends Component
         $this->authorize('view', $user);
 
         // Load relationships with eager loading to avoid N+1 queries
-        $this->user = $user->load(['roles', 'permissions'])->loadCount('auditLogs');
+        $this->user = $user->load(['roles', 'permissions']);
 
         // Load current roles for modal
         $this->selectedRoles = $user->roles->pluck('name')->toArray();
@@ -72,18 +72,19 @@ class Show extends Component
     }
 
     /**
-     * Get paginated audit logs for this user.
+     * Get paginated activities for this user.
      * Optimized with eager loading and indexed queries.
      */
     #[Computed]
-    public function auditLogs(): LengthAwarePaginator
+    public function activities(): LengthAwarePaginator
     {
-        return AuditLog::query()
-            ->where('user_id', $this->user->id)
-            ->with(['model'])
+        return Activity::query()
+            ->where('causer_type', User::class)
+            ->where('causer_id', $this->user->id)
+            ->with(['subject'])
             ->orderBy('created_at', 'desc')
             ->orderBy('id', 'desc') // Secondary sort for consistent pagination
-            ->paginate($this->auditLogsPerPage);
+            ->paginate($this->activitiesPerPage);
     }
 
     /**
@@ -92,17 +93,21 @@ class Show extends Component
     #[Computed]
     public function statistics(): array
     {
-        $totalActions = $this->user->audit_logs_count ?? 0;
+        $totalActions = Activity::where('causer_type', User::class)
+            ->where('causer_id', $this->user->id)
+            ->count();
 
         // Get actions by type
-        $actionsByType = AuditLog::where('user_id', $this->user->id)
-            ->selectRaw('action, COUNT(*) as count')
-            ->groupBy('action')
-            ->pluck('count', 'action')
+        $actionsByType = Activity::where('causer_type', User::class)
+            ->where('causer_id', $this->user->id)
+            ->selectRaw('description, COUNT(*) as count')
+            ->groupBy('description')
+            ->pluck('count', 'description')
             ->toArray();
 
         // Get last activity
-        $lastActivity = AuditLog::where('user_id', $this->user->id)
+        $lastActivity = Activity::where('causer_type', User::class)
+            ->where('causer_id', $this->user->id)
             ->latest('created_at')
             ->first();
 
@@ -352,8 +357,10 @@ class Show extends Component
 
         $this->authorize('forceDelete', $this->user);
 
-        // Set user_id to null in audit logs before deleting
-        AuditLog::where('user_id', $this->user->id)->update(['user_id' => null]);
+        // Set causer_id to null in activities before deleting (optional - Activity logs can keep reference)
+        // Activity::where('causer_type', User::class)
+        //     ->where('causer_id', $this->user->id)
+        //     ->update(['causer_id' => null, 'causer_type' => null]);
 
         $this->user->forceDelete();
 
@@ -445,7 +452,20 @@ class Show extends Component
         }
 
         // Sync roles
+        $oldRoles = $this->user->roles->pluck('name')->toArray();
         $this->user->syncRoles($this->selectedRoles);
+
+        // Log activity
+        activity()
+            ->performedOn($this->user)
+            ->causedBy(auth()->user())
+            ->withProperties([
+                'ip_address' => request()->ip(),
+                'user_agent' => request()->userAgent(),
+                'old_roles' => $oldRoles,
+                'new_roles' => $this->selectedRoles,
+            ])
+            ->log('roles_assigned');
 
         // Reload user to refresh roles
         $this->user->refresh();

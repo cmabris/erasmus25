@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -18,6 +20,7 @@ class ErasmusEvent extends Model implements HasMedia
     use HasFactory;
 
     use InteractsWithMedia;
+    use LogsActivity;
     use SoftDeletes;
 
     /**
@@ -447,5 +450,27 @@ class ErasmusEvent extends Model implements HasMedia
     public function hasSoftDeletedImages(): bool
     {
         return $this->getSoftDeletedImages()->isNotEmpty();
+    }
+
+    /**
+     * Get the activity log options for the model.
+     */
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly([
+                'program_id',
+                'call_id',
+                'title',
+                'description',
+                'event_type',
+                'start_date',
+                'end_date',
+                'location',
+                'is_public',
+                'is_all_day',
+            ])
+            ->logOnlyDirty()
+            ->dontLogIfAttributesChangedOnly(['updated_at', 'created_by']);
     }
 }

@@ -118,10 +118,25 @@ class Show extends Component
     {
         $this->authorize('publish', $this->call);
 
+        $oldStatus = $this->call->status;
+
         $this->call->status = 'abierta';
         $this->call->published_at = now();
         $this->call->updated_by = auth()->id();
         $this->call->save();
+
+        // Log activity
+        activity()
+            ->performedOn($this->call)
+            ->causedBy(auth()->user())
+            ->withProperties([
+                'ip_address' => request()->ip(),
+                'user_agent' => request()->userAgent(),
+                'old_status' => $oldStatus,
+                'new_status' => 'abierta',
+                'published_at' => $this->call->published_at?->toIso8601String(),
+            ])
+            ->log('published');
 
         // Reload the call to refresh the view
         $this->call->refresh();
@@ -260,6 +275,16 @@ class Show extends Component
         $this->call->restore();
         $this->call->updated_by = auth()->id();
         $this->call->save();
+
+        // Log activity
+        activity()
+            ->performedOn($this->call)
+            ->causedBy(auth()->user())
+            ->withProperties([
+                'ip_address' => request()->ip(),
+                'user_agent' => request()->userAgent(),
+            ])
+            ->log('restored');
 
         // Reload the call to refresh the view
         $this->call->refresh();

@@ -34,6 +34,7 @@ return [
         'users' => 'Usuarios',
         'roles' => 'Roles y Permisos',
         'translations' => 'Traducciones',
+        'audit_logs' => 'Auditoría y Logs',
     ],
 
     // Botones y acciones

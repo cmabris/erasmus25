@@ -33,6 +33,7 @@ return [
         'users' => 'Users',
         'roles' => 'Roles and Permissions',
         'translations' => 'Translations',
+        'audit_logs' => 'Audit Logs',
     ],
 
     // Buttons and actions

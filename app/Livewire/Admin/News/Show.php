@@ -88,10 +88,25 @@ class Show extends Component
     {
         $this->authorize('publish', $this->newsPost);
 
+        $oldStatus = $this->newsPost->status;
+
         $this->newsPost->update([
             'status' => 'publicado',
             'published_at' => now(),
         ]);
+
+        // Log activity
+        activity()
+            ->performedOn($this->newsPost)
+            ->causedBy(auth()->user())
+            ->withProperties([
+                'ip_address' => request()->ip(),
+                'user_agent' => request()->userAgent(),
+                'old_status' => $oldStatus,
+                'new_status' => 'publicado',
+                'published_at' => $this->newsPost->published_at?->toIso8601String(),
+            ])
+            ->log('published');
 
         // Reload the news post to refresh the view
         $this->newsPost->refresh();
@@ -108,10 +123,24 @@ class Show extends Component
     {
         $this->authorize('publish', $this->newsPost);
 
+        $oldStatus = $this->newsPost->status;
+
         $this->newsPost->update([
             'status' => 'borrador',
             'published_at' => null,
         ]);
+
+        // Log activity
+        activity()
+            ->performedOn($this->newsPost)
+            ->causedBy(auth()->user())
+            ->withProperties([
+                'ip_address' => request()->ip(),
+                'user_agent' => request()->userAgent(),
+                'old_status' => $oldStatus,
+                'new_status' => 'borrador',
+            ])
+            ->log('unpublished');
 
         // Reload the news post to refresh the view
         $this->newsPost->refresh();
@@ -147,6 +176,16 @@ class Show extends Component
         $this->authorize('restore', $this->newsPost);
 
         $this->newsPost->restore();
+
+        // Log activity
+        activity()
+            ->performedOn($this->newsPost)
+            ->causedBy(auth()->user())
+            ->withProperties([
+                'ip_address' => request()->ip(),
+                'user_agent' => request()->userAgent(),
+            ])
+            ->log('restored');
 
         // Reload the news post to refresh the view
         $this->newsPost->refresh();

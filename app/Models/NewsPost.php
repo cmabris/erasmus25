@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -18,6 +20,7 @@ class NewsPost extends Model implements HasMedia
     use HasFactory;
 
     use InteractsWithMedia;
+    use LogsActivity;
     use SoftDeletes;
 
     /**
@@ -328,5 +331,28 @@ class NewsPost extends Model implements HasMedia
     public function hasSoftDeletedFeaturedImages(): bool
     {
         return $this->getSoftDeletedFeaturedImages()->isNotEmpty();
+    }
+
+    /**
+     * Get the activity log options for the model.
+     */
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly([
+                'program_id',
+                'academic_year_id',
+                'title',
+                'excerpt',
+                'status',
+                'published_at',
+                'country',
+                'city',
+                'host_entity',
+                'mobility_type',
+                'mobility_category',
+            ])
+            ->logOnlyDirty()
+            ->dontLogIfAttributesChangedOnly(['updated_at', 'slug', 'author_id', 'reviewed_by', 'reviewed_at']);
     }
 }

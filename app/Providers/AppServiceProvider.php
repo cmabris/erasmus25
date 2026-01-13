@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\Policies\ActivityPolicy;
 use App\Policies\RolePolicy;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
+use Spatie\Activitylog\Models\Activity;
 use Spatie\Permission\Models\Role;
 
 class AppServiceProvider extends ServiceProvider
@@ -35,5 +37,8 @@ class AppServiceProvider extends ServiceProvider
 
         // Registrar RolePolicy manualmente (el modelo no está en App\Models)
         Gate::policy(Role::class, RolePolicy::class);
+
+        // Registrar ActivityPolicy manualmente (el modelo es de Spatie)
+        Gate::policy(Activity::class, ActivityPolicy::class);
     }
 }

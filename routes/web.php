@@ -136,6 +136,10 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::get('/traducciones/crear', \App\Livewire\Admin\Translations\Create::class)->name('translations.create');
     Route::get('/traducciones/{translation}', \App\Livewire\Admin\Translations\Show::class)->name('translations.show');
     Route::get('/traducciones/{translation}/editar', \App\Livewire\Admin\Translations\Edit::class)->name('translations.edit');
+
+    // Rutas de Auditoría y Logs
+    Route::get('/auditoria', \App\Livewire\Admin\AuditLogs\Index::class)->name('audit-logs.index');
+    Route::get('/auditoria/{activity}', \App\Livewire\Admin\AuditLogs\Show::class)->name('audit-logs.show');
 });
 
 Route::middleware(['auth'])->group(function () {

@@ -40,6 +40,9 @@
                         @can('viewAny', \App\Models\Translation::class)
                             <flux:navlist.item icon="language" :href="route('admin.translations.index')" :current="request()->routeIs('admin.translations.*')" wire:navigate>{{ __('common.nav.translations') }}</flux:navlist.item>
                         @endcan
+                        @can('viewAny', \Spatie\Activitylog\Models\Activity::class)
+                            <flux:navlist.item icon="clipboard-document-list" :href="route('admin.audit-logs.index')" :current="request()->routeIs('admin.audit-logs.*')" wire:navigate>{{ __('common.nav.audit_logs') }}</flux:navlist.item>
+                        @endcan
                     </flux:navlist.group>
                 @endcan
 

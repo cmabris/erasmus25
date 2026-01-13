@@ -57,6 +57,7 @@
         
         $formatted = [];
         
+        // Handle AuditLog format (before/after)
         if (isset($changes['before']) && is_array($changes['before'])) {
             foreach ($changes['before'] as $key => $value) {
                 $afterValue = $changes['after'][$key] ?? null;
@@ -66,6 +67,20 @@
                         $key,
                         is_array($value) ? json_encode($value) : ($value ?? 'null'),
                         is_array($afterValue) ? json_encode($afterValue) : ($afterValue ?? 'null')
+                    );
+                }
+            }
+        }
+        // Handle Activity format (old/attributes)
+        elseif (isset($changes['old']) && isset($changes['attributes']) && is_array($changes['old'])) {
+            foreach ($changes['old'] as $key => $value) {
+                $newValue = $changes['attributes'][$key] ?? null;
+                if ($value !== $newValue) {
+                    $formatted[] = sprintf(
+                        '%s: %s → %s',
+                        $key,
+                        is_array($value) ? json_encode($value) : ($value ?? 'null'),
+                        is_array($newValue) ? json_encode($newValue) : ($newValue ?? 'null')
                     );
                 }
             }
@@ -119,10 +134,32 @@
         }
     };
     
-    $action = $log->action ?? '';
-    $modelType = $log->model_type ?? null;
-    $model = $log->model ?? null;
-    $modelUrl = $getModelUrl($modelType, $log->model_id ?? null);
+    // Support both AuditLog and Activity (Spatie)
+    $isActivity = $log instanceof \Spatie\Activitylog\Models\Activity;
+    
+    if ($isActivity) {
+        $action = $log->description ?? '';
+        $modelType = $log->subject_type ?? null;
+        $model = $log->subject ?? null;
+        $modelId = $log->subject_id ?? null;
+        // Extract changes from properties (old/attributes format)
+        $properties = $log->properties ?? null;
+        $changes = null;
+        if ($properties && isset($properties['old']) && isset($properties['attributes'])) {
+            $changes = [
+                'old' => $properties['old'],
+                'attributes' => $properties['attributes'],
+            ];
+        }
+    } else {
+        $action = $log->action ?? '';
+        $modelType = $log->model_type ?? null;
+        $model = $log->model ?? null;
+        $modelId = $log->model_id ?? null;
+        $changes = $log->changes ?? null;
+    }
+    
+    $modelUrl = $getModelUrl($modelType, $modelId);
 @endphp
 
 <div {{ $attributes->merge(['class' => $compact ? 'rounded-lg border border-zinc-200 bg-zinc-50 p-3 dark:border-zinc-700 dark:bg-zinc-800' : 'rounded-lg border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-700 dark:bg-zinc-800']) }}>
@@ -151,9 +188,9 @@
                 @endif
             @endif
             
-            @if($showChanges && $log->changes)
+            @if($showChanges && $changes)
                 <p class="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-                    {{ $formatChanges($log->changes) }}
+                    {{ $formatChanges($changes) }}
                 </p>
             @endif
             

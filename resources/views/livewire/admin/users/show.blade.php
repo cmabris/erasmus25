@@ -206,7 +206,7 @@
             <x-ui.card>
                 <div>
                     <flux:heading size="md" class="mb-4">{{ __('Actividad Reciente') }}</flux:heading>
-                    @if($this->auditLogs->isEmpty())
+                    @if($this->activities->isEmpty())
                         <div class="text-center py-8">
                             <flux:icon name="document-text" class="[:where(&)]:size-12 mx-auto text-zinc-400 dark:text-zinc-500 mb-4" variant="outline" />
                             <p class="text-sm font-medium text-zinc-600 dark:text-zinc-400">
@@ -215,15 +215,15 @@
                         </div>
                     @else
                         <div class="space-y-3">
-                            @foreach($this->auditLogs as $log)
-                                <x-ui.audit-log-entry :log="$log" />
+                            @foreach($this->activities as $activity)
+                                <x-ui.audit-log-entry :log="$activity" />
                             @endforeach
                         </div>
 
                         {{-- Pagination --}}
-                        @if($this->auditLogs->hasPages())
+                        @if($this->activities->hasPages())
                             <div class="mt-6">
-                                {{ $this->auditLogs->links() }}
+                                {{ $this->activities->links() }}
                             </div>
                         @endif
                     @endif
