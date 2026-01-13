@@ -464,33 +464,35 @@ Crear un sistema completo de visualización de logs de auditoría en el panel de
 ### **Fase 8: Testing**
 
 #### **Paso 15: Tests Completos**
-- [ ] **Tests de Policy** (`tests/Feature/Policies/ActivityPolicyTest.php`):
-  - `test_super_admin_can_view_any_activities()`
-  - `test_admin_can_view_any_activities()`
-  - `test_editor_cannot_view_activities()`
-  - `test_viewer_cannot_view_activities()`
-  - `test_super_admin_can_view_activity()`
-  - `test_admin_can_view_activity()`
-  - `test_editor_cannot_view_activity()`
-  - `test_viewer_cannot_view_activity()`
-- [ ] **Tests de Componente Index** (`tests/Feature/Livewire/Admin/AuditLogs/IndexTest.php`):
-  - Renderizado, autenticación, autorización
-  - Filtros (modelo, causer, descripción, fechas)
-  - Búsqueda, ordenación, paginación
-  - Estado vacío, visualización de información
-- [ ] **Tests de Componente Show** (`tests/Feature/Livewire/Admin/AuditLogs/ShowTest.php`):
-  - Renderizado, autenticación, autorización
-  - Visualización de información completa
-  - Formateo de propiedades y cambios
-  - Enlaces a modelos relacionados
-  - Manejo de subjects/causers eliminados
-- [ ] **Tests de Logging Automático**:
-  - Verificar que se crean logs al crear/actualizar/eliminar modelos
-  - Verificar que se registran los campos correctos
-  - Verificar relaciones causer y subject
-- [ ] **Tests de Logging Manual**:
-  - Verificar logging de acciones especiales (publish, archive, etc.)
-  - Verificar que se guardan propiedades personalizadas
+- [x] **Tests de Policy** (`tests/Feature/Policies/ActivityPolicyTest.php`):
+  - ✅ Super Admin y Admin pueden ver actividades (4 tests)
+  - ✅ Editor, Viewer y usuarios sin rol no pueden ver actividades (6 tests)
+  - ✅ Total: 10 tests pasando
+- [x] **Tests de Componente Index** (`tests/Feature/Livewire/Admin/AuditLogs/IndexTest.php`):
+  - ✅ Renderizado, autenticación, autorización (5 tests)
+  - ✅ Filtros (búsqueda, modelo, usuario, acción, fechas, log name) (6 tests)
+  - ✅ Ordenación y paginación (2 tests)
+  - ✅ Estado vacío, visualización de información (4 tests)
+  - ✅ Exportación (3 tests)
+  - ✅ Total: 20 tests pasando
+- [x] **Tests de Componente Show** (`tests/Feature/Livewire/Admin/AuditLogs/ShowTest.php`):
+  - ✅ Renderizado, autenticación, autorización (5 tests)
+  - ✅ Visualización de información completa (7 tests)
+  - ✅ Formateo de propiedades y cambios (4 tests)
+  - ✅ Propiedades personalizadas (2 tests)
+  - ✅ IP Address y User Agent (3 tests)
+  - ✅ Métodos helper (6 tests)
+  - ✅ Total: 27 tests pasando
+- [x] **Tests de Logging Automático** (`tests/Feature/ActivityLog/AutomaticLoggingTest.php`):
+  - ✅ Verificar que se crean logs al crear/actualizar/eliminar modelos (6 modelos: Program, Call, NewsPost, Document, ErasmusEvent, AcademicYear)
+  - ✅ Verificar que se registran los campos correctos (3 tests)
+  - ✅ Verificar relaciones causer y subject (3 tests)
+  - ✅ Total: 15 tests pasando
+- [x] **Tests de Logging Manual** (`tests/Feature/ActivityLog/ManualLoggingTest.php`):
+  - ✅ Verificar logging de acciones especiales (publish, unpublish, restore) para Call, NewsPost, Resolution (6 tests)
+  - ✅ Verificar logging de asignación de roles (2 tests)
+  - ✅ Verificar que se guardan propiedades personalizadas (IP, User Agent, contexto) (3 tests)
+  - ✅ Total: 13 tests pasando
 
 ---
 
