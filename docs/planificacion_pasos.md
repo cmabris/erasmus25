@@ -477,16 +477,20 @@ Para cada policy:
   - Búsqueda de traducciones
 
 #### 3.5.14. Auditoría y Logs
+- [ ] Instalar y configurar **Spatie Laravel Activitylog v4**
+- [ ] Configurar logging automático en modelos principales
 - [ ] Crear componente Livewire `Admin\AuditLogs\Index` (listado de logs)
 - [ ] Crear componente Livewire `Admin\AuditLogs\Show` (detalle de log)
 - [ ] Funcionalidades:
   - Ver historial de cambios
   - Filtrar por modelo, usuario, acción, fecha
   - Ver cambios antes/después (JSON)
+  - Logging automático de eventos de modelos
+  - Logging manual para acciones especiales
 
 **Documentación:**
-- [Plan detallado](pasos/paso-3.5.14-plan.md) - Plan paso a paso completo (12 pasos, 6 fases) ✅
-- [Resumen ejecutivo](pasos/paso-3.5.14-resumen.md) - Resumen de objetivos y estructura ✅
+- [Plan detallado](pasos/paso-3.5.14-plan.md) - Plan paso a paso completo (15 pasos, 8 fases) ✅ Adaptado para Spatie Activitylog
+- [Resumen ejecutivo](pasos/paso-3.5.14-resumen.md) - Resumen de objetivos y estructura ✅ Adaptado para Spatie Activitylog
 
 #### 3.5.15. Gestión de Suscripciones Newsletter
 - [ ] Crear componente Livewire `Admin\Newsletter\Index` (listado de suscriptores)

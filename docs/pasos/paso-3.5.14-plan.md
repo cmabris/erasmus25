@@ -1,45 +1,133 @@
 # Plan de Desarrollo: Paso 3.5.14 - Auditoría y Logs en Panel de Administración
 
-Este documento establece el plan detallado para desarrollar el sistema completo de Auditoría y Logs en el panel de administración de la aplicación Erasmus+ Centro (Murcia).
+Este documento establece el plan detallado para desarrollar el sistema completo de Auditoría y Logs en el panel de administración usando **Spatie Laravel Activitylog v4**.
 
 ## 🎯 Objetivo
 
 Crear un sistema completo de visualización de logs de auditoría en el panel de administración con:
+- Integración de **Spatie Laravel Activitylog v4** para logging automático
 - Listado moderno con tabla interactiva y filtros avanzados
 - Vista detallada de cada log con información completa
 - Filtros por modelo, usuario, acción y fecha
 - Visualización de cambios antes/después en formato legible
+- Logging automático de eventos de modelos (created, updated, deleted)
 - Diseño moderno y responsive usando Flux UI y Tailwind CSS v4
-- Integración con el sistema de auditoría existente (AuditLog model)
 
 ---
 
-## 📋 Pasos de Desarrollo (12 Pasos)
+## 📚 Información sobre Spatie Laravel Activitylog v4
 
-### **Fase 1: Preparación Base**
+### Características Principales
 
-#### **Paso 1: Crear AuditLogPolicy**
-- [ ] Crear `app/Policies/AuditLogPolicy.php`
+1. **Logging Manual**: Función helper `activity()->log('mensaje')`
+2. **Logging Automático**: Trait `LogsActivity` en modelos para eventos automáticos
+3. **Modelo Activity**: `Spatie\Activitylog\Models\Activity` con relaciones:
+   - `causer` - Usuario/entidad que causó la actividad (polimórfico)
+   - `subject` - Modelo sobre el que se realizó la actividad (polimórfico)
+4. **Estructura de Tabla `activity_log`**:
+   - `id`, `log_name`, `description`, `subject_id`, `subject_type`, `causer_id`, `causer_type`
+   - `properties` (JSON), `created_at`, `updated_at`
+5. **Opciones de Logging**:
+   - `logOnly()`, `logAll()`, `logOnlyDirty()`, `logExcept()`
+   - `dontLogIfAttributesChangedOnly()`
+6. **Propiedades Personalizadas**: `withProperties()` para datos adicionales
+7. **Batch Logging**: Agrupar múltiples logs
+8. **Múltiples Logs**: Diferentes logs por nombre
+
+### Diferencias con el Sistema Actual
+
+| Aspecto | Sistema Actual (`audit_logs`) | Spatie Activitylog (`activity_log`) |
+|---------|-------------------------------|-------------------------------------|
+| Campo acción | `action` (enum) | `description` (string) |
+| Cambios | `changes` (JSON: `{before, after}`) | `properties` (JSON: `{attributes, old}`) |
+| Usuario | `user_id` (FK directa) | `causer_id` + `causer_type` (polimórfico) |
+| Modelo | `model_id` + `model_type` | `subject_id` + `subject_type` |
+| IP/User Agent | Campos directos | En `properties` (configurable) |
+
+---
+
+## 📋 Pasos de Desarrollo (15 Pasos)
+
+### **Fase 1: Instalación y Configuración de Spatie Activitylog**
+
+#### **Paso 1: Instalar y Configurar la Librería**
+- [ ] Instalar paquete: `composer require spatie/laravel-activitylog`
+- [ ] Publicar migraciones: `php artisan vendor:publish --provider="Spatie\Activitylog\ActivitylogServiceProvider" --tag="activitylog-migrations"`
+- [ ] Publicar configuración: `php artisan vendor:publish --provider="Spatie\Activitylog\ActivitylogServiceProvider" --tag="activitylog-config"`
+- [ ] Revisar archivo de configuración `config/activitylog.php`:
+  - Configurar `default_log_name` si es necesario
+  - Revisar opciones de limpieza automática
+- [ ] Ejecutar migraciones: `php artisan migrate`
+- [ ] Verificar que la tabla `activity_log` se creó correctamente
+
+#### **Paso 2: Migrar Datos Existentes (Opcional)**
+- [ ] Decidir estrategia:
+  - **Opción A**: Mantener ambas tablas (`audit_logs` y `activity_log`) durante transición
+  - **Opción B**: Migrar datos de `audit_logs` a `activity_log` y deprecar `audit_logs`
+- [ ] Si se elige migración, crear comando Artisan `MigrateAuditLogsToActivityLog`:
+  - Mapear campos: `action` → `description`, `changes` → `properties`, etc.
+  - Convertir estructura `{before, after}` a `{attributes, old}`
+  - Mapear `user_id` a `causer_id` + `causer_type`
+  - Mapear `model_id/model_type` a `subject_id/subject_type`
+  - Guardar IP y User Agent en `properties`
+- [ ] Ejecutar migración de datos
+- [ ] Verificar integridad de datos migrados
+
+#### **Paso 3: Configurar Logging Automático en Modelos**
+- [ ] Identificar modelos que necesitan logging automático:
+  - `Program`, `Call`, `NewsPost`, `Document`, `ErasmusEvent`, `AcademicYear`, etc.
+- [ ] Agregar trait `LogsActivity` a cada modelo:
+  ```php
+  use Spatie\Activitylog\Traits\LogsActivity;
+  use Spatie\Activitylog\LogOptions;
+  
+  class Program extends Model
+  {
+      use LogsActivity;
+      
+      public function getActivitylogOptions(): LogOptions
+      {
+          return LogOptions::defaults()
+              ->logOnly(['name', 'code', 'description', 'is_active'])
+              ->logOnlyDirty()
+              ->dontLogIfAttributesChangedOnly(['updated_at']);
+      }
+  }
+  ```
+- [ ] Configurar opciones de logging por modelo según necesidades:
+  - Campos a registrar
+  - Eventos a registrar (created, updated, deleted)
+  - Descripciones personalizadas
+- [ ] Probar logging automático creando/actualizando registros
+
+---
+
+### **Fase 2: Preparación Base y Policy**
+
+#### **Paso 4: Crear ActivityPolicy**
+- [ ] Crear `app/Policies/ActivityPolicy.php`
 - [ ] Implementar métodos:
   - `viewAny()` - Ver listado (solo admin y super-admin)
   - `view()` - Ver detalle (solo admin y super-admin)
 - [ ] **Autorización**: Solo usuarios con rol `admin` o `super-admin` pueden ver logs
 - [ ] **Método before()**: Super-admin tiene acceso total
-- [ ] Crear tests básicos para la policy en `tests/Feature/Policies/AuditLogPolicyTest.php`
+- [ ] Crear tests básicos para la policy en `tests/Feature/Policies/ActivityPolicyTest.php`
 
 **Nota**: Los logs de auditoría son de solo lectura, no se pueden crear, editar ni eliminar desde la interfaz.
 
 ---
 
-### **Fase 2: Componente Index (Listado)**
+### **Fase 3: Componente Index (Listado)**
 
-#### **Paso 2: Crear Componente Livewire Index**
+#### **Paso 5: Crear Componente Livewire Index**
 - [ ] Crear componente `Admin\AuditLogs\Index` usando `php artisan make:livewire Admin/AuditLogs/Index`
+- [ ] Importar modelo: `use Spatie\Activitylog\Models\Activity;`
 - [ ] Implementar propiedades públicas:
   - `string $search = ''` - Búsqueda (con `#[Url(as: 'q')]`)
   - `?string $filterModel = null` - Filtro por modelo (con `#[Url(as: 'modelo')]`)
-  - `?int $filterUserId = null` - Filtro por usuario (con `#[Url(as: 'usuario')]`)
-  - `?string $filterAction = null` - Filtro por acción (con `#[Url(as: 'accion')]`)
+  - `?int $filterCauserId = null` - Filtro por causer/usuario (con `#[Url(as: 'usuario')]`)
+  - `?string $filterDescription = null` - Filtro por descripción/acción (con `#[Url(as: 'accion')]`)
+  - `?string $filterLogName = null` - Filtro por log_name (con `#[Url(as: 'log')]`)
   - `?string $filterDateFrom = null` - Filtro fecha desde (con `#[Url(as: 'desde')]`)
   - `?string $filterDateTo = null` - Filtro fecha hasta (con `#[Url(as: 'hasta')]`)
   - `string $sortField = 'created_at'` - Campo de ordenación (con `#[Url(as: 'ordenar')]`)
@@ -47,50 +135,51 @@ Crear un sistema completo de visualización de logs de auditoría en el panel de
   - `int $perPage = 25` - Elementos por página (con `#[Url(as: 'por-pagina')]`)
 - [ ] Implementar métodos:
   - `mount()` - Inicialización con autorización
-  - `auditLogs()` - Computed property con paginación, filtros y ordenación
-    - Eager loading: `user`, `model`
-    - Búsqueda en: `model_type`, `action` (si aplica)
-    - Filtros: modelo, usuario, acción, rango de fechas
+  - `activities()` - Computed property con paginación, filtros y ordenación
+    - Eager loading: `causer`, `subject`
+    - Búsqueda en: `description`, `subject_type`
+    - Filtros: modelo (subject_type), causer, descripción, log_name, rango de fechas
     - Ordenación por `created_at` desc por defecto
   - `sortBy($field)` - Cambiar ordenación
   - `resetFilters()` - Resetear todos los filtros
   - `updatedSearch()` - Resetear página al buscar
   - `updatedFilterModel()` - Resetear página al cambiar filtro
-  - `updatedFilterUserId()` - Resetear página al cambiar filtro
-  - `updatedFilterAction()` - Resetear página al cambiar filtro
+  - `updatedFilterCauserId()` - Resetear página al cambiar filtro
+  - `updatedFilterDescription()` - Resetear página al cambiar filtro
   - `updatedFilterDateFrom()` - Resetear página al cambiar fecha
   - `updatedFilterDateTo()` - Resetear página al cambiar fecha
-  - `getAvailableModels()` - Obtener modelos únicos de audit_logs
-  - `getAvailableUsers()` - Obtener usuarios que tienen logs
-  - `getAvailableActions()` - Obtener acciones disponibles (create, update, delete, publish, archive, restore)
-  - `getModelDisplayName(?string $modelType)` - Nombre legible del modelo
-  - `getActionDisplayName(string $action)` - Nombre legible de la acción
-  - `getActionBadgeVariant(string $action)` - Variante de badge para la acción
-  - `getModelUrl(?string $modelType, ?int $modelId)` - URL del modelo si existe ruta
+  - `getAvailableModels()` - Obtener modelos únicos de `subject_type`
+  - `getAvailableCausers()` - Obtener usuarios que tienen logs (desde `causer`)
+  - `getAvailableDescriptions()` - Obtener descripciones únicas (created, updated, deleted, etc.)
+  - `getModelDisplayName(?string $subjectType)` - Nombre legible del modelo
+  - `getDescriptionDisplayName(string $description)` - Nombre legible de la descripción
+  - `getDescriptionBadgeVariant(string $description)` - Variante de badge para la descripción
+  - `getSubjectUrl(?string $subjectType, ?int $subjectId)` - URL del subject si existe ruta
   - `render()` - Renderizado con paginación
-- [ ] Implementar autorización con `AuditLogPolicy::viewAny()`
+- [ ] Implementar autorización con `ActivityPolicy::viewAny()`
 
-#### **Paso 3: Crear Vista Index**
+#### **Paso 6: Crear Vista Index**
 - [ ] Crear vista `resources/views/livewire/admin/audit-logs/index.blade.php`
 - [ ] Implementar estructura:
   - **Header**: Título "Auditoría y Logs" con descripción
   - **Breadcrumbs**: Admin > Auditoría y Logs
   - **Filtros avanzados**:
     - Búsqueda (input con debounce)
-    - Select de modelo (con opción "Todos")
-    - Select de usuario (con opción "Todos")
-    - Select de acción (create, update, delete, publish, archive, restore)
+    - Select de modelo (subject_type, con opción "Todos")
+    - Select de usuario/causer (con opción "Todos")
+    - Select de descripción/acción (created, updated, deleted, etc.)
+    - Select de log_name (si se usan múltiples logs)
     - Date picker "Desde" (fecha)
     - Date picker "Hasta" (fecha)
     - Botón "Limpiar filtros"
   - **Tabla responsive** con columnas:
     - Fecha/Hora (formato legible + diffForHumans)
-    - Usuario (nombre + email, con avatar si disponible)
-    - Acción (badge con color según acción)
-    - Modelo (tipo de modelo)
-    - Registro (nombre/título del modelo, enlace si existe)
-    - Cambios (resumen truncado, enlace a detalle)
-    - IP (si está disponible)
+    - Usuario/Causer (nombre + email, con avatar si disponible)
+    - Descripción/Acción (badge con color según acción)
+    - Modelo/Subject (tipo de modelo)
+    - Registro (nombre/título del subject, enlace si existe)
+    - Cambios (resumen truncado desde `properties`, enlace a detalle)
+    - Log Name (si se usan múltiples logs)
     - Acciones (botón "Ver detalle")
   - **Paginación** con selector de elementos por página
   - **Estado vacío** cuando no hay resultados
@@ -108,27 +197,30 @@ Crear un sistema completo de visualización de logs de auditoría en el panel de
 
 ---
 
-### **Fase 3: Componente Show (Detalle)**
+### **Fase 4: Componente Show (Detalle)**
 
-#### **Paso 4: Crear Componente Livewire Show**
+#### **Paso 7: Crear Componente Livewire Show**
 - [ ] Crear componente `Admin\AuditLogs\Show` usando `php artisan make:livewire Admin/AuditLogs/Show`
+- [ ] Importar modelo: `use Spatie\Activitylog\Models\Activity;`
 - [ ] Implementar propiedades públicas:
-  - `AuditLog $auditLog` - El log a mostrar
+  - `Activity $activity` - El log a mostrar
 - [ ] Implementar métodos:
-  - `mount(AuditLog $auditLog)` - Inicialización con autorización y eager loading
-    - Cargar relaciones: `user`, `model`
-  - `getModelDisplayName(?string $modelType)` - Nombre legible del modelo
-  - `getActionDisplayName(string $action)` - Nombre legible de la acción
-  - `getActionBadgeVariant(string $action)` - Variante de badge
-  - `getModelUrl(?string $modelType, ?int $modelId)` - URL del modelo si existe
-  - `getModelTitle($model)` - Título del modelo (title, name, o ID)
-  - `formatChanges(?array $changes)` - Formatear cambios para visualización
+  - `mount(Activity $activity)` - Inicialización con autorización y eager loading
+    - Cargar relaciones: `causer`, `subject`
+  - `getModelDisplayName(?string $subjectType)` - Nombre legible del modelo
+  - `getDescriptionDisplayName(string $description)` - Nombre legible de la descripción
+  - `getDescriptionBadgeVariant(string $description)` - Variante de badge
+  - `getSubjectUrl(?string $subjectType, ?int $subjectId)` - URL del subject si existe
+  - `getSubjectTitle($subject)` - Título del subject (title, name, o ID)
+  - `formatProperties(?array $properties)` - Formatear propiedades para visualización
+  - `getChangesFromProperties(?array $properties)` - Extraer cambios (attributes/old) de properties
   - `formatJsonForDisplay($data)` - Formatear JSON de forma legible
-  - `getUserAgentInfo(?string $userAgent)` - Extraer información del user agent
+  - `getUserAgentInfo(?array $properties)` - Extraer información del user agent desde properties
+  - `getIpAddress(?array $properties)` - Extraer IP desde properties
   - `render()` - Renderizado
-- [ ] Implementar autorización con `AuditLogPolicy::view()`
+- [ ] Implementar autorización con `ActivityPolicy::view()`
 
-#### **Paso 5: Crear Vista Show**
+#### **Paso 8: Crear Vista Show**
 - [ ] Crear vista `resources/views/livewire/admin/audit-logs/show.blade.php`
 - [ ] Implementar estructura:
   - **Header**: 
@@ -138,30 +230,34 @@ Crear un sistema completo de visualización de logs de auditoría en el panel de
   - **Información Principal** (card):
     - ID del log
     - Fecha y hora (formato completo + diffForHumans)
-    - Acción (badge con color)
-    - Usuario (nombre, email, avatar si disponible)
-    - IP Address (si disponible)
-    - User Agent (si disponible, con información parseada)
-  - **Información del Modelo** (card):
-    - Tipo de modelo
-    - ID del modelo
+    - Descripción/Acción (badge con color)
+    - Log Name (si aplica)
+    - Usuario/Causer (nombre, email, avatar si disponible)
+    - IP Address (extraída de properties si está disponible)
+    - User Agent (extraído de properties si está disponible, con información parseada)
+  - **Información del Subject** (card):
+    - Tipo de modelo (subject_type)
+    - ID del modelo (subject_id)
     - Nombre/Título del modelo (enlace si existe ruta)
     - Estado actual del modelo (si está disponible)
   - **Cambios Realizados** (card expandible):
-    - Si hay cambios, mostrar tabla comparativa:
+    - Si hay cambios en `properties`, mostrar tabla comparativa:
       - Campo
-      - Valor Anterior
-      - Valor Nuevo
+      - Valor Anterior (desde `properties.old`)
+      - Valor Nuevo (desde `properties.attributes`)
       - Diferencia destacada
     - Si no hay cambios, mostrar mensaje
     - Formato JSON expandible para vista técnica
+  - **Propiedades Personalizadas** (card colapsable):
+    - Mostrar todas las propiedades personalizadas
+    - Formato JSON expandible
   - **Información Técnica** (card colapsable):
     - JSON completo del log
-    - User Agent completo
+    - Properties completo
     - Información de la sesión (si disponible)
   - **Acciones**:
-    - Botón "Ver registro relacionado" (si existe modelo y ruta)
-    - Botón "Ver usuario" (si existe usuario)
+    - Botón "Ver registro relacionado" (si existe subject y ruta)
+    - Botón "Ver usuario" (si existe causer)
     - Botón "Volver al listado"
 - [ ] Usar componentes Flux UI:
   - `flux:heading` para títulos
@@ -171,23 +267,23 @@ Crear un sistema completo de visualización de logs de auditoría en el panel de
   - `flux:field` para información estructurada
 - [ ] Diseño responsive con Tailwind CSS v4
 - [ ] Soporte para dark mode
-- [ ] Usar el componente `x-ui.audit-log-entry` existente si es apropiado
+- [ ] Adaptar componente `x-ui.audit-log-entry` para usar Activity si es necesario
 
 ---
 
-### **Fase 4: Rutas y Navegación**
+### **Fase 5: Rutas y Navegación**
 
-#### **Paso 6: Configurar Rutas**
+#### **Paso 9: Configurar Rutas**
 - [ ] Agregar rutas en `routes/web.php` dentro del grupo `admin`:
   ```php
   // Rutas de Auditoría y Logs
   Route::get('/auditoria', \App\Livewire\Admin\AuditLogs\Index::class)->name('audit-logs.index');
-  Route::get('/auditoria/{audit_log}', \App\Livewire\Admin\AuditLogs\Show::class)->name('audit-logs.show');
+  Route::get('/auditoria/{activity}', \App\Livewire\Admin\AuditLogs\Show::class)->name('audit-logs.show');
   ```
 - [ ] Verificar que las rutas funcionan correctamente
 - [ ] Probar navegación entre Index y Show
 
-#### **Paso 7: Integrar en Navegación**
+#### **Paso 10: Integrar en Navegación**
 - [ ] Agregar enlace en sidebar de administración (`resources/views/components/layouts/admin-sidebar.blade.php` o similar)
 - [ ] Agregar en sección "Sistema" o "Configuración"
 - [ ] Icono apropiado (ej: `heroicon-o-clipboard-document-list` o `heroicon-o-shield-check`)
@@ -196,25 +292,63 @@ Crear un sistema completo de visualización de logs de auditoría en el panel de
 
 ---
 
-### **Fase 5: Optimizaciones y Mejoras**
+### **Fase 6: Integración con Sistema Existente**
 
-#### **Paso 8: Optimizaciones de Rendimiento**
-- [ ] Implementar índices en consultas frecuentes:
-  - Ya existen índices en `audit_logs` para `user_id + created_at` y `model_type + model_id`
-  - Verificar que se usan correctamente
+#### **Paso 11: Actualizar Componentes Existentes**
+- [ ] Actualizar `Admin\Dashboard` para usar `Activity` en lugar de `AuditLog`
+- [ ] Actualizar `Admin\Users\Show` para usar `Activity` en lugar de `AuditLog`
+- [ ] Actualizar componente `x-ui.audit-log-entry` para aceptar tanto `AuditLog` como `Activity`
+- [ ] Crear helper o método para convertir entre formatos si es necesario
+- [ ] Verificar que todos los componentes funcionan correctamente
+
+#### **Paso 12: Configurar Logging Manual para Acciones Especiales**
+- [ ] Identificar acciones que no son eventos de modelo estándar:
+  - Publicar convocatoria/noticia (`publish`)
+  - Archivar contenido (`archive`)
+  - Restaurar contenido (`restore`)
+  - Asignar roles (`assignRoles`)
+- [ ] Implementar logging manual usando `activity()`:
+  ```php
+  activity()
+      ->performedOn($call)
+      ->causedBy(auth()->user())
+      ->withProperties([
+          'ip_address' => request()->ip(),
+          'user_agent' => request()->userAgent(),
+          'old_status' => $call->getOriginal('status'),
+          'new_status' => 'published',
+      ])
+      ->log('published');
+  ```
+- [ ] Agregar logging en:
+  - Métodos `publish()` de Call y NewsPost
+  - Métodos `archive()` y `restore()` donde existan
+  - Métodos de asignación de roles
+
+---
+
+### **Fase 7: Optimizaciones y Mejoras**
+
+#### **Paso 13: Optimizaciones de Rendimiento**
+- [ ] Verificar índices en tabla `activity_log`:
+  - Índice en `subject_type` + `subject_id`
+  - Índice en `causer_type` + `causer_id`
+  - Índice en `created_at`
+  - Índice en `log_name` (si se usa)
 - [ ] Implementar eager loading en todas las consultas:
-  - `user` (relación BelongsTo)
-  - `model` (relación MorphTo)
+  - `causer` (relación polimórfica)
+  - `subject` (relación polimórfica)
 - [ ] Implementar caché para listados de filtros:
   - Modelos disponibles (caché 1 hora)
   - Usuarios disponibles (caché 30 minutos)
-  - Acciones disponibles (sin caché, son estáticas)
+  - Descripciones disponibles (sin caché, son estáticas)
 - [ ] Optimizar consultas de paginación:
   - Usar `select()` específico si no se necesitan todos los campos
   - Evitar N+1 queries
 - [ ] Implementar debounce en búsqueda (500ms)
+- [ ] Configurar limpieza automática de logs antiguos (opcional, desde configuración)
 
-#### **Paso 9: Mejoras de UX**
+#### **Paso 14: Mejoras de UX**
 - [ ] Agregar tooltips informativos en filtros
 - [ ] Agregar indicadores de carga durante filtrado
 - [ ] Agregar mensajes informativos cuando no hay resultados
@@ -226,62 +360,40 @@ Crear un sistema completo de visualización de logs de auditoría en el panel de
   - Gráfico de actividad por fecha
   - Top usuarios más activos
   - Top modelos más modificados
+- [ ] Agregar filtro rápido por "Últimas 24 horas", "Última semana", "Último mes"
 
 ---
 
-### **Fase 6: Testing**
+### **Fase 8: Testing**
 
-#### **Paso 10: Tests de Policy**
-- [ ] Crear `tests/Feature/Policies/AuditLogPolicyTest.php`
-- [ ] Tests a implementar:
-  - `test_super_admin_can_view_any_audit_logs()` - Super-admin puede ver todos
-  - `test_admin_can_view_any_audit_logs()` - Admin puede ver todos
-  - `test_editor_cannot_view_audit_logs()` - Editor no puede ver
-  - `test_viewer_cannot_view_audit_logs()` - Viewer no puede ver
-  - `test_super_admin_can_view_audit_log()` - Super-admin puede ver detalle
-  - `test_admin_can_view_audit_log()` - Admin puede ver detalle
-  - `test_editor_cannot_view_audit_log()` - Editor no puede ver detalle
-  - `test_viewer_cannot_view_audit_log()` - Viewer no puede ver detalle
-
-#### **Paso 11: Tests de Componente Index**
-- [ ] Crear `tests/Feature/Livewire/Admin/AuditLogs/IndexTest.php`
-- [ ] Tests a implementar:
-  - `test_can_render_index_page()` - Renderiza correctamente
-  - `test_requires_authentication()` - Requiere autenticación
-  - `test_requires_authorization()` - Requiere autorización
-  - `test_can_filter_by_model()` - Filtro por modelo funciona
-  - `test_can_filter_by_user()` - Filtro por usuario funciona
-  - `test_can_filter_by_action()` - Filtro por acción funciona
-  - `test_can_filter_by_date_range()` - Filtro por rango de fechas funciona
-  - `test_can_search_logs()` - Búsqueda funciona
-  - `test_can_sort_logs()` - Ordenación funciona
-  - `test_can_change_per_page()` - Cambio de elementos por página funciona
-  - `test_shows_empty_state()` - Muestra estado vacío cuando no hay logs
-  - `test_pagination_works()` - Paginación funciona
-  - `test_reset_filters_works()` - Resetear filtros funciona
-  - `test_shows_user_information()` - Muestra información de usuario
-  - `test_shows_model_information()` - Muestra información de modelo
-  - `test_shows_action_badges()` - Muestra badges de acción correctamente
-
-#### **Paso 12: Tests de Componente Show**
-- [ ] Crear `tests/Feature/Livewire/Admin/AuditLogs/ShowTest.php`
-- [ ] Tests a implementar:
-  - `test_can_render_show_page()` - Renderiza correctamente
-  - `test_requires_authentication()` - Requiere autenticación
-  - `test_requires_authorization()` - Requiere autorización
-  - `test_shows_log_information()` - Muestra información del log
-  - `test_shows_user_information()` - Muestra información del usuario
-  - `test_shows_model_information()` - Muestra información del modelo
-  - `test_shows_changes_when_available()` - Muestra cambios cuando existen
-  - `test_shows_no_changes_message()` - Muestra mensaje cuando no hay cambios
-  - `test_formats_changes_correctly()` - Formatea cambios correctamente
-  - `test_shows_json_data()` - Muestra datos JSON formateados
-  - `test_shows_user_agent_info()` - Muestra información de user agent
-  - `test_shows_ip_address()` - Muestra dirección IP
-  - `test_links_to_related_model()` - Enlaces a modelo relacionado funcionan
-  - `test_links_to_user()` - Enlaces a usuario funcionan
-  - `test_handles_missing_model()` - Maneja modelo eliminado correctamente
-  - `test_handles_missing_user()` - Maneja usuario eliminado correctamente
+#### **Paso 15: Tests Completos**
+- [ ] **Tests de Policy** (`tests/Feature/Policies/ActivityPolicyTest.php`):
+  - `test_super_admin_can_view_any_activities()`
+  - `test_admin_can_view_any_activities()`
+  - `test_editor_cannot_view_activities()`
+  - `test_viewer_cannot_view_activities()`
+  - `test_super_admin_can_view_activity()`
+  - `test_admin_can_view_activity()`
+  - `test_editor_cannot_view_activity()`
+  - `test_viewer_cannot_view_activity()`
+- [ ] **Tests de Componente Index** (`tests/Feature/Livewire/Admin/AuditLogs/IndexTest.php`):
+  - Renderizado, autenticación, autorización
+  - Filtros (modelo, causer, descripción, fechas)
+  - Búsqueda, ordenación, paginación
+  - Estado vacío, visualización de información
+- [ ] **Tests de Componente Show** (`tests/Feature/Livewire/Admin/AuditLogs/ShowTest.php`):
+  - Renderizado, autenticación, autorización
+  - Visualización de información completa
+  - Formateo de propiedades y cambios
+  - Enlaces a modelos relacionados
+  - Manejo de subjects/causers eliminados
+- [ ] **Tests de Logging Automático**:
+  - Verificar que se crean logs al crear/actualizar/eliminar modelos
+  - Verificar que se registran los campos correctos
+  - Verificar relaciones causer y subject
+- [ ] **Tests de Logging Manual**:
+  - Verificar logging de acciones especiales (publish, archive, etc.)
+  - Verificar que se guardan propiedades personalizadas
 
 ---
 
@@ -295,7 +407,15 @@ app/
 │           ├── Index.php
 │           └── Show.php
 ├── Policies/
-│   └── AuditLogPolicy.php
+│   └── ActivityPolicy.php
+├── Console/
+│   └── Commands/
+│       └── MigrateAuditLogsToActivityLog.php (opcional)
+config/
+└── activitylog.php (publicado por Spatie)
+database/
+└── migrations/
+    └── xxxx_xx_xx_xxxxxx_create_activity_log_table.php (publicado por Spatie)
 resources/
 └── views/
     └── livewire/
@@ -311,14 +431,14 @@ tests/
     │           ├── IndexTest.php
     │           └── ShowTest.php
     └── Policies/
-        └── AuditLogPolicyTest.php
+        └── ActivityPolicyTest.php
 ```
 
 ---
 
 ## 🎨 Componentes UI a Reutilizar
 
-- `x-ui.audit-log-entry` - Componente existente para mostrar entrada de log
+- `x-ui.audit-log-entry` - Adaptar para aceptar `Activity` además de `AuditLog`
 - Componentes Flux UI estándar (button, badge, input, select, table, pagination, etc.)
 
 ---
@@ -326,35 +446,48 @@ tests/
 ## 🔒 Consideraciones de Seguridad
 
 1. **Autorización**: Solo admin y super-admin pueden ver logs
-2. **Datos Sensibles**: Considerar ocultar información sensible en cambios (passwords, tokens, etc.)
+2. **Datos Sensibles**: Configurar `dontLogIfAttributesChangedOnly(['password', 'remember_token'])` en modelos
 3. **Rate Limiting**: Considerar rate limiting en exportación si se implementa
 4. **Logs Inmutables**: Los logs no se pueden modificar ni eliminar desde la interfaz
+5. **Limpieza Automática**: Configurar limpieza de logs antiguos según políticas de retención
 
 ---
 
 ## 📝 Notas de Implementación
 
-1. **Modelo AuditLog**: Ya existe y está configurado correctamente
-2. **Relaciones**: 
-   - `user()` - BelongsTo User (nullable)
-   - `model()` - MorphTo (polimórfico)
+1. **Modelo Activity**: Usar `Spatie\Activitylog\Models\Activity` en lugar de `AuditLog`
+2. **Relaciones**:
+   - `causer()` - MorphTo (polimórfico, puede ser User u otro modelo)
+   - `subject()` - MorphTo (polimórfico, el modelo afectado)
 3. **Campos importantes**:
-   - `action`: enum (create, update, delete, publish, archive, restore)
-   - `changes`: JSON con estructura `{before: {}, after: {}}`
-   - `ip_address`: string nullable
-   - `user_agent`: text nullable
-4. **Índices**: Ya existen índices optimizados
-5. **Componente UI existente**: `x-ui.audit-log-entry` puede reutilizarse en Show
+   - `description`: string (ej: "created", "updated", "deleted", "published")
+   - `properties`: JSON con estructura `{attributes: {}, old: {}, custom: {}}`
+   - `log_name`: string (para múltiples logs, por defecto "default")
+4. **Estructura de Properties**:
+   ```json
+   {
+     "attributes": {"name": "Nuevo", "status": "active"},
+     "old": {"name": "Viejo", "status": "draft"},
+     "ip_address": "127.0.0.1",
+     "user_agent": "Mozilla/5.0..."
+   }
+   ```
+5. **Trait LogsActivity**: Agregar a modelos que necesiten logging automático
+6. **Migración de Datos**: Considerar mantener `audit_logs` durante transición o migrar completamente
 
 ---
 
 ## ✅ Criterios de Aceptación
 
+- [ ] Spatie Activitylog instalado y configurado
+- [ ] Logging automático funcionando en modelos principales
+- [ ] Logging manual funcionando para acciones especiales
 - [ ] Policy creada y funcionando
 - [ ] Componente Index creado con todos los filtros
 - [ ] Componente Show creado con información completa
 - [ ] Rutas configuradas y funcionando
 - [ ] Navegación integrada en sidebar
+- [ ] Componentes existentes actualizados
 - [ ] Tests completos pasando (mínimo 80% cobertura)
 - [ ] Diseño responsive y moderno
 - [ ] Soporte para dark mode
@@ -363,5 +496,27 @@ tests/
 
 ---
 
+## 🔄 Migración desde Sistema Actual
+
+Si se decide migrar completamente de `audit_logs` a `activity_log`:
+
+1. **Fase de Transición** (opcional):
+   - Mantener ambas tablas funcionando
+   - Nuevos logs van a `activity_log`
+   - Visualizar ambos en el panel (con indicador de origen)
+
+2. **Migración de Datos**:
+   - Crear comando Artisan para migración
+   - Mapear estructura de datos
+   - Validar integridad
+
+3. **Deprecación**:
+   - Marcar `AuditLog` como deprecated
+   - Actualizar todos los componentes
+   - Eliminar tabla `audit_logs` (opcional, después de período de gracia)
+
+---
+
 **Fecha de Creación**: Diciembre 2025  
+**Última Actualización**: Diciembre 2025 (Adaptado para Spatie Activitylog)  
 **Estado**: 📋 Plan completado - Pendiente de implementación
