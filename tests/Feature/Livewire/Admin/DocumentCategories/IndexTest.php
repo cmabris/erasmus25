@@ -127,6 +127,9 @@ describe('Admin DocumentCategories Index - Search', function () {
         $user->assignRole(Roles::ADMIN);
         $this->actingAs($user);
 
+        // Clear any existing categories to avoid interference from other tests
+        DocumentCategory::query()->delete();
+
         $category1 = DocumentCategory::factory()->create(['name' => 'Convocatorias']);
         $category2 = DocumentCategory::factory()->create(['name' => 'Modelos']);
 
@@ -157,6 +160,9 @@ describe('Admin DocumentCategories Index - Search', function () {
         $user = User::factory()->create();
         $user->assignRole(Roles::ADMIN);
         $this->actingAs($user);
+
+        // Clear any existing categories to avoid interference from other tests
+        DocumentCategory::query()->delete();
 
         $category1 = DocumentCategory::factory()->create([
             'name' => 'Convocatorias',

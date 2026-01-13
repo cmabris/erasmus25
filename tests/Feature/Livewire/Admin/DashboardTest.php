@@ -267,6 +267,9 @@ describe('Admin Dashboard - Recent Activities', function () {
         $user->assignRole(Roles::ADMIN);
         $this->actingAs($user);
 
+        // Clear any existing activities
+        \Spatie\Activitylog\Models\Activity::query()->delete();
+
         Livewire::test(Dashboard::class)
             ->assertSee(__('common.admin.dashboard.activity.no_activity'));
     });
@@ -448,7 +451,7 @@ describe('Admin Dashboard - Rendering', function () {
         $user->assignRole(Roles::ADMIN);
         $this->actingAs($user);
 
-        $this->get(route('admin.dashboard'))
+        Livewire::test(Dashboard::class)
             ->assertSee(__('Dashboard'));
     });
 
@@ -457,7 +460,7 @@ describe('Admin Dashboard - Rendering', function () {
         $user->assignRole(Roles::ADMIN);
         $this->actingAs($user);
 
-        $this->get(route('admin.dashboard'))
+        Livewire::test(Dashboard::class)
             ->assertSee(__('common.admin.dashboard.statistics_title'));
     });
 
@@ -466,7 +469,7 @@ describe('Admin Dashboard - Rendering', function () {
         $user->assignRole(Roles::ADMIN);
         $this->actingAs($user);
 
-        $this->get(route('admin.dashboard'))
+        Livewire::test(Dashboard::class)
             ->assertSee(__('common.admin.dashboard.quick_actions_title'));
     });
 
@@ -475,7 +478,7 @@ describe('Admin Dashboard - Rendering', function () {
         $user->assignRole(Roles::ADMIN);
         $this->actingAs($user);
 
-        $this->get(route('admin.dashboard'))
+        Livewire::test(Dashboard::class)
             ->assertSee(__('common.admin.dashboard.recent_activity_title'));
     });
 
@@ -484,7 +487,7 @@ describe('Admin Dashboard - Rendering', function () {
         $user->assignRole(Roles::ADMIN);
         $this->actingAs($user);
 
-        $this->get(route('admin.dashboard'))
+        Livewire::test(Dashboard::class)
             ->assertSee(__('common.admin.dashboard.charts.monthly_activity_title'));
     });
 });

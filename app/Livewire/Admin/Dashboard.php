@@ -396,7 +396,7 @@ class Dashboard extends Component
             Document::class => 'folder',
             ErasmusEvent::class => 'calendar',
             Program::class => 'academic-cap',
-            default => 'circle',
+            default => 'information-circle',
         };
     }
 

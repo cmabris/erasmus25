@@ -144,10 +144,15 @@ class Show extends Component
      *
      * @return array<string, array{field: string, old: mixed, new: mixed}>
      */
-    public function getChangesFromProperties(?array $properties): array
+    public function getChangesFromProperties(array|\Illuminate\Support\Collection|null $properties): array
     {
         if (! $properties) {
             return [];
+        }
+
+        // Convert Collection to array if needed
+        if ($properties instanceof \Illuminate\Support\Collection) {
+            $properties = $properties->toArray();
         }
 
         $changes = [];
@@ -217,10 +222,15 @@ class Show extends Component
     /**
      * Get IP address from properties.
      */
-    public function getIpAddress(?array $properties): ?string
+    public function getIpAddress(array|\Illuminate\Support\Collection|null $properties): ?string
     {
         if (! $properties) {
             return null;
+        }
+
+        // Convert Collection to array if needed
+        if ($properties instanceof \Illuminate\Support\Collection) {
+            $properties = $properties->toArray();
         }
 
         return $properties['ip_address'] ?? $properties['ip'] ?? null;
@@ -229,10 +239,15 @@ class Show extends Component
     /**
      * Get user agent from properties.
      */
-    public function getUserAgent(?array $properties): ?string
+    public function getUserAgent(array|\Illuminate\Support\Collection|null $properties): ?string
     {
         if (! $properties) {
             return null;
+        }
+
+        // Convert Collection to array if needed
+        if ($properties instanceof \Illuminate\Support\Collection) {
+            $properties = $properties->toArray();
         }
 
         return $properties['user_agent'] ?? $properties['userAgent'] ?? null;
@@ -283,10 +298,15 @@ class Show extends Component
     /**
      * Get custom properties (excluding old/attributes).
      */
-    public function getCustomProperties(?array $properties): array
+    public function getCustomProperties(array|\Illuminate\Support\Collection|null $properties): array
     {
         if (! $properties) {
             return [];
+        }
+
+        // Convert Collection to array if needed
+        if ($properties instanceof \Illuminate\Support\Collection) {
+            $properties = $properties->toArray();
         }
 
         $custom = [];

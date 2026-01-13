@@ -1,13 +1,13 @@
 <?php
 
 use App\Livewire\Admin\Users\Show;
-use App\Models\AuditLog;
 use App\Models\Program;
 use App\Models\User;
 use App\Support\Permissions;
 use App\Support\Roles;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
+use Spatie\Activitylog\Models\Activity;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -139,12 +139,20 @@ describe('Admin Users Show - Display', function () {
         $this->actingAs($user);
 
         $testUser = User::factory()->create();
-        AuditLog::factory()->count(5)->create(['user_id' => $testUser->id]);
+        $program = Program::factory()->create();
 
-        $component = Livewire::test(Show::class, ['user' => $testUser->loadCount('auditLogs')]);
-        $auditLogsCount = $component->get('user')->audit_logs_count;
+        // Create 5 activities for the test user
+        for ($i = 0; $i < 5; $i++) {
+            activity()
+                ->performedOn($program)
+                ->causedBy($testUser)
+                ->log('created');
+        }
 
-        expect($auditLogsCount)->toBe(5);
+        $component = Livewire::test(Show::class, ['user' => $testUser]);
+        $statistics = $component->get('statistics');
+
+        expect($statistics['total_actions'])->toBe(5);
     });
 
     it('displays paginated audit logs', function () {
@@ -153,13 +161,21 @@ describe('Admin Users Show - Display', function () {
         $this->actingAs($user);
 
         $testUser = User::factory()->create();
-        AuditLog::factory()->count(15)->create(['user_id' => $testUser->id]);
+        $program = Program::factory()->create();
+
+        // Create 15 activities for the test user
+        for ($i = 0; $i < 15; $i++) {
+            activity()
+                ->performedOn($program)
+                ->causedBy($testUser)
+                ->log('created');
+        }
 
         $component = Livewire::test(Show::class, ['user' => $testUser]);
-        $auditLogs = $component->get('auditLogs');
+        $activities = $component->get('activities');
 
-        expect($auditLogs->count())->toBe(10) // Default per page
-            ->and($auditLogs->total())->toBe(15);
+        expect($activities->count())->toBe(10) // Default per page
+            ->and($activities->total())->toBe(15);
     });
 
     it('can change audit logs per page', function () {
@@ -168,13 +184,21 @@ describe('Admin Users Show - Display', function () {
         $this->actingAs($user);
 
         $testUser = User::factory()->create();
-        AuditLog::factory()->count(25)->create(['user_id' => $testUser->id]);
+        $program = Program::factory()->create();
+
+        // Create 25 activities for the test user
+        for ($i = 0; $i < 25; $i++) {
+            activity()
+                ->performedOn($program)
+                ->causedBy($testUser)
+                ->log('created');
+        }
 
         $component = Livewire::test(Show::class, ['user' => $testUser])
-            ->set('auditLogsPerPage', 20);
+            ->set('activitiesPerPage', 20);
 
-        $auditLogs = $component->get('auditLogs');
-        expect($auditLogs->count())->toBe(20);
+        $activities = $component->get('activities');
+        expect($activities->count())->toBe(20);
     });
 
     it('displays statistics correctly', function () {
@@ -183,21 +207,30 @@ describe('Admin Users Show - Display', function () {
         $this->actingAs($user);
 
         $testUser = User::factory()->create();
-        AuditLog::factory()->count(3)->create([
-            'user_id' => $testUser->id,
-            'action' => 'create',
-        ]);
-        AuditLog::factory()->count(2)->create([
-            'user_id' => $testUser->id,
-            'action' => 'update',
-        ]);
+        $program = Program::factory()->create();
 
-        $component = Livewire::test(Show::class, ['user' => $testUser->loadCount('auditLogs')]);
+        // Create 3 activities with 'created' description
+        for ($i = 0; $i < 3; $i++) {
+            activity()
+                ->performedOn($program)
+                ->causedBy($testUser)
+                ->log('created');
+        }
+
+        // Create 2 activities with 'updated' description
+        for ($i = 0; $i < 2; $i++) {
+            activity()
+                ->performedOn($program)
+                ->causedBy($testUser)
+                ->log('updated');
+        }
+
+        $component = Livewire::test(Show::class, ['user' => $testUser]);
         $statistics = $component->get('statistics');
 
         expect($statistics['total_actions'])->toBe(5)
-            ->and($statistics['actions_by_type']['create'])->toBe(3)
-            ->and($statistics['actions_by_type']['update'])->toBe(2);
+            ->and($statistics['actions_by_type']['created'])->toBe(3)
+            ->and($statistics['actions_by_type']['updated'])->toBe(2);
     });
 
     it('displays last activity correctly', function () {
@@ -206,19 +239,26 @@ describe('Admin Users Show - Display', function () {
         $this->actingAs($user);
 
         $testUser = User::factory()->create();
-        $oldLog = AuditLog::factory()->create([
-            'user_id' => $testUser->id,
-            'created_at' => now()->subDays(5),
-        ]);
-        $newLog = AuditLog::factory()->create([
-            'user_id' => $testUser->id,
-            'created_at' => now(),
-        ]);
+        $program = Program::factory()->create();
 
-        $component = Livewire::test(Show::class, ['user' => $testUser->loadCount('auditLogs')]);
+        // Create old activity (5 days ago)
+        $oldActivity = activity()
+            ->performedOn($program)
+            ->causedBy($testUser)
+            ->log('created');
+        $oldActivity->created_at = now()->subDays(5);
+        $oldActivity->save();
+
+        // Create new activity (now)
+        $newActivity = activity()
+            ->performedOn($program)
+            ->causedBy($testUser)
+            ->log('updated');
+
+        $component = Livewire::test(Show::class, ['user' => $testUser]);
         $statistics = $component->get('statistics');
 
-        expect($statistics['last_activity']->format('Y-m-d H:i:s'))->toBe($newLog->created_at->format('Y-m-d H:i:s'));
+        expect($statistics['last_activity']->format('Y-m-d H:i:s'))->toBe($newActivity->created_at->format('Y-m-d H:i:s'));
     });
 });
 
@@ -543,18 +583,17 @@ describe('Admin Users Show - Audit Logs Display', function () {
         $testUser = User::factory()->create();
         $program = Program::factory()->create();
 
-        AuditLog::factory()->create([
-            'user_id' => $testUser->id,
-            'action' => 'create',
-            'model_type' => Program::class,
-            'model_id' => $program->id,
-        ]);
+        // Create an activity for the test user on the program
+        activity()
+            ->performedOn($program)
+            ->causedBy($testUser)
+            ->log('created');
 
         $component = Livewire::test(Show::class, ['user' => $testUser]);
-        $auditLogs = $component->get('auditLogs');
+        $activities = $component->get('activities');
 
-        expect($auditLogs->first()->model)->not->toBeNull()
-            ->and($auditLogs->first()->model_type)->toBe(Program::class);
+        expect($activities->first()->subject)->not->toBeNull()
+            ->and($activities->first()->subject_type)->toBe(Program::class);
     });
 
     it('orders audit logs by created_at desc', function () {
@@ -563,19 +602,25 @@ describe('Admin Users Show - Audit Logs Display', function () {
         $this->actingAs($user);
 
         $testUser = User::factory()->create();
+        $program = Program::factory()->create();
 
-        $oldLog = AuditLog::factory()->create([
-            'user_id' => $testUser->id,
-            'created_at' => now()->subDays(2),
-        ]);
-        $newLog = AuditLog::factory()->create([
-            'user_id' => $testUser->id,
-            'created_at' => now(),
-        ]);
+        // Create old activity (2 days ago)
+        $oldActivity = activity()
+            ->performedOn($program)
+            ->causedBy($testUser)
+            ->log('created');
+        $oldActivity->created_at = now()->subDays(2);
+        $oldActivity->save();
+
+        // Create new activity (now)
+        $newActivity = activity()
+            ->performedOn($program)
+            ->causedBy($testUser)
+            ->log('updated');
 
         $component = Livewire::test(Show::class, ['user' => $testUser]);
-        $auditLogs = $component->get('auditLogs');
+        $activities = $component->get('activities');
 
-        expect($auditLogs->first()->id)->toBe($newLog->id);
+        expect($activities->first()->id)->toBe($newActivity->id);
     });
 });

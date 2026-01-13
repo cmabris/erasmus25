@@ -303,12 +303,13 @@
                         class="flex w-full items-center justify-between text-sm font-medium text-zinc-700 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-white"
                     >
                         <span>{{ __('Ver JSON de Cambios') }}</span>
-                        <flux:icon 
-                            name="chevron-down" 
-                            class="[:where(&)]:size-4 transition-transform"
-                            :class="{ 'rotate-180': open }"
-                            variant="outline" 
-                        />
+                        <div x-bind:class="open ? 'rotate-180' : ''" class="transition-transform">
+                            <flux:icon 
+                                name="chevron-down" 
+                                class="[:where(&)]:size-4"
+                                variant="outline" 
+                            />
+                        </div>
                     </button>
                     <div x-show="open" x-collapse class="mt-4">
                         <pre class="overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-50 p-4 text-xs dark:border-zinc-700 dark:bg-zinc-800"><code class="text-zinc-800 dark:text-zinc-200">{{ $this->formatJsonForDisplay($activity->properties) }}</code></pre>
@@ -329,12 +330,13 @@
                         class="mb-6 flex w-full items-center justify-between"
                     >
                         <flux:heading size="md">{{ __('Propiedades Personalizadas') }}</flux:heading>
-                        <flux:icon 
-                            name="chevron-down" 
-                            class="[:where(&)]:size-5 transition-transform"
-                            :class="{ 'rotate-180': open }"
-                            variant="outline" 
-                        />
+                        <div x-bind:class="open ? 'rotate-180' : ''" class="transition-transform">
+                            <flux:icon 
+                                name="chevron-down" 
+                                class="[:where(&)]:size-5"
+                                variant="outline" 
+                            />
+                        </div>
                     </button>
                     <div x-show="open" x-collapse>
                         <div class="space-y-4">
@@ -362,12 +364,13 @@
                     class="mb-6 flex w-full items-center justify-between"
                 >
                     <flux:heading size="md">{{ __('Información Técnica') }}</flux:heading>
-                    <flux:icon 
-                        name="chevron-down" 
-                        class="[:where(&)]:size-5 transition-transform"
-                        :class="{ 'rotate-180': open }"
-                        variant="outline" 
-                    />
+                    <div x-bind:class="open ? 'rotate-180' : ''" class="transition-transform">
+                        <flux:icon 
+                            name="chevron-down" 
+                            class="[:where(&)]:size-5"
+                            variant="outline" 
+                        />
+                    </div>
                 </button>
                 <div x-show="open" x-collapse>
                     <div class="space-y-6">

@@ -793,6 +793,13 @@ return [
                 'manage_users' => 'Manage Users',
                 'manage_users_description' => 'Administrate users and permissions',
             ],
+            'activity' => [
+                'no_activity' => 'No recent activity',
+                'created' => 'created',
+                'updated' => 'updated',
+                'published' => 'published',
+                'deleted' => 'deleted',
+            ],
         ],
     ],
 

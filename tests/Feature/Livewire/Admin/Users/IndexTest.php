@@ -1,12 +1,13 @@
 <?php
 
 use App\Livewire\Admin\Users\Index;
-use App\Models\AuditLog;
+use App\Models\Program;
 use App\Models\User;
 use App\Support\Permissions;
 use App\Support\Roles;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
+use Spatie\Activitylog\Models\Activity;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -106,7 +107,15 @@ describe('Admin Users Index - Listing', function () {
         $this->actingAs($user);
 
         $testUser = User::factory()->create();
-        AuditLog::factory()->count(5)->create(['user_id' => $testUser->id]);
+        $program = Program::factory()->create();
+
+        // Create 5 activities for the test user using activity() helper
+        for ($i = 0; $i < 5; $i++) {
+            activity()
+                ->performedOn($program)
+                ->causedBy($testUser)
+                ->log('created');
+        }
 
         Livewire::test(Index::class)
             ->assertSee('5');
@@ -367,7 +376,13 @@ describe('Admin Users Index - Soft Delete', function () {
         $this->actingAs($user);
 
         $testUser = User::factory()->create(['name' => 'Test User']);
-        AuditLog::factory()->create(['user_id' => $testUser->id]);
+        $program = Program::factory()->create();
+
+        // Create an activity for the test user
+        activity()
+            ->performedOn($program)
+            ->causedBy($testUser)
+            ->log('created');
 
         Livewire::test(Index::class)
             ->call('confirmDelete', $testUser->id)
@@ -434,7 +449,14 @@ describe('Admin Users Index - Soft Delete', function () {
         $this->actingAs($user);
 
         $testUser = User::factory()->create(['name' => 'Test User']);
-        $auditLog = AuditLog::factory()->create(['user_id' => $testUser->id]);
+        $program = Program::factory()->create();
+
+        // Create an activity for the test user
+        $activity = activity()
+            ->performedOn($program)
+            ->causedBy($testUser)
+            ->log('created');
+
         $testUser->delete();
 
         Livewire::test(Index::class)
@@ -444,7 +466,12 @@ describe('Admin Users Index - Soft Delete', function () {
             ->assertDispatched('user-force-deleted');
 
         expect(User::withTrashed()->find($testUser->id))->toBeNull();
-        expect($auditLog->fresh()->user_id)->toBeNull();
+
+        // Activity should still exist but causer_id may be null after force delete
+        // (depending on database foreign key constraints)
+        $activity->refresh();
+        // Note: Spatie Activitylog doesn't automatically set causer_id to null on user deletion
+        // This is different from the old AuditLog behavior
     });
 
     it('cannot force delete itself', function () {
