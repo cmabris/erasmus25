@@ -567,12 +567,21 @@ Para cada policy:
 - [Documentación de rutas](../admin-routes.md) - Documentación completa de todas las rutas ✅
 - [Documentación de autorización](../admin-routes-authorization.md) - Decisión de diseño y patrones ✅
 
-#### 3.6.3. Navegación Principal
-- [ ] Crear componente de navegación pública (`components/nav/public-nav.blade.php`)
-- [ ] Crear componente de navegación de administración (`components/nav/admin-nav.blade.php`)
-- [ ] Menú responsive con Flux UI
-- [ ] Indicador de idioma actual
-- [ ] Enlaces según permisos del usuario
+#### 3.6.3. Navegación Principal ✅ COMPLETADO
+- [x] Crear componente de navegación pública (`components/nav/public-nav.blade.php`)
+- [x] Crear componente de navegación de administración (`components/nav/admin-nav.blade.php`)
+- [x] Menú responsive con Flux UI
+- [x] Indicador de idioma actual
+- [x] Enlaces según permisos del usuario
+- [x] **Mejoras**: Enlace al panel de administración según permisos en navegación pública
+- [x] **Organización**: Navegación de administración extraída a componente separado
+- [x] **Optimización**: Grupos de navegación reorganizados sin duplicación
+- [x] **Tests**: 41 tests pasando (105 assertions) - `tests/Feature/Components/PublicLayoutTest.php` y `AdminNavTest.php`
+- [x] **Documentación**: `docs/navigation.md` creada con documentación completa
+
+**Documentación:**
+- [Plan detallado](pasos/paso-3.6.3-plan.md) - Plan paso a paso completo ✅
+- [Documentación de navegación](../navigation.md) - Documentación completa de navegación ✅
 
 #### 3.6.4. Breadcrumbs
 - [ ] Implementar breadcrumbs en vistas públicas
