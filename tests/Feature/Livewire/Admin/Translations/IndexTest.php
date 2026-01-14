@@ -240,8 +240,16 @@ describe('Admin Translations Index - Filters', function () {
         $user->assignRole(Roles::ADMIN);
         $this->actingAs($user);
 
-        $language1 = Language::factory()->create(['name' => 'Español']);
-        $language2 = Language::factory()->create(['name' => 'English']);
+        // Use unique codes to avoid conflicts in parallel tests
+        $uniqueId = uniqid('', true);
+        $language1 = Language::factory()->create([
+            'name' => 'Español',
+            'code' => 'es-'.$uniqueId,
+        ]);
+        $language2 = Language::factory()->create([
+            'name' => 'English',
+            'code' => 'en-'.$uniqueId,
+        ]);
         $program = Program::factory()->create();
 
         Translation::factory()->create([
@@ -445,7 +453,7 @@ describe('Admin Translations Index - Pagination', function () {
         }
 
         $component = Livewire::test(Index::class);
-        
+
         // Verificamos que hay traducciones y que la paginación funciona
         expect($component->get('translations')->total())->toBeGreaterThan(15)
             ->and($component->get('translations')->count())->toBeLessThanOrEqual(15);

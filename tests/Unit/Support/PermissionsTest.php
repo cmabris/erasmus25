@@ -56,7 +56,7 @@ it('returns all permissions when calling all()', function () {
     $permissions = Permissions::all();
 
     expect($permissions)->toBeArray()
-        ->toHaveCount(40) // 32 originales + 3 de Settings (VIEW, EDIT, ALL) + 5 de Translations (VIEW, CREATE, EDIT, DELETE, ALL)
+        ->toHaveCount(44) // 32 originales + 3 de Settings (VIEW, EDIT, ALL) + 5 de Translations (VIEW, CREATE, EDIT, DELETE, ALL) + 4 de Newsletter (VIEW, DELETE, EXPORT, ALL)
         ->toContain(Permissions::PROGRAMS_VIEW)
         ->toContain(Permissions::CALLS_PUBLISH)
         ->toContain(Permissions::NEWS_PUBLISH)
@@ -70,14 +70,18 @@ it('returns all permissions when calling all()', function () {
         ->toContain(Permissions::TRANSLATIONS_CREATE)
         ->toContain(Permissions::TRANSLATIONS_EDIT)
         ->toContain(Permissions::TRANSLATIONS_DELETE)
-        ->toContain(Permissions::TRANSLATIONS_ALL);
+        ->toContain(Permissions::TRANSLATIONS_ALL)
+        ->toContain(Permissions::NEWSLETTER_VIEW)
+        ->toContain(Permissions::NEWSLETTER_DELETE)
+        ->toContain(Permissions::NEWSLETTER_EXPORT)
+        ->toContain(Permissions::NEWSLETTER_ALL);
 });
 
 it('returns permissions grouped by module when calling byModule()', function () {
     $permissionsByModule = Permissions::byModule();
 
     expect($permissionsByModule)->toBeArray()
-        ->toHaveKeys(['programs', 'calls', 'news', 'documents', 'events', 'users', 'settings', 'translations'])
+        ->toHaveKeys(['programs', 'calls', 'news', 'documents', 'events', 'users', 'settings', 'translations', 'newsletter'])
         ->and($permissionsByModule['programs'])->toBeArray()->toHaveCount(5)
         ->and($permissionsByModule['calls'])->toBeArray()->toHaveCount(6)
         ->and($permissionsByModule['news'])->toBeArray()->toHaveCount(6)
@@ -85,7 +89,8 @@ it('returns permissions grouped by module when calling byModule()', function () 
         ->and($permissionsByModule['events'])->toBeArray()->toHaveCount(5)
         ->and($permissionsByModule['users'])->toBeArray()->toHaveCount(5)
         ->and($permissionsByModule['settings'])->toBeArray()->toHaveCount(3)
-        ->and($permissionsByModule['translations'])->toBeArray()->toHaveCount(5);
+        ->and($permissionsByModule['translations'])->toBeArray()->toHaveCount(5)
+        ->and($permissionsByModule['newsletter'])->toBeArray()->toHaveCount(4);
 });
 
 it('includes correct permissions for programs module', function () {
@@ -113,7 +118,7 @@ it('returns view-only permissions when calling viewOnly()', function () {
     $viewPermissions = Permissions::viewOnly();
 
     expect($viewPermissions)->toBeArray()
-        ->toHaveCount(7) // 5 originales + SETTINGS_VIEW + TRANSLATIONS_VIEW
+        ->toHaveCount(8) // 5 originales + SETTINGS_VIEW + TRANSLATIONS_VIEW + NEWSLETTER_VIEW
         ->toContain(Permissions::PROGRAMS_VIEW)
         ->toContain(Permissions::CALLS_VIEW)
         ->toContain(Permissions::NEWS_VIEW)
@@ -121,9 +126,11 @@ it('returns view-only permissions when calling viewOnly()', function () {
         ->toContain(Permissions::EVENTS_VIEW)
         ->toContain(Permissions::SETTINGS_VIEW)
         ->toContain(Permissions::TRANSLATIONS_VIEW)
+        ->toContain(Permissions::NEWSLETTER_VIEW)
         ->not->toContain(Permissions::PROGRAMS_CREATE)
         ->not->toContain(Permissions::CALLS_PUBLISH)
-        ->not->toContain(Permissions::TRANSLATIONS_CREATE);
+        ->not->toContain(Permissions::TRANSLATIONS_CREATE)
+        ->not->toContain(Permissions::NEWSLETTER_DELETE);
 });
 
 it('does not include user view permission in viewOnly()', function () {
@@ -131,6 +138,3 @@ it('does not include user view permission in viewOnly()', function () {
 
     expect($viewPermissions)->not->toContain(Permissions::USERS_VIEW);
 });
-
-
-

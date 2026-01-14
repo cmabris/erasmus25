@@ -127,19 +127,30 @@ describe('Admin DocumentCategories Index - Search', function () {
         $user->assignRole(Roles::ADMIN);
         $this->actingAs($user);
 
-        // Clear any existing categories to avoid interference from other tests
-        DocumentCategory::query()->delete();
-
-        $category1 = DocumentCategory::factory()->create(['name' => 'Convocatorias']);
-        $category2 = DocumentCategory::factory()->create(['name' => 'Modelos']);
+        // Create unique test categories with timestamps to avoid conflicts
+        $uniqueId = uniqid('test_', true);
+        $category1 = DocumentCategory::factory()->create([
+            'name' => "Convocatorias {$uniqueId}",
+            'slug' => "convocatorias-{$uniqueId}",
+        ]);
+        $category2 = DocumentCategory::factory()->create([
+            'name' => "Modelos {$uniqueId}",
+            'slug' => "modelos-{$uniqueId}",
+        ]);
 
         $component = Livewire::test(Index::class)
-            ->set('search', 'Convocatorias');
+            ->set('search', "Convocatorias {$uniqueId}");
 
         $categories = $component->get('documentCategories');
         $categoryNames = $categories->pluck('name')->toArray();
-        expect($categoryNames)->toContain('Convocatorias')
-            ->and($categoryNames)->not->toContain('Modelos');
+
+        // Verify that the search returns only the matching category
+        expect($categoryNames)->toContain("Convocatorias {$uniqueId}")
+            ->and($categoryNames)->not->toContain("Modelos {$uniqueId}");
+
+        // Clean up
+        $category1->forceDelete();
+        $category2->forceDelete();
     });
 
     it('can search document categories by slug', function () {
@@ -161,26 +172,32 @@ describe('Admin DocumentCategories Index - Search', function () {
         $user->assignRole(Roles::ADMIN);
         $this->actingAs($user);
 
-        // Clear any existing categories to avoid interference from other tests
-        DocumentCategory::query()->delete();
-
+        // Create unique test categories with timestamps to avoid conflicts
+        $uniqueId = uniqid('test_', true);
         $category1 = DocumentCategory::factory()->create([
-            'name' => 'Convocatorias',
-            'description' => 'Documentos de convocatorias',
+            'name' => "Convocatorias {$uniqueId}",
+            'slug' => "convocatorias-{$uniqueId}",
+            'description' => "Documentos de convocatorias {$uniqueId}",
         ]);
         $category2 = DocumentCategory::factory()->create([
-            'name' => 'Modelos',
-            'description' => 'Documentos modelo',
+            'name' => "Modelos {$uniqueId}",
+            'slug' => "modelos-{$uniqueId}",
+            'description' => "Documentos modelo {$uniqueId}",
         ]);
 
         $component = Livewire::test(Index::class)
-            ->set('search', 'convocatorias');
+            ->set('search', "convocatorias {$uniqueId}");
 
         $categories = $component->get('documentCategories');
         $categoryNames = $categories->pluck('name')->toArray();
 
-        expect($categoryNames)->toContain('Convocatorias')
-            ->and($categoryNames)->not->toContain('Modelos');
+        // Verify that the search returns only the matching category
+        expect($categoryNames)->toContain("Convocatorias {$uniqueId}")
+            ->and($categoryNames)->not->toContain("Modelos {$uniqueId}");
+
+        // Clean up
+        $category1->forceDelete();
+        $category2->forceDelete();
     });
 
     it('resets pagination when searching', function () {
