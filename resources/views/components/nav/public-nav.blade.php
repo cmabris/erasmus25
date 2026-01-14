@@ -25,6 +25,7 @@
         ['label' => __('common.nav.news'), 'route' => 'noticias.index', 'icon' => 'newspaper'],
         ['label' => __('common.nav.documents'), 'route' => 'documentos.index', 'icon' => 'folder-open'],
         ['label' => __('common.nav.calendar'), 'route' => 'calendario', 'icon' => 'calendar-days'],
+        ['label' => __('common.search.global_title'), 'route' => 'search', 'icon' => 'magnifying-glass'],
     ];
     
     // Clases de fondo según el modo (transparente o normal)

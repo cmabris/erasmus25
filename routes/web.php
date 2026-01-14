@@ -8,6 +8,7 @@ use App\Livewire\Public\Home;
 use App\Livewire\Public\News;
 use App\Livewire\Public\Newsletter;
 use App\Livewire\Public\Programs;
+use App\Livewire\Search\GlobalSearch;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
@@ -28,6 +29,10 @@ use Laravel\Fortify\Features;
 
 // Página principal
 Route::get('/', Home::class)->name('home');
+
+// Búsqueda Global
+// Búsqueda unificada en programas, convocatorias, noticias y documentos
+Route::get('/buscar', GlobalSearch::class)->name('search');
 
 // Programas Erasmus+
 // Listado y detalle de programas disponibles

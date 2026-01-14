@@ -11,7 +11,7 @@
 --}}
 
 <flux:navlist variant="outline">
-    {{-- Platform: Dashboard --}}
+    {{-- Platform: Dashboard y Búsqueda Global --}}
     <flux:navlist.group :heading="__('Platform')" class="grid">
         <flux:navlist.item 
             icon="squares-2x2" 
@@ -20,6 +20,16 @@
             wire:navigate
         >
             {{ __('Dashboard') }}
+        </flux:navlist.item>
+        
+        {{-- Búsqueda Global (con contexto admin) --}}
+        <flux:navlist.item 
+            icon="magnifying-glass" 
+            :href="route('search', ['admin' => true])" 
+            :current="request()->routeIs('search')" 
+            wire:navigate
+        >
+            {{ __('common.search.global_title') }}
         </flux:navlist.item>
     </flux:navlist.group>
 
