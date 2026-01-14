@@ -25,7 +25,7 @@
             class="mt-4"
             :items="[
                 ['label' => __('common.nav.dashboard'), 'href' => route('admin.dashboard'), 'icon' => 'squares-2x2'],
-                ['label' => __('Traducciones'), 'href' => route('admin.translations.index'), 'icon' => 'language'],
+                ['label' => __('common.nav.translations'), 'href' => route('admin.translations.index'), 'icon' => 'language'],
                 ['label' => __('Crear'), 'icon' => 'plus'],
             ]"
         />

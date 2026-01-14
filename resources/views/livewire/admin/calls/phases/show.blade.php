@@ -62,10 +62,10 @@
             class="mt-4"
             :items="[
                 ['label' => __('common.nav.dashboard'), 'href' => route('admin.dashboard'), 'icon' => 'squares-2x2'],
-                ['label' => __('Convocatorias'), 'href' => route('admin.calls.index'), 'icon' => 'document-text'],
-                ['label' => $call->title, 'href' => route('admin.calls.show', $call), 'icon' => 'document'],
-                ['label' => __('Fases'), 'href' => route('admin.calls.phases.index', $call), 'icon' => 'list-bullet'],
-                ['label' => $callPhase->name, 'icon' => 'list-bullet'],
+                ['label' => __('common.nav.calls'), 'href' => route('admin.calls.index'), 'icon' => 'megaphone'],
+                ['label' => $call->title, 'href' => route('admin.calls.show', $call), 'icon' => 'megaphone'],
+                ['label' => __('common.nav.phases'), 'href' => route('admin.calls.phases.index', $call), 'icon' => 'calendar'],
+                ['label' => $callPhase->name, 'icon' => 'calendar'],
             ]"
         />
     </div>

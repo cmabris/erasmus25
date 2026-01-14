@@ -38,6 +38,8 @@ return [
         'translations' => 'Traducciones',
         'audit_logs' => 'Auditoría y Logs',
         'newsletter_subscriptions' => 'Suscripciones Newsletter',
+        'phases' => 'Fases',
+        'resolutions' => 'Resoluciones',
     ],
 
     // Botones y acciones

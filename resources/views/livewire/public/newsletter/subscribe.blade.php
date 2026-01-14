@@ -27,6 +27,16 @@
         </div>
         
         <div class="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36">
+            {{-- Breadcrumbs --}}
+            <div class="mb-8">
+                <x-ui.breadcrumbs 
+                    :items="[
+                        ['label' => __('common.newsletter.title'), 'href' => route('newsletter.subscribe')],
+                    ]" 
+                    class="text-white/60 [&_a:hover]:text-white [&_a]:text-white/60 [&_span]:text-white"
+                />
+            </div>
+            
             <div class="max-w-3xl text-center">
                 <div class="mb-6 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm">
                     <flux:icon name="envelope" class="[:where(&)]:size-5" variant="outline" />

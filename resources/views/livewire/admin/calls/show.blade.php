@@ -72,8 +72,8 @@
             class="mt-4"
             :items="[
                 ['label' => __('common.nav.dashboard'), 'href' => route('admin.dashboard'), 'icon' => 'squares-2x2'],
-                ['label' => __('Convocatorias'), 'href' => route('admin.calls.index'), 'icon' => 'document-text'],
-                ['label' => $call->title, 'icon' => 'document-text'],
+                ['label' => __('common.nav.calls'), 'href' => route('admin.calls.index'), 'icon' => 'megaphone'],
+                ['label' => $call->title, 'icon' => 'megaphone'],
             ]"
         />
     </div>

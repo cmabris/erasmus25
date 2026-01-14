@@ -63,9 +63,9 @@
             class="mt-4"
             :items="[
                 ['label' => __('common.nav.dashboard'), 'href' => route('admin.dashboard'), 'icon' => 'squares-2x2'],
-                ['label' => __('Convocatorias'), 'href' => route('admin.calls.index'), 'icon' => 'document-text'],
-                ['label' => $call->title, 'href' => route('admin.calls.show', $call), 'icon' => 'document'],
-                ['label' => __('Resoluciones'), 'href' => route('admin.calls.resolutions.index', $call), 'icon' => 'document-check'],
+                ['label' => __('common.nav.calls'), 'href' => route('admin.calls.index'), 'icon' => 'megaphone'],
+                ['label' => $call->title, 'href' => route('admin.calls.show', $call), 'icon' => 'megaphone'],
+                ['label' => __('common.nav.resolutions'), 'href' => route('admin.calls.resolutions.index', $call), 'icon' => 'document-check'],
                 ['label' => $resolution->title, 'icon' => 'document-check'],
             ]"
         />

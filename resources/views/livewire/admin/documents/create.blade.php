@@ -25,7 +25,7 @@
             class="mt-4"
             :items="[
                 ['label' => __('common.nav.dashboard'), 'href' => route('admin.dashboard'), 'icon' => 'squares-2x2'],
-                ['label' => __('Documentos'), 'href' => route('admin.documents.index'), 'icon' => 'document'],
+                ['label' => __('common.nav.documents'), 'href' => route('admin.documents.index'), 'icon' => 'document'],
                 ['label' => __('Crear'), 'icon' => 'plus'],
             ]"
         />
