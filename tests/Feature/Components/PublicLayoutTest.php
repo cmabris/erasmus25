@@ -107,7 +107,7 @@ describe('Public Navigation', function () {
         expect($html)->toContain('Iniciar sesión');
     });
 
-    it('renders panel link for authenticated users', function () {
+    it('renders dashboard link for authenticated users without admin permissions', function () {
         $user = User::factory()->create();
 
         $this->actingAs($user);
@@ -116,7 +116,55 @@ describe('Public Navigation', function () {
 
         expect($html)
             ->toContain('Panel')
+            ->toContain(route('dashboard'))
+            ->not->toContain('Panel de Administración')
+            ->not->toContain(route('admin.dashboard'))
             ->not->toContain('Iniciar sesión');
+    });
+
+    it('renders admin panel link for authenticated users with admin permissions', function () {
+        $user = User::factory()->create();
+        $permission = \Spatie\Permission\Models\Permission::firstOrCreate([
+            'name' => \App\Support\Permissions::PROGRAMS_VIEW,
+            'guard_name' => 'web',
+        ]);
+        $user->givePermissionTo($permission);
+
+        $this->actingAs($user);
+
+        $html = Blade::render('<x-nav.public-nav />');
+
+        expect($html)
+            ->toContain('Panel de Administración')
+            ->toContain(route('admin.dashboard'))
+            ->not->toContain(route('dashboard'))
+            ->not->toContain('Iniciar sesión');
+    });
+
+    it('renders admin panel link for users with users.view permission', function () {
+        $user = User::factory()->create();
+        $permission = \Spatie\Permission\Models\Permission::firstOrCreate([
+            'name' => \App\Support\Permissions::USERS_VIEW,
+            'guard_name' => 'web',
+        ]);
+        $user->givePermissionTo($permission);
+
+        $this->actingAs($user);
+
+        $html = Blade::render('<x-nav.public-nav />');
+
+        expect($html)
+            ->toContain('Panel de Administración')
+            ->toContain(route('admin.dashboard'))
+            ->not->toContain('Iniciar sesión');
+    });
+
+    it('renders language switcher', function () {
+        $html = Blade::render('<x-nav.public-nav />');
+
+        expect($html)
+            ->toContain('wire:id')
+            ->toContain('language-switcher');
     });
 
     it('renders mobile menu button', function () {
