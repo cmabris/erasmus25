@@ -583,10 +583,21 @@ Para cada policy:
 - [Plan detallado](pasos/paso-3.6.3-plan.md) - Plan paso a paso completo ✅
 - [Documentación de navegación](../navigation.md) - Documentación completa de navegación ✅
 
-#### 3.6.4. Breadcrumbs
-- [ ] Implementar breadcrumbs en vistas públicas
-- [ ] Implementar breadcrumbs en panel de administración
-- [ ] Usar componente Flux UI si está disponible
+#### 3.6.4. Breadcrumbs ✅ COMPLETADO
+- [x] Implementar breadcrumbs en vistas públicas
+- [x] Implementar breadcrumbs en panel de administración
+- [x] Usar componente Flux UI si está disponible
+- [x] **Breadcrumb añadido a newsletter/subscribe**
+- [x] **Traducciones añadidas**: `common.nav.phases` y `common.nav.resolutions`
+- [x] **Iconos corregidos**: Convocatorias usa `megaphone`, Fases usa `calendar`
+- [x] **Traducciones actualizadas**: Todas las vistas usan `common.nav.*`
+- [x] **Tests**: 27 tests pasando (48 assertions) - `tests/Feature/Components/BreadcrumbsTest.php`
+
+**Documentación:**
+- [Plan detallado](pasos/paso-3.6.4-plan.md) - Plan paso a paso completo ✅
+- [Auditoría completa](pasos/paso-3.6.4-auditoria.md) - Estado de breadcrumbs en todas las vistas ✅
+- [Verificación y correcciones](pasos/paso-3.6.4-verificacion.md) - Correcciones aplicadas ✅
+- [Documentación de breadcrumbs](../breadcrumbs.md) - Guía completa de uso ✅
 
 ---
 
