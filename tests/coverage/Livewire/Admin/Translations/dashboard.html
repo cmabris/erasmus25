@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard for /Users/carlos/Qsync/proyectosHerd/erasmus25/app/Livewire/Admin/Translations</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="../../../_css/bootstrap.min.css?v=12.5.1" rel="stylesheet" type="text/css">
+  <link href="../../../_css/billboard.min.css?v=12.5.1" rel="stylesheet" type="text/css">
+  <link href="../../../_css/style.css?v=12.5.1" rel="stylesheet" type="text/css">
+  <link href="../../../_css/custom.css" rel="stylesheet" type="text/css">
+ </head>
+ <body>
+  <header>
+   <div class="container-fluid">
+    <div class="row">
+     <div class="col-md-12">
+      <nav aria-label="breadcrumb">
+       <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="../../../index.html">/Users/carlos/Qsync/proyectosHerd/erasmus25/app</a></li>
+         <li class="breadcrumb-item"><a href="../../index.html">Livewire</a></li>
+         <li class="breadcrumb-item"><a href="../index.html">Admin</a></li>
+         <li class="breadcrumb-item"><a href="index.html">Translations</a></li>
+         <li class="breadcrumb-item active">(Dashboard)</li>
+
+       </ol>
+      </nav>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="container-fluid">
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Classes</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="classesCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="classComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3 style="margin-top: 2rem;">Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Show.php.html#11">App\Livewire\Admin\Translations\Show</a></td><td class="text-right">84%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3 style="margin-top: 2rem;">Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right">Coverage</th>
+         <th class="text-right">Complexity</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Show.php.html#11">App\Livewire\Admin\Translations\Show</a></td><td class="text-right">84,7%</td><td class="text-right">27</td><td class="text-right">29</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-12">
+     <h2 style="margin-top: 3rem;">Methods</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="methodsCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="methodComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3 style="margin-top: 2rem;">Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Index.php.html#169"><abbr title="App\Livewire\Admin\Translations\Index::resetFilters">resetFilters</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Create.php.html#52"><abbr title="App\Livewire\Admin\Translations\Create::mount">mount</abbr></a></td><td class="text-right">57%</td></tr>
+       <tr><td><a href="Index.php.html#254"><abbr title="App\Livewire\Admin\Translations\Index::getTranslatableOptions">getTranslatableOptions</abbr></a></td><td class="text-right">69%</td></tr>
+       <tr><td><a href="Edit.php.html#41"><abbr title="App\Livewire\Admin\Translations\Edit::getModelTypeDisplayName">getModelTypeDisplayName</abbr></a></td><td class="text-right">71%</td></tr>
+       <tr><td><a href="Show.php.html#39"><abbr title="App\Livewire\Admin\Translations\Show::getModelTypeDisplayName">getModelTypeDisplayName</abbr></a></td><td class="text-right">71%</td></tr>
+       <tr><td><a href="Edit.php.html#57"><abbr title="App\Livewire\Admin\Translations\Edit::getTranslatableDisplayName">getTranslatableDisplayName</abbr></a></td><td class="text-right">75%</td></tr>
+       <tr><td><a href="Show.php.html#82"><abbr title="App\Livewire\Admin\Translations\Show::getTranslatableDisplayName">getTranslatableDisplayName</abbr></a></td><td class="text-right">75%</td></tr>
+       <tr><td><a href="Show.php.html#120"><abbr title="App\Livewire\Admin\Translations\Show::getTranslatableRoute">getTranslatableRoute</abbr></a></td><td class="text-right">75%</td></tr>
+       <tr><td><a href="Index.php.html#309"><abbr title="App\Livewire\Admin\Translations\Index::getTranslatableModel">getTranslatableModel</abbr></a></td><td class="text-right">84%</td></tr>
+       <tr><td><a href="Show.php.html#55"><abbr title="App\Livewire\Admin\Translations\Show::getTranslatableModel">getTranslatableModel</abbr></a></td><td class="text-right">84%</td></tr>
+       <tr><td><a href="Create.php.html#212"><abbr title="App\Livewire\Admin\Translations\Create::getExistingTranslation">getExistingTranslation</abbr></a></td><td class="text-right">85%</td></tr>
+       <tr><td><a href="Index.php.html#405"><abbr title="App\Livewire\Admin\Translations\Index::getModelTypeDisplayName">getModelTypeDisplayName</abbr></a></td><td class="text-right">85%</td></tr>
+       <tr><td><a href="Show.php.html#100"><abbr title="App\Livewire\Admin\Translations\Show::isTranslatableDeleted">isTranslatableDeleted</abbr></a></td><td class="text-right">88%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3 style="margin-top: 2rem;">Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right">Coverage</th>
+         <th class="text-right">Complexity</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Index.php.html#254"><abbr title="App\Livewire\Admin\Translations\Index::getTranslatableOptions">getTranslatableOptions</abbr></a></td><td class="text-right">69,6%</td><td class="text-right">9</td><td class="text-right">11</td></tr>
+       <tr><td><a href="Index.php.html#309"><abbr title="App\Livewire\Admin\Translations\Index::getTranslatableModel">getTranslatableModel</abbr></a></td><td class="text-right">84,2%</td><td class="text-right">6</td><td class="text-right">6</td></tr>
+       <tr><td><a href="Create.php.html#52"><abbr title="App\Livewire\Admin\Translations\Create::mount">mount</abbr></a></td><td class="text-right">57,1%</td><td class="text-right">4</td><td class="text-right">5</td></tr>
+       <tr><td><a href="Create.php.html#212"><abbr title="App\Livewire\Admin\Translations\Create::getExistingTranslation">getExistingTranslation</abbr></a></td><td class="text-right">85,7%</td><td class="text-right">5</td><td class="text-right">5</td></tr>
+       <tr><td><a href="Edit.php.html#41"><abbr title="App\Livewire\Admin\Translations\Edit::getModelTypeDisplayName">getModelTypeDisplayName</abbr></a></td><td class="text-right">71,4%</td><td class="text-right">5</td><td class="text-right">5</td></tr>
+       <tr><td><a href="Edit.php.html#57"><abbr title="App\Livewire\Admin\Translations\Edit::getTranslatableDisplayName">getTranslatableDisplayName</abbr></a></td><td class="text-right">75,0%</td><td class="text-right">5</td><td class="text-right">5</td></tr>
+       <tr><td><a href="Index.php.html#405"><abbr title="App\Livewire\Admin\Translations\Index::getModelTypeDisplayName">getModelTypeDisplayName</abbr></a></td><td class="text-right">85,7%</td><td class="text-right">5</td><td class="text-right">5</td></tr>
+       <tr><td><a href="Show.php.html#39"><abbr title="App\Livewire\Admin\Translations\Show::getModelTypeDisplayName">getModelTypeDisplayName</abbr></a></td><td class="text-right">71,4%</td><td class="text-right">5</td><td class="text-right">5</td></tr>
+       <tr><td><a href="Show.php.html#55"><abbr title="App\Livewire\Admin\Translations\Show::getTranslatableModel">getTranslatableModel</abbr></a></td><td class="text-right">84,6%</td><td class="text-right">5</td><td class="text-right">5</td></tr>
+       <tr><td><a href="Show.php.html#82"><abbr title="App\Livewire\Admin\Translations\Show::getTranslatableDisplayName">getTranslatableDisplayName</abbr></a></td><td class="text-right">75,0%</td><td class="text-right">5</td><td class="text-right">5</td></tr>
+       <tr><td><a href="Show.php.html#120"><abbr title="App\Livewire\Admin\Translations\Show::getTranslatableRoute">getTranslatableRoute</abbr></a></td><td class="text-right">75,0%</td><td class="text-right">5</td><td class="text-right">5</td></tr>
+       <tr><td><a href="Show.php.html#100"><abbr title="App\Livewire\Admin\Translations\Show::isTranslatableDeleted">isTranslatableDeleted</abbr></a></td><td class="text-right">88,9%</td><td class="text-right">3</td><td class="text-right">3</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <footer>
+    <hr/>
+    <p>
+     <small>Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 12.5.1</a> using <a href="https://www.php.net/" target="_top">PHP 8.3.29</a> and <a href="https://phpunit.de/">PHPUnit 12.4.4</a> at Wed Jan 14 17:05:36 UTC 2026.</small>
+    </p>
+   </footer>
+  </div>
+  <script src="../../../_js/billboard.pkgd.min.js?v=12.5.1" type="text/javascript"></script>
+  <script type="application/json" id="complexity_class">[[84.7457627118644,27,"Show.php.html#11","App\\Livewire\\Admin\\Translations\\Show","29.59"],[90.84967320261438,51,"Index.php.html#18","App\\Livewire\\Admin\\Translations\\Index","52.99"],[91.07142857142857,14,"Edit.php.html#11","App\\Livewire\\Admin\\Translations\\Edit","14.14"],[94.57831325301204,59,"Create.php.html#16","App\\Livewire\\Admin\\Translations\\Create","59.55"]]</script>
+  <script type="application/json" id="complexity_method">[[0,1,"Index.php.html#169","App\\Livewire\\Admin\\Translations\\Index::resetFilters","2"],[57.14285714285714,4,"Create.php.html#52","App\\Livewire\\Admin\\Translations\\Create::mount","5.26"],[69.56521739130434,9,"Index.php.html#254","App\\Livewire\\Admin\\Translations\\Index::getTranslatableOptions","11.28"],[71.42857142857143,5,"Edit.php.html#41","App\\Livewire\\Admin\\Translations\\Edit::getModelTypeDisplayName","5.58"],[71.42857142857143,5,"Show.php.html#39","App\\Livewire\\Admin\\Translations\\Show::getModelTypeDisplayName","5.58"],[75,5,"Edit.php.html#57","App\\Livewire\\Admin\\Translations\\Edit::getTranslatableDisplayName","5.39"],[75,5,"Show.php.html#82","App\\Livewire\\Admin\\Translations\\Show::getTranslatableDisplayName","5.39"],[75,5,"Show.php.html#120","App\\Livewire\\Admin\\Translations\\Show::getTranslatableRoute","5.39"],[84.21052631578947,6,"Index.php.html#309","App\\Livewire\\Admin\\Translations\\Index::getTranslatableModel","6.14"],[84.61538461538461,5,"Show.php.html#55","App\\Livewire\\Admin\\Translations\\Show::getTranslatableModel","5.09"],[85.71428571428571,5,"Create.php.html#212","App\\Livewire\\Admin\\Translations\\Create::getExistingTranslation","5.07"],[85.71428571428571,5,"Index.php.html#405","App\\Livewire\\Admin\\Translations\\Index::getModelTypeDisplayName","5.07"],[88.88888888888889,3,"Show.php.html#100","App\\Livewire\\Admin\\Translations\\Show::isTranslatableDeleted","3.01"],[90.9090909090909,2,"Index.php.html#145","App\\Livewire\\Admin\\Translations\\Index::delete","2.00"],[95.6043956043956,25,"Create.php.html#228","App\\Livewire\\Admin\\Translations\\Create::store","25"],[95.65217391304348,9,"Create.php.html#140","App\\Livewire\\Admin\\Translations\\Create::getTranslatableOptions","9"],[97.05882352941177,2,"Edit.php.html#75","App\\Livewire\\Admin\\Translations\\Edit::update","2"],[100,1,"Create.php.html#72","App\\Livewire\\Admin\\Translations\\Create::updatedTranslatableType","1"],[100,1,"Create.php.html#81","App\\Livewire\\Admin\\Translations\\Create::updatedTranslatableId","1"],[100,1,"Create.php.html#89","App\\Livewire\\Admin\\Translations\\Create::updatedLanguageId","1"],[100,1,"Create.php.html#97","App\\Livewire\\Admin\\Translations\\Create::updatedField","1"],[100,1,"Create.php.html#107","App\\Livewire\\Admin\\Translations\\Create::getAvailableModels","1"],[100,1,"Create.php.html#121","App\\Livewire\\Admin\\Translations\\Create::getLanguages","1"],[100,4,"Create.php.html#179","App\\Livewire\\Admin\\Translations\\Create::getAvailableFields","4"],[100,5,"Create.php.html#196","App\\Livewire\\Admin\\Translations\\Create::translationExists","5"],[100,1,"Create.php.html#357","App\\Livewire\\Admin\\Translations\\Create::render","1"],[100,1,"Edit.php.html#28","App\\Livewire\\Admin\\Translations\\Edit::mount","1"],[100,1,"Edit.php.html#127","App\\Livewire\\Admin\\Translations\\Edit::render","1"],[100,1,"Index.php.html#85","App\\Livewire\\Admin\\Translations\\Index::mount","1"],[100,1,"Index.php.html#93","App\\Livewire\\Admin\\Translations\\Index::translations","1"],[100,3,"Index.php.html#121","App\\Livewire\\Admin\\Translations\\Index::sortBy","3"],[100,1,"Index.php.html#136","App\\Livewire\\Admin\\Translations\\Index::confirmDelete","1"],[100,1,"Index.php.html#178","App\\Livewire\\Admin\\Translations\\Index::updatedSearch","1"],[100,1,"Index.php.html#186","App\\Livewire\\Admin\\Translations\\Index::updatedFilterModel","1"],[100,1,"Index.php.html#195","App\\Livewire\\Admin\\Translations\\Index::updatedFilterLanguageId","1"],[100,1,"Index.php.html#203","App\\Livewire\\Admin\\Translations\\Index::updatedFilterTranslatableId","1"],[100,1,"Index.php.html#211","App\\Livewire\\Admin\\Translations\\Index::canCreate","1"],[100,1,"Index.php.html#221","App\\Livewire\\Admin\\Translations\\Index::getAvailableModels","1"],[100,1,"Index.php.html#235","App\\Livewire\\Admin\\Translations\\Index::getLanguages","1"],[100,5,"Index.php.html#290","App\\Livewire\\Admin\\Translations\\Index::getTranslatableDisplayName","5"],[100,3,"Index.php.html#349","App\\Livewire\\Admin\\Translations\\Index::isTranslatableDeleted","3"],[100,6,"Index.php.html#370","App\\Livewire\\Admin\\Translations\\Index::getTranslatableTooltip","6"],[100,1,"Index.php.html#421","App\\Livewire\\Admin\\Translations\\Index::render","1"],[100,1,"Show.php.html#28","App\\Livewire\\Admin\\Translations\\Show::mount","1"],[100,1,"Show.php.html#138","App\\Livewire\\Admin\\Translations\\Show::confirmDelete","1"],[100,1,"Show.php.html#147","App\\Livewire\\Admin\\Translations\\Show::delete","1"],[100,1,"Show.php.html#163","App\\Livewire\\Admin\\Translations\\Show::render","1"]]</script>
+  <script type="text/javascript" defer>
+  const barLabels = [
+    '0%',
+    '0-10%',
+    '10-20%',
+    '20-30%',
+    '30-40%',
+    '40-50%',
+    '50-60%',
+    '60-70%',
+    '70-80%',
+    '80-90%',
+    '90-100%',
+    '100%'
+  ];
+  const barConfig = (name, fullName, values) => ({
+    axis: {
+      x: {
+        type: "category",
+        categories: barLabels,
+      },
+      y: {
+        label: {
+          text: `#${name}`,
+          position: 'outer-top',
+        },
+      },
+    },
+    bindto: `#${name}CoverageDistribution`,
+    data: {
+      columns: [
+        [fullName].concat(values),
+      ],
+      colors: {
+        [fullName]: "rgba(69, 114, 167, 0.75)",
+      },
+      type: "bar",
+    },
+    bar: {
+      width: {
+        ratio: 0.9,
+      },
+    },
+    grid: {
+      focus: {
+        show: false,
+      },
+      x: {
+        show: true,
+      },
+      y: {
+        show: true,
+      },
+    },
+    legend: {
+      show: false,
+    },
+    tooltip: {
+      contents: function (data) {
+        return `<table class="bb-tooltip"><tbody>
+            <tr><th colspan="2">Coverage ${barLabels[data[0].x]}</th></tr>
+            <tr><td class="value">${data[0].value} ${name}</td></tr>
+          </tbody></table>`;
+      },
+      grouped: false,
+    },
+  });
+  bb.generate(
+    barConfig('classes', "Class Coverage", [0,0,0,0,0,0,0,0,0,1,3,0])
+  );
+  bb.generate(
+    barConfig('methods', "Method Coverage", [1,0,0,0,0,0,1,1,5,5,4,30])
+  );
+
+  const scatterConfig = (name, complexityData) => ({
+    axis: {
+      x: {
+        label: {
+          text: 'Code Coverage (in percent)',
+          position: 'outer-right',
+        },
+        tick: {
+          values: [0, 20, 40, 60, 80, 100],
+        },
+      },
+      y: {
+        label: {
+          text: 'Cyclomatic Complexity',
+          position: 'outer-top',
+        },
+        min: 0,
+        padding: {
+          bottom: 0,
+          top: 5,
+        },
+      },
+    },
+    bindto: `#${name}Complexity`,
+    data: {
+      columns: [
+        ["complexity_x"].concat(complexityData.map(d => d[0])),
+        ["complexity"].concat(complexityData.map(d => d[1])),
+      ],
+      onclick: function(data, element) {
+        window.location = complexityData[data.index][2];
+      },
+      type: "scatter",
+      xs: {
+        "complexity": "complexity_x",
+      },
+    },
+    grid: {
+      focus: {
+        show: true,
+        y: true,
+      },
+      x: {
+        show: true,
+      },
+      y: {
+        show: true,
+      },
+    },
+    legend: {
+      show: false,
+    },
+    tooltip: {
+      contents: function (data) {
+        const coverage = Math.round(data[0].x);
+        const complexity = data[0].value;
+        const targetName = complexityData[data[0].index][3];
+        const crap = complexityData[data[0].index][4];
+        return `<table class="bb-tooltip"><tbody>
+            <tr><th colspan="2">${targetName}</th></tr>
+            <tr class="bb-tooltip-name-complexity"><td>Coverage</td><td class="name">${coverage}%</td></tr>
+            <tr class="bb-tooltip-name-complexity"><td>Complexity</td><td class="value">${complexity}</td></tr>
+            <tr class="bb-tooltip-name-complexity"><td>Crap</td><td class="value">${crap}</td></tr>
+          </tbody></table>`;
+      },
+      grouped: false,
+    },
+  });
+  const classComplexityData = JSON.parse(document.getElementById('complexity_class').textContent);
+  bb.generate(
+    scatterConfig("class", classComplexityData)
+  );
+  const methodComplexityData = JSON.parse(document.getElementById('complexity_method').textContent);
+  bb.generate(
+    scatterConfig("method", methodComplexityData),
+  );
+  </script>
+ </body>
+</html>
