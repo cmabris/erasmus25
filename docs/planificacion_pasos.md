@@ -511,8 +511,8 @@ Para cada policy:
 
 **Objetivo**: Establecer la estructura de rutas y navegación de la aplicación.
 
-#### 3.6.1. Rutas Públicas
-- [ ] Definir rutas públicas en `routes/web.php`:
+#### 3.6.1. Rutas Públicas ✅ COMPLETADO
+- [x] Definir rutas públicas en `routes/web.php`:
   - `/` - Página principal
   - `/programas` - Listado de programas
   - `/programas/{program}` - Detalle de programa
@@ -525,6 +525,15 @@ Para cada policy:
   - `/calendario` - Calendario de eventos
   - `/eventos/{event}` - Detalle de evento
   - `/newsletter/suscribir` - Suscripción a newsletter
+- [x] **Organización**: Rutas agrupadas y bien comentadas
+- [x] **Route Model Binding**: Verificado y documentado (slug para Program, Call, NewsPost, Document; ID para ErasmusEvent)
+- [x] **Tests**: 39 tests pasando (52 assertions) - `tests/Feature/Routes/PublicRoutesTest.php`
+- [x] **Documentación**: `docs/public-routes.md` creada con documentación completa
+- [x] **Casos Edge**: Tests para slugs especiales, largos, con números, etc.
+
+**Documentación:**
+- [Plan detallado](pasos/paso-3.6.1-plan.md) - Plan paso a paso completo ✅
+- [Documentación de rutas públicas](../public-routes.md) - Documentación completa de todas las rutas ✅
 
 #### 3.6.2. Rutas de Administración
 - [ ] Crear archivo `routes/admin.php` (opcional) o agrupar en `web.php`
