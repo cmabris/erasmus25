@@ -45,6 +45,7 @@ Esta carpeta contiene la documentación técnica de la aplicación web "Erasmus+
 - **[Paso 29: CRUD de Traducciones en Panel de Administración](pasos/paso29.md)**: Implementación completa del CRUD de Traducciones en el panel de administración con componentes Livewire (Index, Create, Edit, Show), gestión de traducciones polimórficas (Program, Setting), filtros avanzados, búsqueda en tiempo real, validación de unicidad, manejo de SoftDeletes, optimizaciones de rendimiento (caché, índices de BD), limpieza de caché en tests para evitar interferencias en paralelo, y 66 tests completos (152 assertions). Incluye corrección de tests de permisos y optimizaciones de consultas.
 - **[Paso 30: Auditoría y Logs en Panel de Administración](pasos/paso30.md)**: Implementación completa del sistema de Auditoría y Logs en el panel de administración con componentes Livewire (Index, Show), integración con Spatie Laravel Activitylog v4, logging automático en 6 modelos y logging manual en 9 acciones especiales, filtros avanzados, visualización de cambios, exportación a Excel mediante Laravel Excel, optimizaciones de rendimiento (índices, caché, eager loading), limpieza completa de código legacy (eliminación de modelo AuditLog, factory, tests y tabla audit_logs), corrección de 41 tests fallando en paralelo, y 85 tests completos (185 assertions). Estado final: 2277 tests pasando sin problemas.
 - **[Paso 31: Gestión de Suscripciones Newsletter en Panel de Administración](pasos/paso31.md)**: Implementación completa del sistema de gestión de Suscripciones Newsletter en el panel de administración con componentes Livewire (Index, Show), filtros avanzados (búsqueda, programa, estado, verificación), exportación a Excel mediante Laravel Excel, eliminación con confirmación (hard delete para GDPR), diseño moderno y responsive con Flux UI, optimizaciones de rendimiento (índices de BD), corrección de 5 tests existentes fallando en paralelo, y 142 tests completos (339 assertions). Estado final: 2352 tests pasando sin problemas.
+- **[Paso 36: Búsqueda Global (Paso 3.7.1)](pasos/paso36.md)**: Implementación completa de la búsqueda global con detección automática de contexto (público vs admin), búsqueda unificada en 4 tipos de entidades (programas, convocatorias, noticias, documentos), resultados agrupados por tipo, filtros avanzados, enlaces dinámicos según contexto, layout adaptativo, optimizaciones de rendimiento (eager loading, debounce, límites), integración en navegación pública y admin, y 24 tests completos (50 assertions). Estado final: 2546 tests pasando sin problemas.
 - **[Planificación de Pasos de Desarrollo](planificacion_pasos.md)**: Planificación completa y estructurada de los siguientes pasos en el desarrollo de la aplicación, incluyendo seeders, Form Requests, Policies, área pública, panel de administración, rutas, funcionalidades avanzadas, testing y optimización.
 
 ### Base de Datos
@@ -96,6 +97,18 @@ Esta carpeta contiene la documentación técnica de la aplicación web "Erasmus+
 - **[Componentes de Eventos](events-components.md)**: Documentación técnica de los componentes de calendario y eventos, incluyendo vista mensual/semanal/diaria, filtros avanzados, integración con convocatorias, seeders y tests completos.
 - **[Sistema de Newsletter](newsletter-components.md)**: Documentación técnica del sistema completo de suscripción a newsletter, incluyendo componentes Livewire, email de verificación, scopes del modelo, seeders y tests completos.
 - **[Sistema de Internacionalización (i18n)](i18n-system.md)**: Documentación completa del sistema de internacionalización, incluyendo middleware, componente Language Switcher, helpers, trait Translatable, traducciones estáticas y dinámicas, y guía para añadir nuevos idiomas.
+
+### Rutas y Navegación
+
+- **[Rutas Públicas](public-routes.md)**: Documentación completa de todas las rutas públicas de la aplicación, incluyendo route model binding, slugs, estructura de rutas, y tests completos.
+- **[Rutas de Administración](admin-routes.md)**: Documentación completa de todas las rutas de administración, incluyendo middleware, autorización, estructura de rutas anidadas, y tests completos.
+- **[Autorización en Rutas de Administración](admin-routes-authorization.md)**: Documentación sobre la decisión de diseño de autorización en rutas de administración, análisis de opciones, y implementación actual.
+- **[Navegación Principal](navigation.md)**: Documentación completa de la navegación pública y de administración, incluyendo estructura de menús, permisos, selector de idioma, y guía para añadir nuevos elementos.
+- **[Breadcrumbs](breadcrumbs.md)**: Documentación completa del sistema de breadcrumbs (migas de pan), incluyendo componente reutilizable, patrones de uso para vistas públicas y de administración, tabla de iconos por módulo, y ejemplos de implementación.
+
+### Funcionalidades Avanzadas
+
+- **[Búsqueda Global](global-search.md)**: Documentación técnica completa de la búsqueda global, incluyendo detección automática de contexto (público vs admin), búsqueda unificada en múltiples entidades, resultados agrupados por tipo, filtros avanzados, enlaces dinámicos según contexto, layout adaptativo, optimizaciones de rendimiento, y guía de uso con ejemplos.
 
 ### Panel de Administración
 
