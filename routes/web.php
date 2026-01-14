@@ -15,41 +15,81 @@ use App\Livewire\Settings\TwoFactor;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 
+/*
+|--------------------------------------------------------------------------
+| Rutas Públicas (Front-office)
+|--------------------------------------------------------------------------
+|
+| Estas rutas son accesibles sin autenticación y están destinadas a los
+| visitantes del sitio web. Todas las rutas públicas usan el layout
+| 'components.layouts.public' y están disponibles para usuarios anónimos.
+|
+*/
+
+// Página principal
 Route::get('/', Home::class)->name('home');
 
-// Rutas públicas de programas
+// Programas Erasmus+
+// Listado y detalle de programas disponibles
 Route::get('/programas', Programs\Index::class)->name('programas.index');
 Route::get('/programas/{program:slug}', Programs\Show::class)->name('programas.show');
 
-// Rutas públicas de convocatorias
+// Convocatorias
+// Listado y detalle de convocatorias abiertas y cerradas (solo publicadas)
 Route::get('/convocatorias', Calls\Index::class)->name('convocatorias.index');
 Route::get('/convocatorias/{call:slug}', Calls\Show::class)->name('convocatorias.show');
 
-// Rutas públicas de noticias
+// Noticias
+// Listado y detalle de noticias publicadas
 Route::get('/noticias', News\Index::class)->name('noticias.index');
 Route::get('/noticias/{newsPost:slug}', News\Show::class)->name('noticias.show');
 
-// Rutas públicas de documentos
+// Documentos
+// Listado y detalle de documentos disponibles para descarga
 Route::get('/documentos', Documents\Index::class)->name('documentos.index');
 Route::get('/documentos/{document:slug}', Documents\Show::class)->name('documentos.show');
 
-// Rutas públicas de eventos
+// Eventos
+// Calendario de eventos y listado/detalle de eventos públicos
+// Nota: Los eventos usan ID en lugar de slug porque son entidades más temporales
+// y no requieren URLs amigables para SEO. El modelo ErasmusEvent no tiene campo slug.
 Route::get('/calendario', Events\Calendar::class)->name('calendario');
 Route::get('/eventos', Events\Index::class)->name('eventos.index');
 Route::get('/eventos/{event}', Events\Show::class)->name('eventos.show');
 
-// Rutas públicas de newsletter
+// Newsletter
+// Suscripción, verificación y baja del newsletter
 Route::get('/newsletter/suscribir', Newsletter\Subscribe::class)->name('newsletter.subscribe');
 Route::get('/newsletter/verificar/{token}', Newsletter\Verify::class)->name('newsletter.verify');
 Route::get('/newsletter/baja', Newsletter\Unsubscribe::class)->name('newsletter.unsubscribe');
 Route::get('/newsletter/baja/{token}', Newsletter\Unsubscribe::class)->name('newsletter.unsubscribe.token');
 
-// Dashboard público (placeholder - redirige al admin si tiene permisos)
+/*
+|--------------------------------------------------------------------------
+| Rutas de Usuario Autenticado
+|--------------------------------------------------------------------------
+|
+| Estas rutas requieren autenticación pero no son parte del panel de
+| administración. Incluyen el dashboard personal y configuración de usuario.
+|
+*/
+
+// Dashboard personal (placeholder - redirige al admin si tiene permisos)
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
-// Rutas de administración
+/*
+|--------------------------------------------------------------------------
+| Rutas de Administración (Back-office)
+|--------------------------------------------------------------------------
+|
+| Estas rutas requieren autenticación y verificación de email. Todas las
+| rutas de administración están bajo el prefijo '/admin' y el nombre de
+| ruta 'admin.*'. Requieren permisos específicos según la funcionalidad.
+|
+*/
+
 Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', AdminDashboard::class)->name('dashboard');
 
@@ -145,6 +185,16 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::get('/newsletter', \App\Livewire\Admin\Newsletter\Index::class)->name('newsletter.index');
     Route::get('/newsletter/{newsletter_subscription}', \App\Livewire\Admin\Newsletter\Show::class)->name('newsletter.show');
 });
+
+/*
+|--------------------------------------------------------------------------
+| Rutas de Configuración de Usuario
+|--------------------------------------------------------------------------
+|
+| Estas rutas permiten a los usuarios autenticados gestionar su perfil,
+| contraseña, apariencia y autenticación de dos factores.
+|
+*/
 
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');
