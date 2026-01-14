@@ -17,7 +17,6 @@ class NotificationService
      * Create a new notification.
      *
      * @param  array<string, mixed>  $data
-     * @return Notification
      */
     public function create(array $data): Notification
     {
@@ -35,7 +34,6 @@ class NotificationService
      * Create and broadcast a notification (prepared for future real-time implementation).
      *
      * @param  array<string, mixed>  $data
-     * @return Notification
      */
     public function createAndBroadcast(array $data): Notification
     {
@@ -184,14 +182,16 @@ class NotificationService
      * Normalize users input to a collection.
      *
      * @param  User|Collection<int, User>  $users
-     * @return Collection<int, User>
+     * @return \Illuminate\Support\Collection<int, User>
      */
-    protected function normalizeUsers(User|Collection $users): Collection
+    protected function normalizeUsers(User|Collection $users): \Illuminate\Support\Collection
     {
         if ($users instanceof User) {
             return collect([$users]);
         }
 
-        return $users;
+        return $users instanceof \Illuminate\Database\Eloquent\Collection
+            ? $users
+            : collect($users);
     }
 }

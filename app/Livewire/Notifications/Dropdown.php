@@ -33,7 +33,7 @@ class Dropdown extends Component
      */
     public function mount(): void
     {
-        $this->notifications = collect();
+        $this->notifications = Notification::query()->whereRaw('1 = 0')->get();
         $this->loadNotifications();
     }
 
@@ -43,7 +43,7 @@ class Dropdown extends Component
     public function loadNotifications(): void
     {
         if (! Auth::check()) {
-            $this->notifications = collect();
+            $this->notifications = Notification::query()->whereRaw('1 = 0')->get();
             $this->unreadCount = 0;
 
             return;
