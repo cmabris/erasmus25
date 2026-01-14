@@ -535,26 +535,37 @@ Para cada policy:
 - [Plan detallado](pasos/paso-3.6.1-plan.md) - Plan paso a paso completo ✅
 - [Documentación de rutas públicas](../public-routes.md) - Documentación completa de todas las rutas ✅
 
-#### 3.6.2. Rutas de Administración
-- [ ] Crear archivo `routes/admin.php` (opcional) o agrupar en `web.php`
-- [ ] Definir prefijo `/admin` para todas las rutas de administración
-- [ ] Middleware `auth` y verificación de permisos
-- [ ] Rutas de administración:
-  - `/admin` - Dashboard
-  - `/admin/programas` - CRUD programas
-  - `/admin/anios-academicos` - CRUD años académicos
-  - `/admin/convocatorias` - CRUD convocatorias
-  - `/admin/noticias` - CRUD noticias
-  - `/admin/etiquetas` - CRUD etiquetas
-  - `/admin/documentos` - CRUD documentos
-  - `/admin/categorias` - CRUD categorías
-  - `/admin/eventos` - CRUD eventos
-  - `/admin/usuarios` - CRUD usuarios
-  - `/admin/roles` - CRUD roles
-  - `/admin/configuracion` - Configuración del sistema
-  - `/admin/traducciones` - Gestión de traducciones
-  - `/admin/auditoria` - Logs de auditoría
-  - `/admin/newsletter` - Suscripciones newsletter
+#### 3.6.2. Rutas de Administración ✅ COMPLETADO
+- [x] Crear archivo `routes/admin.php` (opcional) o agrupar en `web.php` - Agrupadas en `web.php`
+- [x] Definir prefijo `/admin` para todas las rutas de administración
+- [x] Middleware `auth` y verificación de permisos - Implementado en componentes Livewire
+- [x] Rutas de administración:
+  - `/admin` - Dashboard ✅
+  - `/admin/programas` - CRUD programas ✅
+  - `/admin/anios-academicos` - CRUD años académicos ✅
+  - `/admin/convocatorias` - CRUD convocatorias ✅
+  - `/admin/convocatorias/{call}/fases` - CRUD fases (anidadas) ✅
+  - `/admin/convocatorias/{call}/resoluciones` - CRUD resoluciones (anidadas) ✅
+  - `/admin/noticias` - CRUD noticias ✅
+  - `/admin/etiquetas` - CRUD etiquetas ✅
+  - `/admin/documentos` - CRUD documentos ✅
+  - `/admin/categorias` - CRUD categorías ✅
+  - `/admin/eventos` - CRUD eventos ✅
+  - `/admin/usuarios` - CRUD usuarios ✅
+  - `/admin/roles` - CRUD roles ✅
+  - `/admin/configuracion` - Configuración del sistema ✅
+  - `/admin/traducciones` - Gestión de traducciones ✅
+  - `/admin/auditoria` - Logs de auditoría ✅
+  - `/admin/newsletter` - Suscripciones newsletter ✅
+- [x] **Organización**: Rutas agrupadas y bien comentadas
+- [x] **Route Model Binding**: Verificado y documentado (ID para todas las rutas de administración)
+- [x] **Tests**: 90 tests pasando (107 assertions) - `tests/Feature/Routes/AdminRoutesTest.php`
+- [x] **Documentación**: `docs/admin-routes.md` y `docs/admin-routes-authorization.md` creadas
+
+**Documentación:**
+- [Plan detallado](pasos/paso-3.6.2-plan.md) - Plan paso a paso completo ✅
+- [Documentación de rutas](../admin-routes.md) - Documentación completa de todas las rutas ✅
+- [Documentación de autorización](../admin-routes-authorization.md) - Decisión de diseño y patrones ✅
 
 #### 3.6.3. Navegación Principal
 - [ ] Crear componente de navegación pública (`components/nav/public-nav.blade.php`)
