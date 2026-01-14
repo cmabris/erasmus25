@@ -2,6 +2,14 @@
 
 namespace App\Providers;
 
+use App\Models\Call;
+use App\Models\Document;
+use App\Models\NewsPost;
+use App\Models\Resolution;
+use App\Observers\CallObserver;
+use App\Observers\DocumentObserver;
+use App\Observers\NewsPostObserver;
+use App\Observers\ResolutionObserver;
 use App\Policies\ActivityPolicy;
 use App\Policies\RolePolicy;
 use Illuminate\Support\Facades\Blade;
@@ -40,5 +48,11 @@ class AppServiceProvider extends ServiceProvider
 
         // Registrar ActivityPolicy manualmente (el modelo es de Spatie)
         Gate::policy(Activity::class, ActivityPolicy::class);
+
+        // Registrar Observers
+        Call::observe(CallObserver::class);
+        Resolution::observe(ResolutionObserver::class);
+        NewsPost::observe(NewsPostObserver::class);
+        Document::observe(DocumentObserver::class);
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Livewire\Admin\Dashboard as AdminDashboard;
+use App\Livewire\Notifications\Index as NotificationsIndex;
 use App\Livewire\Public\Calls;
 use App\Livewire\Public\Documents;
 use App\Livewire\Public\Events;
@@ -83,6 +84,12 @@ Route::get('/newsletter/baja/{token}', Newsletter\Unsubscribe::class)->name('new
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
+
+// Notificaciones
+// Página de notificaciones del usuario autenticado
+Route::get('/notificaciones', NotificationsIndex::class)
+    ->middleware(['auth'])
+    ->name('notifications.index');
 
 /*
 |--------------------------------------------------------------------------

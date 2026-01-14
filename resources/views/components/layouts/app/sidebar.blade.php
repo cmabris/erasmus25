@@ -34,6 +34,11 @@
                 </flux:navlist.item>
             </flux:navlist>
 
+            {{-- Notifications Bell --}}
+            <div class="px-4 py-2">
+                <livewire:notifications.bell />
+            </div>
+
             <!-- Desktop User Menu -->
             <flux:dropdown class="hidden lg:block" position="bottom" align="start">
                 <flux:profile
@@ -87,6 +92,11 @@
             {{-- Language Switcher (Mobile) --}}
             <div class="me-2 lg:hidden">
                 <livewire:language.switcher variant="dropdown" size="sm" />
+            </div>
+
+            {{-- Notifications Bell (Mobile) --}}
+            <div class="me-2 lg:hidden">
+                <livewire:notifications.bell />
             </div>
 
             <flux:spacer />
