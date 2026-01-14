@@ -501,6 +501,10 @@ Para cada policy:
   - Exportar lista de emails
   - Eliminar suscripciones
 
+**Documentación:**
+- [Plan detallado](pasos/paso-3.5.15-plan.md) - Plan paso a paso completo (10 pasos, 5 fases) ✅
+- [Resumen ejecutivo](pasos/paso-3.5.15-resumen.md) - Resumen de objetivos y estructura ✅
+
 ---
 
 ### **Paso 3.6: Rutas y Navegación**
