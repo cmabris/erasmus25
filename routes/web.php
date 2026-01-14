@@ -91,97 +91,177 @@ Route::view('dashboard', 'dashboard')
 */
 
 Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
+    /*
+    |--------------------------------------------------------------------------
+    | Dashboard de Administración
+    |--------------------------------------------------------------------------
+    |
+    | Panel principal de administración con estadísticas y accesos rápidos.
+    | Requiere permisos: programs.view o users.view (mínimo)
+    |
+    */
     Route::get('/', AdminDashboard::class)->name('dashboard');
 
-    // Rutas de Programas
+    /*
+    |--------------------------------------------------------------------------
+    | Gestión de Contenido Principal
+    |--------------------------------------------------------------------------
+    |
+    | Rutas para gestionar los contenidos principales de la aplicación:
+    | programas, años académicos, convocatorias, noticias y documentos.
+    |
+    */
+
+    // Programas Erasmus+
+    // Permisos requeridos: programs.view, programs.create, programs.edit, programs.delete
+    // Route Model Binding: {program} usa ID (no slug) para rutas de administración
     Route::get('/programas', \App\Livewire\Admin\Programs\Index::class)->name('programs.index');
     Route::get('/programas/crear', \App\Livewire\Admin\Programs\Create::class)->name('programs.create');
     Route::get('/programas/{program}', \App\Livewire\Admin\Programs\Show::class)->name('programs.show');
     Route::get('/programas/{program}/editar', \App\Livewire\Admin\Programs\Edit::class)->name('programs.edit');
 
-    // Rutas de Años Académicos
+    // Años Académicos
+    // Permisos requeridos: academic-years.view, academic-years.create, academic-years.edit, academic-years.delete
+    // Route Model Binding: {academic_year} usa ID
     Route::get('/anios-academicos', \App\Livewire\Admin\AcademicYears\Index::class)->name('academic-years.index');
     Route::get('/anios-academicos/crear', \App\Livewire\Admin\AcademicYears\Create::class)->name('academic-years.create');
     Route::get('/anios-academicos/{academic_year}', \App\Livewire\Admin\AcademicYears\Show::class)->name('academic-years.show');
     Route::get('/anios-academicos/{academic_year}/editar', \App\Livewire\Admin\AcademicYears\Edit::class)->name('academic-years.edit');
 
-    // Rutas de Convocatorias
+    // Convocatorias
+    // Permisos requeridos: calls.view, calls.create, calls.edit, calls.delete, calls.publish
+    // Route Model Binding: {call} usa ID (no slug) para rutas de administración
     Route::get('/convocatorias', \App\Livewire\Admin\Calls\Index::class)->name('calls.index');
     Route::get('/convocatorias/crear', \App\Livewire\Admin\Calls\Create::class)->name('calls.create');
     Route::get('/convocatorias/{call}', \App\Livewire\Admin\Calls\Show::class)->name('calls.show');
     Route::get('/convocatorias/{call}/editar', \App\Livewire\Admin\Calls\Edit::class)->name('calls.edit');
 
-    // Rutas de Noticias
+    // Noticias
+    // Permisos requeridos: news.view, news.create, news.edit, news.delete, news.publish
+    // Route Model Binding: {news_post} usa ID (no slug) para rutas de administración
     Route::get('/noticias', \App\Livewire\Admin\News\Index::class)->name('news.index');
     Route::get('/noticias/crear', \App\Livewire\Admin\News\Create::class)->name('news.create');
     Route::get('/noticias/{news_post}', \App\Livewire\Admin\News\Show::class)->name('news.show');
     Route::get('/noticias/{news_post}/editar', \App\Livewire\Admin\News\Edit::class)->name('news.edit');
 
-    // Rutas de Etiquetas de Noticias
+    // Etiquetas de Noticias
+    // Permisos requeridos: news-tags.view, news-tags.create, news-tags.edit, news-tags.delete
+    // Route Model Binding: {news_tag} usa ID
     Route::get('/etiquetas', \App\Livewire\Admin\NewsTags\Index::class)->name('news-tags.index');
     Route::get('/etiquetas/crear', \App\Livewire\Admin\NewsTags\Create::class)->name('news-tags.create');
     Route::get('/etiquetas/{news_tag}', \App\Livewire\Admin\NewsTags\Show::class)->name('news-tags.show');
     Route::get('/etiquetas/{news_tag}/editar', \App\Livewire\Admin\NewsTags\Edit::class)->name('news-tags.edit');
 
-    // Rutas de Documentos
+    // Documentos
+    // Permisos requeridos: documents.view, documents.create, documents.edit, documents.delete
+    // Route Model Binding: {document} usa ID (no slug) para rutas de administración
     Route::get('/documentos', \App\Livewire\Admin\Documents\Index::class)->name('documents.index');
     Route::get('/documentos/crear', \App\Livewire\Admin\Documents\Create::class)->name('documents.create');
     Route::get('/documentos/{document}', \App\Livewire\Admin\Documents\Show::class)->name('documents.show');
     Route::get('/documentos/{document}/editar', \App\Livewire\Admin\Documents\Edit::class)->name('documents.edit');
 
-    // Rutas de Categorías de Documentos
+    // Categorías de Documentos
+    // Permisos requeridos: document-categories.view, document-categories.create, document-categories.edit, document-categories.delete
+    // Route Model Binding: {document_category} usa ID
     Route::get('/categorias', \App\Livewire\Admin\DocumentCategories\Index::class)->name('document-categories.index');
     Route::get('/categorias/crear', \App\Livewire\Admin\DocumentCategories\Create::class)->name('document-categories.create');
     Route::get('/categorias/{document_category}', \App\Livewire\Admin\DocumentCategories\Show::class)->name('document-categories.show');
     Route::get('/categorias/{document_category}/editar', \App\Livewire\Admin\DocumentCategories\Edit::class)->name('document-categories.edit');
 
-    // Rutas de Eventos
+    // Eventos
+    // Permisos requeridos: events.view, events.create, events.edit, events.delete
+    // Route Model Binding: {event} usa ID (el modelo ErasmusEvent no tiene slug)
     Route::get('/eventos', \App\Livewire\Admin\Events\Index::class)->name('events.index');
     Route::get('/eventos/crear', \App\Livewire\Admin\Events\Create::class)->name('events.create');
     Route::get('/eventos/{event}', \App\Livewire\Admin\Events\Show::class)->name('events.show');
     Route::get('/eventos/{event}/editar', \App\Livewire\Admin\Events\Edit::class)->name('events.edit');
 
-    // Rutas anidadas de Fases de Convocatorias
+    /*
+    |--------------------------------------------------------------------------
+    | Rutas Anidadas de Convocatorias
+    |--------------------------------------------------------------------------
+    |
+    | Rutas para gestionar fases y resoluciones de convocatorias.
+    | Estas rutas están anidadas bajo una convocatoria específica.
+    |
+    */
+
+    // Fases de Convocatorias
+    // Permisos requeridos: calls.phases.view, calls.phases.create, calls.phases.edit, calls.phases.delete
+    // Route Model Binding: {call} y {call_phase} usan ID
     Route::prefix('convocatorias/{call}')->group(function () {
         Route::get('/fases', \App\Livewire\Admin\Calls\Phases\Index::class)->name('calls.phases.index');
         Route::get('/fases/crear', \App\Livewire\Admin\Calls\Phases\Create::class)->name('calls.phases.create');
         Route::get('/fases/{call_phase}', \App\Livewire\Admin\Calls\Phases\Show::class)->name('calls.phases.show');
         Route::get('/fases/{call_phase}/editar', \App\Livewire\Admin\Calls\Phases\Edit::class)->name('calls.phases.edit');
 
-        // Rutas anidadas de Resoluciones de Convocatorias
+        // Resoluciones de Convocatorias
+        // Permisos requeridos: resolutions.view, resolutions.create, resolutions.edit, resolutions.delete
+        // Route Model Binding: {call} y {resolution} usan ID
         Route::get('/resoluciones', \App\Livewire\Admin\Calls\Resolutions\Index::class)->name('calls.resolutions.index');
         Route::get('/resoluciones/crear', \App\Livewire\Admin\Calls\Resolutions\Create::class)->name('calls.resolutions.create');
         Route::get('/resoluciones/{resolution}', \App\Livewire\Admin\Calls\Resolutions\Show::class)->name('calls.resolutions.show');
         Route::get('/resoluciones/{resolution}/editar', \App\Livewire\Admin\Calls\Resolutions\Edit::class)->name('calls.resolutions.edit');
     });
 
-    // Rutas de Usuarios
+    /*
+    |--------------------------------------------------------------------------
+    | Gestión de Usuarios y Permisos
+    |--------------------------------------------------------------------------
+    |
+    | Rutas para gestionar usuarios, roles y permisos del sistema.
+    |
+    */
+
+    // Usuarios
+    // Permisos requeridos: users.view, users.create, users.edit, users.delete
+    // Route Model Binding: {user} usa ID (los usuarios no tienen slug)
     Route::get('/usuarios', \App\Livewire\Admin\Users\Index::class)->name('users.index');
     Route::get('/usuarios/crear', \App\Livewire\Admin\Users\Create::class)->name('users.create');
     Route::get('/usuarios/{user}', \App\Livewire\Admin\Users\Show::class)->name('users.show');
     Route::get('/usuarios/{user}/editar', \App\Livewire\Admin\Users\Edit::class)->name('users.edit');
 
-    // Rutas de Roles
+    // Roles y Permisos
+    // Permisos requeridos: roles.view, roles.create, roles.edit, roles.delete (solo super-admin)
+    // Route Model Binding: {role} usa ID (los roles no tienen slug)
     Route::get('/roles', \App\Livewire\Admin\Roles\Index::class)->name('roles.index');
     Route::get('/roles/crear', \App\Livewire\Admin\Roles\Create::class)->name('roles.create');
     Route::get('/roles/{role}', \App\Livewire\Admin\Roles\Show::class)->name('roles.show');
     Route::get('/roles/{role}/editar', \App\Livewire\Admin\Roles\Edit::class)->name('roles.edit');
 
-    // Rutas de Configuración del Sistema
+    /*
+    |--------------------------------------------------------------------------
+    | Configuración y Sistema
+    |--------------------------------------------------------------------------
+    |
+    | Rutas para gestionar configuraciones del sistema, traducciones,
+    | auditoría y suscripciones al newsletter.
+    |
+    */
+
+    // Configuración del Sistema
+    // Permisos requeridos: settings.view, settings.edit (solo admin y super-admin)
+    // Route Model Binding: {setting} usa ID
     Route::get('/configuracion', \App\Livewire\Admin\Settings\Index::class)->name('settings.index');
     Route::get('/configuracion/{setting}/editar', \App\Livewire\Admin\Settings\Edit::class)->name('settings.edit');
 
-    // Rutas de Traducciones
+    // Traducciones
+    // Permisos requeridos: translations.view, translations.create, translations.edit, translations.delete
+    // Route Model Binding: {translation} usa ID
     Route::get('/traducciones', \App\Livewire\Admin\Translations\Index::class)->name('translations.index');
     Route::get('/traducciones/crear', \App\Livewire\Admin\Translations\Create::class)->name('translations.create');
     Route::get('/traducciones/{translation}', \App\Livewire\Admin\Translations\Show::class)->name('translations.show');
     Route::get('/traducciones/{translation}/editar', \App\Livewire\Admin\Translations\Edit::class)->name('translations.edit');
 
-    // Rutas de Auditoría y Logs
+    // Auditoría y Logs
+    // Permisos requeridos: audit-logs.view (solo admin y super-admin)
+    // Route Model Binding: {activity} usa ID (los logs no tienen slug)
     Route::get('/auditoria', \App\Livewire\Admin\AuditLogs\Index::class)->name('audit-logs.index');
     Route::get('/auditoria/{activity}', \App\Livewire\Admin\AuditLogs\Show::class)->name('audit-logs.show');
 
-    // Rutas de Suscripciones Newsletter
+    // Suscripciones Newsletter
+    // Permisos requeridos: newsletter.view (solo admin y super-admin)
+    // Route Model Binding: {newsletter_subscription} usa ID
     Route::get('/newsletter', \App\Livewire\Admin\Newsletter\Index::class)->name('newsletter.index');
     Route::get('/newsletter/{newsletter_subscription}', \App\Livewire\Admin\Newsletter\Show::class)->name('newsletter.show');
 });
