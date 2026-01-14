@@ -43,6 +43,9 @@
                         @can('viewAny', \Spatie\Activitylog\Models\Activity::class)
                             <flux:navlist.item icon="clipboard-document-list" :href="route('admin.audit-logs.index')" :current="request()->routeIs('admin.audit-logs.*')" wire:navigate>{{ __('common.nav.audit_logs') }}</flux:navlist.item>
                         @endcan
+                        @can('viewAny', \App\Models\NewsletterSubscription::class)
+                            <flux:navlist.item icon="envelope" :href="route('admin.newsletter.index')" :current="request()->routeIs('admin.newsletter.*')" wire:navigate>{{ __('common.nav.newsletter_subscriptions') }}</flux:navlist.item>
+                        @endcan
                     </flux:navlist.group>
                 @endcan
 

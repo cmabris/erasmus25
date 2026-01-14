@@ -155,4 +155,61 @@ class NewsletterSubscription extends Model
 
         return in_array($programCode, $this->programs, true);
     }
+
+    /**
+     * Get the program models for this subscription.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection<int, Program>
+     */
+    public function getProgramsModelsAttribute(): \Illuminate\Database\Eloquent\Collection
+    {
+        if (! $this->programs || ! is_array($this->programs) || empty($this->programs)) {
+            return Program::query()->whereRaw('1 = 0')->get(); // Retorna Collection vacía de Eloquent
+        }
+
+        return Program::whereIn('code', $this->programs)
+            ->orderBy('order')
+            ->orderBy('name')
+            ->get();
+    }
+
+    /**
+     * Get a formatted display string of program names.
+     */
+    public function getProgramsDisplayAttribute(): string
+    {
+        if (! $this->programs || ! is_array($this->programs) || empty($this->programs)) {
+            return '-';
+        }
+
+        $programModels = $this->programs_models;
+        $programCodes = collect($this->programs);
+
+        if ($programModels->isEmpty()) {
+            // Si no se encuentran los programas, mostrar los códigos
+            return $programCodes->join(', ');
+        }
+
+        // Crear un mapa de códigos a nombres
+        $codeToName = $programModels->pluck('name', 'code');
+
+        // Para cada código, usar el nombre si existe, sino el código
+        $display = $programCodes->map(function ($code) use ($codeToName) {
+            return $codeToName->get($code, $code);
+        })->join(', ');
+
+        return $display;
+    }
+
+    /**
+     * Get program codes as a comma-separated string.
+     */
+    public function getProgramsCodesAttribute(): string
+    {
+        if (! $this->programs || ! is_array($this->programs) || empty($this->programs)) {
+            return '-';
+        }
+
+        return implode(', ', $this->programs);
+    }
 }

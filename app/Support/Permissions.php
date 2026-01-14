@@ -12,6 +12,7 @@ namespace App\Support;
  * - documents: Gesti?n de documentos
  * - events: Gesti?n de eventos
  * - users: Gesti?n de usuarios
+ * - newsletter: Gesti?n de suscripciones newsletter
  *
  * Cada m?dulo tiene permisos espec?ficos:
  * - view: Ver listados y detalles
@@ -111,6 +112,15 @@ class Permissions
 
     public const TRANSLATIONS_ALL = 'translations.*';
 
+    // Permisos de Newsletter
+    public const NEWSLETTER_VIEW = 'newsletter.view';
+
+    public const NEWSLETTER_DELETE = 'newsletter.delete';
+
+    public const NEWSLETTER_EXPORT = 'newsletter.export';
+
+    public const NEWSLETTER_ALL = 'newsletter.*';
+
     /**
      * Obtener todos los permisos disponibles.
      *
@@ -174,6 +184,12 @@ class Permissions
             self::TRANSLATIONS_EDIT,
             self::TRANSLATIONS_DELETE,
             self::TRANSLATIONS_ALL,
+
+            // Newsletter
+            self::NEWSLETTER_VIEW,
+            self::NEWSLETTER_DELETE,
+            self::NEWSLETTER_EXPORT,
+            self::NEWSLETTER_ALL,
         ];
     }
 
@@ -241,6 +257,12 @@ class Permissions
                 self::TRANSLATIONS_DELETE,
                 self::TRANSLATIONS_ALL,
             ],
+            'newsletter' => [
+                self::NEWSLETTER_VIEW,
+                self::NEWSLETTER_DELETE,
+                self::NEWSLETTER_EXPORT,
+                self::NEWSLETTER_ALL,
+            ],
         ];
     }
 
@@ -259,6 +281,7 @@ class Permissions
             self::EVENTS_VIEW,
             self::SETTINGS_VIEW,
             self::TRANSLATIONS_VIEW,
+            self::NEWSLETTER_VIEW,
         ];
     }
 }

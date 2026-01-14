@@ -35,6 +35,7 @@ return [
         'roles' => 'Roles y Permisos',
         'translations' => 'Traducciones',
         'audit_logs' => 'Auditoría y Logs',
+        'newsletter_subscriptions' => 'Suscripciones Newsletter',
     ],
 
     // Botones y acciones

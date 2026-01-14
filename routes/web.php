@@ -140,6 +140,10 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     // Rutas de Auditoría y Logs
     Route::get('/auditoria', \App\Livewire\Admin\AuditLogs\Index::class)->name('audit-logs.index');
     Route::get('/auditoria/{activity}', \App\Livewire\Admin\AuditLogs\Show::class)->name('audit-logs.show');
+
+    // Rutas de Suscripciones Newsletter
+    Route::get('/newsletter', \App\Livewire\Admin\Newsletter\Index::class)->name('newsletter.index');
+    Route::get('/newsletter/{newsletter_subscription}', \App\Livewire\Admin\Newsletter\Show::class)->name('newsletter.show');
 });
 
 Route::middleware(['auth'])->group(function () {
