@@ -127,6 +127,29 @@ Verifica si una convocatoria puede ser eliminada (no tiene relaciones).
 #### `canForceDelete()` (Computed)
 Verifica si una convocatoria puede ser eliminada permanentemente (solo super-admin y sin relaciones).
 
+#### `export()`
+Exporta las convocatorias filtradas a Excel.
+
+**Autorización:**
+- Verifica permiso `CALLS_VIEW` mediante `CallPolicy::viewAny()`
+
+**Funcionalidad:**
+- Recolecta todos los filtros actuales del componente
+- Genera nombre de archivo con timestamp: `convocatorias-YYYY-MM-DD-HHMMSS.xlsx`
+- Utiliza `CallsExport` para generar el archivo Excel
+- Aplica los mismos filtros que el listado (búsqueda, programa, año académico, tipo, modalidad, estado, eliminados, ordenación)
+
+**Uso:**
+El botón de exportación está disponible en la vista cuando el usuario tiene permisos para ver convocatorias eliminadas (`canViewDeleted()`).
+
+**Formato del Archivo:**
+- Formato: XLSX (Excel 2007+)
+- Columnas: ID, Título, Programa, Año Académico, Tipo, Modalidad, Número de Plazas, Destinos, Fechas, Estado, Creador, etc.
+- Estilos: Encabezados en negrita
+- Traducciones: Datos traducidos al idioma actual del usuario
+
+**Ver también:** [Sistema de Exportación](exports-system.md)
+
 ---
 
 ### 2. Create (Crear)

@@ -94,6 +94,33 @@ public int $perPage = 15;
 
 ---
 
+#### `export()`
+Exporta las resoluciones filtradas de la convocatoria a Excel.
+
+**Autorización:**
+- Verifica permiso `CALLS_VIEW` mediante `ResolutionPolicy::viewAny()`
+
+**Funcionalidad:**
+- Recolecta todos los filtros actuales del componente, incluyendo el `call_id` (obligatorio)
+- Genera nombre de archivo con slug de convocatoria y timestamp: `resoluciones-{slug-convocatoria}-YYYY-MM-DD-HHMMSS.xlsx`
+- Utiliza `ResolutionsExport` para generar el archivo Excel
+- Aplica los mismos filtros que el listado (búsqueda, tipo, publicado, fase, eliminados, ordenación)
+- Solo exporta resoluciones de la convocatoria actual
+
+**Uso:**
+El botón de exportación está disponible en la vista cuando el usuario tiene permisos para ver resoluciones eliminadas (`canViewDeleted()`).
+
+**Formato del Archivo:**
+- Formato: XLSX (Excel 2007+)
+- Columnas: ID, Título, Convocatoria, Fase, Tipo, Descripción, Procedimiento de Evaluación, Fecha Oficial, Publicado, Fechas, Creador, etc.
+- Estilos: Encabezados en negrita
+- Traducciones: Datos traducidos al idioma actual del usuario
+- Truncado: Descripciones y procedimientos truncados a 200 caracteres para legibilidad
+
+**Ver también:** [Sistema de Exportación](exports-system.md)
+
+---
+
 ### 2. Create (Crear)
 
 **Ubicación:**
