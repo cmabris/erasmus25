@@ -145,6 +145,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     // Route Model Binding: {call} usa ID (no slug) para rutas de administración
     Route::get('/convocatorias', \App\Livewire\Admin\Calls\Index::class)->name('calls.index');
     Route::get('/convocatorias/crear', \App\Livewire\Admin\Calls\Create::class)->name('calls.create');
+    Route::get('/convocatorias/importar', \App\Livewire\Admin\Calls\Import::class)->name('calls.import');
     Route::get('/convocatorias/{call}', \App\Livewire\Admin\Calls\Show::class)->name('calls.show');
     Route::get('/convocatorias/{call}/editar', \App\Livewire\Admin\Calls\Edit::class)->name('calls.edit');
 
@@ -230,6 +231,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     // Route Model Binding: {user} usa ID (los usuarios no tienen slug)
     Route::get('/usuarios', \App\Livewire\Admin\Users\Index::class)->name('users.index');
     Route::get('/usuarios/crear', \App\Livewire\Admin\Users\Create::class)->name('users.create');
+    Route::get('/usuarios/importar', \App\Livewire\Admin\Users\Import::class)->name('users.import');
     Route::get('/usuarios/{user}', \App\Livewire\Admin\Users\Show::class)->name('users.show');
     Route::get('/usuarios/{user}/editar', \App\Livewire\Admin\Users\Edit::class)->name('users.edit');
 

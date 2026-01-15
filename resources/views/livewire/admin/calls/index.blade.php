@@ -29,6 +29,14 @@
                 @endif
                 @if($this->canCreate())
                     <flux:button 
+                        href="{{ route('admin.calls.import') }}" 
+                        variant="outline"
+                        wire:navigate
+                        icon="arrow-up-tray"
+                    >
+                        {{ __('Importar') }}
+                    </flux:button>
+                    <flux:button 
                         href="{{ route('admin.calls.create') }}" 
                         variant="primary"
                         wire:navigate
