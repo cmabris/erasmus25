@@ -103,7 +103,7 @@ class AuditLogsExport implements FromCollection, WithHeadings, WithMapping, With
         return [
             $activity->id,
             $activity->created_at->format('d/m/Y H:i:s'),
-            $activity->causer?->name ?? __('Sistema'),
+            $activity->causer?->name ?? __('common.messages.system'),
             $activity->causer?->email ?? '-',
             $this->getDescriptionDisplayName($activity->description),
             $this->getModelDisplayName($activity->subject_type),

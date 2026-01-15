@@ -10,16 +10,34 @@
                     {{ __('Gestiona las convocatorias Erasmus+ disponibles en el sistema') }}
                 </p>
             </div>
-            @if($this->canCreate())
-                <flux:button 
-                    href="{{ route('admin.calls.create') }}" 
-                    variant="primary"
-                    wire:navigate
-                    icon="plus"
-                >
-                    {{ __('Crear Convocatoria') }}
-                </flux:button>
-            @endif
+            <div class="flex items-center gap-3">
+                @if($this->canViewDeleted())
+                    <flux:button 
+                        wire:click="export"
+                        variant="outline"
+                        icon="arrow-down-tray"
+                        wire:loading.attr="disabled"
+                        wire:target="export"
+                    >
+                        <span wire:loading.remove wire:target="export">
+                            {{ __('common.actions.export') }}
+                        </span>
+                        <span wire:loading wire:target="export">
+                            {{ __('common.actions.exporting') }}
+                        </span>
+                    </flux:button>
+                @endif
+                @if($this->canCreate())
+                    <flux:button 
+                        href="{{ route('admin.calls.create') }}" 
+                        variant="primary"
+                        wire:navigate
+                        icon="plus"
+                    >
+                        {{ __('Crear Convocatoria') }}
+                    </flux:button>
+                @endif
+            </div>
         </div>
 
         {{-- Breadcrumbs --}}

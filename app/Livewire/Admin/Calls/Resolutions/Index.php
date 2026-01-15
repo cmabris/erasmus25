@@ -2,15 +2,18 @@
 
 namespace App\Livewire\Admin\Calls\Resolutions;
 
+use App\Exports\ResolutionsExport;
 use App\Models\Call;
 use App\Models\Resolution;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Maatwebsite\Excel\Facades\Excel;
 
 class Index extends Component
 {
@@ -425,6 +428,29 @@ class Index extends Component
     public function canViewDeleted(): bool
     {
         return auth()->user()?->can('viewAny', Resolution::class) ?? false;
+    }
+
+    /**
+     * Export resolutions to Excel.
+     */
+    public function export()
+    {
+        $this->authorize('viewAny', Resolution::class);
+
+        $filters = [
+            'call_id' => $this->call->id,
+            'search' => $this->search,
+            'filterType' => $this->filterType,
+            'filterPublished' => $this->filterPublished,
+            'filterPhase' => $this->filterPhase,
+            'showDeleted' => $this->showDeleted,
+            'sortField' => $this->sortField,
+            'sortDirection' => $this->sortDirection,
+        ];
+
+        $filename = 'resoluciones-'.Str::slug($this->call->title).'-'.now()->format('Y-m-d-His').'.xlsx';
+
+        return Excel::download(new ResolutionsExport($filters), $filename);
     }
 
     /**

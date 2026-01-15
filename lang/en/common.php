@@ -81,6 +81,8 @@ return [
         'translated_description' => 'Translated description',
         'available_translations' => 'Available Translations',
         'current_language' => 'Current language',
+        'export' => 'Export',
+        'exporting' => 'Exporting...',
         'cancel' => 'Cancel',
         'close' => 'Close',
         'back' => 'Back',
@@ -119,6 +121,9 @@ return [
         'permanently_deleted_successfully' => 'Permanently deleted',
         'order_updated_successfully' => 'Order updated successfully',
         'by' => 'by',
+        'system' => 'System',
+        'yes' => 'Yes',
+        'no' => 'No',
     ],
 
     // Status

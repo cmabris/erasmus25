@@ -19,6 +19,22 @@
                 >
                     {{ __('Volver a Convocatoria') }}
                 </flux:button>
+                @if($this->canViewDeleted())
+                    <flux:button 
+                        wire:click="export"
+                        variant="outline"
+                        icon="arrow-down-tray"
+                        wire:loading.attr="disabled"
+                        wire:target="export"
+                    >
+                        <span wire:loading.remove wire:target="export">
+                            {{ __('common.actions.export') }}
+                        </span>
+                        <span wire:loading wire:target="export">
+                            {{ __('common.actions.exporting') }}
+                        </span>
+                    </flux:button>
+                @endif
                 @if($this->canCreate())
                     <flux:button 
                         href="{{ route('admin.calls.resolutions.create', $call) }}" 

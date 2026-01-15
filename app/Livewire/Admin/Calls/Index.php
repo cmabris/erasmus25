@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Calls;
 
+use App\Exports\CallsExport;
 use App\Models\AcademicYear;
 use App\Models\Call;
 use App\Models\Program;
@@ -12,6 +13,7 @@ use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Maatwebsite\Excel\Facades\Excel;
 
 class Index extends Component
 {
@@ -456,6 +458,30 @@ class Index extends Component
     public function canViewDeleted(): bool
     {
         return auth()->user()?->can('viewAny', Call::class) ?? false;
+    }
+
+    /**
+     * Export calls to Excel.
+     */
+    public function export()
+    {
+        $this->authorize('viewAny', Call::class);
+
+        $filters = [
+            'search' => $this->search,
+            'filterProgram' => $this->filterProgram,
+            'filterAcademicYear' => $this->filterAcademicYear,
+            'filterType' => $this->filterType,
+            'filterModality' => $this->filterModality,
+            'filterStatus' => $this->filterStatus,
+            'showDeleted' => $this->showDeleted,
+            'sortField' => $this->sortField,
+            'sortDirection' => $this->sortDirection,
+        ];
+
+        $filename = 'convocatorias-'.now()->format('Y-m-d-His').'.xlsx';
+
+        return Excel::download(new CallsExport($filters), $filename);
     }
 
     /**

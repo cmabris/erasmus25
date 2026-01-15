@@ -95,6 +95,8 @@ return [
         'translated_description' => 'Descripción traducida',
         'available_translations' => 'Traducciones Disponibles',
         'current_language' => 'Idioma actual',
+        'export' => 'Exportar',
+        'exporting' => 'Exportando...',
     ],
 
     // Mensajes comunes
@@ -121,6 +123,8 @@ return [
         'order_updated_successfully' => 'Orden actualizado correctamente',
         'by' => 'por',
         'system' => 'Sistema',
+        'yes' => 'Sí',
+        'no' => 'No',
     ],
 
     // Estados

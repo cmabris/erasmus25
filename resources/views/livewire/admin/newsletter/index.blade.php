@@ -15,8 +15,15 @@
                     wire:click="export"
                     variant="primary"
                     icon="arrow-down-tray"
+                    wire:loading.attr="disabled"
+                    wire:target="export"
                 >
-                    {{ __('Exportar') }}
+                    <span wire:loading.remove wire:target="export">
+                        {{ __('common.actions.export') }}
+                    </span>
+                    <span wire:loading wire:target="export">
+                        {{ __('common.actions.exporting') }}
+                    </span>
                 </flux:button>
             @endif
         </div>
