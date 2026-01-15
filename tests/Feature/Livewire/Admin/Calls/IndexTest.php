@@ -571,3 +571,161 @@ describe('Admin Calls Index - Actions', function () {
         expect(Call::withTrashed()->find($call->id))->not->toBeNull();
     });
 });
+
+describe('Admin Calls Index - Export', function () {
+    it('allows admin to export calls', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $program = Program::factory()->create();
+        $academicYear = AcademicYear::factory()->create();
+
+        Call::factory()->count(5)->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+        ]);
+
+        Livewire::test(Index::class)
+            ->call('export')
+            ->assertFileDownloaded();
+    });
+
+    it('allows viewer to export calls', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::VIEWER);
+        $this->actingAs($user);
+
+        $program = Program::factory()->create();
+        $academicYear = AcademicYear::factory()->create();
+
+        Call::factory()->count(3)->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+        ]);
+
+        Livewire::test(Index::class)
+            ->call('export')
+            ->assertFileDownloaded();
+    });
+
+    it('applies filters to export', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $program1 = Program::factory()->create();
+        $program2 = Program::factory()->create();
+        $academicYear = AcademicYear::factory()->create();
+
+        Call::factory()->create([
+            'program_id' => $program1->id,
+            'academic_year_id' => $academicYear->id,
+            'status' => 'abierta',
+        ]);
+        Call::factory()->create([
+            'program_id' => $program2->id,
+            'academic_year_id' => $academicYear->id,
+            'status' => 'cerrada',
+        ]);
+
+        Livewire::test(Index::class)
+            ->set('filterProgram', (string) $program1->id)
+            ->set('filterStatus', 'abierta')
+            ->call('export')
+            ->assertFileDownloaded();
+    });
+
+    it('applies search filter to export', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $program = Program::factory()->create();
+        $academicYear = AcademicYear::factory()->create();
+
+        Call::factory()->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+            'title' => 'Convocatoria Erasmus',
+        ]);
+        Call::factory()->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+            'title' => 'Convocatoria Movilidad',
+        ]);
+
+        Livewire::test(Index::class)
+            ->set('search', 'Erasmus')
+            ->call('export')
+            ->assertFileDownloaded();
+    });
+
+    it('applies sorting to export', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $program = Program::factory()->create();
+        $academicYear = AcademicYear::factory()->create();
+
+        Call::factory()->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+            'title' => 'B Convocatoria',
+        ]);
+        Call::factory()->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+            'title' => 'A Convocatoria',
+        ]);
+
+        Livewire::test(Index::class)
+            ->set('sortField', 'title')
+            ->set('sortDirection', 'asc')
+            ->call('export')
+            ->assertFileDownloaded();
+    });
+
+    it('includes deleted calls in export when showDeleted is 1', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $program = Program::factory()->create();
+        $academicYear = AcademicYear::factory()->create();
+
+        $call1 = Call::factory()->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+        ]);
+        $call2 = Call::factory()->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+        ]);
+        $call2->delete();
+
+        Livewire::test(Index::class)
+            ->set('showDeleted', '1')
+            ->call('export')
+            ->assertFileDownloaded();
+    });
+
+    it('generates downloadable file', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $program = Program::factory()->create();
+        $academicYear = AcademicYear::factory()->create();
+
+        Call::factory()->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+        ]);
+
+        Livewire::test(Index::class)
+            ->call('export')
+            ->assertFileDownloaded();
+    });
+});

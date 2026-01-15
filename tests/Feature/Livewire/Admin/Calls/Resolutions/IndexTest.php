@@ -614,3 +614,232 @@ describe('Admin Calls Resolutions Index - Actions', function () {
         expect(Resolution::withTrashed()->find($resolution->id))->toBeNull();
     });
 });
+
+describe('Admin Calls Resolutions Index - Export', function () {
+    it('allows admin to export resolutions', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $program = Program::factory()->create();
+        $academicYear = AcademicYear::factory()->create();
+        $call = Call::factory()->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+        ]);
+        $phase = CallPhase::factory()->create(['call_id' => $call->id]);
+
+        Resolution::factory()->count(5)->create([
+            'call_id' => $call->id,
+            'call_phase_id' => $phase->id,
+        ]);
+
+        Livewire::test(Index::class, ['call' => $call])
+            ->call('export')
+            ->assertFileDownloaded();
+    });
+
+    it('allows viewer to export resolutions', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::VIEWER);
+        $this->actingAs($user);
+
+        $program = Program::factory()->create();
+        $academicYear = AcademicYear::factory()->create();
+        $call = Call::factory()->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+        ]);
+        $phase = CallPhase::factory()->create(['call_id' => $call->id]);
+
+        Resolution::factory()->count(3)->create([
+            'call_id' => $call->id,
+            'call_phase_id' => $phase->id,
+        ]);
+
+        Livewire::test(Index::class, ['call' => $call])
+            ->call('export')
+            ->assertFileDownloaded();
+    });
+
+    it('only exports resolutions for the specified call', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $program = Program::factory()->create();
+        $academicYear = AcademicYear::factory()->create();
+        $call1 = Call::factory()->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+            'title' => 'Convocatoria 1',
+        ]);
+        $call2 = Call::factory()->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+            'title' => 'Convocatoria 2',
+        ]);
+        $phase1 = CallPhase::factory()->create(['call_id' => $call1->id]);
+        $phase2 = CallPhase::factory()->create(['call_id' => $call2->id]);
+
+        Resolution::factory()->create([
+            'call_id' => $call1->id,
+            'call_phase_id' => $phase1->id,
+        ]);
+        Resolution::factory()->create([
+            'call_id' => $call2->id,
+            'call_phase_id' => $phase2->id,
+        ]);
+
+        Livewire::test(Index::class, ['call' => $call1])
+            ->call('export')
+            ->assertFileDownloaded();
+    });
+
+    it('applies filters to export', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $program = Program::factory()->create();
+        $academicYear = AcademicYear::factory()->create();
+        $call = Call::factory()->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+        ]);
+        $phase = CallPhase::factory()->create(['call_id' => $call->id]);
+
+        Resolution::factory()->create([
+            'call_id' => $call->id,
+            'call_phase_id' => $phase->id,
+            'type' => 'provisional',
+            'published_at' => now(),
+        ]);
+        Resolution::factory()->create([
+            'call_id' => $call->id,
+            'call_phase_id' => $phase->id,
+            'type' => 'definitivo',
+            'published_at' => null,
+        ]);
+
+        Livewire::test(Index::class, ['call' => $call])
+            ->set('filterType', 'provisional')
+            ->set('filterPublished', '1')
+            ->call('export')
+            ->assertFileDownloaded();
+    });
+
+    it('applies search filter to export', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $program = Program::factory()->create();
+        $academicYear = AcademicYear::factory()->create();
+        $call = Call::factory()->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+        ]);
+        $phase = CallPhase::factory()->create(['call_id' => $call->id]);
+
+        Resolution::factory()->create([
+            'call_id' => $call->id,
+            'call_phase_id' => $phase->id,
+            'title' => 'Resolución Provisional',
+        ]);
+        Resolution::factory()->create([
+            'call_id' => $call->id,
+            'call_phase_id' => $phase->id,
+            'title' => 'Resolución Definitiva',
+        ]);
+
+        Livewire::test(Index::class, ['call' => $call])
+            ->set('search', 'Provisional')
+            ->call('export')
+            ->assertFileDownloaded();
+    });
+
+    it('applies sorting to export', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $program = Program::factory()->create();
+        $academicYear = AcademicYear::factory()->create();
+        $call = Call::factory()->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+        ]);
+        $phase = CallPhase::factory()->create(['call_id' => $call->id]);
+
+        Resolution::factory()->create([
+            'call_id' => $call->id,
+            'call_phase_id' => $phase->id,
+            'official_date' => now()->subDays(10),
+        ]);
+        Resolution::factory()->create([
+            'call_id' => $call->id,
+            'call_phase_id' => $phase->id,
+            'official_date' => now()->subDays(5),
+        ]);
+
+        Livewire::test(Index::class, ['call' => $call])
+            ->set('sortField', 'official_date')
+            ->set('sortDirection', 'desc')
+            ->call('export')
+            ->assertFileDownloaded();
+    });
+
+    it('includes deleted resolutions in export when showDeleted is 1', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $program = Program::factory()->create();
+        $academicYear = AcademicYear::factory()->create();
+        $call = Call::factory()->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+        ]);
+        $phase = CallPhase::factory()->create(['call_id' => $call->id]);
+
+        $resolution1 = Resolution::factory()->create([
+            'call_id' => $call->id,
+            'call_phase_id' => $phase->id,
+        ]);
+        $resolution2 = Resolution::factory()->create([
+            'call_id' => $call->id,
+            'call_phase_id' => $phase->id,
+        ]);
+        $resolution2->delete();
+
+        Livewire::test(Index::class, ['call' => $call])
+            ->set('showDeleted', '1')
+            ->call('export')
+            ->assertFileDownloaded();
+    });
+
+    it('generates downloadable file with call context', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $program = Program::factory()->create();
+        $academicYear = AcademicYear::factory()->create();
+        $call = Call::factory()->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+            'title' => 'Convocatoria Test',
+        ]);
+        $phase = CallPhase::factory()->create(['call_id' => $call->id]);
+
+        Resolution::factory()->create([
+            'call_id' => $call->id,
+            'call_phase_id' => $phase->id,
+        ]);
+
+        Livewire::test(Index::class, ['call' => $call])
+            ->call('export')
+            ->assertFileDownloaded();
+    });
+});

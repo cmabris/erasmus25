@@ -59,8 +59,8 @@ describe('NewsletterSubscriptionsExport - Basic Export', function () {
         expect($mapped[0])->toBe('test@example.com')
             ->and($mapped[1])->toBe('Test User')
             ->and($mapped[2])->toContain('Programa Test')
-            ->and($mapped[3])->toBe(__('Activo'))
-            ->and($mapped[4])->toBe(__('Sí'))
+            ->and($mapped[3])->toBe(__('common.status.active'))
+            ->and($mapped[4])->toBe(__('common.messages.yes'))
             ->and($mapped[5])->toBe($subscription->subscribed_at->format('d/m/Y H:i'))
             ->and($mapped[6])->toBe($subscription->verified_at->format('d/m/Y H:i'))
             ->and($mapped[7])->toBe('-');
@@ -87,7 +87,7 @@ describe('NewsletterSubscriptionsExport - Basic Export', function () {
         $export = new NewsletterSubscriptionsExport([]);
         $mapped = $export->map($subscription);
 
-        expect($mapped[4])->toBe(__('No'))
+        expect($mapped[4])->toBe(__('common.messages.no'))
             ->and($mapped[6])->toBe('-')
             ->and($mapped[7])->toBe('-');
     });
