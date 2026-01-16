@@ -38,8 +38,45 @@ beforeEach(function () {
 });
 
 describe('StoreDocumentCategoryRequest - Authorization', function () {
-    // Note: Authorization is tested in Livewire component tests
-    // These tests focus on validation rules only
+    it('authorizes user with create permission to create document category', function () {
+        $user = User::factory()->create();
+        $user->givePermissionTo(Permissions::DOCUMENTS_CREATE);
+        $this->actingAs($user);
+
+        $request = StoreDocumentCategoryRequest::create('/admin/documentos/categorias', 'POST', []);
+        $request->setUserResolver(fn () => $user);
+
+        expect($request->authorize())->toBeTrue();
+    });
+
+    it('authorizes super-admin user to create document category', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::SUPER_ADMIN);
+        $this->actingAs($user);
+
+        $request = StoreDocumentCategoryRequest::create('/admin/documentos/categorias', 'POST', []);
+        $request->setUserResolver(fn () => $user);
+
+        expect($request->authorize())->toBeTrue();
+    });
+
+    it('denies user without create permission', function () {
+        $user = User::factory()->create();
+        $user->givePermissionTo(Permissions::DOCUMENTS_VIEW); // Solo view, no create
+        $this->actingAs($user);
+
+        $request = StoreDocumentCategoryRequest::create('/admin/documentos/categorias', 'POST', []);
+        $request->setUserResolver(fn () => $user);
+
+        expect($request->authorize())->toBeFalse();
+    });
+
+    it('denies unauthenticated user', function () {
+        $request = StoreDocumentCategoryRequest::create('/admin/documentos/categorias', 'POST', []);
+        $request->setUserResolver(fn () => null);
+
+        expect($request->authorize())->toBeFalse();
+    });
 });
 
 describe('StoreDocumentCategoryRequest - Validation Rules', function () {
