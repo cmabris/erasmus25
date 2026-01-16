@@ -42,8 +42,111 @@ beforeEach(function () {
 });
 
 describe('UpdateErasmusEventRequest - Authorization', function () {
-    // Note: Authorization is tested in Livewire component tests
-    // These tests focus on validation rules only
+    it('authorizes user with update permission to update event', function () {
+        $user = User::factory()->create();
+        $user->givePermissionTo(Permissions::EVENTS_EDIT);
+        $this->actingAs($user);
+
+        $event = ErasmusEvent::factory()->create(['created_by' => $user->id]);
+
+        $request = UpdateErasmusEventRequest::create("/admin/events/{$event->id}", 'PUT', []);
+        $request->setUserResolver(fn () => $user);
+        $request->setRouteResolver(function () use ($event) {
+            $route = new \Illuminate\Routing\Route(['PUT'], '/admin/events/{event}', []);
+            $route->bind(new \Illuminate\Http\Request);
+            $route->setParameter('event', $event);
+            return $route;
+        });
+
+        expect($request->authorize())->toBeTrue();
+    });
+
+    it('authorizes super-admin user to update event', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::SUPER_ADMIN);
+        $this->actingAs($user);
+
+        $event = ErasmusEvent::factory()->create(['created_by' => $user->id]);
+
+        $request = UpdateErasmusEventRequest::create("/admin/events/{$event->id}", 'PUT', []);
+        $request->setUserResolver(fn () => $user);
+        $request->setRouteResolver(function () use ($event) {
+            $route = new \Illuminate\Routing\Route(['PUT'], '/admin/events/{event}', []);
+            $route->bind(new \Illuminate\Http\Request);
+            $route->setParameter('event', $event);
+            return $route;
+        });
+
+        expect($request->authorize())->toBeTrue();
+    });
+
+    it('denies user without update permission', function () {
+        $user = User::factory()->create();
+        $user->givePermissionTo(Permissions::EVENTS_VIEW); // Solo view, no edit
+        $this->actingAs($user);
+
+        $event = ErasmusEvent::factory()->create(['created_by' => $user->id]);
+
+        $request = UpdateErasmusEventRequest::create("/admin/events/{$event->id}", 'PUT', []);
+        $request->setUserResolver(fn () => $user);
+        $request->setRouteResolver(function () use ($event) {
+            $route = new \Illuminate\Routing\Route(['PUT'], '/admin/events/{event}', []);
+            $route->bind(new \Illuminate\Http\Request);
+            $route->setParameter('event', $event);
+            return $route;
+        });
+
+        expect($request->authorize())->toBeFalse();
+    });
+
+    it('denies unauthenticated user', function () {
+        $event = ErasmusEvent::factory()->create();
+
+        $request = UpdateErasmusEventRequest::create("/admin/events/{$event->id}", 'PUT', []);
+        $request->setUserResolver(fn () => null);
+        $request->setRouteResolver(function () use ($event) {
+            $route = new \Illuminate\Routing\Route(['PUT'], '/admin/events/{event}', []);
+            $route->bind(new \Illuminate\Http\Request);
+            $route->setParameter('event', $event);
+            return $route;
+        });
+
+        expect($request->authorize())->toBeFalse();
+    });
+
+    it('denies when route parameter is not ErasmusEvent instance', function () {
+        $user = User::factory()->create();
+        $user->givePermissionTo(Permissions::EVENTS_EDIT);
+        $this->actingAs($user);
+
+        $request = UpdateErasmusEventRequest::create('/admin/events/123', 'PUT', []);
+        $request->setUserResolver(fn () => $user);
+        $request->setRouteResolver(function () {
+            $route = new \Illuminate\Routing\Route(['PUT'], '/admin/events/{event}', []);
+            $route->bind(new \Illuminate\Http\Request);
+            $route->setParameter('event', 'not-an-event-instance');
+            return $route;
+        });
+
+        expect($request->authorize())->toBeFalse();
+    });
+
+    it('denies when route parameter is null', function () {
+        $user = User::factory()->create();
+        $user->givePermissionTo(Permissions::EVENTS_EDIT);
+        $this->actingAs($user);
+
+        $request = UpdateErasmusEventRequest::create('/admin/events/123', 'PUT', []);
+        $request->setUserResolver(fn () => $user);
+        $request->setRouteResolver(function () {
+            $route = new \Illuminate\Routing\Route(['PUT'], '/admin/events/{event}', []);
+            $route->bind(new \Illuminate\Http\Request);
+            $route->setParameter('event', null);
+            return $route;
+        });
+
+        expect($request->authorize())->toBeFalse();
+    });
 });
 
 describe('UpdateErasmusEventRequest - Validation Rules', function () {
