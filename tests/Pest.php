@@ -61,3 +61,40 @@ function something()
 {
     // ..
 }
+
+/**
+ * Helper function to create an Excel file for testing imports.
+ */
+function createExcelFile(array $data): \Illuminate\Http\UploadedFile
+{
+    $filename = 'test-import-'.uniqid().'.xlsx';
+    $tempPath = sys_get_temp_dir().'/'.$filename;
+
+    // Create Excel file using Laravel Excel
+    $export = new class($data) implements \Maatwebsite\Excel\Concerns\FromArray
+    {
+        public function __construct(protected array $data) {}
+
+        public function array(): array
+        {
+            return $this->data;
+        }
+    };
+
+    // Use Excel::download to create file, then read it
+    $filePath = \Maatwebsite\Excel\Facades\Excel::raw($export, \Maatwebsite\Excel\Excel::XLSX);
+
+    // Save to temp file
+    file_put_contents($tempPath, $filePath);
+
+    // Create UploadedFile from the stored file
+    $file = new \Illuminate\Http\UploadedFile(
+        $tempPath,
+        $filename,
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        null,
+        true // test mode
+    );
+
+    return $file;
+}

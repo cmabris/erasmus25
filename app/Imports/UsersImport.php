@@ -82,6 +82,10 @@ class UsersImport implements SkipsOnFailure, ToCollection, WithHeadingRow, WithV
                         'status' => 'valid',
                     ]);
                 } else {
+                    // Store generated password before validation (it may be filtered out)
+                    // generated_password is only set when password is empty in mapRowToData
+                    $generatedPassword = $data['generated_password'] ?? null;
+
                     // Create the user
                     $user = User::create([
                         'name' => $validated['name'],
@@ -102,11 +106,12 @@ class UsersImport implements SkipsOnFailure, ToCollection, WithHeadingRow, WithV
                     ];
 
                     // Store generated password if it was auto-generated
-                    if (isset($validated['generated_password'])) {
-                        $userData['generated_password'] = $validated['generated_password'];
+                    // Only add to usersWithPasswords if password was actually generated
+                    if (isset($data['generated_password']) && $generatedPassword !== null) {
+                        $userData['generated_password'] = $generatedPassword;
                         $this->usersWithPasswords->push([
                             'user' => $user,
-                            'password' => $validated['generated_password'],
+                            'password' => $generatedPassword,
                         ]);
                     }
 

@@ -76,6 +76,10 @@ class CallsImport implements SkipsOnFailure, ToCollection, WithHeadingRow, WithV
                         'status' => 'valid',
                     ]);
                 } else {
+                    // Ensure created_by and updated_by are included (they may be filtered out by validation)
+                    $validated['created_by'] = $this->userId;
+                    $validated['updated_by'] = $this->userId;
+
                     // Create the call
                     $call = Call::create($validated);
                     $this->processedCalls->push([
@@ -109,10 +113,10 @@ class CallsImport implements SkipsOnFailure, ToCollection, WithHeadingRow, WithV
     {
         $data = [];
 
-        // WithHeadingRow converts headers to snake_case, so we need to check both formats
-        // Also handle Spanish characters (á, ñ, etc.)
+        // WithHeadingRow converts headers to snake_case, removing special characters
+        // "Año Académico" becomes "ano_academico", "Número de Plazas" becomes "numero_de_plazas"
         $programa = $row['programa'] ?? $row['program'] ?? null;
-        $anioAcademico = $row['año_academico'] ?? $row['anio_academico'] ?? $row['año_académico'] ?? $row['academic_year'] ?? null;
+        $anioAcademico = $row['ano_academico'] ?? $row['año_academico'] ?? $row['anio_academico'] ?? $row['año_académico'] ?? $row['academic_year'] ?? null;
 
         // Map programa to program_id
         if ($programa) {
@@ -159,7 +163,8 @@ class CallsImport implements SkipsOnFailure, ToCollection, WithHeadingRow, WithV
         }
 
         // Map numero_plazas to number_of_places
-        $numeroPlazas = $row['numero_plazas'] ?? $row['number_of_places'] ?? null;
+        // "Número de Plazas" becomes "numero_de_plazas" (with underscore)
+        $numeroPlazas = $row['numero_de_plazas'] ?? $row['numero_plazas'] ?? $row['number_of_places'] ?? null;
         if ($numeroPlazas !== null) {
             $data['number_of_places'] = (int) $numeroPlazas;
         }
@@ -172,12 +177,14 @@ class CallsImport implements SkipsOnFailure, ToCollection, WithHeadingRow, WithV
         }
 
         // Map fecha_inicio_estimada to estimated_start_date
+        // "Fecha Inicio Estimada" becomes "fecha_inicio_estimada"
         $fechaInicio = $row['fecha_inicio_estimada'] ?? $row['estimated_start_date'] ?? null;
         if ($fechaInicio && ! empty(trim($fechaInicio))) {
             $data['estimated_start_date'] = $this->parseDate($fechaInicio);
         }
 
         // Map fecha_fin_estimada to estimated_end_date
+        // "Fecha Fin Estimada" becomes "fecha_fin_estimada"
         $fechaFin = $row['fecha_fin_estimada'] ?? $row['estimated_end_date'] ?? null;
         if ($fechaFin && ! empty(trim($fechaFin))) {
             $data['estimated_end_date'] = $this->parseDate($fechaFin);
@@ -196,7 +203,8 @@ class CallsImport implements SkipsOnFailure, ToCollection, WithHeadingRow, WithV
         }
 
         // Map criterios_seleccion to selection_criteria
-        $criterios = $row['criterios_seleccion'] ?? $row['selection_criteria'] ?? null;
+        // "Criterios de Selección" becomes "criterios_de_seleccion"
+        $criterios = $row['criterios_de_seleccion'] ?? $row['criterios_seleccion'] ?? $row['selection_criteria'] ?? null;
         if ($criterios && ! empty(trim($criterios))) {
             $data['selection_criteria'] = trim($criterios);
         }
@@ -208,6 +216,7 @@ class CallsImport implements SkipsOnFailure, ToCollection, WithHeadingRow, WithV
         }
 
         // Map fecha_publicacion to published_at
+        // "Fecha Publicación" becomes "fecha_publicacion"
         $fechaPublicacion = $row['fecha_publicacion'] ?? $row['published_at'] ?? null;
         if ($fechaPublicacion && ! empty(trim($fechaPublicacion))) {
             $data['published_at'] = $this->parseDate($fechaPublicacion);
