@@ -291,8 +291,128 @@ Los Form Requests de usuarios utilizan `Password::defaults()` para aplicar las r
 
 ## Testing
 
-Los Form Requests se testearán como parte de los Feature Tests de los CRUDs (Paso 4 de la planificación), ya que:
+### Cobertura de Tests
 
-1. Los Form Requests están diseñados para funcionar en contexto HTTP
-2. Testearlos aisladamente puede ser artificial
-3. Los tests de integración verifican el flujo completo (request → validation → controller → response)
+Todos los Form Requests tienen **100% de cobertura** mediante tests dedicados ubicados en `tests/Feature/Http/Requests/`.
+
+**Estadísticas de cobertura:**
+- **Total de Form Requests**: 30
+- **Cobertura total**: 100% (1072/1072 líneas)
+- **Tests creados/mejorados**: 538 tests
+- **Total de assertions**: 1,391
+
+### Estructura de Tests
+
+Cada Form Request tiene un archivo de test dedicado que sigue el siguiente patrón:
+
+```php
+<?php
+
+use App\Http\Requests\{FormRequest};
+use App\Models\{Model};
+use App\Models\User;
+use App\Support\Roles;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Validator;
+
+uses(RefreshDatabase::class);
+
+beforeEach(function () {
+    // Setup de permisos y roles
+});
+
+describe('{FormRequest} - Authorization', function () {
+    // Tests de autorización
+});
+
+describe('{FormRequest} - Validation Rules', function () {
+    // Tests de reglas de validación
+});
+
+describe('{FormRequest} - Custom Messages', function () {
+    // Tests de mensajes personalizados
+});
+```
+
+### Categorías de Tests
+
+#### 1. Tests de Autorización
+
+Cubren el método `authorize()` verificando:
+- Usuarios con permisos específicos pueden realizar la acción
+- Usuarios con rol SUPER_ADMIN pueden realizar la acción
+- Usuarios sin permisos no pueden realizar la acción
+- Usuarios no autenticados no pueden realizar la acción
+- Casos edge: parámetros de ruta que no son instancias del modelo esperado o son null
+
+#### 2. Tests de Validación
+
+Cubren el método `rules()` verificando:
+- Campos requeridos
+- Tipos de datos (string, integer, boolean, array, date, file)
+- Longitudes máximas/mínimas
+- Validaciones `unique` (con y sin `ignore`)
+- Validaciones `exists` en tablas relacionadas
+- Validaciones `enum` con `Rule::in()`
+- Validaciones personalizadas (closures)
+- Validaciones de archivos (mimes, tamaño máximo)
+- Validaciones de arrays y elementos anidados
+- Validaciones de fechas (`after`, `before`)
+- Validaciones de contraseñas (`Password::defaults()`, `confirmed`)
+
+#### 3. Tests de Mensajes Personalizados
+
+Cubren el método `messages()` verificando:
+- Que todos los mensajes personalizados estén definidos
+- Que las claves de mensajes coincidan con las reglas de validación
+
+### Casos Especiales Testeados
+
+#### Route Model Binding
+
+Los Form Requests de tipo Update que usan route model binding tienen tests específicos para:
+- Cuando el parámetro de ruta es una instancia del modelo
+- Cuando el parámetro de ruta es un ID (integer)
+- Cuando el parámetro de ruta no es del tipo esperado
+- Cuando el parámetro de ruta es null
+
+#### Validaciones Personalizadas
+
+Los Form Requests con validaciones personalizadas (closures) tienen tests para:
+- Todas las ramas de lógica condicional
+- Casos `default` en expresiones `match`
+- Validaciones que dependen de otros campos del request
+
+#### Métodos Especiales
+
+- **`prepareForValidation()`**: Tests específicos para la manipulación de datos antes de la validación
+- **`withValidator()`**: Tests específicos para validaciones adicionales después de las reglas básicas
+- **`attributes()`**: Tests específicos para nombres de atributos personalizados
+
+### Ejecución de Tests
+
+Para ejecutar todos los tests de Form Requests:
+
+```bash
+php artisan test --filter=RequestTest
+```
+
+Para ejecutar tests de un Form Request específico:
+
+```bash
+php artisan test --filter=StoreProgramRequestTest
+```
+
+### Generación de Cobertura
+
+Para generar el reporte de cobertura en formato HTML:
+
+```bash
+php artisan test --coverage-html=tests/coverage
+```
+
+El reporte se genera en `tests/coverage/Http/Requests/index.html` y muestra:
+- Cobertura por Form Request
+- Líneas cubiertas vs no cubiertas
+- Métodos cubiertos vs no cubiertos
+- Clases cubiertas vs no cubiertas
