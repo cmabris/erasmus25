@@ -40,8 +40,145 @@ beforeEach(function () {
 });
 
 describe('UpdateDocumentRequest - Authorization', function () {
-    // Note: Authorization is tested in Livewire component tests
-    // These tests focus on validation rules only
+    it('authorizes user with edit permission to update document', function () {
+        $user = User::factory()->create();
+        $user->givePermissionTo(Permissions::DOCUMENTS_EDIT);
+        $this->actingAs($user);
+
+        $category = DocumentCategory::factory()->create();
+        $document = Document::factory()->create(['category_id' => $category->id]);
+
+        $request = UpdateDocumentRequest::create(
+            "/admin/documentos/{$document->id}",
+            'PUT',
+            []
+        );
+        $request->setUserResolver(fn () => $user);
+        $request->setRouteResolver(function () use ($document) {
+            $route = new \Illuminate\Routing\Route(['PUT'], '/admin/documentos/{document}', []);
+            $route->bind(new \Illuminate\Http\Request);
+            $route->setParameter('document', $document);
+
+            return $route;
+        });
+
+        expect($request->authorize())->toBeTrue();
+    });
+
+    it('authorizes super-admin user to update document', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::SUPER_ADMIN);
+        $this->actingAs($user);
+
+        $category = DocumentCategory::factory()->create();
+        $document = Document::factory()->create(['category_id' => $category->id]);
+
+        $request = UpdateDocumentRequest::create(
+            "/admin/documentos/{$document->id}",
+            'PUT',
+            []
+        );
+        $request->setUserResolver(fn () => $user);
+        $request->setRouteResolver(function () use ($document) {
+            $route = new \Illuminate\Routing\Route(['PUT'], '/admin/documentos/{document}', []);
+            $route->bind(new \Illuminate\Http\Request);
+            $route->setParameter('document', $document);
+
+            return $route;
+        });
+
+        expect($request->authorize())->toBeTrue();
+    });
+
+    it('denies user without edit permission', function () {
+        $user = User::factory()->create();
+        $user->givePermissionTo(Permissions::DOCUMENTS_VIEW); // Solo view, no edit
+        $this->actingAs($user);
+
+        $category = DocumentCategory::factory()->create();
+        $document = Document::factory()->create(['category_id' => $category->id]);
+
+        $request = UpdateDocumentRequest::create(
+            "/admin/documentos/{$document->id}",
+            'PUT',
+            []
+        );
+        $request->setUserResolver(fn () => $user);
+        $request->setRouteResolver(function () use ($document) {
+            $route = new \Illuminate\Routing\Route(['PUT'], '/admin/documentos/{document}', []);
+            $route->bind(new \Illuminate\Http\Request);
+            $route->setParameter('document', $document);
+
+            return $route;
+        });
+
+        expect($request->authorize())->toBeFalse();
+    });
+
+    it('denies unauthenticated user', function () {
+        $category = DocumentCategory::factory()->create();
+        $document = Document::factory()->create(['category_id' => $category->id]);
+
+        $request = UpdateDocumentRequest::create(
+            "/admin/documentos/{$document->id}",
+            'PUT',
+            []
+        );
+        $request->setUserResolver(fn () => null);
+        $request->setRouteResolver(function () use ($document) {
+            $route = new \Illuminate\Routing\Route(['PUT'], '/admin/documentos/{document}', []);
+            $route->bind(new \Illuminate\Http\Request);
+            $route->setParameter('document', $document);
+
+            return $route;
+        });
+
+        expect($request->authorize())->toBeFalse();
+    });
+
+    it('returns false when route parameter is not Document instance', function () {
+        $user = User::factory()->create();
+        $user->givePermissionTo(Permissions::DOCUMENTS_EDIT);
+        $this->actingAs($user);
+
+        $request = UpdateDocumentRequest::create(
+            '/admin/documentos/999',
+            'PUT',
+            []
+        );
+        $request->setUserResolver(fn () => $user);
+        $request->setRouteResolver(function () {
+            $route = new \Illuminate\Routing\Route(['PUT'], '/admin/documentos/{document}', []);
+            $route->bind(new \Illuminate\Http\Request);
+            $route->setParameter('document', 'not-a-document'); // No es instancia de Document
+
+            return $route;
+        });
+
+        expect($request->authorize())->toBeFalse();
+    });
+
+    it('returns false when route parameter is null', function () {
+        $user = User::factory()->create();
+        $user->givePermissionTo(Permissions::DOCUMENTS_EDIT);
+        $this->actingAs($user);
+
+        $request = UpdateDocumentRequest::create(
+            '/admin/documentos/999',
+            'PUT',
+            []
+        );
+        $request->setUserResolver(fn () => $user);
+        $request->setRouteResolver(function () {
+            $route = new \Illuminate\Routing\Route(['PUT'], '/admin/documentos/{document}', []);
+            $route->bind(new \Illuminate\Http\Request);
+            $route->setParameter('document', null);
+
+            return $route;
+        });
+
+        expect($request->authorize())->toBeFalse();
+    });
 });
 
 describe('UpdateDocumentRequest - Validation Rules', function () {
@@ -181,26 +318,33 @@ describe('UpdateDocumentRequest - Validation Rules', function () {
 
     it('validates slug uniqueness ignoring current record', function () {
         $user = User::factory()->create();
-        $user->assignRole(Roles::ADMIN);
+        $user->givePermissionTo(Permissions::DOCUMENTS_EDIT);
         $this->actingAs($user);
 
         $category = DocumentCategory::factory()->create();
         $document1 = Document::factory()->create(['slug' => 'slug-one', 'category_id' => $category->id]);
         $document2 = Document::factory()->create(['slug' => 'slug-two', 'category_id' => $category->id]);
 
-        $rules = [
-            'category_id' => ['required', 'exists:document_categories,id'],
-            'title' => ['required', 'string', 'max:255'],
-            'slug' => ['nullable', 'string', 'max:255', \Illuminate\Validation\Rule::unique('documents', 'slug')->ignore($document1->id)],
-            'document_type' => ['required', \Illuminate\Validation\Rule::in(['convocatoria', 'modelo', 'seguro', 'consentimiento', 'guia', 'faq', 'otro'])],
-        ];
+        $request = UpdateDocumentRequest::create(
+            "/admin/documentos/{$document1->id}",
+            'PUT',
+            [
+                'category_id' => $category->id,
+                'title' => 'Test Document',
+                'slug' => 'slug-two',
+                'document_type' => 'convocatoria',
+            ]
+        );
+        $request->setRouteResolver(function () use ($document1) {
+            $route = new \Illuminate\Routing\Route(['PUT'], '/admin/documentos/{document}', []);
+            $route->bind(new \Illuminate\Http\Request);
+            $route->setParameter('document', $document1);
 
-        $validator = Validator::make([
-            'category_id' => $category->id,
-            'title' => 'Test Document',
-            'slug' => 'slug-two',
-            'document_type' => 'convocatoria',
-        ], $rules);
+            return $route;
+        });
+
+        $rules = $request->rules();
+        $validator = Validator::make($request->all(), $rules);
 
         expect($validator->fails())->toBeTrue();
         expect($validator->errors()->has('slug'))->toBeTrue();
@@ -208,25 +352,32 @@ describe('UpdateDocumentRequest - Validation Rules', function () {
 
     it('allows keeping the same slug', function () {
         $user = User::factory()->create();
-        $user->assignRole(Roles::ADMIN);
+        $user->givePermissionTo(Permissions::DOCUMENTS_EDIT);
         $this->actingAs($user);
 
         $category = DocumentCategory::factory()->create();
         $document = Document::factory()->create(['slug' => 'original-slug', 'category_id' => $category->id]);
 
-        $rules = [
-            'category_id' => ['required', 'exists:document_categories,id'],
-            'title' => ['required', 'string', 'max:255'],
-            'slug' => ['nullable', 'string', 'max:255', \Illuminate\Validation\Rule::unique('documents', 'slug')->ignore($document->id)],
-            'document_type' => ['required', \Illuminate\Validation\Rule::in(['convocatoria', 'modelo', 'seguro', 'consentimiento', 'guia', 'faq', 'otro'])],
-        ];
+        $request = UpdateDocumentRequest::create(
+            "/admin/documentos/{$document->id}",
+            'PUT',
+            [
+                'category_id' => $category->id,
+                'title' => 'Updated Title',
+                'slug' => 'original-slug',
+                'document_type' => 'convocatoria',
+            ]
+        );
+        $request->setRouteResolver(function () use ($document) {
+            $route = new \Illuminate\Routing\Route(['PUT'], '/admin/documentos/{document}', []);
+            $route->bind(new \Illuminate\Http\Request);
+            $route->setParameter('document', $document);
 
-        $validator = Validator::make([
-            'category_id' => $category->id,
-            'title' => 'Updated Title',
-            'slug' => 'original-slug',
-            'document_type' => 'convocatoria',
-        ], $rules);
+            return $route;
+        });
+
+        $rules = $request->rules();
+        $validator = Validator::make($request->all(), $rules);
 
         expect($validator->fails())->toBeFalse();
     });
@@ -400,32 +551,149 @@ describe('UpdateDocumentRequest - Validation Rules', function () {
 
         expect($validator->fails())->toBeFalse();
     });
-});
 
-describe('UpdateDocumentRequest - Custom Messages', function () {
-    it('has custom error messages', function () {
+    it('handles route parameter as Document instance in rules', function () {
         $user = User::factory()->create();
-        $user->assignRole(Roles::ADMIN);
+        $user->givePermissionTo(Permissions::DOCUMENTS_EDIT);
         $this->actingAs($user);
 
         $category = DocumentCategory::factory()->create();
         $document = Document::factory()->create(['category_id' => $category->id]);
 
-        $request = new UpdateDocumentRequest;
+        $request = UpdateDocumentRequest::create(
+            "/admin/documentos/{$document->id}",
+            'PUT',
+            [
+                'category_id' => $category->id,
+                'title' => 'Updated Document',
+                'document_type' => 'convocatoria',
+            ]
+        );
         $request->setRouteResolver(function () use ($document) {
-            $route = \Illuminate\Routing\Route::get('/admin/documentos/{document}', function () {});
+            $route = new \Illuminate\Routing\Route(['PUT'], '/admin/documentos/{document}', []);
+            $route->bind(new \Illuminate\Http\Request);
+            $route->setParameter('document', $document); // Instancia de Document
+
+            return $route;
+        });
+
+        $rules = $request->rules();
+
+        expect($rules)->toBeArray();
+        expect($rules)->toHaveKey('category_id');
+        expect($rules)->toHaveKey('title');
+        expect($rules)->toHaveKey('slug');
+        expect($rules)->toHaveKey('document_type');
+    });
+
+    it('handles route parameter as ID in rules', function () {
+        $user = User::factory()->create();
+        $user->givePermissionTo(Permissions::DOCUMENTS_EDIT);
+        $this->actingAs($user);
+
+        $category = DocumentCategory::factory()->create();
+        $document = Document::factory()->create(['category_id' => $category->id]);
+
+        $request = UpdateDocumentRequest::create(
+            "/admin/documentos/{$document->id}",
+            'PUT',
+            [
+                'category_id' => $category->id,
+                'title' => 'Updated Document',
+                'document_type' => 'convocatoria',
+            ]
+        );
+        $request->setRouteResolver(function () use ($document) {
+            $route = new \Illuminate\Routing\Route(['PUT'], '/admin/documentos/{document}', []);
+            $route->bind(new \Illuminate\Http\Request);
+            $route->setParameter('document', $document->id); // ID numérico
+
+            return $route;
+        });
+
+        $rules = $request->rules();
+
+        expect($rules)->toBeArray();
+        expect($rules)->toHaveKey('category_id');
+        expect($rules)->toHaveKey('title');
+        expect($rules)->toHaveKey('slug');
+        expect($rules)->toHaveKey('document_type');
+    });
+});
+
+describe('UpdateDocumentRequest - Custom Messages', function () {
+    it('has custom error messages for all validation rules', function () {
+        $user = User::factory()->create();
+        $user->givePermissionTo(Permissions::DOCUMENTS_EDIT);
+        $this->actingAs($user);
+
+        $category = DocumentCategory::factory()->create();
+        $document = Document::factory()->create(['category_id' => $category->id]);
+
+        $request = UpdateDocumentRequest::create(
+            "/admin/documentos/{$document->id}",
+            'PUT',
+            []
+        );
+        $request->setRouteResolver(function () use ($document) {
+            $route = new \Illuminate\Routing\Route(['PUT'], '/admin/documentos/{document}', []);
+            $route->bind(new \Illuminate\Http\Request);
             $route->setParameter('document', $document);
 
             return $route;
         });
+
         $messages = $request->messages();
 
         expect($messages)->toBeArray();
         expect($messages)->toHaveKey('category_id.required');
+        expect($messages)->toHaveKey('category_id.exists');
+        expect($messages)->toHaveKey('program_id.exists');
+        expect($messages)->toHaveKey('academic_year_id.exists');
         expect($messages)->toHaveKey('title.required');
-        expect($messages)->toHaveKey('document_type.required');
+        expect($messages)->toHaveKey('title.string');
+        expect($messages)->toHaveKey('title.max');
+        expect($messages)->toHaveKey('slug.string');
+        expect($messages)->toHaveKey('slug.max');
         expect($messages)->toHaveKey('slug.unique');
+        expect($messages)->toHaveKey('description.string');
+        expect($messages)->toHaveKey('document_type.required');
+        expect($messages)->toHaveKey('document_type.in');
+        expect($messages)->toHaveKey('version.string');
+        expect($messages)->toHaveKey('version.max');
+        expect($messages)->toHaveKey('is_active.boolean');
+        expect($messages)->toHaveKey('file.file');
         expect($messages)->toHaveKey('file.mimes');
         expect($messages)->toHaveKey('file.max');
+    });
+
+    it('returns translated custom messages', function () {
+        $user = User::factory()->create();
+        $user->givePermissionTo(Permissions::DOCUMENTS_EDIT);
+        $this->actingAs($user);
+
+        $category = DocumentCategory::factory()->create();
+        $document = Document::factory()->create(['category_id' => $category->id]);
+
+        $request = UpdateDocumentRequest::create(
+            "/admin/documentos/{$document->id}",
+            'PUT',
+            []
+        );
+        $request->setRouteResolver(function () use ($document) {
+            $route = new \Illuminate\Routing\Route(['PUT'], '/admin/documentos/{document}', []);
+            $route->bind(new \Illuminate\Http\Request);
+            $route->setParameter('document', $document);
+
+            return $route;
+        });
+
+        $messages = $request->messages();
+
+        expect($messages['category_id.required'])->toBe(__('La categoría del documento es obligatoria.'));
+        expect($messages['category_id.exists'])->toBe(__('La categoría seleccionada no existe o ha sido eliminada.'));
+        expect($messages['title.required'])->toBe(__('El título del documento es obligatorio.'));
+        expect($messages['document_type.required'])->toBe(__('Debe seleccionar un tipo de documento.'));
+        expect($messages['slug.unique'])->toBe(__('Este slug ya está en uso. Por favor, elija otro.'));
     });
 });
