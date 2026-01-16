@@ -320,4 +320,120 @@ describe('StoreTranslationRequest - Validation Rules', function () {
 
         expect($validator->fails())->toBeFalse();
     });
+
+    it('handles default case in translatable_id validation when type is not Program or Setting', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $language = Language::factory()->create();
+
+        // Create a request with invalid type that will bypass Rule::in validation
+        // by directly testing the closure with a request that has invalid type
+        $request = StoreTranslationRequest::create('/admin/traducciones', 'POST', [
+            'translatable_type' => 'App\\Models\\SomeOtherClass', // Invalid type
+            'translatable_id' => 1,
+            'language_id' => $language->id,
+            'field' => 'name',
+            'value' => 'Test',
+        ]);
+        $request->setUserResolver(fn () => $user);
+        $rules = $request->rules();
+
+        // Create validator - translatable_type will fail, but we can test the closure logic
+        // by creating a new request with valid type but then modifying it
+        $testRequest = StoreTranslationRequest::create('/admin/traducciones', 'POST', [
+            'translatable_type' => Program::class, // Valid type
+            'translatable_id' => 1,
+            'language_id' => $language->id,
+            'field' => 'name',
+            'value' => 'Test',
+        ]);
+        $testRequest->setUserResolver(fn () => $user);
+        
+        // Get the closure and bind it to a request with invalid type
+        $translatableIdRule = $rules['translatable_id'];
+        $closure = $translatableIdRule[2];
+        
+        // Create a request with invalid type to test default case
+        $invalidRequest = StoreTranslationRequest::create('/admin/traducciones', 'POST', []);
+        $invalidRequest->merge(['translatable_type' => 'App\\Models\\SomeOtherClass']);
+        
+        // Bind closure to invalid request
+        $boundClosure = \Closure::bind($closure, $invalidRequest, StoreTranslationRequest::class);
+        
+        $failCalled = false;
+        $boundClosure('translatable_id', 1, function ($message) use (&$failCalled) {
+            $failCalled = true;
+        });
+
+        // The default case should set table to null, so validation should not fail
+        expect($failCalled)->toBeFalse();
+    });
+
+    it('handles default case in field validation when type is not Program or Setting', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $language = Language::factory()->create();
+        $program = Program::factory()->create();
+
+        // Create a request and get the rules
+        $request = StoreTranslationRequest::create('/admin/traducciones', 'POST', [
+            'translatable_type' => Program::class,
+            'translatable_id' => $program->id,
+            'language_id' => $language->id,
+            'field' => 'name',
+            'value' => 'Test',
+        ]);
+        $request->setUserResolver(fn () => $user);
+        $rules = $request->rules();
+
+        // Get the field validation closure
+        $fieldRule = $rules['field'];
+        $closure = $fieldRule[3];
+
+        // Create a request with invalid type to test default case
+        $invalidRequest = StoreTranslationRequest::create('/admin/traducciones', 'POST', []);
+        $invalidRequest->merge(['translatable_type' => 'App\\Models\\SomeOtherClass']);
+        
+        // Bind closure to invalid request
+        $boundClosure = \Closure::bind($closure, $invalidRequest, StoreTranslationRequest::class);
+
+        // Execute the closure with invalid type to trigger default case
+        $failCalled = false;
+        $boundClosure('field', 'any_field', function ($message) use (&$failCalled) {
+            $failCalled = true;
+        });
+
+        // The default case should set validFields to empty array, so validation should not fail
+        expect($failCalled)->toBeFalse();
+    });
+});
+
+describe('StoreTranslationRequest - Custom Messages', function () {
+    it('returns custom error messages', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $request = StoreTranslationRequest::create('/admin/traducciones', 'POST', []);
+        $messages = $request->messages();
+
+        expect($messages)->toBeArray();
+        expect($messages)->toHaveKey('translatable_type.required');
+        expect($messages)->toHaveKey('translatable_type.string');
+        expect($messages)->toHaveKey('translatable_type.in');
+        expect($messages)->toHaveKey('translatable_id.required');
+        expect($messages)->toHaveKey('translatable_id.integer');
+        expect($messages)->toHaveKey('language_id.required');
+        expect($messages)->toHaveKey('language_id.integer');
+        expect($messages)->toHaveKey('language_id.exists');
+        expect($messages)->toHaveKey('field.required');
+        expect($messages)->toHaveKey('field.string');
+        expect($messages)->toHaveKey('field.max');
+        expect($messages)->toHaveKey('value.required');
+        expect($messages)->toHaveKey('value.string');
+    });
 });
