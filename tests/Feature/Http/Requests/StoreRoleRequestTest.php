@@ -28,8 +28,34 @@ beforeEach(function () {
 });
 
 describe('StoreRoleRequest - Authorization', function () {
-    // Note: Authorization is tested in Livewire component tests
-    // These tests focus on validation rules only
+    it('authorizes super-admin user to create role', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::SUPER_ADMIN);
+        $this->actingAs($user);
+
+        $request = StoreRoleRequest::create('/admin/roles', 'POST', []);
+        $request->setUserResolver(fn () => $user);
+
+        expect($request->authorize())->toBeTrue();
+    });
+
+    it('denies non-super-admin user', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $request = StoreRoleRequest::create('/admin/roles', 'POST', []);
+        $request->setUserResolver(fn () => $user);
+
+        expect($request->authorize())->toBeFalse();
+    });
+
+    it('denies unauthenticated user', function () {
+        $request = StoreRoleRequest::create('/admin/roles', 'POST', []);
+        $request->setUserResolver(fn () => null);
+
+        expect($request->authorize())->toBeFalse();
+    });
 });
 
 describe('StoreRoleRequest - Validation Rules', function () {
