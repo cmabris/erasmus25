@@ -28,8 +28,117 @@ beforeEach(function () {
 });
 
 describe('UpdateRoleRequest - Authorization', function () {
-    // Note: Authorization is tested in Livewire component tests
-    // These tests focus on validation rules only
+    it('authorizes super-admin user to update role', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::SUPER_ADMIN);
+        $this->actingAs($user);
+
+        $role = Role::where('name', Roles::ADMIN)->first();
+
+        $request = UpdateRoleRequest::create(
+            "/admin/roles/{$role->id}",
+            'PUT',
+            []
+        );
+        $request->setUserResolver(fn () => $user);
+        $request->setRouteResolver(function () use ($role) {
+            $route = new \Illuminate\Routing\Route(['PUT'], '/admin/roles/{role}', []);
+            $route->bind(new \Illuminate\Http\Request);
+            $route->setParameter('role', $role);
+
+            return $route;
+        });
+
+        expect($request->authorize())->toBeTrue();
+    });
+
+    it('denies non-super-admin user', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN); // No es super-admin
+        $this->actingAs($user);
+
+        $role = Role::where('name', Roles::ADMIN)->first();
+
+        $request = UpdateRoleRequest::create(
+            "/admin/roles/{$role->id}",
+            'PUT',
+            []
+        );
+        $request->setUserResolver(fn () => $user);
+        $request->setRouteResolver(function () use ($role) {
+            $route = new \Illuminate\Routing\Route(['PUT'], '/admin/roles/{role}', []);
+            $route->bind(new \Illuminate\Http\Request);
+            $route->setParameter('role', $role);
+
+            return $route;
+        });
+
+        expect($request->authorize())->toBeFalse();
+    });
+
+    it('denies unauthenticated user', function () {
+        $role = Role::where('name', Roles::ADMIN)->first();
+
+        $request = UpdateRoleRequest::create(
+            "/admin/roles/{$role->id}",
+            'PUT',
+            []
+        );
+        $request->setUserResolver(fn () => null);
+        $request->setRouteResolver(function () use ($role) {
+            $route = new \Illuminate\Routing\Route(['PUT'], '/admin/roles/{role}', []);
+            $route->bind(new \Illuminate\Http\Request);
+            $route->setParameter('role', $role);
+
+            return $route;
+        });
+
+        expect($request->authorize())->toBeFalse();
+    });
+
+    it('returns false when route parameter is not Role instance', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::SUPER_ADMIN);
+        $this->actingAs($user);
+
+        $request = UpdateRoleRequest::create(
+            '/admin/roles/999',
+            'PUT',
+            []
+        );
+        $request->setUserResolver(fn () => $user);
+        $request->setRouteResolver(function () {
+            $route = new \Illuminate\Routing\Route(['PUT'], '/admin/roles/{role}', []);
+            $route->bind(new \Illuminate\Http\Request);
+            $route->setParameter('role', 'not-a-role'); // No es instancia de Role
+
+            return $route;
+        });
+
+        expect($request->authorize())->toBeFalse();
+    });
+
+    it('returns false when route parameter is null', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::SUPER_ADMIN);
+        $this->actingAs($user);
+
+        $request = UpdateRoleRequest::create(
+            '/admin/roles/999',
+            'PUT',
+            []
+        );
+        $request->setUserResolver(fn () => $user);
+        $request->setRouteResolver(function () {
+            $route = new \Illuminate\Routing\Route(['PUT'], '/admin/roles/{role}', []);
+            $route->bind(new \Illuminate\Http\Request);
+            $route->setParameter('role', null);
+
+            return $route;
+        });
+
+        expect($request->authorize())->toBeFalse();
+    });
 });
 
 describe('UpdateRoleRequest - Validation Rules', function () {
@@ -399,15 +508,200 @@ describe('UpdateRoleRequest - Validation Rules', function () {
 
         expect($validator->fails())->toBeFalse();
     });
-});
 
-describe('UpdateRoleRequest - Custom Messages', function () {
-    it('returns custom error messages', function () {
+    it('prevents changing name of system role', function () {
         $user = User::factory()->create();
         $user->assignRole(Roles::SUPER_ADMIN);
         $this->actingAs($user);
 
-        $request = new UpdateRoleRequest;
+        $role = Role::where('name', Roles::ADMIN)->first(); // Rol del sistema
+
+        $request = UpdateRoleRequest::create(
+            "/admin/roles/{$role->id}",
+            'PUT',
+            [
+                'name' => Roles::EDITOR, // Intentar cambiar el nombre a otro rol del sistema
+                'permissions' => [],
+            ]
+        );
+        $request->setRouteResolver(function () use ($role) {
+            $route = new \Illuminate\Routing\Route(['PUT'], '/admin/roles/{role}', []);
+            $route->bind(new \Illuminate\Http\Request);
+            $route->setParameter('role', $role);
+
+            return $route;
+        });
+
+        $rules = $request->rules();
+        $validator = Validator::make($request->all(), $rules);
+
+        // La validación debe fallar porque:
+        // 1. El nombre EDITOR ya existe (unique validation)
+        // 2. O la validación personalizada previene el cambio (system role validation)
+        expect($validator->fails())->toBeTrue();
+        expect($validator->errors()->has('name'))->toBeTrue();
+    });
+
+    it('validates custom rule prevents changing system role name', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::SUPER_ADMIN);
+        $this->actingAs($user);
+
+        $role = Role::where('name', Roles::ADMIN)->first(); // Rol del sistema
+
+        $request = UpdateRoleRequest::create(
+            "/admin/roles/{$role->id}",
+            'PUT',
+            []
+        );
+        $request->setRouteResolver(function () use ($role) {
+            $route = new \Illuminate\Routing\Route(['PUT'], '/admin/roles/{role}', []);
+            $route->bind(new \Illuminate\Http\Request);
+            $route->setParameter('role', $role);
+
+            return $route;
+        });
+
+        $rules = $request->rules();
+        
+        // Extraer la validación personalizada y probarla directamente
+        $nameRules = $rules['name'];
+        $customRule = null;
+        foreach ($nameRules as $rule) {
+            if (is_callable($rule) && !is_string($rule) && !($rule instanceof \Illuminate\Contracts\Validation\Rule)) {
+                $customRule = $rule;
+                break;
+            }
+        }
+        
+        expect($customRule)->not->toBeNull();
+        
+        // Probar la validación personalizada directamente
+        $failCalled = false;
+        $failMessage = '';
+        $fail = function ($message) use (&$failCalled, &$failMessage) {
+            $failCalled = true;
+            $failMessage = $message;
+        };
+        
+        // Intentar cambiar el nombre de un rol del sistema a un valor diferente
+        $customRule('name', Roles::EDITOR, $fail);
+        
+        expect($failCalled)->toBeTrue();
+        expect($failMessage)->toBe(__('No se puede cambiar el nombre de un rol del sistema.'));
+    });
+
+    it('allows keeping the same name for system role', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::SUPER_ADMIN);
+        $this->actingAs($user);
+
+        $role = Role::where('name', Roles::ADMIN)->first(); // Rol del sistema
+
+        $request = UpdateRoleRequest::create(
+            "/admin/roles/{$role->id}",
+            'PUT',
+            [
+                'name' => Roles::ADMIN, // Mantener el mismo nombre
+                'permissions' => [],
+            ]
+        );
+        $request->setRouteResolver(function () use ($role) {
+            $route = new \Illuminate\Routing\Route(['PUT'], '/admin/roles/{role}', []);
+            $route->bind(new \Illuminate\Http\Request);
+            $route->setParameter('role', $role);
+
+            return $route;
+        });
+
+        $rules = $request->rules();
+        $validator = Validator::make($request->all(), $rules);
+
+        expect($validator->fails())->toBeFalse();
+    });
+
+    it('handles route parameter as Role instance in rules', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::SUPER_ADMIN);
+        $this->actingAs($user);
+
+        $role = Role::where('name', Roles::ADMIN)->first();
+
+        $request = UpdateRoleRequest::create(
+            "/admin/roles/{$role->id}",
+            'PUT',
+            [
+                'name' => Roles::ADMIN,
+                'permissions' => [],
+            ]
+        );
+        $request->setRouteResolver(function () use ($role) {
+            $route = new \Illuminate\Routing\Route(['PUT'], '/admin/roles/{role}', []);
+            $route->bind(new \Illuminate\Http\Request);
+            $route->setParameter('role', $role); // Instancia de Role
+
+            return $route;
+        });
+
+        $rules = $request->rules();
+
+        expect($rules)->toBeArray();
+        expect($rules)->toHaveKey('name');
+        expect($rules)->toHaveKey('permissions');
+    });
+
+    it('handles route parameter as ID in rules', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::SUPER_ADMIN);
+        $this->actingAs($user);
+
+        $role = Role::where('name', Roles::ADMIN)->first();
+
+        $request = UpdateRoleRequest::create(
+            "/admin/roles/{$role->id}",
+            'PUT',
+            [
+                'name' => Roles::ADMIN,
+                'permissions' => [],
+            ]
+        );
+        $request->setRouteResolver(function () use ($role) {
+            $route = new \Illuminate\Routing\Route(['PUT'], '/admin/roles/{role}', []);
+            $route->bind(new \Illuminate\Http\Request);
+            $route->setParameter('role', $role->id); // ID numérico
+
+            return $route;
+        });
+
+        $rules = $request->rules();
+
+        expect($rules)->toBeArray();
+        expect($rules)->toHaveKey('name');
+        expect($rules)->toHaveKey('permissions');
+    });
+});
+
+describe('UpdateRoleRequest - Custom Messages', function () {
+    it('has custom error messages for all validation rules', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::SUPER_ADMIN);
+        $this->actingAs($user);
+
+        $role = Role::where('name', Roles::ADMIN)->first();
+
+        $request = UpdateRoleRequest::create(
+            "/admin/roles/{$role->id}",
+            'PUT',
+            []
+        );
+        $request->setRouteResolver(function () use ($role) {
+            $route = new \Illuminate\Routing\Route(['PUT'], '/admin/roles/{role}', []);
+            $route->bind(new \Illuminate\Http\Request);
+            $route->setParameter('role', $role);
+
+            return $route;
+        });
+
         $messages = $request->messages();
 
         expect($messages)->toBeArray();
@@ -419,5 +713,35 @@ describe('UpdateRoleRequest - Custom Messages', function () {
         expect($messages)->toHaveKey('permissions.array');
         expect($messages)->toHaveKey('permissions.*.string');
         expect($messages)->toHaveKey('permissions.*.exists');
+    });
+
+    it('returns translated custom messages', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::SUPER_ADMIN);
+        $this->actingAs($user);
+
+        $role = Role::where('name', Roles::ADMIN)->first();
+
+        $request = UpdateRoleRequest::create(
+            "/admin/roles/{$role->id}",
+            'PUT',
+            []
+        );
+        $request->setRouteResolver(function () use ($role) {
+            $route = new \Illuminate\Routing\Route(['PUT'], '/admin/roles/{role}', []);
+            $route->bind(new \Illuminate\Http\Request);
+            $route->setParameter('role', $role);
+
+            return $route;
+        });
+
+        $messages = $request->messages();
+        $validRoles = implode(', ', Roles::all());
+
+        expect($messages['name.required'])->toBe(__('El nombre del rol es obligatorio.'));
+        expect($messages['name.string'])->toBe(__('El nombre del rol debe ser un texto válido.'));
+        expect($messages['name.max'])->toBe(__('El nombre del rol no puede tener más de :max caracteres.'));
+        expect($messages['name.unique'])->toBe(__('Este nombre de rol ya está en uso.'));
+        expect($messages['name.in'])->toBe(__('El nombre del rol no es válido. Los roles válidos son: :values', ['values' => $validRoles]));
     });
 });
