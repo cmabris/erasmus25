@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard for /Users/carlos/Qsync/proyectosHerd/erasmus25/app/Livewire/Admin/Calls</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="../../../_css/bootstrap.min.css?v=12.5.1" rel="stylesheet" type="text/css">
+  <link href="../../../_css/billboard.min.css?v=12.5.1" rel="stylesheet" type="text/css">
+  <link href="../../../_css/style.css?v=12.5.1" rel="stylesheet" type="text/css">
+  <link href="../../../_css/custom.css" rel="stylesheet" type="text/css">
+ </head>
+ <body>
+  <header>
+   <div class="container-fluid">
+    <div class="row">
+     <div class="col-md-12">
+      <nav aria-label="breadcrumb">
+       <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="../../../index.html">/Users/carlos/Qsync/proyectosHerd/erasmus25/app</a></li>
+         <li class="breadcrumb-item"><a href="../../index.html">Livewire</a></li>
+         <li class="breadcrumb-item"><a href="../index.html">Admin</a></li>
+         <li class="breadcrumb-item"><a href="index.html">Calls</a></li>
+         <li class="breadcrumb-item active">(Dashboard)</li>
+
+       </ol>
+      </nav>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="container-fluid">
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Classes</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="classesCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="classComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3 style="margin-top: 2rem;">Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Import.php.html#15">App\Livewire\Admin\Calls\Import</a></td><td class="text-right">22%</td></tr>
+       <tr><td><a href="Edit.php.html#15">App\Livewire\Admin\Calls\Edit</a></td><td class="text-right">64%</td></tr>
+       <tr><td><a href="Show.php.html#13">App\Livewire\Admin\Calls\Show</a></td><td class="text-right">66%</td></tr>
+       <tr><td><a href="Phases/Create.php.html#12">App\Livewire\Admin\Calls\Phases\Create</a></td><td class="text-right">85%</td></tr>
+       <tr><td><a href="Phases/Edit.php.html#12">App\Livewire\Admin\Calls\Phases\Edit</a></td><td class="text-right">85%</td></tr>
+       <tr><td><a href="Create.php.html#15">App\Livewire\Admin\Calls\Create</a></td><td class="text-right">86%</td></tr>
+       <tr><td><a href="Index.php.html#18">App\Livewire\Admin\Calls\Index</a></td><td class="text-right">87%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3 style="margin-top: 2rem;">Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right">Coverage</th>
+         <th class="text-right">Complexity</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Edit.php.html#15">App\Livewire\Admin\Calls\Edit</a></td><td class="text-right">65,0%</td><td class="text-right">51</td><td class="text-right">162</td></tr>
+       <tr><td><a href="Show.php.html#13">App\Livewire\Admin\Calls\Show</a></td><td class="text-right">66,1%</td><td class="text-right">46</td><td class="text-right">128</td></tr>
+       <tr><td><a href="Import.php.html#15">App\Livewire\Admin\Calls\Import</a></td><td class="text-right">22,5%</td><td class="text-right">13</td><td class="text-right">91</td></tr>
+       <tr><td><a href="Index.php.html#18">App\Livewire\Admin\Calls\Index</a></td><td class="text-right">87,3%</td><td class="text-right">49</td><td class="text-right">53</td></tr>
+       <tr><td><a href="Create.php.html#15">App\Livewire\Admin\Calls\Create</a></td><td class="text-right">86,4%</td><td class="text-right">45</td><td class="text-right">50</td></tr>
+       <tr><td><a href="Phases/Create.php.html#12">App\Livewire\Admin\Calls\Phases\Create</a></td><td class="text-right">85,6%</td><td class="text-right">24</td><td class="text-right">25</td></tr>
+       <tr><td><a href="Phases/Edit.php.html#12">App\Livewire\Admin\Calls\Phases\Edit</a></td><td class="text-right">85,9%</td><td class="text-right">22</td><td class="text-right">23</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-12">
+     <h2 style="margin-top: 3rem;">Methods</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="methodsCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="methodComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3 style="margin-top: 2rem;">Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Create.php.html#284"><abbr title="App\Livewire\Admin\Calls\Create::updateDestination">updateDestination</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Create.php.html#324"><abbr title="App\Livewire\Admin\Calls\Create::updateScoringItem">updateScoringItem</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Edit.php.html#227"><abbr title="App\Livewire\Admin\Calls\Edit::updatedEstimatedStartDate">updatedEstimatedStartDate</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Edit.php.html#243"><abbr title="App\Livewire\Admin\Calls\Edit::updatedEstimatedEndDate">updatedEstimatedEndDate</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Edit.php.html#259"><abbr title="App\Livewire\Admin\Calls\Edit::updatedProgramId">updatedProgramId</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Edit.php.html#269"><abbr title="App\Livewire\Admin\Calls\Edit::updatedAcademicYearId">updatedAcademicYearId</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Edit.php.html#289"><abbr title="App\Livewire\Admin\Calls\Edit::addDestination">addDestination</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Edit.php.html#303"><abbr title="App\Livewire\Admin\Calls\Edit::removeDestination">removeDestination</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Edit.php.html#314"><abbr title="App\Livewire\Admin\Calls\Edit::updateDestination">updateDestination</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Edit.php.html#324"><abbr title="App\Livewire\Admin\Calls\Edit::addScoringItem">addScoringItem</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Edit.php.html#343"><abbr title="App\Livewire\Admin\Calls\Edit::removeScoringItem">removeScoringItem</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Edit.php.html#354"><abbr title="App\Livewire\Admin\Calls\Edit::updateScoringItem">updateScoringItem</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Import.php.html#64"><abbr title="App\Livewire\Admin\Calls\Import::validateUploadedFile">validateUploadedFile</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Index.php.html#253"><abbr title="App\Livewire\Admin\Calls\Index::confirmDelete">confirmDelete</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Index.php.html#309"><abbr title="App\Livewire\Admin\Calls\Index::confirmRestore">confirmRestore</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Index.php.html#345"><abbr title="App\Livewire\Admin\Calls\Index::confirmForceDelete">confirmForceDelete</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Index.php.html#399"><abbr title="App\Livewire\Admin\Calls\Index::resetFilters">resetFilters</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Index.php.html#432"><abbr title="App\Livewire\Admin\Calls\Index::updatedFilterModality">updatedFilterModality</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Index.php.html#506"><abbr title="App\Livewire\Admin\Calls\Index::getValidStatusTransitions">getValidStatusTransitions</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Phases/Create.php.html#237"><abbr title="App\Livewire\Admin\Calls\Phases\Create::getCurrentPhaseName">getCurrentPhaseName</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Phases/Edit.php.html#243"><abbr title="App\Livewire\Admin\Calls\Phases\Edit::getCurrentPhaseName">getCurrentPhaseName</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Phases/Index.php.html#402"><abbr title="App\Livewire\Admin\Calls\Phases\Index::resetFilters">resetFilters</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Phases/Show.php.html#244"><abbr title="App\Livewire\Admin\Calls\Phases\Show::hasRelationships">hasRelationships</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Resolutions/Edit.php.html#130"><abbr title="App\Livewire\Admin\Calls\Resolutions\Edit::removePdf">removePdf</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Resolutions/Index.php.html#313"><abbr title="App\Livewire\Admin\Calls\Resolutions\Index::resetFilters">resetFilters</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Show.php.html#177"><abbr title="App\Livewire\Admin\Calls\Show::unmarkPhaseAsCurrent">unmarkPhaseAsCurrent</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Show.php.html#215"><abbr title="App\Livewire\Admin\Calls\Show::unpublishResolution">unpublishResolution</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Show.php.html#301"><abbr title="App\Livewire\Admin\Calls\Show::forceDelete">forceDelete</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Show.php.html#352"><abbr title="App\Livewire\Admin\Calls\Show::getValidStatusTransitions">getValidStatusTransitions</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Show.php.html#369"><abbr title="App\Livewire\Admin\Calls\Show::getStatusDescription">getStatusDescription</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Import.php.html#112"><abbr title="App\Livewire\Admin\Calls\Import::import">import</abbr></a></td><td class="text-right">22%</td></tr>
+       <tr><td><a href="Phases/Create.php.html#104"><abbr title="App\Livewire\Admin\Calls\Phases\Create::updatedStartDate">updatedStartDate</abbr></a></td><td class="text-right">25%</td></tr>
+       <tr><td><a href="Phases/Edit.php.html#104"><abbr title="App\Livewire\Admin\Calls\Phases\Edit::updatedStartDate">updatedStartDate</abbr></a></td><td class="text-right">25%</td></tr>
+       <tr><td><a href="Show.php.html#235"><abbr title="App\Livewire\Admin\Calls\Show::delete">delete</abbr></a></td><td class="text-right">52%</td></tr>
+       <tr><td><a href="Phases/Show.php.html#165"><abbr title="App\Livewire\Admin\Calls\Phases\Show::forceDelete">forceDelete</abbr></a></td><td class="text-right">52%</td></tr>
+       <tr><td><a href="Create.php.html#250"><abbr title="App\Livewire\Admin\Calls\Create::addDestination">addDestination</abbr></a></td><td class="text-right">55%</td></tr>
+       <tr><td><a href="Create.php.html#188"><abbr title="App\Livewire\Admin\Calls\Create::updatedEstimatedStartDate">updatedEstimatedStartDate</abbr></a></td><td class="text-right">57%</td></tr>
+       <tr><td><a href="Create.php.html#204"><abbr title="App\Livewire\Admin\Calls\Create::updatedEstimatedEndDate">updatedEstimatedEndDate</abbr></a></td><td class="text-right">57%</td></tr>
+       <tr><td><a href="Resolutions/Index.php.html#152"><abbr title="App\Livewire\Admin\Calls\Resolutions\Index::sortBy">sortBy</abbr></a></td><td class="text-right">60%</td></tr>
+       <tr><td><a href="Phases/Show.php.html#231"><abbr title="App\Livewire\Admin\Calls\Phases\Show::canDelete">canDelete</abbr></a></td><td class="text-right">66%</td></tr>
+       <tr><td><a href="Resolutions/Index.php.html#407"><abbr title="App\Livewire\Admin\Calls\Resolutions\Index::hasPdf">hasPdf</abbr></a></td><td class="text-right">66%</td></tr>
+       <tr><td><a href="Phases/Create.php.html#131"><abbr title="App\Livewire\Admin\Calls\Phases\Create::checkDateOverlaps">checkDateOverlaps</abbr></a></td><td class="text-right">76%</td></tr>
+       <tr><td><a href="Edit.php.html#120"><abbr title="App\Livewire\Admin\Calls\Edit::mount">mount</abbr></a></td><td class="text-right">77%</td></tr>
+       <tr><td><a href="Phases/Edit.php.html#131"><abbr title="App\Livewire\Admin\Calls\Phases\Edit::checkDateOverlaps">checkDateOverlaps</abbr></a></td><td class="text-right">77%</td></tr>
+       <tr><td><a href="Edit.php.html#200"><abbr title="App\Livewire\Admin\Calls\Edit::updatedTitle">updatedTitle</abbr></a></td><td class="text-right">80%</td></tr>
+       <tr><td><a href="Index.php.html#174"><abbr title="App\Livewire\Admin\Calls\Index::sortBy">sortBy</abbr></a></td><td class="text-right">80%</td></tr>
+       <tr><td><a href="Phases/Index.php.html#141"><abbr title="App\Livewire\Admin\Calls\Phases\Index::sortBy">sortBy</abbr></a></td><td class="text-right">80%</td></tr>
+       <tr><td><a href="Phases/Index.php.html#198"><abbr title="App\Livewire\Admin\Calls\Phases\Index::moveUp">moveUp</abbr></a></td><td class="text-right">80%</td></tr>
+       <tr><td><a href="Phases/Index.php.html#232"><abbr title="App\Livewire\Admin\Calls\Phases\Index::moveDown">moveDown</abbr></a></td><td class="text-right">80%</td></tr>
+       <tr><td><a href="Show.php.html#336"><abbr title="App\Livewire\Admin\Calls\Show::getStatusColor">getStatusColor</abbr></a></td><td class="text-right">88%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3 style="margin-top: 2rem;">Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right">Coverage</th>
+         <th class="text-right">Complexity</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Show.php.html#369"><abbr title="App\Livewire\Admin\Calls\Show::getStatusDescription">getStatusDescription</abbr></a></td><td class="text-right">0,0%</td><td class="text-right">8</td><td class="text-right">72</td></tr>
+       <tr><td><a href="Import.php.html#112"><abbr title="App\Livewire\Admin\Calls\Import::import">import</abbr></a></td><td class="text-right">22,6%</td><td class="text-right">6</td><td class="text-right">22</td></tr>
+       <tr><td><a href="Show.php.html#301"><abbr title="App\Livewire\Admin\Calls\Show::forceDelete">forceDelete</abbr></a></td><td class="text-right">0,0%</td><td class="text-right">4</td><td class="text-right">20</td></tr>
+       <tr><td><a href="Edit.php.html#120"><abbr title="App\Livewire\Admin\Calls\Edit::mount">mount</abbr></a></td><td class="text-right">77,8%</td><td class="text-right">13</td><td class="text-right">14</td></tr>
+       <tr><td><a href="Create.php.html#324"><abbr title="App\Livewire\Admin\Calls\Create::updateScoringItem">updateScoringItem</abbr></a></td><td class="text-right">0,0%</td><td class="text-right">3</td><td class="text-right">12</td></tr>
+       <tr><td><a href="Edit.php.html#227"><abbr title="App\Livewire\Admin\Calls\Edit::updatedEstimatedStartDate">updatedEstimatedStartDate</abbr></a></td><td class="text-right">0,0%</td><td class="text-right">3</td><td class="text-right">12</td></tr>
+       <tr><td><a href="Edit.php.html#243"><abbr title="App\Livewire\Admin\Calls\Edit::updatedEstimatedEndDate">updatedEstimatedEndDate</abbr></a></td><td class="text-right">0,0%</td><td class="text-right">3</td><td class="text-right">12</td></tr>
+       <tr><td><a href="Edit.php.html#354"><abbr title="App\Livewire\Admin\Calls\Edit::updateScoringItem">updateScoringItem</abbr></a></td><td class="text-right">0,0%</td><td class="text-right">3</td><td class="text-right">12</td></tr>
+       <tr><td><a href="Import.php.html#64"><abbr title="App\Livewire\Admin\Calls\Import::validateUploadedFile">validateUploadedFile</abbr></a></td><td class="text-right">0,0%</td><td class="text-right">3</td><td class="text-right">12</td></tr>
+       <tr><td><a href="Create.php.html#250"><abbr title="App\Livewire\Admin\Calls\Create::addDestination">addDestination</abbr></a></td><td class="text-right">55,6%</td><td class="text-right">6</td><td class="text-right">9</td></tr>
+       <tr><td><a href="Show.php.html#336"><abbr title="App\Livewire\Admin\Calls\Show::getStatusColor">getStatusColor</abbr></a></td><td class="text-right">88,9%</td><td class="text-right">8</td><td class="text-right">8</td></tr>
+       <tr><td><a href="Create.php.html#284"><abbr title="App\Livewire\Admin\Calls\Create::updateDestination">updateDestination</abbr></a></td><td class="text-right">0,0%</td><td class="text-right">2</td><td class="text-right">6</td></tr>
+       <tr><td><a href="Edit.php.html#289"><abbr title="App\Livewire\Admin\Calls\Edit::addDestination">addDestination</abbr></a></td><td class="text-right">0,0%</td><td class="text-right">2</td><td class="text-right">6</td></tr>
+       <tr><td><a href="Edit.php.html#303"><abbr title="App\Livewire\Admin\Calls\Edit::removeDestination">removeDestination</abbr></a></td><td class="text-right">0,0%</td><td class="text-right">2</td><td class="text-right">6</td></tr>
+       <tr><td><a href="Edit.php.html#314"><abbr title="App\Livewire\Admin\Calls\Edit::updateDestination">updateDestination</abbr></a></td><td class="text-right">0,0%</td><td class="text-right">2</td><td class="text-right">6</td></tr>
+       <tr><td><a href="Edit.php.html#343"><abbr title="App\Livewire\Admin\Calls\Edit::removeScoringItem">removeScoringItem</abbr></a></td><td class="text-right">0,0%</td><td class="text-right">2</td><td class="text-right">6</td></tr>
+       <tr><td><a href="Phases/Create.php.html#104"><abbr title="App\Livewire\Admin\Calls\Phases\Create::updatedStartDate">updatedStartDate</abbr></a></td><td class="text-right">25,0%</td><td class="text-right">3</td><td class="text-right">6</td></tr>
+       <tr><td><a href="Phases/Edit.php.html#104"><abbr title="App\Livewire\Admin\Calls\Phases\Edit::updatedStartDate">updatedStartDate</abbr></a></td><td class="text-right">25,0%</td><td class="text-right">3</td><td class="text-right">6</td></tr>
+       <tr><td><a href="Show.php.html#235"><abbr title="App\Livewire\Admin\Calls\Show::delete">delete</abbr></a></td><td class="text-right">52,4%</td><td class="text-right">4</td><td class="text-right">5</td></tr>
+       <tr><td><a href="Phases/Create.php.html#131"><abbr title="App\Livewire\Admin\Calls\Phases\Create::checkDateOverlaps">checkDateOverlaps</abbr></a></td><td class="text-right">76,9%</td><td class="text-right">4</td><td class="text-right">4</td></tr>
+       <tr><td><a href="Phases/Edit.php.html#131"><abbr title="App\Livewire\Admin\Calls\Phases\Edit::checkDateOverlaps">checkDateOverlaps</abbr></a></td><td class="text-right">77,8%</td><td class="text-right">4</td><td class="text-right">4</td></tr>
+       <tr><td><a href="Create.php.html#188"><abbr title="App\Livewire\Admin\Calls\Create::updatedEstimatedStartDate">updatedEstimatedStartDate</abbr></a></td><td class="text-right">57,1%</td><td class="text-right">3</td><td class="text-right">3</td></tr>
+       <tr><td><a href="Create.php.html#204"><abbr title="App\Livewire\Admin\Calls\Create::updatedEstimatedEndDate">updatedEstimatedEndDate</abbr></a></td><td class="text-right">57,1%</td><td class="text-right">3</td><td class="text-right">3</td></tr>
+       <tr><td><a href="Edit.php.html#200"><abbr title="App\Livewire\Admin\Calls\Edit::updatedTitle">updatedTitle</abbr></a></td><td class="text-right">80,0%</td><td class="text-right">3</td><td class="text-right">3</td></tr>
+       <tr><td><a href="Index.php.html#174"><abbr title="App\Livewire\Admin\Calls\Index::sortBy">sortBy</abbr></a></td><td class="text-right">80,0%</td><td class="text-right">3</td><td class="text-right">3</td></tr>
+       <tr><td><a href="Phases/Index.php.html#141"><abbr title="App\Livewire\Admin\Calls\Phases\Index::sortBy">sortBy</abbr></a></td><td class="text-right">80,0%</td><td class="text-right">3</td><td class="text-right">3</td></tr>
+       <tr><td><a href="Resolutions/Index.php.html#152"><abbr title="App\Livewire\Admin\Calls\Resolutions\Index::sortBy">sortBy</abbr></a></td><td class="text-right">60,0%</td><td class="text-right">3</td><td class="text-right">3</td></tr>
+       <tr><td><a href="Phases/Index.php.html#198"><abbr title="App\Livewire\Admin\Calls\Phases\Index::moveUp">moveUp</abbr></a></td><td class="text-right">81,0%</td><td class="text-right">2</td><td class="text-right">2</td></tr>
+       <tr><td><a href="Phases/Index.php.html#232"><abbr title="App\Livewire\Admin\Calls\Phases\Index::moveDown">moveDown</abbr></a></td><td class="text-right">81,0%</td><td class="text-right">2</td><td class="text-right">2</td></tr>
+       <tr><td><a href="Phases/Show.php.html#165"><abbr title="App\Livewire\Admin\Calls\Phases\Show::forceDelete">forceDelete</abbr></a></td><td class="text-right">52,9%</td><td class="text-right">2</td><td class="text-right">2</td></tr>
+       <tr><td><a href="Phases/Show.php.html#231"><abbr title="App\Livewire\Admin\Calls\Phases\Show::canDelete">canDelete</abbr></a></td><td class="text-right">66,7%</td><td class="text-right">2</td><td class="text-right">2</td></tr>
+       <tr><td><a href="Resolutions/Index.php.html#407"><abbr title="App\Livewire\Admin\Calls\Resolutions\Index::hasPdf">hasPdf</abbr></a></td><td class="text-right">66,7%</td><td class="text-right">2</td><td class="text-right">2</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <footer>
+    <hr/>
+    <p>
+     <small>Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 12.5.1</a> using <a href="https://www.php.net/" target="_top">PHP 8.3.29</a> and <a href="https://phpunit.de/">PHPUnit 12.4.4</a> at Fri Jan 16 20:01:42 UTC 2026.</small>
+    </p>
+   </footer>
+  </div>
+  <script src="../../../_js/billboard.pkgd.min.js?v=12.5.1" type="text/javascript"></script>
+  <script type="application/json" id="complexity_class">[[22.54901960784314,13,"Import.php.html#15","App\\Livewire\\Admin\\Calls\\Import","91.52"],[64.96815286624204,51,"Edit.php.html#15","App\\Livewire\\Admin\\Calls\\Edit","162.82"],[66.14583333333334,46,"Show.php.html#13","App\\Livewire\\Admin\\Calls\\Show","128.10"],[85.55555555555556,24,"Phases\/Create.php.html#12","App\\Livewire\\Admin\\Calls\\Phases\\Create","25.74"],[85.85858585858585,22,"Phases\/Edit.php.html#12","App\\Livewire\\Admin\\Calls\\Phases\\Edit","23.37"],[86.4406779661017,45,"Create.php.html#15","App\\Livewire\\Admin\\Calls\\Create","50.05"],[87.3015873015873,49,"Index.php.html#18","App\\Livewire\\Admin\\Calls\\Index","53.92"],[90.0990099009901,31,"Phases\/Show.php.html#12","App\\Livewire\\Admin\\Calls\\Phases\\Show","31.93"],[92.3076923076923,48,"Phases\/Index.php.html#15","App\\Livewire\\Admin\\Calls\\Phases\\Index","49.05"],[93.75,43,"Resolutions\/Index.php.html#18","App\\Livewire\\Admin\\Calls\\Resolutions\\Index","43.45"],[97.14285714285714,15,"Resolutions\/Edit.php.html#16","App\\Livewire\\Admin\\Calls\\Resolutions\\Edit","15"],[100,12,"Resolutions\/Create.php.html#16","App\\Livewire\\Admin\\Calls\\Resolutions\\Create","12"],[100,19,"Resolutions\/Show.php.html#12","App\\Livewire\\Admin\\Calls\\Resolutions\\Show","19"]]</script>
+  <script type="application/json" id="complexity_method">[[0,2,"Create.php.html#284","App\\Livewire\\Admin\\Calls\\Create::updateDestination","6"],[0,3,"Create.php.html#324","App\\Livewire\\Admin\\Calls\\Create::updateScoringItem","12"],[0,3,"Edit.php.html#227","App\\Livewire\\Admin\\Calls\\Edit::updatedEstimatedStartDate","12"],[0,3,"Edit.php.html#243","App\\Livewire\\Admin\\Calls\\Edit::updatedEstimatedEndDate","12"],[0,1,"Edit.php.html#259","App\\Livewire\\Admin\\Calls\\Edit::updatedProgramId","2"],[0,1,"Edit.php.html#269","App\\Livewire\\Admin\\Calls\\Edit::updatedAcademicYearId","2"],[0,2,"Edit.php.html#289","App\\Livewire\\Admin\\Calls\\Edit::addDestination","6"],[0,2,"Edit.php.html#303","App\\Livewire\\Admin\\Calls\\Edit::removeDestination","6"],[0,2,"Edit.php.html#314","App\\Livewire\\Admin\\Calls\\Edit::updateDestination","6"],[0,1,"Edit.php.html#324","App\\Livewire\\Admin\\Calls\\Edit::addScoringItem","2"],[0,2,"Edit.php.html#343","App\\Livewire\\Admin\\Calls\\Edit::removeScoringItem","6"],[0,3,"Edit.php.html#354","App\\Livewire\\Admin\\Calls\\Edit::updateScoringItem","12"],[0,3,"Import.php.html#64","App\\Livewire\\Admin\\Calls\\Import::validateUploadedFile","12"],[0,1,"Index.php.html#253","App\\Livewire\\Admin\\Calls\\Index::confirmDelete","2"],[0,1,"Index.php.html#309","App\\Livewire\\Admin\\Calls\\Index::confirmRestore","2"],[0,1,"Index.php.html#345","App\\Livewire\\Admin\\Calls\\Index::confirmForceDelete","2"],[0,1,"Index.php.html#399","App\\Livewire\\Admin\\Calls\\Index::resetFilters","2"],[0,1,"Index.php.html#432","App\\Livewire\\Admin\\Calls\\Index::updatedFilterModality","2"],[0,1,"Index.php.html#506","App\\Livewire\\Admin\\Calls\\Index::getValidStatusTransitions","2"],[0,1,"Phases\/Create.php.html#237","App\\Livewire\\Admin\\Calls\\Phases\\Create::getCurrentPhaseName","2"],[0,1,"Phases\/Edit.php.html#243","App\\Livewire\\Admin\\Calls\\Phases\\Edit::getCurrentPhaseName","2"],[0,1,"Phases\/Index.php.html#402","App\\Livewire\\Admin\\Calls\\Phases\\Index::resetFilters","2"],[0,1,"Phases\/Show.php.html#244","App\\Livewire\\Admin\\Calls\\Phases\\Show::hasRelationships","2"],[0,1,"Resolutions\/Edit.php.html#130","App\\Livewire\\Admin\\Calls\\Resolutions\\Edit::removePdf","2"],[0,1,"Resolutions\/Index.php.html#313","App\\Livewire\\Admin\\Calls\\Resolutions\\Index::resetFilters","2"],[0,1,"Show.php.html#177","App\\Livewire\\Admin\\Calls\\Show::unmarkPhaseAsCurrent","2"],[0,1,"Show.php.html#215","App\\Livewire\\Admin\\Calls\\Show::unpublishResolution","2"],[0,4,"Show.php.html#301","App\\Livewire\\Admin\\Calls\\Show::forceDelete","20"],[0,1,"Show.php.html#352","App\\Livewire\\Admin\\Calls\\Show::getValidStatusTransitions","2"],[0,8,"Show.php.html#369","App\\Livewire\\Admin\\Calls\\Show::getStatusDescription","72"],[22.58064516129032,6,"Import.php.html#112","App\\Livewire\\Admin\\Calls\\Import::import","22.71"],[25,3,"Phases\/Create.php.html#104","App\\Livewire\\Admin\\Calls\\Phases\\Create::updatedStartDate","6.80"],[25,3,"Phases\/Edit.php.html#104","App\\Livewire\\Admin\\Calls\\Phases\\Edit::updatedStartDate","6.80"],[52.38095238095239,4,"Show.php.html#235","App\\Livewire\\Admin\\Calls\\Show::delete","5.73"],[52.94117647058824,2,"Phases\/Show.php.html#165","App\\Livewire\\Admin\\Calls\\Phases\\Show::forceDelete","2.42"],[55.55555555555556,6,"Create.php.html#250","App\\Livewire\\Admin\\Calls\\Create::addDestination","9.16"],[57.14285714285714,3,"Create.php.html#188","App\\Livewire\\Admin\\Calls\\Create::updatedEstimatedStartDate","3.71"],[57.14285714285714,3,"Create.php.html#204","App\\Livewire\\Admin\\Calls\\Create::updatedEstimatedEndDate","3.71"],[60,3,"Resolutions\/Index.php.html#152","App\\Livewire\\Admin\\Calls\\Resolutions\\Index::sortBy","3.58"],[66.66666666666666,2,"Phases\/Show.php.html#231","App\\Livewire\\Admin\\Calls\\Phases\\Show::canDelete","2.15"],[66.66666666666666,2,"Resolutions\/Index.php.html#407","App\\Livewire\\Admin\\Calls\\Resolutions\\Index::hasPdf","2.15"],[76.92307692307693,4,"Phases\/Create.php.html#131","App\\Livewire\\Admin\\Calls\\Phases\\Create::checkDateOverlaps","4.20"],[77.77777777777779,13,"Edit.php.html#120","App\\Livewire\\Admin\\Calls\\Edit::mount","14.85"],[77.77777777777779,4,"Phases\/Edit.php.html#131","App\\Livewire\\Admin\\Calls\\Phases\\Edit::checkDateOverlaps","4.18"],[80,3,"Edit.php.html#200","App\\Livewire\\Admin\\Calls\\Edit::updatedTitle","3.07"],[80,3,"Index.php.html#174","App\\Livewire\\Admin\\Calls\\Index::sortBy","3.07"],[80,3,"Phases\/Index.php.html#141","App\\Livewire\\Admin\\Calls\\Phases\\Index::sortBy","3.07"],[80.95238095238095,2,"Phases\/Index.php.html#198","App\\Livewire\\Admin\\Calls\\Phases\\Index::moveUp","2.03"],[80.95238095238095,2,"Phases\/Index.php.html#232","App\\Livewire\\Admin\\Calls\\Phases\\Index::moveDown","2.03"],[88.88888888888889,8,"Show.php.html#336","App\\Livewire\\Admin\\Calls\\Show::getStatusColor","8.09"],[92.3076923076923,2,"Phases\/Index.php.html#324","App\\Livewire\\Admin\\Calls\\Phases\\Index::restore","2.00"],[92.3076923076923,2,"Resolutions\/Index.php.html#212","App\\Livewire\\Admin\\Calls\\Resolutions\\Index::delete","2.00"],[92.3076923076923,2,"Resolutions\/Index.php.html#247","App\\Livewire\\Admin\\Calls\\Resolutions\\Index::restore","2.00"],[92.3076923076923,2,"Resolutions\/Index.php.html#282","App\\Livewire\\Admin\\Calls\\Resolutions\\Index::forceDelete","2.00"],[92.85714285714286,2,"Index.php.html#318","App\\Livewire\\Admin\\Calls\\Index::restore","2.00"],[95.45454545454545,3,"Phases\/Index.php.html#275","App\\Livewire\\Admin\\Calls\\Phases\\Index::delete","3"],[95.83333333333334,3,"Phases\/Index.php.html#359","App\\Livewire\\Admin\\Calls\\Phases\\Index::forceDelete","3"],[96,5,"Index.php.html#189","App\\Livewire\\Admin\\Calls\\Index::changeStatus","5"],[96,5,"Show.php.html#72","App\\Livewire\\Admin\\Calls\\Show::changeStatus","5"],[96.29629629629629,5,"Index.php.html#354","App\\Livewire\\Admin\\Calls\\Index::forceDelete","5"],[96.42857142857143,5,"Index.php.html#262","App\\Livewire\\Admin\\Calls\\Index::delete","5"],[100,3,"Create.php.html#115","App\\Livewire\\Admin\\Calls\\Create::mount","3"],[100,1,"Create.php.html#139","App\\Livewire\\Admin\\Calls\\Create::programs","1"],[100,1,"Create.php.html#150","App\\Livewire\\Admin\\Calls\\Create::academicYears","1"],[100,3,"Create.php.html#161","App\\Livewire\\Admin\\Calls\\Create::updatedTitle","3"],[100,2,"Create.php.html#176","App\\Livewire\\Admin\\Calls\\Create::updatedSlug","2"],[100,1,"Create.php.html#220","App\\Livewire\\Admin\\Calls\\Create::updatedProgramId","1"],[100,1,"Create.php.html#230","App\\Livewire\\Admin\\Calls\\Create::updatedAcademicYearId","1"],[100,1,"Create.php.html#240","App\\Livewire\\Admin\\Calls\\Create::updatedNumberOfPlaces","1"],[100,2,"Create.php.html#273","App\\Livewire\\Admin\\Calls\\Create::removeDestination","2"],[100,1,"Create.php.html#294","App\\Livewire\\Admin\\Calls\\Create::addScoringItem","1"],[100,2,"Create.php.html#313","App\\Livewire\\Admin\\Calls\\Create::removeScoringItem","2"],[100,9,"Create.php.html#338","App\\Livewire\\Admin\\Calls\\Create::store","9"],[100,1,"Create.php.html#395","App\\Livewire\\Admin\\Calls\\Create::render","1"],[100,1,"Edit.php.html#178","App\\Livewire\\Admin\\Calls\\Edit::programs","1"],[100,1,"Edit.php.html#189","App\\Livewire\\Admin\\Calls\\Edit::academicYears","1"],[100,2,"Edit.php.html#215","App\\Livewire\\Admin\\Calls\\Edit::updatedSlug","2"],[100,1,"Edit.php.html#279","App\\Livewire\\Admin\\Calls\\Edit::updatedNumberOfPlaces","1"],[100,9,"Edit.php.html#368","App\\Livewire\\Admin\\Calls\\Edit::update","9"],[100,1,"Edit.php.html#446","App\\Livewire\\Admin\\Calls\\Edit::render","1"],[100,1,"Import.php.html#43","App\\Livewire\\Admin\\Calls\\Import::mount","1"],[100,1,"Import.php.html#51","App\\Livewire\\Admin\\Calls\\Import::downloadTemplate","1"],[100,1,"Import.php.html#201","App\\Livewire\\Admin\\Calls\\Import::resetForm","1"],[100,1,"Import.php.html#209","App\\Livewire\\Admin\\Calls\\Import::render","1"],[100,1,"Index.php.html#117","App\\Livewire\\Admin\\Calls\\Index::mount","1"],[100,1,"Index.php.html#125","App\\Livewire\\Admin\\Calls\\Index::calls","1"],[100,1,"Index.php.html#152","App\\Livewire\\Admin\\Calls\\Index::programs","1"],[100,1,"Index.php.html#163","App\\Livewire\\Admin\\Calls\\Index::academicYears","1"],[100,1,"Index.php.html#233","App\\Livewire\\Admin\\Calls\\Index::publish","1"],[100,1,"Index.php.html#409","App\\Livewire\\Admin\\Calls\\Index::updatedSearch","1"],[100,1,"Index.php.html#417","App\\Livewire\\Admin\\Calls\\Index::updatedFilterProgram","1"],[100,1,"Index.php.html#422","App\\Livewire\\Admin\\Calls\\Index::updatedFilterAcademicYear","1"],[100,1,"Index.php.html#427","App\\Livewire\\Admin\\Calls\\Index::updatedFilterType","1"],[100,1,"Index.php.html#437","App\\Livewire\\Admin\\Calls\\Index::updatedFilterStatus","1"],[100,1,"Index.php.html#442","App\\Livewire\\Admin\\Calls\\Index::updatedShowDeleted","1"],[100,1,"Index.php.html#450","App\\Livewire\\Admin\\Calls\\Index::canCreate","1"],[100,1,"Index.php.html#458","App\\Livewire\\Admin\\Calls\\Index::canViewDeleted","1"],[100,1,"Index.php.html#466","App\\Livewire\\Admin\\Calls\\Index::export","1"],[100,8,"Index.php.html#490","App\\Livewire\\Admin\\Calls\\Index::getStatusColor","8"],[100,1,"Index.php.html#523","App\\Livewire\\Admin\\Calls\\Index::render","1"],[100,2,"Phases\/Create.php.html#64","App\\Livewire\\Admin\\Calls\\Phases\\Create::mount","2"],[100,1,"Phases\/Create.php.html#80","App\\Livewire\\Admin\\Calls\\Phases\\Create::getNextOrder","1"],[100,2,"Phases\/Create.php.html#91","App\\Livewire\\Admin\\Calls\\Phases\\Create::updatedIsCurrent","2"],[100,3,"Phases\/Create.php.html#116","App\\Livewire\\Admin\\Calls\\Phases\\Create::updatedEndDate","3"],[100,5,"Phases\/Create.php.html#170","App\\Livewire\\Admin\\Calls\\Phases\\Create::store","5"],[100,1,"Phases\/Create.php.html#211","App\\Livewire\\Admin\\Calls\\Phases\\Create::getPhaseTypeOptions","1"],[100,1,"Phases\/Create.php.html#227","App\\Livewire\\Admin\\Calls\\Phases\\Create::hasCurrentPhase","1"],[100,1,"Phases\/Create.php.html#249","App\\Livewire\\Admin\\Calls\\Phases\\Create::render","1"],[100,1,"Phases\/Edit.php.html#69","App\\Livewire\\Admin\\Calls\\Phases\\Edit::mount","1"],[100,2,"Phases\/Edit.php.html#90","App\\Livewire\\Admin\\Calls\\Phases\\Edit::updatedIsCurrent","2"],[100,3,"Phases\/Edit.php.html#116","App\\Livewire\\Admin\\Calls\\Phases\\Edit::updatedEndDate","3"],[100,5,"Phases\/Edit.php.html#171","App\\Livewire\\Admin\\Calls\\Phases\\Edit::update","5"],[100,1,"Phases\/Edit.php.html#216","App\\Livewire\\Admin\\Calls\\Phases\\Edit::getPhaseTypeOptions","1"],[100,1,"Phases\/Edit.php.html#232","App\\Livewire\\Admin\\Calls\\Phases\\Edit::hasCurrentPhase","1"],[100,1,"Phases\/Edit.php.html#256","App\\Livewire\\Admin\\Calls\\Phases\\Edit::render","1"],[100,1,"Phases\/Index.php.html#101","App\\Livewire\\Admin\\Calls\\Phases\\Index::mount","1"],[100,1,"Phases\/Index.php.html#112","App\\Livewire\\Admin\\Calls\\Phases\\Index::phases","1"],[100,1,"Phases\/Index.php.html#156","App\\Livewire\\Admin\\Calls\\Phases\\Index::markAsCurrent","1"],[100,1,"Phases\/Index.php.html#180","App\\Livewire\\Admin\\Calls\\Phases\\Index::unmarkAsCurrent","1"],[100,1,"Phases\/Index.php.html#266","App\\Livewire\\Admin\\Calls\\Phases\\Index::confirmDelete","1"],[100,1,"Phases\/Index.php.html#315","App\\Livewire\\Admin\\Calls\\Phases\\Index::confirmRestore","1"],[100,1,"Phases\/Index.php.html#350","App\\Livewire\\Admin\\Calls\\Phases\\Index::confirmForceDelete","1"],[100,1,"Phases\/Index.php.html#412","App\\Livewire\\Admin\\Calls\\Phases\\Index::updatedSearch","1"],[100,1,"Phases\/Index.php.html#420","App\\Livewire\\Admin\\Calls\\Phases\\Index::updatedFilterPhaseType","1"],[100,1,"Phases\/Index.php.html#425","App\\Livewire\\Admin\\Calls\\Phases\\Index::updatedFilterIsCurrent","1"],[100,1,"Phases\/Index.php.html#430","App\\Livewire\\Admin\\Calls\\Phases\\Index::updatedShowDeleted","1"],[100,1,"Phases\/Index.php.html#438","App\\Livewire\\Admin\\Calls\\Phases\\Index::getPhaseTypeOptions","1"],[100,9,"Phases\/Index.php.html#454","App\\Livewire\\Admin\\Calls\\Phases\\Index::getPhaseTypeColor","9"],[100,8,"Phases\/Index.php.html#471","App\\Livewire\\Admin\\Calls\\Phases\\Index::getStatusColor","8"],[100,1,"Phases\/Index.php.html#487","App\\Livewire\\Admin\\Calls\\Phases\\Index::canCreate","1"],[100,1,"Phases\/Index.php.html#495","App\\Livewire\\Admin\\Calls\\Phases\\Index::canViewDeleted","1"],[100,1,"Phases\/Index.php.html#503","App\\Livewire\\Admin\\Calls\\Phases\\Index::render","1"],[100,1,"Phases\/Show.php.html#38","App\\Livewire\\Admin\\Calls\\Phases\\Show::mount","1"],[100,1,"Phases\/Show.php.html#60","App\\Livewire\\Admin\\Calls\\Phases\\Show::statistics","1"],[100,1,"Phases\/Show.php.html#71","App\\Livewire\\Admin\\Calls\\Phases\\Show::markAsCurrent","1"],[100,1,"Phases\/Show.php.html#96","App\\Livewire\\Admin\\Calls\\Phases\\Show::unmarkAsCurrent","1"],[100,2,"Phases\/Show.php.html#115","App\\Livewire\\Admin\\Calls\\Phases\\Show::delete","2"],[100,1,"Phases\/Show.php.html#147","App\\Livewire\\Admin\\Calls\\Phases\\Show::restore","1"],[100,9,"Phases\/Show.php.html#197","App\\Livewire\\Admin\\Calls\\Phases\\Show::getPhaseTypeColor","9"],[100,9,"Phases\/Show.php.html#214","App\\Livewire\\Admin\\Calls\\Phases\\Show::getPhaseTypeLabel","9"],[100,1,"Phases\/Show.php.html#253","App\\Livewire\\Admin\\Calls\\Phases\\Show::render","1"],[100,1,"Resolutions\/Create.php.html#75","App\\Livewire\\Admin\\Calls\\Resolutions\\Create::mount","1"],[100,3,"Resolutions\/Create.php.html#90","App\\Livewire\\Admin\\Calls\\Resolutions\\Create::updatedCallPhaseId","3"],[100,5,"Resolutions\/Create.php.html#114","App\\Livewire\\Admin\\Calls\\Resolutions\\Create::save","5"],[100,1,"Resolutions\/Create.php.html#163","App\\Livewire\\Admin\\Calls\\Resolutions\\Create::callPhases","1"],[100,1,"Resolutions\/Create.php.html#174","App\\Livewire\\Admin\\Calls\\Resolutions\\Create::getTypeOptions","1"],[100,1,"Resolutions\/Create.php.html#186","App\\Livewire\\Admin\\Calls\\Resolutions\\Create::render","1"],[100,1,"Resolutions\/Edit.php.html#85","App\\Livewire\\Admin\\Calls\\Resolutions\\Edit::mount","1"],[100,3,"Resolutions\/Edit.php.html#106","App\\Livewire\\Admin\\Calls\\Resolutions\\Edit::updatedCallPhaseId","3"],[100,6,"Resolutions\/Edit.php.html#139","App\\Livewire\\Admin\\Calls\\Resolutions\\Edit::update","6"],[100,1,"Resolutions\/Edit.php.html#197","App\\Livewire\\Admin\\Calls\\Resolutions\\Edit::callPhases","1"],[100,1,"Resolutions\/Edit.php.html#208","App\\Livewire\\Admin\\Calls\\Resolutions\\Edit::existingPdf","1"],[100,1,"Resolutions\/Edit.php.html#217","App\\Livewire\\Admin\\Calls\\Resolutions\\Edit::getTypeOptions","1"],[100,1,"Resolutions\/Edit.php.html#229","App\\Livewire\\Admin\\Calls\\Resolutions\\Edit::render","1"],[100,1,"Resolutions\/Index.php.html#110","App\\Livewire\\Admin\\Calls\\Resolutions\\Index::mount","1"],[100,1,"Resolutions\/Index.php.html#121","App\\Livewire\\Admin\\Calls\\Resolutions\\Index::resolutions","1"],[100,1,"Resolutions\/Index.php.html#167","App\\Livewire\\Admin\\Calls\\Resolutions\\Index::publish","1"],[100,1,"Resolutions\/Index.php.html#185","App\\Livewire\\Admin\\Calls\\Resolutions\\Index::unpublish","1"],[100,1,"Resolutions\/Index.php.html#203","App\\Livewire\\Admin\\Calls\\Resolutions\\Index::confirmDelete","1"],[100,1,"Resolutions\/Index.php.html#238","App\\Livewire\\Admin\\Calls\\Resolutions\\Index::confirmRestore","1"],[100,1,"Resolutions\/Index.php.html#273","App\\Livewire\\Admin\\Calls\\Resolutions\\Index::confirmForceDelete","1"],[100,1,"Resolutions\/Index.php.html#323","App\\Livewire\\Admin\\Calls\\Resolutions\\Index::updatedSearch","1"],[100,1,"Resolutions\/Index.php.html#331","App\\Livewire\\Admin\\Calls\\Resolutions\\Index::updatedFilterType","1"],[100,1,"Resolutions\/Index.php.html#336","App\\Livewire\\Admin\\Calls\\Resolutions\\Index::updatedFilterPublished","1"],[100,1,"Resolutions\/Index.php.html#341","App\\Livewire\\Admin\\Calls\\Resolutions\\Index::updatedFilterPhase","1"],[100,1,"Resolutions\/Index.php.html#346","App\\Livewire\\Admin\\Calls\\Resolutions\\Index::updatedShowDeleted","1"],[100,1,"Resolutions\/Index.php.html#354","App\\Livewire\\Admin\\Calls\\Resolutions\\Index::getTypeOptions","1"],[100,5,"Resolutions\/Index.php.html#366","App\\Livewire\\Admin\\Calls\\Resolutions\\Index::getTypeColor","5"],[100,8,"Resolutions\/Index.php.html#379","App\\Livewire\\Admin\\Calls\\Resolutions\\Index::getStatusColor","8"],[100,1,"Resolutions\/Index.php.html#395","App\\Livewire\\Admin\\Calls\\Resolutions\\Index::callPhases","1"],[100,1,"Resolutions\/Index.php.html#420","App\\Livewire\\Admin\\Calls\\Resolutions\\Index::canCreate","1"],[100,1,"Resolutions\/Index.php.html#428","App\\Livewire\\Admin\\Calls\\Resolutions\\Index::canViewDeleted","1"],[100,1,"Resolutions\/Index.php.html#436","App\\Livewire\\Admin\\Calls\\Resolutions\\Index::export","1"],[100,1,"Resolutions\/Index.php.html#459","App\\Livewire\\Admin\\Calls\\Resolutions\\Index::render","1"],[100,1,"Resolutions\/Show.php.html#38","App\\Livewire\\Admin\\Calls\\Resolutions\\Show::mount","1"],[100,1,"Resolutions\/Show.php.html#59","App\\Livewire\\Admin\\Calls\\Resolutions\\Show::publish","1"],[100,1,"Resolutions\/Show.php.html#92","App\\Livewire\\Admin\\Calls\\Resolutions\\Show::unpublish","1"],[100,1,"Resolutions\/Show.php.html#124","App\\Livewire\\Admin\\Calls\\Resolutions\\Show::delete","1"],[100,1,"Resolutions\/Show.php.html#142","App\\Livewire\\Admin\\Calls\\Resolutions\\Show::restore","1"],[100,1,"Resolutions\/Show.php.html#170","App\\Livewire\\Admin\\Calls\\Resolutions\\Show::forceDelete","1"],[100,5,"Resolutions\/Show.php.html#193","App\\Livewire\\Admin\\Calls\\Resolutions\\Show::getTypeColor","5"],[100,5,"Resolutions\/Show.php.html#206","App\\Livewire\\Admin\\Calls\\Resolutions\\Show::getTypeLabel","5"],[100,1,"Resolutions\/Show.php.html#219","App\\Livewire\\Admin\\Calls\\Resolutions\\Show::existingPdf","1"],[100,1,"Resolutions\/Show.php.html#228","App\\Livewire\\Admin\\Calls\\Resolutions\\Show::hasPdf","1"],[100,1,"Resolutions\/Show.php.html#236","App\\Livewire\\Admin\\Calls\\Resolutions\\Show::render","1"],[100,1,"Show.php.html#39","App\\Livewire\\Admin\\Calls\\Show::mount","1"],[100,1,"Show.php.html#59","App\\Livewire\\Admin\\Calls\\Show::statistics","1"],[100,1,"Show.php.html#117","App\\Livewire\\Admin\\Calls\\Show::publish","1"],[100,1,"Show.php.html#153","App\\Livewire\\Admin\\Calls\\Show::markPhaseAsCurrent","1"],[100,1,"Show.php.html#195","App\\Livewire\\Admin\\Calls\\Show::publishResolution","1"],[100,1,"Show.php.html#271","App\\Livewire\\Admin\\Calls\\Show::restore","1"],[100,4,"Show.php.html#385","App\\Livewire\\Admin\\Calls\\Show::canDelete","4"],[100,3,"Show.php.html#400","App\\Livewire\\Admin\\Calls\\Show::hasRelationships","3"],[100,1,"Show.php.html#411","App\\Livewire\\Admin\\Calls\\Show::render","1"]]</script>
+  <script type="text/javascript" defer>
+  const barLabels = [
+    '0%',
+    '0-10%',
+    '10-20%',
+    '20-30%',
+    '30-40%',
+    '40-50%',
+    '50-60%',
+    '60-70%',
+    '70-80%',
+    '80-90%',
+    '90-100%',
+    '100%'
+  ];
+  const barConfig = (name, fullName, values) => ({
+    axis: {
+      x: {
+        type: "category",
+        categories: barLabels,
+      },
+      y: {
+        label: {
+          text: `#${name}`,
+          position: 'outer-top',
+        },
+      },
+    },
+    bindto: `#${name}CoverageDistribution`,
+    data: {
+      columns: [
+        [fullName].concat(values),
+      ],
+      colors: {
+        [fullName]: "rgba(69, 114, 167, 0.75)",
+      },
+      type: "bar",
+    },
+    bar: {
+      width: {
+        ratio: 0.9,
+      },
+    },
+    grid: {
+      focus: {
+        show: false,
+      },
+      x: {
+        show: true,
+      },
+      y: {
+        show: true,
+      },
+    },
+    legend: {
+      show: false,
+    },
+    tooltip: {
+      contents: function (data) {
+        return `<table class="bb-tooltip"><tbody>
+            <tr><th colspan="2">Coverage ${barLabels[data[0].x]}</th></tr>
+            <tr><td class="value">${data[0].value} ${name}</td></tr>
+          </tbody></table>`;
+      },
+      grouped: false,
+    },
+  });
+  bb.generate(
+    barConfig('classes', "Class Coverage", [0,0,0,1,0,0,0,2,0,4,4,2])
+  );
+  bb.generate(
+    barConfig('methods', "Method Coverage", [30,0,0,3,0,0,5,3,3,6,11,133])
+  );
+
+  const scatterConfig = (name, complexityData) => ({
+    axis: {
+      x: {
+        label: {
+          text: 'Code Coverage (in percent)',
+          position: 'outer-right',
+        },
+        tick: {
+          values: [0, 20, 40, 60, 80, 100],
+        },
+      },
+      y: {
+        label: {
+          text: 'Cyclomatic Complexity',
+          position: 'outer-top',
+        },
+        min: 0,
+        padding: {
+          bottom: 0,
+          top: 5,
+        },
+      },
+    },
+    bindto: `#${name}Complexity`,
+    data: {
+      columns: [
+        ["complexity_x"].concat(complexityData.map(d => d[0])),
+        ["complexity"].concat(complexityData.map(d => d[1])),
+      ],
+      onclick: function(data, element) {
+        window.location = complexityData[data.index][2];
+      },
+      type: "scatter",
+      xs: {
+        "complexity": "complexity_x",
+      },
+    },
+    grid: {
+      focus: {
+        show: true,
+        y: true,
+      },
+      x: {
+        show: true,
+      },
+      y: {
+        show: true,
+      },
+    },
+    legend: {
+      show: false,
+    },
+    tooltip: {
+      contents: function (data) {
+        const coverage = Math.round(data[0].x);
+        const complexity = data[0].value;
+        const targetName = complexityData[data[0].index][3];
+        const crap = complexityData[data[0].index][4];
+        return `<table class="bb-tooltip"><tbody>
+            <tr><th colspan="2">${targetName}</th></tr>
+            <tr class="bb-tooltip-name-complexity"><td>Coverage</td><td class="name">${coverage}%</td></tr>
+            <tr class="bb-tooltip-name-complexity"><td>Complexity</td><td class="value">${complexity}</td></tr>
+            <tr class="bb-tooltip-name-complexity"><td>Crap</td><td class="value">${crap}</td></tr>
+          </tbody></table>`;
+      },
+      grouped: false,
+    },
+  });
+  const classComplexityData = JSON.parse(document.getElementById('complexity_class').textContent);
+  bb.generate(
+    scatterConfig("class", classComplexityData)
+  );
+  const methodComplexityData = JSON.parse(document.getElementById('complexity_method').textContent);
+  bb.generate(
+    scatterConfig("method", methodComplexityData),
+  );
+  </script>
+ </body>
+</html>

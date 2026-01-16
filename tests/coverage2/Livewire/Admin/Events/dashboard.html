@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard for /Users/carlos/Qsync/proyectosHerd/erasmus25/app/Livewire/Admin/Events</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="../../../_css/bootstrap.min.css?v=12.5.1" rel="stylesheet" type="text/css">
+  <link href="../../../_css/billboard.min.css?v=12.5.1" rel="stylesheet" type="text/css">
+  <link href="../../../_css/style.css?v=12.5.1" rel="stylesheet" type="text/css">
+  <link href="../../../_css/custom.css" rel="stylesheet" type="text/css">
+ </head>
+ <body>
+  <header>
+   <div class="container-fluid">
+    <div class="row">
+     <div class="col-md-12">
+      <nav aria-label="breadcrumb">
+       <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="../../../index.html">/Users/carlos/Qsync/proyectosHerd/erasmus25/app</a></li>
+         <li class="breadcrumb-item"><a href="../../index.html">Livewire</a></li>
+         <li class="breadcrumb-item"><a href="../index.html">Admin</a></li>
+         <li class="breadcrumb-item"><a href="index.html">Events</a></li>
+         <li class="breadcrumb-item active">(Dashboard)</li>
+
+       </ol>
+      </nav>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="container-fluid">
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Classes</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="classesCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="classComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3 style="margin-top: 2rem;">Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Create.php.html#16">App\Livewire\Admin\Events\Create</a></td><td class="text-right">79%</td></tr>
+       <tr><td><a href="Edit.php.html#18">App\Livewire\Admin\Events\Edit</a></td><td class="text-right">82%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3 style="margin-top: 2rem;">Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right">Coverage</th>
+         <th class="text-right">Complexity</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Edit.php.html#18">App\Livewire\Admin\Events\Edit</a></td><td class="text-right">82,6%</td><td class="text-right">62</td><td class="text-right">82</td></tr>
+       <tr><td><a href="Create.php.html#16">App\Livewire\Admin\Events\Create</a></td><td class="text-right">79,4%</td><td class="text-right">49</td><td class="text-right">70</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-12">
+     <h2 style="margin-top: 3rem;">Methods</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="methodsCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="methodComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3 style="margin-top: 2rem;">Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Create.php.html#268"><abbr title="App\Livewire\Admin\Events\Create::validateUploadedFile">validateUploadedFile</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Edit.php.html#298"><abbr title="App\Livewire\Admin\Events\Edit::validateUploadedFile">validateUploadedFile</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Index.php.html#485"><abbr title="App\Livewire\Admin\Events\Index::confirmDelete">confirmDelete</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Index.php.html#518"><abbr title="App\Livewire\Admin\Events\Index::confirmRestore">confirmRestore</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Index.php.html#553"><abbr title="App\Livewire\Admin\Events\Index::confirmForceDelete">confirmForceDelete</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Index.php.html#600"><abbr title="App\Livewire\Admin\Events\Index::goToDate">goToDate</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Index.php.html#678"><abbr title="App\Livewire\Admin\Events\Index::previous">previous</abbr></a></td><td class="text-right">66%</td></tr>
+       <tr><td><a href="Create.php.html#222"><abbr title="App\Livewire\Admin\Events\Create::updatedEndDate">updatedEndDate</abbr></a></td><td class="text-right">70%</td></tr>
+       <tr><td><a href="Edit.php.html#252"><abbr title="App\Livewire\Admin\Events\Edit::updatedEndDate">updatedEndDate</abbr></a></td><td class="text-right">70%</td></tr>
+       <tr><td><a href="Create.php.html#196"><abbr title="App\Livewire\Admin\Events\Create::updatedStartDate">updatedStartDate</abbr></a></td><td class="text-right">80%</td></tr>
+       <tr><td><a href="Edit.php.html#226"><abbr title="App\Livewire\Admin\Events\Edit::updatedStartDate">updatedStartDate</abbr></a></td><td class="text-right">80%</td></tr>
+       <tr><td><a href="Index.php.html#692"><abbr title="App\Livewire\Admin\Events\Index::next">next</abbr></a></td><td class="text-right">83%</td></tr>
+       <tr><td><a href="Edit.php.html#397"><abbr title="App\Livewire\Admin\Events\Edit::deleteImage">deleteImage</abbr></a></td><td class="text-right">87%</td></tr>
+       <tr><td><a href="Index.php.html#181"><abbr title="App\Livewire\Admin\Events\Index::calendarEvents">calendarEvents</abbr></a></td><td class="text-right">87%</td></tr>
+       <tr><td><a href="Edit.php.html#437"><abbr title="App\Livewire\Admin\Events\Edit::forceDeleteImage">forceDeleteImage</abbr></a></td><td class="text-right">88%</td></tr>
+       <tr><td><a href="Show.php.html#133"><abbr title="App\Livewire\Admin\Events\Show::togglePublic">togglePublic</abbr></a></td><td class="text-right">88%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3 style="margin-top: 2rem;">Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right">Coverage</th>
+         <th class="text-right">Complexity</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Create.php.html#268"><abbr title="App\Livewire\Admin\Events\Create::validateUploadedFile">validateUploadedFile</abbr></a></td><td class="text-right">0,0%</td><td class="text-right">7</td><td class="text-right">56</td></tr>
+       <tr><td><a href="Edit.php.html#298"><abbr title="App\Livewire\Admin\Events\Edit::validateUploadedFile">validateUploadedFile</abbr></a></td><td class="text-right">0,0%</td><td class="text-right">7</td><td class="text-right">56</td></tr>
+       <tr><td><a href="Index.php.html#181"><abbr title="App\Livewire\Admin\Events\Index::calendarEvents">calendarEvents</abbr></a></td><td class="text-right">87,5%</td><td class="text-right">9</td><td class="text-right">9</td></tr>
+       <tr><td><a href="Create.php.html#196"><abbr title="App\Livewire\Admin\Events\Create::updatedStartDate">updatedStartDate</abbr></a></td><td class="text-right">80,0%</td><td class="text-right">6</td><td class="text-right">6</td></tr>
+       <tr><td><a href="Create.php.html#222"><abbr title="App\Livewire\Admin\Events\Create::updatedEndDate">updatedEndDate</abbr></a></td><td class="text-right">70,0%</td><td class="text-right">6</td><td class="text-right">6</td></tr>
+       <tr><td><a href="Edit.php.html#226"><abbr title="App\Livewire\Admin\Events\Edit::updatedStartDate">updatedStartDate</abbr></a></td><td class="text-right">80,0%</td><td class="text-right">6</td><td class="text-right">6</td></tr>
+       <tr><td><a href="Edit.php.html#252"><abbr title="App\Livewire\Admin\Events\Edit::updatedEndDate">updatedEndDate</abbr></a></td><td class="text-right">70,0%</td><td class="text-right">6</td><td class="text-right">6</td></tr>
+       <tr><td><a href="Index.php.html#678"><abbr title="App\Livewire\Admin\Events\Index::previous">previous</abbr></a></td><td class="text-right">66,7%</td><td class="text-right">4</td><td class="text-right">4</td></tr>
+       <tr><td><a href="Index.php.html#692"><abbr title="App\Livewire\Admin\Events\Index::next">next</abbr></a></td><td class="text-right">83,3%</td><td class="text-right">4</td><td class="text-right">4</td></tr>
+       <tr><td><a href="Edit.php.html#397"><abbr title="App\Livewire\Admin\Events\Edit::deleteImage">deleteImage</abbr></a></td><td class="text-right">87,5%</td><td class="text-right">3</td><td class="text-right">3</td></tr>
+       <tr><td><a href="Edit.php.html#437"><abbr title="App\Livewire\Admin\Events\Edit::forceDeleteImage">forceDeleteImage</abbr></a></td><td class="text-right">88,9%</td><td class="text-right">3</td><td class="text-right">3</td></tr>
+       <tr><td><a href="Show.php.html#133"><abbr title="App\Livewire\Admin\Events\Show::togglePublic">togglePublic</abbr></a></td><td class="text-right">88,9%</td><td class="text-right">2</td><td class="text-right">2</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <footer>
+    <hr/>
+    <p>
+     <small>Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 12.5.1</a> using <a href="https://www.php.net/" target="_top">PHP 8.3.29</a> and <a href="https://phpunit.de/">PHPUnit 12.4.4</a> at Fri Jan 16 20:01:42 UTC 2026.</small>
+    </p>
+   </footer>
+  </div>
+  <script src="../../../_js/billboard.pkgd.min.js?v=12.5.1" type="text/javascript"></script>
+  <script type="application/json" id="complexity_class">[[79.36507936507937,49,"Create.php.html#16","App\\Livewire\\Admin\\Events\\Create","70.10"],[82.6086956521739,62,"Edit.php.html#18","App\\Livewire\\Admin\\Events\\Edit","82.22"],[92.48826291079813,76,"Index.php.html#18","App\\Livewire\\Admin\\Events\\Index","78.45"],[98.50746268656717,26,"Show.php.html#12","App\\Livewire\\Admin\\Events\\Show","26"]]</script>
+  <script type="application/json" id="complexity_method">[[0,7,"Create.php.html#268","App\\Livewire\\Admin\\Events\\Create::validateUploadedFile","56"],[0,7,"Edit.php.html#298","App\\Livewire\\Admin\\Events\\Edit::validateUploadedFile","56"],[0,1,"Index.php.html#485","App\\Livewire\\Admin\\Events\\Index::confirmDelete","2"],[0,1,"Index.php.html#518","App\\Livewire\\Admin\\Events\\Index::confirmRestore","2"],[0,1,"Index.php.html#553","App\\Livewire\\Admin\\Events\\Index::confirmForceDelete","2"],[0,1,"Index.php.html#600","App\\Livewire\\Admin\\Events\\Index::goToDate","2"],[66.66666666666666,4,"Index.php.html#678","App\\Livewire\\Admin\\Events\\Index::previous","4.59"],[70,6,"Create.php.html#222","App\\Livewire\\Admin\\Events\\Create::updatedEndDate","6.97"],[70,6,"Edit.php.html#252","App\\Livewire\\Admin\\Events\\Edit::updatedEndDate","6.97"],[80,6,"Create.php.html#196","App\\Livewire\\Admin\\Events\\Create::updatedStartDate","6.29"],[80,6,"Edit.php.html#226","App\\Livewire\\Admin\\Events\\Edit::updatedStartDate","6.29"],[83.33333333333334,4,"Index.php.html#692","App\\Livewire\\Admin\\Events\\Index::next","4.07"],[87.5,3,"Edit.php.html#397","App\\Livewire\\Admin\\Events\\Edit::deleteImage","3.02"],[87.5,9,"Index.php.html#181","App\\Livewire\\Admin\\Events\\Index::calendarEvents","9.16"],[88.88888888888889,3,"Edit.php.html#437","App\\Livewire\\Admin\\Events\\Edit::forceDeleteImage","3.01"],[88.88888888888889,2,"Show.php.html#133","App\\Livewire\\Admin\\Events\\Show::togglePublic","2.01"],[90.9090909090909,2,"Index.php.html#494","App\\Livewire\\Admin\\Events\\Index::delete","2.00"],[92.3076923076923,2,"Index.php.html#527","App\\Livewire\\Admin\\Events\\Index::restore","2.00"],[92.3076923076923,2,"Index.php.html#562","App\\Livewire\\Admin\\Events\\Index::forceDelete","2.00"],[93.93939393939394,12,"Create.php.html#332","App\\Livewire\\Admin\\Events\\Create::store","12.03"],[93.93939393939394,12,"Edit.php.html#458","App\\Livewire\\Admin\\Events\\Edit::update","12.03"],[100,4,"Create.php.html#87","App\\Livewire\\Admin\\Events\\Create::mount","4"],[100,1,"Create.php.html#110","App\\Livewire\\Admin\\Events\\Create::availablePrograms","1"],[100,2,"Create.php.html#124","App\\Livewire\\Admin\\Events\\Create::availableCalls","2"],[100,1,"Create.php.html#141","App\\Livewire\\Admin\\Events\\Create::eventTypes","1"],[100,1,"Create.php.html#160","App\\Livewire\\Admin\\Events\\Create::getComponentRules","1"],[100,1,"Create.php.html#184","App\\Livewire\\Admin\\Events\\Create::updatedProgramId","1"],[100,4,"Create.php.html#248","App\\Livewire\\Admin\\Events\\Create::updatedIsAllDay","4"],[100,1,"Create.php.html#308","App\\Livewire\\Admin\\Events\\Create::updatedTitle","1"],[100,1,"Create.php.html#316","App\\Livewire\\Admin\\Events\\Create::updatedEventType","1"],[100,1,"Create.php.html#324","App\\Livewire\\Admin\\Events\\Create::updatedCallId","1"],[100,1,"Create.php.html#404","App\\Livewire\\Admin\\Events\\Create::render","1"],[100,2,"Edit.php.html#115","App\\Livewire\\Admin\\Events\\Edit::mount","2"],[100,1,"Edit.php.html#139","App\\Livewire\\Admin\\Events\\Edit::availablePrograms","1"],[100,2,"Edit.php.html#153","App\\Livewire\\Admin\\Events\\Edit::availableCalls","2"],[100,1,"Edit.php.html#170","App\\Livewire\\Admin\\Events\\Edit::eventTypes","1"],[100,1,"Edit.php.html#189","App\\Livewire\\Admin\\Events\\Edit::existingImages","1"],[100,1,"Edit.php.html#200","App\\Livewire\\Admin\\Events\\Edit::deletedImages","1"],[100,4,"Edit.php.html#209","App\\Livewire\\Admin\\Events\\Edit::updatedProgramId","4"],[100,4,"Edit.php.html#278","App\\Livewire\\Admin\\Events\\Edit::updatedIsAllDay","4"],[100,1,"Edit.php.html#340","App\\Livewire\\Admin\\Events\\Edit::getComponentRules","1"],[100,1,"Edit.php.html#364","App\\Livewire\\Admin\\Events\\Edit::updatedTitle","1"],[100,1,"Edit.php.html#372","App\\Livewire\\Admin\\Events\\Edit::updatedEventType","1"],[100,1,"Edit.php.html#380","App\\Livewire\\Admin\\Events\\Edit::updatedCallId","1"],[100,1,"Edit.php.html#388","App\\Livewire\\Admin\\Events\\Edit::confirmDeleteImage","1"],[100,2,"Edit.php.html#416","App\\Livewire\\Admin\\Events\\Edit::restoreImage","2"],[100,1,"Edit.php.html#428","App\\Livewire\\Admin\\Events\\Edit::confirmForceDeleteImage","1"],[100,1,"Edit.php.html#529","App\\Livewire\\Admin\\Events\\Edit::render","1"],[100,2,"Index.php.html#129","App\\Livewire\\Admin\\Events\\Index::mount","2"],[100,1,"Index.php.html#141","App\\Livewire\\Admin\\Events\\Index::events","1"],[100,1,"Index.php.html#170","App\\Livewire\\Admin\\Events\\Index::currentDateCarbon","1"],[100,2,"Index.php.html#227","App\\Livewire\\Admin\\Events\\Index::eventsByDate","2"],[100,3,"Index.php.html#246","App\\Livewire\\Admin\\Events\\Index::calendarDays","3"],[100,4,"Index.php.html#283","App\\Livewire\\Admin\\Events\\Index::weekDays","4"],[100,1,"Index.php.html#312","App\\Livewire\\Admin\\Events\\Index::dayEvents","1"],[100,1,"Index.php.html#326","App\\Livewire\\Admin\\Events\\Index::availablePrograms","1"],[100,2,"Index.php.html#340","App\\Livewire\\Admin\\Events\\Index::availableCalls","2"],[100,1,"Index.php.html#357","App\\Livewire\\Admin\\Events\\Index::eventTypes","1"],[100,3,"Index.php.html#374","App\\Livewire\\Admin\\Events\\Index::sortBy","3"],[100,1,"Index.php.html#389","App\\Livewire\\Admin\\Events\\Index::resetFilters","1"],[100,1,"Index.php.html#399","App\\Livewire\\Admin\\Events\\Index::updatedSearch","1"],[100,1,"Index.php.html#407","App\\Livewire\\Admin\\Events\\Index::updatedShowDeleted","1"],[100,1,"Index.php.html#415","App\\Livewire\\Admin\\Events\\Index::updatedProgramFilter","1"],[100,1,"Index.php.html#425","App\\Livewire\\Admin\\Events\\Index::canCreate","1"],[100,1,"Index.php.html#433","App\\Livewire\\Admin\\Events\\Index::canViewDeleted","1"],[100,8,"Index.php.html#443","App\\Livewire\\Admin\\Events\\Index::getEventTypeConfig","8"],[100,4,"Index.php.html#461","App\\Livewire\\Admin\\Events\\Index::getEventStatusConfig","4"],[100,1,"Index.php.html#592","App\\Livewire\\Admin\\Events\\Index::goToToday","1"],[100,1,"Index.php.html#608","App\\Livewire\\Admin\\Events\\Index::previousMonth","1"],[100,1,"Index.php.html#617","App\\Livewire\\Admin\\Events\\Index::nextMonth","1"],[100,1,"Index.php.html#626","App\\Livewire\\Admin\\Events\\Index::previousWeek","1"],[100,1,"Index.php.html#635","App\\Livewire\\Admin\\Events\\Index::nextWeek","1"],[100,1,"Index.php.html#644","App\\Livewire\\Admin\\Events\\Index::previousDay","1"],[100,1,"Index.php.html#653","App\\Livewire\\Admin\\Events\\Index::nextDay","1"],[100,1,"Index.php.html#662","App\\Livewire\\Admin\\Events\\Index::changeCalendarView","1"],[100,1,"Index.php.html#670","App\\Livewire\\Admin\\Events\\Index::changeViewMode","1"],[100,1,"Index.php.html#706","App\\Livewire\\Admin\\Events\\Index::render","1"],[100,1,"Show.php.html#33","App\\Livewire\\Admin\\Events\\Show::mount","1"],[100,1,"Show.php.html#50","App\\Livewire\\Admin\\Events\\Show::images","1"],[100,1,"Show.php.html#59","App\\Livewire\\Admin\\Events\\Show::featuredImageUrl","1"],[100,1,"Show.php.html#69","App\\Livewire\\Admin\\Events\\Show::hasImages","1"],[100,8,"Show.php.html#80","App\\Livewire\\Admin\\Events\\Show::getEventTypeConfig","8"],[100,4,"Show.php.html#98","App\\Livewire\\Admin\\Events\\Show::getEventStatusConfig","4"],[100,1,"Show.php.html#120","App\\Livewire\\Admin\\Events\\Show::statistics","1"],[100,1,"Show.php.html#151","App\\Livewire\\Admin\\Events\\Show::confirmDelete","1"],[100,1,"Show.php.html#159","App\\Livewire\\Admin\\Events\\Show::delete","1"],[100,1,"Show.php.html#177","App\\Livewire\\Admin\\Events\\Show::confirmRestore","1"],[100,1,"Show.php.html#185","App\\Livewire\\Admin\\Events\\Show::restore","1"],[100,1,"Show.php.html#201","App\\Livewire\\Admin\\Events\\Show::confirmForceDelete","1"],[100,1,"Show.php.html#209","App\\Livewire\\Admin\\Events\\Show::forceDelete","1"],[100,1,"Show.php.html#227","App\\Livewire\\Admin\\Events\\Show::render","1"]]</script>
+  <script type="text/javascript" defer>
+  const barLabels = [
+    '0%',
+    '0-10%',
+    '10-20%',
+    '20-30%',
+    '30-40%',
+    '40-50%',
+    '50-60%',
+    '60-70%',
+    '70-80%',
+    '80-90%',
+    '90-100%',
+    '100%'
+  ];
+  const barConfig = (name, fullName, values) => ({
+    axis: {
+      x: {
+        type: "category",
+        categories: barLabels,
+      },
+      y: {
+        label: {
+          text: `#${name}`,
+          position: 'outer-top',
+        },
+      },
+    },
+    bindto: `#${name}CoverageDistribution`,
+    data: {
+      columns: [
+        [fullName].concat(values),
+      ],
+      colors: {
+        [fullName]: "rgba(69, 114, 167, 0.75)",
+      },
+      type: "bar",
+    },
+    bar: {
+      width: {
+        ratio: 0.9,
+      },
+    },
+    grid: {
+      focus: {
+        show: false,
+      },
+      x: {
+        show: true,
+      },
+      y: {
+        show: true,
+      },
+    },
+    legend: {
+      show: false,
+    },
+    tooltip: {
+      contents: function (data) {
+        return `<table class="bb-tooltip"><tbody>
+            <tr><th colspan="2">Coverage ${barLabels[data[0].x]}</th></tr>
+            <tr><td class="value">${data[0].value} ${name}</td></tr>
+          </tbody></table>`;
+      },
+      grouped: false,
+    },
+  });
+  bb.generate(
+    barConfig('classes', "Class Coverage", [0,0,0,0,0,0,0,0,1,1,2,0])
+  );
+  bb.generate(
+    barConfig('methods', "Method Coverage", [6,0,0,0,0,0,0,1,2,7,5,70])
+  );
+
+  const scatterConfig = (name, complexityData) => ({
+    axis: {
+      x: {
+        label: {
+          text: 'Code Coverage (in percent)',
+          position: 'outer-right',
+        },
+        tick: {
+          values: [0, 20, 40, 60, 80, 100],
+        },
+      },
+      y: {
+        label: {
+          text: 'Cyclomatic Complexity',
+          position: 'outer-top',
+        },
+        min: 0,
+        padding: {
+          bottom: 0,
+          top: 5,
+        },
+      },
+    },
+    bindto: `#${name}Complexity`,
+    data: {
+      columns: [
+        ["complexity_x"].concat(complexityData.map(d => d[0])),
+        ["complexity"].concat(complexityData.map(d => d[1])),
+      ],
+      onclick: function(data, element) {
+        window.location = complexityData[data.index][2];
+      },
+      type: "scatter",
+      xs: {
+        "complexity": "complexity_x",
+      },
+    },
+    grid: {
+      focus: {
+        show: true,
+        y: true,
+      },
+      x: {
+        show: true,
+      },
+      y: {
+        show: true,
+      },
+    },
+    legend: {
+      show: false,
+    },
+    tooltip: {
+      contents: function (data) {
+        const coverage = Math.round(data[0].x);
+        const complexity = data[0].value;
+        const targetName = complexityData[data[0].index][3];
+        const crap = complexityData[data[0].index][4];
+        return `<table class="bb-tooltip"><tbody>
+            <tr><th colspan="2">${targetName}</th></tr>
+            <tr class="bb-tooltip-name-complexity"><td>Coverage</td><td class="name">${coverage}%</td></tr>
+            <tr class="bb-tooltip-name-complexity"><td>Complexity</td><td class="value">${complexity}</td></tr>
+            <tr class="bb-tooltip-name-complexity"><td>Crap</td><td class="value">${crap}</td></tr>
+          </tbody></table>`;
+      },
+      grouped: false,
+    },
+  });
+  const classComplexityData = JSON.parse(document.getElementById('complexity_class').textContent);
+  bb.generate(
+    scatterConfig("class", classComplexityData)
+  );
+  const methodComplexityData = JSON.parse(document.getElementById('complexity_method').textContent);
+  bb.generate(
+    scatterConfig("method", methodComplexityData),
+  );
+  </script>
+ </body>
+</html>
