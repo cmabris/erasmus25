@@ -605,6 +605,73 @@ El enlace "Usuarios" se añade al sidebar de administración:
 
 ---
 
+## Importación de Usuarios
+
+### Descripción
+
+El sistema de importación permite importar múltiples usuarios desde archivos Excel (.xlsx, .xls) o CSV (.csv) de manera masiva. Incluye generación automática de contraseñas, asignación de roles y modo dry-run para validar archivos sin guardar.
+
+### Componente Import
+
+**Ubicación:**
+- **Clase**: `App\Livewire\Admin\Users\Import`
+- **Vista**: `resources/views/livewire/admin/users/import.blade.php`
+- **Ruta**: `/admin/usuarios/importar` (nombre: `admin.users.import`)
+
+**Características:**
+- ✅ Subida de archivos mediante FilePond
+- ✅ Descarga de plantilla Excel con ejemplos
+- ✅ Modo dry-run (validar sin guardar)
+- ✅ Generación automática de contraseñas
+- ✅ Asignación automática de roles
+- ✅ Tabla de usuarios con contraseñas generadas
+- ✅ Opción para enviar emails (pendiente de implementar)
+- ✅ Autorización automática (requiere permiso `users.create`)
+
+**Uso:**
+1. Acceder a `/admin/usuarios/importar`
+2. Descargar la plantilla Excel para ver el formato requerido
+3. Completar la plantilla con los datos a importar
+4. Subir el archivo completado
+5. Opcionalmente activar "Modo de prueba" para validar sin guardar
+6. Hacer clic en "Importar"
+7. Revisar los resultados, errores (si los hay) y contraseñas generadas
+
+**Formato del Archivo:**
+- Primera fila: Encabezados (no modificar)
+- Filas siguientes: Datos de usuarios
+- Columnas requeridas: Nombre, Email
+- Columnas opcionales: Contraseña (se genera si está vacío), Roles (separados por comas)
+- Ver `docs/imports-system.md` para detalles completos del formato
+
+**Validaciones:**
+- Nombre es obligatorio
+- Email es obligatorio, debe ser único y formato válido
+- Contraseña debe cumplir reglas de seguridad (se genera automáticamente si está vacío)
+- Roles deben existir en el sistema (roles inválidos se filtran automáticamente)
+
+**Generación de Contraseñas:**
+- Si la contraseña está vacía, se genera automáticamente una de 12 caracteres
+- Las contraseñas generadas se muestran en una tabla después de la importación
+- Las contraseñas se hashean automáticamente antes de guardar
+
+**Asignación de Roles:**
+- Los roles se pueden especificar separados por comas (ej: `admin,editor`)
+- También se aceptan separados por punto y coma (`;`)
+- Los roles inválidos se filtran automáticamente
+- Si todos los roles son inválidos, el usuario se crea sin roles
+
+**Manejo de Errores:**
+- El sistema continúa procesando aunque haya errores
+- Todos los errores se reportan al finalizar
+- Cada error incluye número de fila y mensajes específicos
+
+**Botón de Importación:**
+El botón "Importar" está disponible en la página de listado (`/admin/usuarios`) con el icono de flecha hacia arriba.
+
+---
+
 **Fecha de Creación**: Enero 2026  
+**Última Actualización**: Enero 2026  
 **Estado**: ✅ Completado - 172 tests pasando (397 assertions)
 

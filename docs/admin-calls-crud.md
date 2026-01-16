@@ -675,7 +675,62 @@ Según la planificación (`planificacion_pasos.md`), los siguientes pasos son:
 
 ---
 
+## Importación de Convocatorias
+
+### Descripción
+
+El sistema de importación permite importar múltiples convocatorias desde archivos Excel (.xlsx, .xls) o CSV (.csv) de manera masiva. Incluye validación robusta, manejo de errores y modo dry-run para validar archivos sin guardar.
+
+### Componente Import
+
+**Ubicación:**
+- **Clase**: `App\Livewire\Admin\Calls\Import`
+- **Vista**: `resources/views/livewire/admin/calls/import.blade.php`
+- **Ruta**: `/admin/convocatorias/importar` (nombre: `admin.calls.import`)
+
+**Características:**
+- ✅ Subida de archivos mediante FilePond
+- ✅ Descarga de plantilla Excel con ejemplos
+- ✅ Modo dry-run (validar sin guardar)
+- ✅ Reporte detallado de errores por fila
+- ✅ Autorización automática (requiere permiso `calls.create`)
+
+**Uso:**
+1. Acceder a `/admin/convocatorias/importar`
+2. Descargar la plantilla Excel para ver el formato requerido
+3. Completar la plantilla con los datos a importar
+4. Subir el archivo completado
+5. Opcionalmente activar "Modo de prueba" para validar sin guardar
+6. Hacer clic en "Importar"
+7. Revisar los resultados y errores (si los hay)
+
+**Formato del Archivo:**
+- Primera fila: Encabezados (no modificar)
+- Filas siguientes: Datos de convocatorias
+- Columnas requeridas: Programa, Año Académico, Título, Tipo, Modalidad, Número de Plazas, Destinos
+- Ver `docs/imports-system.md` para detalles completos del formato
+
+**Validaciones:**
+- Programa debe existir (búsqueda por código o nombre)
+- Año académico debe existir
+- Título es obligatorio
+- Tipo debe ser `alumnado` o `personal`
+- Modalidad debe ser `corta` o `larga`
+- Número de plazas >= 1
+- Destinos no pueden estar vacíos
+- Fecha fin debe ser posterior a fecha inicio
+
+**Manejo de Errores:**
+- El sistema continúa procesando aunque haya errores
+- Todos los errores se reportan al finalizar
+- Cada error incluye número de fila y mensajes específicos
+
+**Botón de Importación:**
+El botón "Importar" está disponible en la página de listado (`/admin/convocatorias`) con el icono de flecha hacia arriba.
+
+---
+
 **Fecha de Creación**: Diciembre 2025  
-**Última Actualización**: Diciembre 2025  
+**Última Actualización**: Enero 2026  
 **Estado**: ✅ Completado
 
