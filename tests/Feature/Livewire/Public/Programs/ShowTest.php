@@ -130,6 +130,110 @@ it('returns correct program config for SCH code', function () {
         ->assertSee(__('Educación Escolar'));
 });
 
+it('returns correct program config for ADU code', function () {
+    $aduProgram = Program::factory()->create(['code' => 'KA121-ADU']);
+
+    // ADU programs should show Educación de Adultos type
+    Livewire::test(Show::class, ['program' => $aduProgram])
+        ->assertSee(__('Educación de Adultos'));
+});
+
+it('returns correct program config for KA1 pure code', function () {
+    // KA1 code that doesn't contain VET, HED, SCH, or ADU
+    $ka1Program = Program::factory()->create(['code' => 'KA101-MOB']);
+
+    // KA1 programs should show Movilidad type
+    $component = Livewire::test(Show::class, ['program' => $ka1Program]);
+    $config = $component->instance()->programConfig;
+    
+    expect($config['icon'])->toBe('academic-cap')
+        ->and($config['color'])->toBe('blue')
+        ->and($config['type'])->toBe(__('Movilidad'));
+});
+
+it('returns correct program config for JM code', function () {
+    $jmProgram = Program::factory()->create(['code' => 'JM-2024-001']);
+
+    // JM programs should show Jean Monnet type
+    $component = Livewire::test(Show::class, ['program' => $jmProgram]);
+    $config = $component->instance()->programConfig;
+    
+    expect($config['icon'])->toBe('building-office-2')
+        ->and($config['color'])->toBe('indigo')
+        ->and($config['type'])->toBe(__('Jean Monnet'));
+});
+
+it('returns correct program config for DISCOVER code', function () {
+    $discoverProgram = Program::factory()->create(['code' => 'DISCOVER-2024']);
+
+    // DISCOVER programs should show DiscoverEU type
+    $component = Livewire::test(Show::class, ['program' => $discoverProgram]);
+    $config = $component->instance()->programConfig;
+    
+    expect($config['icon'])->toBe('map')
+        ->and($config['color'])->toBe('rose')
+        ->and($config['type'])->toBe(__('DiscoverEU'));
+});
+
+it('returns default program config for unknown code', function () {
+    $unknownProgram = Program::factory()->create(['code' => 'UNKNOWN-CODE']);
+
+    // Unknown codes should show default Erasmus+ type
+    $component = Livewire::test(Show::class, ['program' => $unknownProgram]);
+    $config = $component->instance()->programConfig;
+    
+    expect($config['icon'])->toBe('globe-europe-africa')
+        ->and($config['color'])->toBe('erasmus')
+        ->and($config['type'])->toBe(__('Erasmus+'));
+});
+
+it('returns default program config when code is null', function () {
+    // Since code is required in the database, we create with a valid code
+    // then use setAttribute to set it to null to test the default case
+    $programWithoutCode = Program::factory()->create(['code' => 'TEST-CODE']);
+    
+    // Set code to null to test the default case
+    $programWithoutCode->setAttribute('code', null);
+
+    // Programs without code should show default Erasmus+ type
+    $component = Livewire::test(Show::class, ['program' => $programWithoutCode]);
+    $config = $component->instance()->programConfig;
+    
+    expect($config['icon'])->toBe('globe-europe-africa')
+        ->and($config['color'])->toBe('erasmus')
+        ->and($config['type'])->toBe(__('Erasmus+'));
+});
+
+it('returns empty collection for relatedCalls when no calls exist', function () {
+    // Program without any calls
+    $programWithoutCalls = Program::factory()->create(['is_active' => true]);
+
+    $component = Livewire::test(Show::class, ['program' => $programWithoutCalls]);
+    $relatedCalls = $component->instance()->relatedCalls;
+    
+    expect($relatedCalls)->toBeEmpty();
+});
+
+it('returns empty collection for relatedNews when no news exist', function () {
+    // Program without any news
+    $programWithoutNews = Program::factory()->create(['is_active' => true]);
+
+    $component = Livewire::test(Show::class, ['program' => $programWithoutNews]);
+    $relatedNews = $component->instance()->relatedNews;
+    
+    expect($relatedNews)->toBeEmpty();
+});
+
+it('returns empty collection for otherPrograms when no other programs exist', function () {
+    // Delete all other programs to ensure empty result
+    Program::where('id', '!=', $this->program->id)->delete();
+
+    $component = Livewire::test(Show::class, ['program' => $this->program]);
+    $otherPrograms = $component->instance()->otherPrograms;
+    
+    expect($otherPrograms)->toBeEmpty();
+});
+
 it('returns 404 for non-existent program', function () {
     $this->get(route('programas.show', 'non-existent-slug'))
         ->assertNotFound();
