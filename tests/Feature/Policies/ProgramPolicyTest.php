@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Call;
+use App\Models\NewsPost;
 use App\Models\Program;
 use App\Models\User;
 use App\Support\Permissions;
@@ -157,5 +159,58 @@ describe('ProgramPolicy with direct permissions', function () {
         expect($user->can('delete', $program))->toBeTrue()
             ->and($user->can('restore', $program))->toBeTrue()
             ->and($user->can('forceDelete', $program))->toBeFalse(); // Solo super-admin puede hacer forceDelete
+    });
+});
+
+describe('ProgramPolicy forceDelete with relations', function () {
+    it('allows super-admin to force delete program without relations', function () {
+        $superAdmin = User::factory()->create();
+        $superAdmin->assignRole(Roles::SUPER_ADMIN);
+        $program = Program::factory()->create();
+        // No crear relaciones
+
+        // Usar can() para verificar que el método before() permite la acción
+        expect($superAdmin->can('forceDelete', $program))->toBeTrue();
+
+        // También verificar directamente la lógica del método forceDelete()
+        $policy = new \App\Policies\ProgramPolicy;
+        expect($policy->forceDelete($superAdmin, $program))->toBeTrue();
+    });
+
+    it('prevents super-admin from force deleting program with calls', function () {
+        $superAdmin = User::factory()->create();
+        $superAdmin->assignRole(Roles::SUPER_ADMIN);
+        $program = Program::factory()->create();
+        Call::factory()->create(['program_id' => $program->id]);
+
+        // Llamar directamente al método de la policy para testear la lógica
+        // porque before() devuelve true y no ejecuta forceDelete()
+        $policy = new \App\Policies\ProgramPolicy;
+        expect($policy->forceDelete($superAdmin, $program))->toBeFalse();
+    });
+
+    it('prevents super-admin from force deleting program with newsPosts', function () {
+        $superAdmin = User::factory()->create();
+        $superAdmin->assignRole(Roles::SUPER_ADMIN);
+        $program = Program::factory()->create();
+        NewsPost::factory()->create(['program_id' => $program->id]);
+
+        // Llamar directamente al método de la policy para testear la lógica
+        // porque before() devuelve true y no ejecuta forceDelete()
+        $policy = new \App\Policies\ProgramPolicy;
+        expect($policy->forceDelete($superAdmin, $program))->toBeFalse();
+    });
+
+    it('prevents super-admin from force deleting program with both calls and newsPosts', function () {
+        $superAdmin = User::factory()->create();
+        $superAdmin->assignRole(Roles::SUPER_ADMIN);
+        $program = Program::factory()->create();
+        Call::factory()->create(['program_id' => $program->id]);
+        NewsPost::factory()->create(['program_id' => $program->id]);
+
+        // Llamar directamente al método de la policy para testear la lógica
+        // porque before() devuelve true y no ejecuta forceDelete()
+        $policy = new \App\Policies\ProgramPolicy;
+        expect($policy->forceDelete($superAdmin, $program))->toBeFalse();
     });
 });
