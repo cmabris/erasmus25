@@ -650,10 +650,12 @@ Para cada policy:
 - [ ] Validar reglas de validación
 - [ ] Validar mensajes de error personalizados
 
-#### 3.8.2. Tests de Policies
-- [ ] Tests para cada Policy
-- [ ] Verificar autorización por rol
-- [ ] Verificar restricciones de acceso
+#### 3.8.2. Tests de Policies ✅ COMPLETADO
+- [x] Tests para cada Policy
+- [x] Verificar autorización por rol
+- [x] Verificar restricciones de acceso
+- [x] **Cobertura**: 100% (170/170 líneas, 118/118 métodos, 16/16 clases)
+- [x] **Tests implementados**: 13 tests nuevos (ProgramPolicy: 3, UserPolicy restore: 4, UserPolicy forceDelete: 6)
 
 #### 3.8.3. Tests de Componentes Livewire Públicos
 - [ ] Tests para componentes de área pública

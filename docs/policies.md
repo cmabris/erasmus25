@@ -333,11 +333,80 @@ Los tests de policies se encuentran en `tests/Feature/Policies/` y verifican:
 4. **Acceso de viewer**: Solo puede ver
 5. **Sin rol**: Acceso denegado
 6. **Permisos directos**: Verificación de permisos asignados directamente
+7. **Casos especiales**: Validación de relaciones, auto-eliminación, etc.
 
-Ejecutar tests de policies:
-```bash
-php artisan test tests/Feature/Policies/
+### Cobertura de Tests
+
+**Estado**: ✅ **100% de cobertura alcanzado** (Enero 2026)
+
+- **Cobertura Total de Líneas**: 100% (170/170 líneas)
+- **Cobertura de Funciones/Métodos**: 100% (118/118)
+- **Cobertura de Clases**: 100% (16/16)
+- **Total de Tests**: 140 tests pasando (569 assertions)
+
+### Tests Especiales Implementados
+
+#### ProgramPolicy - Validación de Relaciones en forceDelete()
+
+Los tests verifican que un programa no puede ser eliminado permanentemente si tiene relaciones con otros modelos:
+
+```php
+// Test: Super-admin no puede hacer forceDelete con calls
+it('prevents super-admin from force deleting program with calls', function () {
+    $superAdmin = User::factory()->create();
+    $superAdmin->assignRole(Roles::SUPER_ADMIN);
+    $program = Program::factory()->create();
+    Call::factory()->create(['program_id' => $program->id]);
+
+    $policy = new \App\Policies\ProgramPolicy;
+    expect($policy->forceDelete($superAdmin, $program))->toBeFalse();
+});
 ```
+
+**Nota técnica**: Como el método `before()` devuelve `true` para super-admin, se llama directamente al método de la policy para testear la lógica de validación de relaciones.
+
+#### UserPolicy - Métodos restore() y forceDelete()
+
+Los tests cubren todos los casos de restauración y eliminación permanente:
+
+- **restore()**: Verifica permisos `USERS_DELETE` para restaurar usuarios eliminados
+- **forceDelete()**: Verifica permisos y previene auto-eliminación
+
+```php
+// Test: Usuario no puede eliminarse a sí mismo
+it('prevents user with USERS_DELETE permission from force deleting themselves', function () {
+    $user = User::factory()->create();
+    $user->givePermissionTo(Permissions::USERS_DELETE);
+    $user->delete(); // Soft delete primero
+
+    $policy = new \App\Policies\UserPolicy;
+    expect($policy->forceDelete($user, $user))->toBeFalse();
+});
+```
+
+### Ejecutar Tests
+
+```bash
+# Todos los tests de policies
+php artisan test tests/Feature/Policies/
+
+# Test específico
+php artisan test --filter=ProgramPolicy
+php artisan test --filter=UserPolicy
+
+# Con cobertura
+php artisan test tests/Feature/Policies/ --coverage
+```
+
+### Archivos de Test
+
+Cada policy tiene su archivo de test correspondiente:
+
+- `tests/Feature/Policies/ProgramPolicyTest.php` - 13 tests
+- `tests/Feature/Policies/UserPolicyTest.php` - 27 tests
+- `tests/Feature/Policies/CallPolicyTest.php` - 7 tests
+- `tests/Feature/Policies/NewsPostPolicyTest.php` - 7 tests
+- ... (y así para todas las 16 policies)
 
 ---
 
@@ -352,4 +421,5 @@ No es necesario registrar manualmente las policies en `AuthServiceProvider`.
 ---
 
 **Fecha de Creación**: Diciembre 2025  
-**Última Actualización**: Diciembre 2025
+**Última Actualización**: Enero 2026  
+**Cobertura de Tests**: 100% (Enero 2026)
