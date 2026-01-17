@@ -5,9 +5,11 @@ use App\Models\AcademicYear;
 use App\Models\Call;
 use App\Models\Document;
 use App\Models\DocumentCategory;
+use App\Models\MediaConsent;
 use App\Models\Program;
 use App\Models\User;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 
@@ -120,6 +122,12 @@ it('displays file information when file is attached', function () {
 it('displays message when no file is attached', function () {
     Livewire::test(Show::class, ['document' => $this->document])
         ->assertSee(__('Este documento no tiene archivo asociado disponible para descarga.'));
+});
+
+it('returns null for fileSize when no file is attached', function () {
+    $component = Livewire::test(Show::class, ['document' => $this->document]);
+    
+    expect($component->instance()->fileSize)->toBeNull();
 });
 
 it('increments download count when downloading', function () {
@@ -388,4 +396,563 @@ it('formats file size correctly', function () {
 
     // Clean up
     @unlink($tempFile);
+});
+
+it('returns false for hasMediaConsent when no consent exists', function () {
+    $component = Livewire::test(Show::class, ['document' => $this->document]);
+    
+    expect($component->instance()->hasMediaConsent)->toBeFalse();
+});
+
+it('returns false for hasMediaConsent when consent is revoked', function () {
+    $mediaId = Schema::hasTable('media') ? \DB::table('media')->insertGetId([
+        'model_type' => 'App\Models\Test',
+        'model_id' => 1,
+        'collection_name' => 'test',
+        'name' => 'test',
+        'file_name' => 'test.jpg',
+        'mime_type' => 'image/jpeg',
+        'disk' => 'public',
+        'size' => 1024,
+        'manipulations' => '[]',
+        'custom_properties' => '[]',
+        'generated_conversions' => '[]',
+        'responsive_images' => '[]',
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]) : 999999;
+
+    MediaConsent::factory()->revoked()->create([
+        'consent_document_id' => $this->document->id,
+        'media_id' => $mediaId,
+        'consent_given' => false,
+        'revoked_at' => now(),
+    ]);
+
+    $component = Livewire::test(Show::class, ['document' => $this->document]);
+    
+    expect($component->instance()->hasMediaConsent)->toBeFalse();
+});
+
+it('returns false for hasMediaConsent when consent_given is false', function () {
+    $mediaId = Schema::hasTable('media') ? \DB::table('media')->insertGetId([
+        'model_type' => 'App\Models\Test',
+        'model_id' => 1,
+        'collection_name' => 'test',
+        'name' => 'test',
+        'file_name' => 'test.jpg',
+        'mime_type' => 'image/jpeg',
+        'disk' => 'public',
+        'size' => 1024,
+        'manipulations' => '[]',
+        'custom_properties' => '[]',
+        'generated_conversions' => '[]',
+        'responsive_images' => '[]',
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]) : 999999;
+
+    MediaConsent::factory()->create([
+        'consent_document_id' => $this->document->id,
+        'media_id' => $mediaId,
+        'consent_given' => false,
+        'revoked_at' => null,
+    ]);
+
+    $component = Livewire::test(Show::class, ['document' => $this->document]);
+    
+    expect($component->instance()->hasMediaConsent)->toBeFalse();
+});
+
+it('returns true for hasMediaConsent when active consent exists', function () {
+    $mediaId = Schema::hasTable('media') ? \DB::table('media')->insertGetId([
+        'model_type' => 'App\Models\Test',
+        'model_id' => 1,
+        'collection_name' => 'test',
+        'name' => 'test',
+        'file_name' => 'test.jpg',
+        'mime_type' => 'image/jpeg',
+        'disk' => 'public',
+        'size' => 1024,
+        'manipulations' => '[]',
+        'custom_properties' => '[]',
+        'generated_conversions' => '[]',
+        'responsive_images' => '[]',
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]) : 999999;
+
+    MediaConsent::factory()->create([
+        'consent_document_id' => $this->document->id,
+        'media_id' => $mediaId,
+        'consent_given' => true,
+        'revoked_at' => null,
+    ]);
+
+    $component = Livewire::test(Show::class, ['document' => $this->document]);
+    
+    expect($component->instance()->hasMediaConsent)->toBeTrue();
+});
+
+it('returns empty collection for mediaConsents when no consent exists', function () {
+    $component = Livewire::test(Show::class, ['document' => $this->document]);
+    $consents = $component->instance()->mediaConsents;
+    
+    expect($consents)->toBeEmpty();
+});
+
+it('returns empty collection for mediaConsents when all are revoked', function () {
+    $mediaId = Schema::hasTable('media') ? \DB::table('media')->insertGetId([
+        'model_type' => 'App\Models\Test',
+        'model_id' => 1,
+        'collection_name' => 'test',
+        'name' => 'test',
+        'file_name' => 'test.jpg',
+        'mime_type' => 'image/jpeg',
+        'disk' => 'public',
+        'size' => 1024,
+        'manipulations' => '[]',
+        'custom_properties' => '[]',
+        'generated_conversions' => '[]',
+        'responsive_images' => '[]',
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]) : 999999;
+
+    MediaConsent::factory()->revoked()->create([
+        'consent_document_id' => $this->document->id,
+        'media_id' => $mediaId,
+        'consent_given' => false,
+        'revoked_at' => now(),
+    ]);
+
+    $component = Livewire::test(Show::class, ['document' => $this->document]);
+    $consents = $component->instance()->mediaConsents;
+    
+    expect($consents)->toBeEmpty();
+});
+
+it('returns only active consents in mediaConsents', function () {
+    $mediaId1 = Schema::hasTable('media') ? \DB::table('media')->insertGetId([
+        'model_type' => 'App\Models\Test',
+        'model_id' => 1,
+        'collection_name' => 'test',
+        'name' => 'test',
+        'file_name' => 'test.jpg',
+        'mime_type' => 'image/jpeg',
+        'disk' => 'public',
+        'size' => 1024,
+        'manipulations' => '[]',
+        'custom_properties' => '[]',
+        'generated_conversions' => '[]',
+        'responsive_images' => '[]',
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]) : 999999;
+
+    $mediaId2 = Schema::hasTable('media') ? \DB::table('media')->insertGetId([
+        'model_type' => 'App\Models\Test',
+        'model_id' => 2,
+        'collection_name' => 'test',
+        'name' => 'test2',
+        'file_name' => 'test2.jpg',
+        'mime_type' => 'image/jpeg',
+        'disk' => 'public',
+        'size' => 1024,
+        'manipulations' => '[]',
+        'custom_properties' => '[]',
+        'generated_conversions' => '[]',
+        'responsive_images' => '[]',
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]) : 999998;
+
+    $activeConsent = MediaConsent::factory()->create([
+        'consent_document_id' => $this->document->id,
+        'media_id' => $mediaId1,
+        'consent_given' => true,
+        'revoked_at' => null,
+        'consent_date' => now()->subDays(5),
+    ]);
+
+    $revokedConsent = MediaConsent::factory()->revoked()->create([
+        'consent_document_id' => $this->document->id,
+        'media_id' => $mediaId2,
+        'consent_given' => false,
+        'revoked_at' => now(),
+        'consent_date' => now()->subDays(10),
+    ]);
+
+    $component = Livewire::test(Show::class, ['document' => $this->document]);
+    $consents = $component->instance()->mediaConsents;
+    
+    expect($consents)->toHaveCount(1)
+        ->and($consents->first()->id)->toBe($activeConsent->id);
+});
+
+it('returns empty collection for relatedDocuments when document has no program and no related documents exist', function () {
+    // Since category_id is required, we test the case where document has category but no program
+    // and there are no other documents with the same category
+    $documentWithoutProgram = Document::factory()->create([
+        'category_id' => $this->category->id,
+        'program_id' => null,
+        'academic_year_id' => $this->academicYear->id,
+        'is_active' => true,
+        'created_by' => $this->creator->id,
+    ]);
+
+    // Delete all other documents with the same category to ensure empty result
+    Document::where('category_id', $this->category->id)
+        ->where('id', '!=', $documentWithoutProgram->id)
+        ->delete();
+
+    $component = Livewire::test(Show::class, ['document' => $documentWithoutProgram]);
+    $relatedDocs = $component->instance()->relatedDocuments;
+    
+    // Should return documents from same category, but since we deleted them, should be empty
+    expect($relatedDocs)->toBeEmpty();
+});
+
+it('returns empty collection for relatedCalls when document has no program', function () {
+    $documentWithoutProgram = Document::factory()->create([
+        'category_id' => $this->category->id,
+        'program_id' => null,
+        'academic_year_id' => $this->academicYear->id,
+        'is_active' => true,
+        'created_by' => $this->creator->id,
+    ]);
+
+    $component = Livewire::test(Show::class, ['document' => $documentWithoutProgram]);
+    $relatedCalls = $component->instance()->relatedCalls;
+    
+    expect($relatedCalls)->toBeEmpty();
+});
+
+it('returns correct document type config for seguro type', function () {
+    $document = Document::factory()->create([
+        'category_id' => $this->category->id,
+        'program_id' => $this->program->id,
+        'academic_year_id' => $this->academicYear->id,
+        'is_active' => true,
+        'document_type' => 'seguro',
+        'created_by' => $this->creator->id,
+    ]);
+
+    $component = Livewire::test(Show::class, ['document' => $document]);
+    $config = $component->instance()->documentTypeConfig;
+    
+    expect($config['icon'])->toBe('shield-check')
+        ->and($config['color'])->toBe('success')
+        ->and($config['label'])->toBe(__('Seguro'));
+});
+
+it('returns correct document type config for consentimiento type', function () {
+    $document = Document::factory()->create([
+        'category_id' => $this->category->id,
+        'program_id' => $this->program->id,
+        'academic_year_id' => $this->academicYear->id,
+        'is_active' => true,
+        'document_type' => 'consentimiento',
+        'created_by' => $this->creator->id,
+    ]);
+
+    $component = Livewire::test(Show::class, ['document' => $document]);
+    $config = $component->instance()->documentTypeConfig;
+    
+    expect($config['icon'])->toBe('clipboard-document-check')
+        ->and($config['color'])->toBe('warning')
+        ->and($config['label'])->toBe(__('Consentimiento'));
+});
+
+it('returns correct document type config for faq type', function () {
+    $document = Document::factory()->create([
+        'category_id' => $this->category->id,
+        'program_id' => $this->program->id,
+        'academic_year_id' => $this->academicYear->id,
+        'is_active' => true,
+        'document_type' => 'faq',
+        'created_by' => $this->creator->id,
+    ]);
+
+    $component = Livewire::test(Show::class, ['document' => $document]);
+    $config = $component->instance()->documentTypeConfig;
+    
+    expect($config['icon'])->toBe('question-mark-circle')
+        ->and($config['color'])->toBe('info')
+        ->and($config['label'])->toBe(__('FAQ'));
+});
+
+it('returns correct document type config for otro type', function () {
+    $document = Document::factory()->create([
+        'category_id' => $this->category->id,
+        'program_id' => $this->program->id,
+        'academic_year_id' => $this->academicYear->id,
+        'is_active' => true,
+        'document_type' => 'otro',
+        'created_by' => $this->creator->id,
+    ]);
+
+    $component = Livewire::test(Show::class, ['document' => $document]);
+    $config = $component->instance()->documentTypeConfig;
+    
+    expect($config['icon'])->toBe('document')
+        ->and($config['color'])->toBe('neutral')
+        ->and($config['label'])->toBe(__('Otro'));
+});
+
+it('returns correct document type config for convocatoria type', function () {
+    $document = Document::factory()->create([
+        'category_id' => $this->category->id,
+        'program_id' => $this->program->id,
+        'academic_year_id' => $this->academicYear->id,
+        'is_active' => true,
+        'document_type' => 'convocatoria',
+        'created_by' => $this->creator->id,
+    ]);
+
+    $component = Livewire::test(Show::class, ['document' => $document]);
+    $config = $component->instance()->documentTypeConfig;
+    
+    expect($config['icon'])->toBe('document-text')
+        ->and($config['color'])->toBe('primary')
+        ->and($config['label'])->toBe(__('Convocatoria'));
+});
+
+it('returns correct document type config for modelo type', function () {
+    $document = Document::factory()->create([
+        'category_id' => $this->category->id,
+        'program_id' => $this->program->id,
+        'academic_year_id' => $this->academicYear->id,
+        'is_active' => true,
+        'document_type' => 'modelo',
+        'created_by' => $this->creator->id,
+    ]);
+
+    $component = Livewire::test(Show::class, ['document' => $document]);
+    $config = $component->instance()->documentTypeConfig;
+    
+    expect($config['icon'])->toBe('document-duplicate')
+        ->and($config['color'])->toBe('info')
+        ->and($config['label'])->toBe(__('Modelo'));
+});
+
+it('returns default document type config for unknown type', function () {
+    // Since document_type is an ENUM in the database, we cannot create a document
+    // with a value outside the enum. However, we can use setAttribute to simulate
+    // an unknown type to test the default case in the match statement.
+    $document = Document::factory()->create([
+        'category_id' => $this->category->id,
+        'program_id' => $this->program->id,
+        'academic_year_id' => $this->academicYear->id,
+        'is_active' => true,
+        'document_type' => 'convocatoria', // Start with valid enum value
+        'created_by' => $this->creator->id,
+    ]);
+
+    // Use setAttribute to set an unknown type to test the default case
+    $document->setAttribute('document_type', 'tipo_desconocido');
+
+    $component = Livewire::test(Show::class, ['document' => $document]);
+    $config = $component->instance()->documentTypeConfig;
+    
+    expect($config['icon'])->toBe('document')
+        ->and($config['color'])->toBe('neutral')
+        ->and($config['label'])->toBe(__('Documento'));
+});
+
+it('formats file size in bytes correctly', function () {
+    $tempFile = tempnam(sys_get_temp_dir(), 'test_doc_');
+    file_put_contents($tempFile, str_repeat('x', 512)); // 512 bytes, less than 1KB
+
+    $document = Document::factory()->create([
+        'category_id' => $this->category->id,
+        'program_id' => $this->program->id,
+        'academic_year_id' => $this->academicYear->id,
+        'is_active' => true,
+        'created_by' => $this->creator->id,
+    ]);
+
+    $document->addMedia($tempFile)
+        ->usingName('Documento de Prueba')
+        ->usingFileName('documento.pdf')
+        ->toMediaCollection('file');
+
+    $component = Livewire::test(Show::class, ['document' => $document]);
+    $fileSize = $component->instance()->fileSize;
+
+    expect($fileSize)->toContain('B')
+        ->and($fileSize)->not->toContain('KB');
+
+    @unlink($tempFile);
+});
+
+it('formats file size in MB correctly', function () {
+    $tempFile = tempnam(sys_get_temp_dir(), 'test_doc_');
+    file_put_contents($tempFile, str_repeat('x', 2 * 1024 * 1024)); // 2MB
+
+    $document = Document::factory()->create([
+        'category_id' => $this->category->id,
+        'program_id' => $this->program->id,
+        'academic_year_id' => $this->academicYear->id,
+        'is_active' => true,
+        'created_by' => $this->creator->id,
+    ]);
+
+    $document->addMedia($tempFile)
+        ->usingName('Documento de Prueba')
+        ->usingFileName('documento.pdf')
+        ->toMediaCollection('file');
+
+    $component = Livewire::test(Show::class, ['document' => $document]);
+    $fileSize = $component->instance()->fileSize;
+
+    expect($fileSize)->toContain('MB')
+        ->and($fileSize)->not->toContain('KB')
+        ->and($fileSize)->not->toContain('GB');
+
+    @unlink($tempFile);
+});
+
+it('formats file size in GB correctly', function () {
+    // Create a smaller file and mock the size to avoid memory issues
+    $tempFile = tempnam(sys_get_temp_dir(), 'test_doc_');
+    file_put_contents($tempFile, str_repeat('x', 1024)); // 1KB
+
+    $document = Document::factory()->create([
+        'category_id' => $this->category->id,
+        'program_id' => $this->program->id,
+        'academic_year_id' => $this->academicYear->id,
+        'is_active' => true,
+        'created_by' => $this->creator->id,
+    ]);
+
+    $media = $document->addMedia($tempFile)
+        ->usingName('Documento de Prueba')
+        ->usingFileName('documento.pdf')
+        ->toMediaCollection('file');
+
+    // Mock the size to be 2GB
+    $media->size = 2 * 1024 * 1024 * 1024;
+    $media->save();
+
+    $component = Livewire::test(Show::class, ['document' => $document->fresh()]);
+    $fileSize = $component->instance()->fileSize;
+
+    expect($fileSize)->toContain('GB')
+        ->and($fileSize)->not->toContain('MB')
+        ->and($fileSize)->not->toContain('TB');
+
+    @unlink($tempFile);
+});
+
+it('formats file size in TB correctly', function () {
+    // Create a small file and mock the size to avoid memory issues
+    $tempFile = tempnam(sys_get_temp_dir(), 'test_doc_');
+    file_put_contents($tempFile, str_repeat('x', 1024)); // 1KB
+
+    $document = Document::factory()->create([
+        'category_id' => $this->category->id,
+        'program_id' => $this->program->id,
+        'academic_year_id' => $this->academicYear->id,
+        'is_active' => true,
+        'created_by' => $this->creator->id,
+    ]);
+
+    $media = $document->addMedia($tempFile)
+        ->usingName('Documento de Prueba')
+        ->usingFileName('documento.pdf')
+        ->toMediaCollection('file');
+
+    // Mock the size to be 2TB
+    $media->size = 2 * 1024 * 1024 * 1024 * 1024;
+    $media->save();
+
+    $component = Livewire::test(Show::class, ['document' => $document->fresh()]);
+    $fileSize = $component->instance()->fileSize;
+
+    expect($fileSize)->toContain('TB')
+        ->and($fileSize)->not->toContain('GB');
+
+    @unlink($tempFile);
+});
+
+it('returns null for fileExtension when no file is attached', function () {
+    $component = Livewire::test(Show::class, ['document' => $this->document]);
+    
+    expect($component->instance()->fileExtension)->toBeNull();
+});
+
+it('returns correct file extension when file is attached', function () {
+    $tempFile = tempnam(sys_get_temp_dir(), 'test_doc_');
+    file_put_contents($tempFile, 'Test PDF content');
+
+    $this->document->addMedia($tempFile)
+        ->usingName('Documento de Prueba')
+        ->usingFileName('documento.pdf')
+        ->toMediaCollection('file');
+
+    $component = Livewire::test(Show::class, ['document' => $this->document]);
+    
+    expect($component->instance()->fileExtension)->toBe('pdf');
+
+    @unlink($tempFile);
+});
+
+it('returns related documents from same program when document has no category', function () {
+    // Since category_id is required in the database, we need to create the document
+    // with a category first, then set category_id to null using setAttribute
+    // to test the elseif branch in relatedDocuments()
+    $documentWithoutCategory = Document::factory()->create([
+        'category_id' => $this->category->id,
+        'program_id' => $this->program->id,
+        'academic_year_id' => $this->academicYear->id,
+        'is_active' => true,
+        'title' => 'Documento Sin Categoría',
+        'created_by' => $this->creator->id,
+    ]);
+
+    // Set category_id to null to test the elseif branch
+    $documentWithoutCategory->setAttribute('category_id', null);
+
+    // Create related documents with same program but different category
+    $otherCategory = DocumentCategory::factory()->create([
+        'name' => 'Otra Categoría',
+        'slug' => 'otra-categoria-'.uniqid(),
+    ]);
+
+    $relatedDoc1 = Document::factory()->create([
+        'category_id' => $otherCategory->id,
+        'program_id' => $this->program->id,
+        'academic_year_id' => $this->academicYear->id,
+        'is_active' => true,
+        'title' => 'Documento Relacionado 1',
+        'created_by' => $this->creator->id,
+    ]);
+
+    $relatedDoc2 = Document::factory()->create([
+        'category_id' => $otherCategory->id,
+        'program_id' => $this->program->id,
+        'academic_year_id' => $this->academicYear->id,
+        'is_active' => true,
+        'title' => 'Documento Relacionado 2',
+        'created_by' => $this->creator->id,
+    ]);
+
+    // Create document with different program - should not appear
+    $otherProgram = Program::factory()->create(['is_active' => true]);
+    $unrelatedDoc = Document::factory()->create([
+        'category_id' => $otherCategory->id,
+        'program_id' => $otherProgram->id,
+        'academic_year_id' => $this->academicYear->id,
+        'is_active' => true,
+        'title' => 'Documento No Relacionado',
+        'created_by' => $this->creator->id,
+    ]);
+
+    $component = Livewire::test(Show::class, ['document' => $documentWithoutCategory]);
+    $relatedDocs = $component->instance()->relatedDocuments;
+
+    expect($relatedDocs->pluck('id'))->toContain($relatedDoc1->id)
+        ->and($relatedDocs->pluck('id'))->toContain($relatedDoc2->id)
+        ->and($relatedDocs->pluck('id'))->not->toContain($unrelatedDoc->id);
 });
