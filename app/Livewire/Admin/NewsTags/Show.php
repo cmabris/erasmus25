@@ -56,6 +56,10 @@ class Show extends Component
      */
     public function delete(): void
     {
+        // Refresh the count to ensure we have the latest data
+        $this->newsTag->refresh();
+        $this->newsTag->loadCount(['newsPosts']);
+
         // Check if news tag has relationships using the loaded count
         $hasRelations = ($this->newsTag->news_posts_count ?? 0) > 0;
 
@@ -88,6 +92,8 @@ class Show extends Component
 
         $this->newsTag->restore();
 
+        $this->showRestoreModal = false;
+
         $this->dispatch('news-tag-restored', [
             'message' => __('common.messages.restored_successfully'),
         ]);
@@ -102,6 +108,10 @@ class Show extends Component
     public function forceDelete(): void
     {
         $this->authorize('forceDelete', $this->newsTag);
+
+        // Refresh the count to ensure we have the latest data
+        $this->newsTag->refresh();
+        $this->newsTag->loadCount(['newsPosts']);
 
         // Check relations one more time using the loaded count
         $hasRelations = ($this->newsTag->news_posts_count ?? 0) > 0;
