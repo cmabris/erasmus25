@@ -237,3 +237,21 @@ it('goes to specific date', function () {
         ->call('goToDate', $targetDate)
         ->assertSet('currentDate', $targetDate);
 });
+
+it('navigates to previous week in week view', function () {
+    $component = Livewire::test(Calendar::class)
+        ->set('viewMode', 'week')
+        ->set('currentDate', now()->format('Y-m-d'))
+        ->call('previous');
+
+    $expectedDate = now()->subWeek();
+    $this->assertEquals($expectedDate->format('Y-m-d'), $component->get('currentDate'));
+});
+
+it('navigates to previous day in day view', function () {
+    Livewire::test(Calendar::class)
+        ->set('viewMode', 'day')
+        ->set('currentDate', now()->format('Y-m-d'))
+        ->call('previous')
+        ->assertSet('currentDate', now()->subDay()->format('Y-m-d'));
+});
