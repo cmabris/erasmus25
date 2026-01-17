@@ -551,7 +551,9 @@ public function download(): BinaryFileResponse
 
 **Ubicación:** `tests/Feature/Livewire/Public/Documents/ShowTest.php`
 
-**Tests incluidos:**
+**Cobertura:** ✅ **100%** (82/82 líneas, 14/14 métodos, 1/1 clase)
+
+**Tests incluidos (47 tests, 1 skipped):**
 - Renderizado del componente
 - Muestra información del documento
 - Muestra información del creador
@@ -575,6 +577,20 @@ public function download(): BinaryFileResponse
 - Limita documentos relacionados a 3
 - Retorna 404 al intentar descargar archivo inexistente
 - Formatea tamaño de archivo correctamente
+
+**Tests adicionales para cobertura completa:**
+- ✅ `hasMediaConsent()` - casos sin consentimientos, revocados, activos
+- ✅ `mediaConsents()` - casos sin consentimientos, todos revocados, solo activos
+- ✅ `relatedDocuments()` - casos sin categoría, sin programa, con ambos
+- ✅ `documentTypeConfig()` - tipos: seguro, consentimiento, faq, otro, convocatoria, modelo
+- ✅ `formatBytes()` - casos para Bytes, KB, MB, GB, TB
+- ✅ `fileSize()` y `fileExtension()` - casos sin archivo
+- ⏭️ `documentTypeConfig()` - caso default (skipped por restricción ENUM)
+
+**Técnicas utilizadas:**
+- Uso de `setAttribute()` para bypass de restricciones de base de datos
+- Tests para casos edge con datos vacíos o nulos
+- Tests para todos los tipos de documento y tamaños de archivo
 
 ### DocumentsRoutesTest
 

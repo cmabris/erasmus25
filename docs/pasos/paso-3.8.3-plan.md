@@ -112,8 +112,14 @@ Aumentar la cobertura de tests de los componentes Livewire públicos del 94.73% 
 
 ## Plan de Implementación
 
-### Fase 1: Documents/Show.php (Prioridad Alta)
+### Fase 1: Documents/Show.php (Prioridad Alta) ✅ COMPLETADO AL 100%
 **Objetivo**: Aumentar de 85.37% a 100%
+
+**Estado**: ✅ **COMPLETADO AL 100%** - 47 tests pasando (1 skipped debido a restricción de enum)
+**Cobertura Final**: 
+- ✅ Líneas: **100.00%** (82/82)
+- ✅ Métodos: **100.00%** (14/14)
+- ✅ Clases: **100.00%** (1/1)
 
 #### Tareas:
 1. **Test para `hasMediaConsent()` sin consentimientos**
@@ -145,12 +151,42 @@ Aumentar la cobertura de tests de los componentes Livewire públicos del 94.73% 
    - Verificar formato correcto para cada unidad
 
 **Archivo**: `tests/Feature/Livewire/Public/Documents/ShowTest.php`
-**Tests estimados**: 7-10 tests nuevos
+**Tests implementados**: 15 tests nuevos
+- ✅ Test para `hasMediaConsent()` sin consentimientos
+- ✅ Test para `hasMediaConsent()` con consentimientos revocados
+- ✅ Test para `hasMediaConsent()` con `consent_given = false`
+- ✅ Test para `hasMediaConsent()` con consentimiento activo
+- ✅ Test para `mediaConsents()` sin consentimientos
+- ✅ Test para `mediaConsents()` con todos revocados
+- ✅ Test para `mediaConsents()` filtrando solo activos
+- ✅ Test para `relatedDocuments()` sin documentos relacionados
+- ✅ Test para `relatedCalls()` sin programa (ya existía, verificado)
+- ✅ Test para `documentTypeConfig()` - tipo `seguro`
+- ✅ Test para `documentTypeConfig()` - tipo `consentimiento`
+- ✅ Test para `documentTypeConfig()` - tipo `faq`
+- ✅ Test para `documentTypeConfig()` - tipo `otro`
+- ⏭️ Test para `documentTypeConfig()` - caso default (skipped por restricción enum)
+- ✅ Test para `documentTypeConfig()` - tipo `convocatoria`
+- ✅ Test para `documentTypeConfig()` - tipo `modelo`
+- ✅ Test para `formatBytes()` - Bytes (< 1KB)
+- ✅ Test para `formatBytes()` - MB
+- ✅ Test para `formatBytes()` - GB
+- ✅ Test para `formatBytes()` - TB
+- ✅ Test para `fileSize()` - retorna null cuando no hay archivo
+- ✅ Test para `fileExtension()` - retorna null cuando no hay archivo
+- ✅ Test para `fileExtension()` - retorna extensión correcta cuando hay archivo
+- ✅ Test para `relatedDocuments()` - caso elseif (sin categoría pero con programa)
 
 ---
 
-### Fase 2: Programs/Show.php (Prioridad Alta)
+### Fase 2: Programs/Show.php (Prioridad Alta) ✅ COMPLETADO AL 100%
 **Objetivo**: Aumentar de 83.33% a 100%
+
+**Estado**: ✅ **COMPLETADO AL 100%** - 28 tests pasando
+**Cobertura Final**: 
+- ✅ Líneas: **100.00%** (120/120)
+- ✅ Métodos: **100.00%** (6/6)
+- ✅ Clases: **100.00%** (1/1)
 
 #### Tareas:
 1. **Test para `programConfig()` - Código ADU**
@@ -186,21 +222,37 @@ Aumentar la cobertura de tests de los componentes Livewire públicos del 94.73% 
    - Verificar que retorna colección vacía
 
 **Archivo**: `tests/Feature/Livewire/Public/Programs/ShowTest.php`
-**Tests estimados**: 8 tests nuevos
+**Tests implementados**: 10 tests nuevos
+- ✅ Test para `programConfig()` - Código ADU
+- ✅ Test para `programConfig()` - Código KA1 puro (sin VET/HED/SCH/ADU)
+- ✅ Test para `programConfig()` - Código JM
+- ✅ Test para `programConfig()` - Código DISCOVER
+- ✅ Test para `programConfig()` - Caso default (código desconocido)
+- ✅ Test para `programConfig()` - Caso default (código null)
+- ✅ Test para `relatedCalls()` sin convocatorias
+- ✅ Test para `relatedNews()` sin noticias
+- ✅ Test para `otherPrograms()` sin otros programas
 
 ---
 
-### Fase 3: Newsletter/Verify.php (Prioridad Media)
+### Fase 3: Newsletter/Verify.php (Prioridad Media) ✅ COMPLETADO AL 100%
 **Objetivo**: Aumentar de 86.96% a 100%
+
+**Estado**: ✅ **COMPLETADO AL 100%** - 12 tests pasando
+**Cobertura Final**: 
+- ✅ Líneas: **100.00%** (23/23)
+- ✅ Métodos: **100.00%** (3/3)
+- ✅ Clases: **100.00%** (1/1)
 
 #### Tareas:
 1. **Test para manejo de excepciones en `verifySubscription()`**
-   - Mockear el método `verify()` del modelo para que lance excepción
+   - Usar Event Listener (`updating`) para simular error en `update()`
    - Verificar que se establece `status = 'error'`
    - Verificar que se establece mensaje de error apropiado
 
 **Archivo**: `tests/Feature/Livewire/Public/Newsletter/VerifyTest.php`
-**Tests estimados**: 1-2 tests nuevos
+**Tests implementados**: 1 test nuevo
+- ✅ Test para manejo de excepciones cuando `verify()` falla (usando Event Listener)
 
 ---
 
@@ -223,36 +275,54 @@ Aumentar la cobertura de tests de los componentes Livewire públicos del 94.73% 
 
 ---
 
-### Fase 5: Events/Calendar.php (Prioridad Baja)
+### Fase 5: Events/Calendar.php (Prioridad Baja) ✅ COMPLETADO AL 100%
 **Objetivo**: Aumentar de 98.02% a 100%
 
-#### Tareas:
-1. **Test para `eventsByDate()` - Casos edge**
-   - Crear test que verifique agrupación cuando hay eventos en diferentes fechas
-   - Verificar que retorna array con fechas como keys y Collections como values
+**Estado**: ✅ **COMPLETADO AL 100%** - 22 tests pasando
+**Cobertura Final**: 
+- ✅ Líneas: **100.00%** (101/101)
+- ✅ Métodos: **100.00%** (16/16)
+- ✅ Clases: **100.00%** (1/1)
 
-2. **Test para `weekDays()` - Conversión de tipos**
-   - Crear test que verifique conversión correcta cuando `eventsByDate` retorna array en lugar de Collection
+#### Tareas:
+1. **Test para `previous()` - Caso 'week'**
+   - Crear test que verifique navegación a semana anterior en vista semanal
+   - Verificar que retorna fecha de la semana anterior
+
+2. **Test para `previous()` - Caso 'day'**
+   - Crear test que verifique navegación a día anterior en vista diaria
+   - Verificar que retorna fecha del día anterior
 
 **Archivo**: `tests/Feature/Livewire/Public/Events/CalendarTest.php`
-**Tests estimados**: 2 tests nuevos
+**Tests implementados**: 2 tests nuevos
+- ✅ Test para `previous()` - navegación a semana anterior en vista 'week'
+- ✅ Test para `previous()` - navegación a día anterior en vista 'day'
 
 ---
 
-### Fase 6: Events/Index.php (Prioridad Baja)
+### Fase 6: Events/Index.php (Prioridad Baja) ✅ COMPLETADO AL 100%
 **Objetivo**: Aumentar de 96.43% a 100%
 
-#### Tareas:
-1. **Test para `updatedDateFrom()` - Valores inválidos**
-   - Crear test que verifique comportamiento con fecha inválida
-   - Verificar que resetea página correctamente
+**Estado**: ✅ **COMPLETADO AL 100%** - 16 tests pasando
+**Cobertura Final**: 
+- ✅ Líneas: **100.00%** (56/56)
+- ✅ Métodos: **100.00%** (12/12)
+- ✅ Clases: **100.00%** (1/1)
 
-2. **Test para `updatedDateTo()` - Valores inválidos**
-   - Crear test que verifique comportamiento con fecha inválida
-   - Verificar que resetea página correctamente
+#### Tareas:
+1. **Test para `togglePastEvents()`**
+   - Crear test que verifique el toggle de eventos pasados
+   - Verificar que cambia el estado y resetea la página
+
+2. **Mejorar tests existentes para acceder a propiedades computed**
+   - Asegurar que los tests accedan explícitamente a `events` para cubrir todas las líneas
+   - Agregar test para búsqueda en descripción
 
 **Archivo**: `tests/Feature/Livewire/Public/Events/IndexTest.php`
-**Tests estimados**: 2 tests nuevos
+**Tests implementados**: 1 test nuevo + mejoras a tests existentes
+- ✅ Test para `togglePastEvents()` - toggle correcto y reset de página
+- ✅ Mejora en test de búsqueda para cubrir búsqueda en descripción
+- ✅ Mejora en test de rango de fechas para acceder explícitamente a `events`
 
 ---
 

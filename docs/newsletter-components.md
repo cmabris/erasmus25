@@ -408,7 +408,7 @@ NewsletterSubscriptionSeeder::class,
 
 ### Cobertura de Tests
 
-**Total:** 45+ tests cubriendo:
+**Total:** 50+ tests cubriendo:
 
 - Validación de formularios
 - Flujos de suscripción/verificación/baja
@@ -424,14 +424,25 @@ NewsletterSubscriptionSeeder::class,
 1. **`tests/Feature/Livewire/Public/Newsletter/SubscribeTest.php`**
    - 22 tests (57 assertions)
    - Renderizado, validación, flujo de suscripción, selección de programas
+   - **Cobertura:** ✅ **100%**
 
 2. **`tests/Feature/Livewire/Public/Newsletter/VerifyTest.php`**
-   - 8+ tests
+   - 12 tests
    - Verificación exitosa, ya verificada, token inválido
+   - **Cobertura:** ✅ **100%** (23/23 líneas, 3/3 métodos, 1/1 clase)
+   - **Tests adicionales:**
+     - ✅ Manejo de excepciones cuando `verify()` falla (usando Model Event Listener)
 
 3. **`tests/Feature/Livewire/Public/Newsletter/UnsubscribeTest.php`**
-   - 12+ tests
+   - 14+ tests
    - Baja por token, baja por email, estados de error
+   - **Cobertura:** ✅ **100%** (46/46 líneas, 4/4 métodos, 1/1 clase)
+   - **Tests adicionales:**
+     - ✅ Manejo de excepciones cuando `unsubscribeByToken()` falla
+     - ✅ Manejo de excepciones cuando `unsubscribeByEmail()` falla
+   - **Técnicas utilizadas:**
+     - Model Event Listeners para simular errores de base de datos
+     - Hooks `beforeEach` y `afterEach` para limpieza de event listeners
 
 4. **`tests/Feature/Models/NewsletterSubscriptionScopesTest.php`**
    - 13 tests (35 assertions)

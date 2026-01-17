@@ -414,7 +414,7 @@ php artisan test tests/Feature/Livewire/Public/Programs/ShowTest.php
 - Paginación
 - SEO y breadcrumbs
 
-**ShowTest.php (19 tests):**
+**ShowTest.php (28 tests):**
 - Renderizado con programa válido
 - 404 para programa inexistente
 - Información del programa
@@ -424,6 +424,24 @@ php artisan test tests/Feature/Livewire/Public/Programs/ShowTest.php
 - Otros programas sugeridos
 - Configuración por tipo
 - Empty state
+
+**Cobertura:** ✅ **100%** (120/120 líneas, 6/6 métodos, 1/1 clase)
+
+**Tests adicionales para cobertura completa:**
+- ✅ `programConfig()` - Código ADU (Educación de Adultos)
+- ✅ `programConfig()` - Código KA1 puro (sin VET/HED/SCH/ADU)
+- ✅ `programConfig()` - Código JM (Jean Monnet)
+- ✅ `programConfig()` - Código DISCOVER (DiscoverEU)
+- ✅ `programConfig()` - Caso default (código desconocido)
+- ✅ `programConfig()` - Caso default (código null)
+- ✅ `relatedCalls()` - sin convocatorias
+- ✅ `relatedNews()` - sin noticias
+- ✅ `otherPrograms()` - sin otros programas
+
+**Técnicas utilizadas:**
+- Uso de `setAttribute()` para simular código null (bypass de restricción NOT NULL)
+- Tests para todos los casos del `match` statement en `programConfig()`
+- Tests para casos edge con colecciones vacías
 
 ---
 

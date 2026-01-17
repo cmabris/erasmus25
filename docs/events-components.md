@@ -506,7 +506,7 @@ $this->call([
 
 **Ubicación:** `tests/Feature/Livewire/Public/Events/CalendarTest.php`
 
-**Tests implementados (20 tests):**
+**Tests implementados (22 tests):**
 - ✅ Renderizado de página
 - ✅ Visualización de mes actual
 - ✅ Navegación (mes anterior/siguiente)
@@ -521,11 +521,17 @@ $this->call([
 - ✅ Navegación en vistas semanal y diaria
 - ✅ Ir a fecha específica
 
+**Cobertura:** ✅ **100%** (101/101 líneas, 16/16 métodos, 1/1 clase)
+
+**Tests adicionales para cobertura completa:**
+- ✅ `previous()` - navegación a semana anterior en vista 'week'
+- ✅ `previous()` - navegación a día anterior en vista 'day'
+
 ### IndexTest
 
 **Ubicación:** `tests/Feature/Livewire/Public/Events/IndexTest.php`
 
-**Tests implementados (15 tests):**
+**Tests implementados (16 tests):**
 - ✅ Renderizado de página
 - ✅ Visualización de eventos públicos
 - ✅ Ocultación de eventos privados
@@ -537,6 +543,17 @@ $this->call([
 - ✅ Paginación
 - ✅ Empty state
 - ✅ Actualización de página al cambiar filtros
+
+**Cobertura:** ✅ **100%** (56/56 líneas, 12/12 métodos, 1/1 clase)
+
+**Tests adicionales para cobertura completa:**
+- ✅ `togglePastEvents()` - toggle correcto y reset de página
+- ✅ Mejora en test de búsqueda para cubrir búsqueda en descripción
+- ✅ Mejora en test de rango de fechas para acceder explícitamente a `events`
+
+**Técnicas utilizadas:**
+- Acceso explícito a propiedades `#[Computed]` usando `$component->get('events')`
+- Esto asegura que el método `events()` se ejecute y cubra todas las líneas, incluyendo closures `when()`
 
 ### ShowTest
 
