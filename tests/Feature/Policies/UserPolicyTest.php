@@ -197,3 +197,98 @@ describe('UserPolicy with direct permissions', function () {
         expect($user->can('assignRoles', $user))->toBeFalse();
     });
 });
+
+describe('UserPolicy restore access', function () {
+    it('allows super-admin to restore other users', function () {
+        $superAdmin = User::factory()->create();
+        $superAdmin->assignRole(Roles::SUPER_ADMIN);
+        $otherUser = User::factory()->create();
+        $otherUser->delete(); // Soft delete
+
+        expect($superAdmin->can('restore', $otherUser))->toBeTrue();
+    });
+
+    it('allows user with USERS_DELETE permission to restore other users', function () {
+        $user = User::factory()->create();
+        $user->givePermissionTo(Permissions::USERS_DELETE);
+        $otherUser = User::factory()->create();
+        $otherUser->delete(); // Soft delete
+
+        expect($user->can('restore', $otherUser))->toBeTrue();
+    });
+
+    it('prevents user without USERS_DELETE permission from restoring users', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN); // Admin no tiene permisos de usuarios por defecto
+        $otherUser = User::factory()->create();
+        $otherUser->delete(); // Soft delete
+
+        expect($user->can('restore', $otherUser))->toBeFalse();
+    });
+
+    it('prevents user without roles from restoring users', function () {
+        $user = User::factory()->create();
+        $otherUser = User::factory()->create();
+        $otherUser->delete(); // Soft delete
+
+        expect($user->can('restore', $otherUser))->toBeFalse();
+    });
+});
+
+describe('UserPolicy forceDelete access', function () {
+    it('allows super-admin to force delete other users', function () {
+        $superAdmin = User::factory()->create();
+        $superAdmin->assignRole(Roles::SUPER_ADMIN);
+        $otherUser = User::factory()->create();
+        $otherUser->delete(); // Soft delete primero
+
+        expect($superAdmin->can('forceDelete', $otherUser))->toBeTrue();
+    });
+
+    it('prevents super-admin from force deleting themselves', function () {
+        $superAdmin = User::factory()->create();
+        $superAdmin->assignRole(Roles::SUPER_ADMIN);
+        $superAdmin->delete(); // Soft delete primero
+
+        // Llamar directamente al método de la policy para testear la lógica
+        // porque before() devuelve true y no ejecuta forceDelete()
+        $policy = new \App\Policies\UserPolicy;
+        expect($policy->forceDelete($superAdmin, $superAdmin))->toBeFalse();
+    });
+
+    it('allows user with USERS_DELETE permission to force delete other users', function () {
+        $user = User::factory()->create();
+        $user->givePermissionTo(Permissions::USERS_DELETE);
+        $otherUser = User::factory()->create();
+        $otherUser->delete(); // Soft delete primero
+
+        expect($user->can('forceDelete', $otherUser))->toBeTrue();
+    });
+
+    it('prevents user with USERS_DELETE permission from force deleting themselves', function () {
+        $user = User::factory()->create();
+        $user->givePermissionTo(Permissions::USERS_DELETE);
+        $user->delete(); // Soft delete primero
+
+        // Llamar directamente al método de la policy para testear la lógica
+        $policy = new \App\Policies\UserPolicy;
+        expect($policy->forceDelete($user, $user))->toBeFalse();
+    });
+
+    it('prevents user without USERS_DELETE permission from force deleting users', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN); // Admin no tiene permisos de usuarios por defecto
+        $otherUser = User::factory()->create();
+        $otherUser->delete(); // Soft delete primero
+
+        expect($user->can('forceDelete', $otherUser))->toBeFalse();
+    });
+
+    it('prevents user without roles from force deleting users', function () {
+        $user = User::factory()->create();
+        $otherUser = User::factory()->create();
+        $otherUser->delete(); // Soft delete primero
+
+        expect($user->can('forceDelete', $otherUser))->toBeFalse();
+    });
+});
