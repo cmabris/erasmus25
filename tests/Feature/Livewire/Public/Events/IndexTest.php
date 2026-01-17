@@ -66,6 +66,7 @@ it('does not display private events', function () {
 it('filters events by search query', function () {
     ErasmusEvent::factory()->create([
         'title' => 'Reunión Informativa',
+        'description' => 'Descripción de reunión',
         'is_public' => true,
         'start_date' => now()->addDays(5),
     ]);
@@ -76,10 +77,19 @@ it('filters events by search query', function () {
         'start_date' => now()->addDays(10),
     ]);
 
-    Livewire::test(Index::class)
-        ->set('search', 'Reunión')
-        ->assertSee('Reunión Informativa')
+    $component = Livewire::test(Index::class)
+        ->set('search', 'Reunión');
+    
+    // Access the events property to ensure the computed method is executed
+    $events = $component->get('events');
+    
+    $component->assertSee('Reunión Informativa')
         ->assertDontSee('Taller de Movilidad');
+    
+    // Verify search works in description too
+    $component->set('search', 'Descripción');
+    $events = $component->get('events');
+    $component->assertSee('Reunión Informativa');
 });
 
 it('filters events by program', function () {
@@ -140,10 +150,14 @@ it('filters events by date range', function () {
         'start_date' => now()->addDays(20),
     ]);
 
-    Livewire::test(Index::class)
+    $component = Livewire::test(Index::class)
         ->set('dateFrom', $dateFrom)
-        ->set('dateTo', $dateTo)
-        ->assertSee('Evento en Rango')
+        ->set('dateTo', $dateTo);
+    
+    // Access the events property to ensure the computed method is executed
+    $events = $component->get('events');
+    
+    $component->assertSee('Evento en Rango')
         ->assertDontSee('Evento Fuera de Rango');
 });
 
@@ -240,4 +254,13 @@ it('updates page when filters change', function () {
     Livewire::test(Index::class)
         ->set('program', $this->program1->id)
         ->assertSet('program', (string) $this->program1->id);
+});
+
+it('toggles past events correctly', function () {
+    $component = Livewire::test(Index::class)
+        ->assertSet('showPast', false)
+        ->call('togglePastEvents')
+        ->assertSet('showPast', true)
+        ->call('togglePastEvents')
+        ->assertSet('showPast', false);
 });
