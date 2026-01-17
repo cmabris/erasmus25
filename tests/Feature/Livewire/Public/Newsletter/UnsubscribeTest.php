@@ -11,6 +11,13 @@ uses(RefreshDatabase::class);
 
 beforeEach(function () {
     App::setLocale('es');
+    // Ensure clean state for event listeners
+    NewsletterSubscription::flushEventListeners();
+});
+
+afterEach(function () {
+    // Clean up event listeners after each test to avoid affecting coverage
+    NewsletterSubscription::flushEventListeners();
 });
 
 describe('Newsletter Unsubscribe Component - Unsubscribe by Token', function () {
@@ -166,6 +173,58 @@ describe('Newsletter Unsubscribe Component - Unsubscribe by Email', function () 
             ->set('email', 'TEST@EXAMPLE.COM')
             ->call('unsubscribeByEmail')
             ->assertSet('status', 'success');
+    });
+});
+
+describe('Newsletter Unsubscribe Component - Error Handling', function () {
+    it('handles exception when unsubscribeByToken fails', function () {
+        $subscription = NewsletterSubscription::factory()->create([
+            'verification_token' => $token = Str::random(32),
+            'is_active' => true,
+        ]);
+
+        // Use a model event to throw an exception when update() is called
+        // This will cause unsubscribe() to fail since it calls update()
+        NewsletterSubscription::updating(function ($model) use ($token) {
+            if ($model->verification_token === $token && $model->isDirty('unsubscribed_at')) {
+                throw new \Exception('Database connection error');
+            }
+        });
+
+        try {
+            Livewire::test(Unsubscribe::class, ['token' => $token])
+                ->assertSet('status', 'error')
+                ->assertSet('message', __('Ha ocurrido un error al cancelar tu suscripción. Por favor, intenta nuevamente más tarde.'));
+        } finally {
+            // Clean up the event listener to avoid affecting other tests
+            NewsletterSubscription::flushEventListeners();
+        }
+    });
+
+    it('handles exception when unsubscribeByEmail fails', function () {
+        $subscription = NewsletterSubscription::factory()->create([
+            'email' => 'test@example.com',
+            'is_active' => true,
+        ]);
+
+        // Use a model event to throw an exception when update() is called
+        // This will cause unsubscribe() to fail since it calls update()
+        NewsletterSubscription::updating(function ($model) {
+            if ($model->email === 'test@example.com' && $model->isDirty('unsubscribed_at')) {
+                throw new \Exception('Database connection error');
+            }
+        });
+
+        try {
+            Livewire::test(Unsubscribe::class)
+                ->set('email', 'test@example.com')
+                ->call('unsubscribeByEmail')
+                ->assertSet('status', 'error')
+                ->assertSet('message', __('Ha ocurrido un error al cancelar tu suscripción. Por favor, intenta nuevamente más tarde.'));
+        } finally {
+            // Clean up the event listener to avoid affecting other tests
+            NewsletterSubscription::flushEventListeners();
+        }
     });
 });
 
