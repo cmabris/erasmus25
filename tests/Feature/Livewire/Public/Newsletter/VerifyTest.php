@@ -120,6 +120,31 @@ describe('Newsletter Verify Component - Invalid Token', function () {
     });
 });
 
+describe('Newsletter Verify Component - Error Handling', function () {
+    it('handles exception when verification fails', function () {
+        $subscription = NewsletterSubscription::factory()->unverified()->create([
+            'verification_token' => $token = Str::random(32),
+        ]);
+
+        // Use a model event to throw an exception when update() is called
+        // This will cause verify() to fail since it calls update()
+        $listener = NewsletterSubscription::updating(function ($model) use ($token) {
+            if ($model->verification_token === $token && $model->isDirty('verified_at')) {
+                throw new \Exception('Database connection error');
+            }
+        });
+
+        try {
+            Livewire::test(Verify::class, ['token' => $token])
+                ->assertSet('status', 'error')
+                ->assertSee(__('Ha ocurrido un error al verificar tu suscripción. Por favor, intenta nuevamente más tarde.'));
+        } finally {
+            // Clean up the event listener to avoid affecting other tests
+            NewsletterSubscription::flushEventListeners();
+        }
+    });
+});
+
 describe('Newsletter Verify Component - Rendering', function () {
     it('renders the verify page', function () {
         $subscription = NewsletterSubscription::factory()->unverified()->create([
