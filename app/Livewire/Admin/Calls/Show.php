@@ -234,7 +234,9 @@ class Show extends Component
      */
     public function delete(): void
     {
-        // Optimize: Use loaded counts instead of exists() queries
+        // Reload counts to ensure they are current (Livewire may lose them on hydration)
+        $this->call->loadCount(['phases', 'resolutions', 'applications']);
+
         $hasRelations = ($this->call->phases_count > 0)
             || ($this->call->resolutions_count > 0)
             || ($this->call->applications_count > 0);
@@ -297,28 +299,12 @@ class Show extends Component
 
     /**
      * Permanently delete the call.
+     * Note: Relations (phases, resolutions, applications) are already cascade-deleted
+     * when the Call is soft-deleted, so no need to check for them here.
      */
     public function forceDelete(): void
     {
         $this->authorize('forceDelete', $this->call);
-
-        // Check relations one more time using loaded counts (more efficient)
-        $hasRelations = ($this->call->phases_count > 0)
-            || ($this->call->resolutions_count > 0)
-            || ($this->call->applications_count > 0);
-
-        if ($hasRelations) {
-            $this->dispatch('call-force-delete-error', [
-                'message' => __('common.errors.cannot_delete_with_relations'),
-                'details' => __('No se puede eliminar permanentemente esta convocatoria porque tiene :phases fases, :resolutions resoluciones y :applications aplicaciones asociadas.', [
-                    'phases' => $this->call->phases_count,
-                    'resolutions' => $this->call->resolutions_count,
-                    'applications' => $this->call->applications_count,
-                ]),
-            ]);
-
-            return;
-        }
 
         $this->call->forceDelete();
 
