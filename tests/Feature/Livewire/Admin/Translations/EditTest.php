@@ -244,3 +244,142 @@ describe('Admin Translations Edit - Display', function () {
             ->assertSee('name');
     });
 });
+
+describe('Admin Translations Edit - Helper Methods', function () {
+    it('returns correct model type display name for Program', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $language = Language::factory()->create();
+        $program = Program::factory()->create();
+        $translation = Translation::factory()->create([
+            'translatable_type' => Program::class,
+            'translatable_id' => $program->id,
+            'language_id' => $language->id,
+        ]);
+
+        $component = Livewire::test(Edit::class, ['translation' => $translation]);
+        $displayName = $component->instance()->getModelTypeDisplayName(Program::class);
+
+        expect($displayName)->toBe(__('Programa'));
+    });
+
+    it('returns correct model type display name for Setting', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $language = Language::factory()->create();
+        $setting = \App\Models\Setting::factory()->create();
+        $translation = Translation::factory()->create([
+            'translatable_type' => \App\Models\Setting::class,
+            'translatable_id' => $setting->id,
+            'language_id' => $language->id,
+        ]);
+
+        $component = Livewire::test(Edit::class, ['translation' => $translation]);
+        $displayName = $component->instance()->getModelTypeDisplayName(\App\Models\Setting::class);
+
+        expect($displayName)->toBe(__('Configuración'));
+    });
+
+    it('returns class basename for unknown model type', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $language = Language::factory()->create();
+        $program = Program::factory()->create();
+        $translation = Translation::factory()->create([
+            'translatable_type' => Program::class,
+            'translatable_id' => $program->id,
+            'language_id' => $language->id,
+        ]);
+
+        $component = Livewire::test(Edit::class, ['translation' => $translation]);
+        $displayName = $component->instance()->getModelTypeDisplayName(\App\Models\User::class);
+
+        expect($displayName)->toBe('User');
+    });
+
+    it('returns dash for null model type', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $language = Language::factory()->create();
+        $program = Program::factory()->create();
+        $translation = Translation::factory()->create([
+            'translatable_type' => Program::class,
+            'translatable_id' => $program->id,
+            'language_id' => $language->id,
+        ]);
+
+        $component = Livewire::test(Edit::class, ['translation' => $translation]);
+        $displayName = $component->instance()->getModelTypeDisplayName(null);
+
+        expect($displayName)->toBe('-');
+    });
+
+    it('returns correct translatable display name for Program', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $language = Language::factory()->create();
+        $program = Program::factory()->create(['code' => 'KA131', 'name' => 'Test Program']);
+        $translation = Translation::factory()->create([
+            'translatable_type' => Program::class,
+            'translatable_id' => $program->id,
+            'language_id' => $language->id,
+        ]);
+
+        $component = Livewire::test(Edit::class, ['translation' => $translation]);
+        $displayName = $component->instance()->getTranslatableDisplayName();
+
+        expect($displayName)->toBe('KA131 - Test Program');
+    });
+
+    it('returns correct translatable display name for Setting', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $language = Language::factory()->create();
+        $setting = \App\Models\Setting::factory()->create(['key' => 'site_title']);
+        $translation = Translation::factory()->create([
+            'translatable_type' => \App\Models\Setting::class,
+            'translatable_id' => $setting->id,
+            'language_id' => $language->id,
+        ]);
+
+        $component = Livewire::test(Edit::class, ['translation' => $translation]);
+        $displayName = $component->instance()->getTranslatableDisplayName();
+
+        expect($displayName)->toBe('site_title');
+    });
+
+    it('returns deleted message for null translatable', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $language = Language::factory()->create();
+        $program = Program::factory()->create();
+        $translation = Translation::factory()->create([
+            'translatable_type' => Program::class,
+            'translatable_id' => $program->id,
+            'language_id' => $language->id,
+        ]);
+
+        // Delete the program to make translatable null
+        $program->forceDelete();
+        $translation->refresh();
+
+        $component = Livewire::test(Edit::class, ['translation' => $translation]);
+        $displayName = $component->instance()->getTranslatableDisplayName();
+
+        expect($displayName)->toBe(__('Registro eliminado'));
+    });
+});

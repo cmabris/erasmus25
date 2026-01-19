@@ -349,3 +349,188 @@ describe('Admin Calls Phases Create - Validation', function () {
         expect($currentPhases)->toBe(1);
     });
 });
+
+describe('Admin Calls Phases Create - Date Validation', function () {
+    it('validates start_date when both dates are set', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $program = Program::factory()->create();
+        $academicYear = AcademicYear::factory()->create();
+        $call = Call::factory()->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+        ]);
+
+        // Set end_date first, then start_date after end_date to trigger validation
+        Livewire::test(Create::class, ['call' => $call])
+            ->set('end_date', '2024-01-15')
+            ->set('start_date', '2024-01-20') // start_date after end_date
+            ->assertHasErrors(['start_date']);
+    });
+
+    it('does not validate start_date when end_date is not set', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $program = Program::factory()->create();
+        $academicYear = AcademicYear::factory()->create();
+        $call = Call::factory()->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+        ]);
+
+        // Setting only start_date should not trigger date comparison validation
+        Livewire::test(Create::class, ['call' => $call])
+            ->set('start_date', '2024-01-20')
+            ->assertHasNoErrors(['start_date']);
+    });
+});
+
+describe('Admin Calls Phases Create - Date Overlap Detection', function () {
+    it('dispatches warning when dates overlap with existing phases', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $program = Program::factory()->create();
+        $academicYear = AcademicYear::factory()->create();
+        $call = Call::factory()->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+        ]);
+
+        // Create an existing phase with dates
+        CallPhase::factory()->create([
+            'call_id' => $call->id,
+            'name' => 'Fase Existente',
+            'start_date' => '2024-01-01',
+            'end_date' => '2024-01-31',
+        ]);
+
+        // Create a new phase with overlapping dates
+        Livewire::test(Create::class, ['call' => $call])
+            ->set('start_date', '2024-01-15')
+            ->set('end_date', '2024-02-15')
+            ->assertDispatched('phase-date-overlap-warning');
+    });
+
+    it('does not dispatch warning when dates do not overlap', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $program = Program::factory()->create();
+        $academicYear = AcademicYear::factory()->create();
+        $call = Call::factory()->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+        ]);
+
+        // Create an existing phase with dates
+        CallPhase::factory()->create([
+            'call_id' => $call->id,
+            'name' => 'Fase Existente',
+            'start_date' => '2024-01-01',
+            'end_date' => '2024-01-31',
+        ]);
+
+        // Create a new phase with non-overlapping dates
+        Livewire::test(Create::class, ['call' => $call])
+            ->set('start_date', '2024-02-01')
+            ->set('end_date', '2024-02-28')
+            ->assertNotDispatched('phase-date-overlap-warning');
+    });
+
+    it('does not check overlap when start_date is not set', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $program = Program::factory()->create();
+        $academicYear = AcademicYear::factory()->create();
+        $call = Call::factory()->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+        ]);
+
+        // Create an existing phase with dates
+        CallPhase::factory()->create([
+            'call_id' => $call->id,
+            'name' => 'Fase Existente',
+            'start_date' => '2024-01-01',
+            'end_date' => '2024-01-31',
+        ]);
+
+        // Set only end_date - should not dispatch warning
+        Livewire::test(Create::class, ['call' => $call])
+            ->set('end_date', '2024-01-15')
+            ->assertNotDispatched('phase-date-overlap-warning');
+    });
+});
+
+describe('Admin Calls Phases Create - Helper Methods', function () {
+    it('returns current phase name when one exists', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $program = Program::factory()->create();
+        $academicYear = AcademicYear::factory()->create();
+        $call = Call::factory()->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+        ]);
+
+        CallPhase::factory()->create([
+            'call_id' => $call->id,
+            'name' => 'Fase Actual',
+            'is_current' => true,
+        ]);
+
+        $component = Livewire::test(Create::class, ['call' => $call]);
+
+        expect($component->instance()->getCurrentPhaseName())->toBe('Fase Actual');
+    });
+
+    it('returns null when no current phase exists', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $program = Program::factory()->create();
+        $academicYear = AcademicYear::factory()->create();
+        $call = Call::factory()->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+        ]);
+
+        $component = Livewire::test(Create::class, ['call' => $call]);
+
+        expect($component->instance()->getCurrentPhaseName())->toBeNull();
+    });
+
+    it('returns true when call has current phase', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $program = Program::factory()->create();
+        $academicYear = AcademicYear::factory()->create();
+        $call = Call::factory()->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+        ]);
+
+        CallPhase::factory()->create([
+            'call_id' => $call->id,
+            'is_current' => true,
+        ]);
+
+        $component = Livewire::test(Create::class, ['call' => $call]);
+
+        expect($component->instance()->hasCurrentPhase())->toBeTrue();
+    });
+});

@@ -381,3 +381,55 @@ describe('Admin Translations Create - Dynamic Selectors', function () {
             ->assertSee('value');
     });
 });
+
+describe('Admin Translations Create - Mount with Parameters', function () {
+    it('pre-fills model type when passed as parameter', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        Livewire::test(Create::class, ['model' => Program::class])
+            ->assertSet('translatableType', Program::class);
+    });
+
+    it('pre-fills translatable ID when passed as parameter', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $program = Program::factory()->create();
+
+        Livewire::test(Create::class, ['model' => Program::class, 'id' => $program->id])
+            ->assertSet('translatableType', Program::class)
+            ->assertSet('translatableId', $program->id);
+    });
+
+    it('pre-fills language ID when passed as parameter', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $language = Language::factory()->create();
+
+        Livewire::test(Create::class, ['language' => $language->id])
+            ->assertSet('languageId', $language->id);
+    });
+
+    it('pre-fills all parameters when passed together', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $program = Program::factory()->create();
+        $language = Language::factory()->create();
+
+        Livewire::test(Create::class, [
+            'model' => Program::class,
+            'id' => $program->id,
+            'language' => $language->id,
+        ])
+            ->assertSet('translatableType', Program::class)
+            ->assertSet('translatableId', $program->id)
+            ->assertSet('languageId', $language->id);
+    });
+});

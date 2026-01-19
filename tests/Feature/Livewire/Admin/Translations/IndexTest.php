@@ -459,3 +459,31 @@ describe('Admin Translations Index - Pagination', function () {
             ->and($component->get('translations')->count())->toBeLessThanOrEqual(15);
     });
 });
+
+describe('Admin Translations Index - Reset Filters', function () {
+    it('resets all filters to default values', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $language = Language::factory()->create();
+        $program = Program::factory()->create();
+
+        Translation::factory()->create([
+            'translatable_type' => Program::class,
+            'translatable_id' => $program->id,
+            'language_id' => $language->id,
+        ]);
+
+        Livewire::test(Index::class)
+            ->set('search', 'test search')
+            ->set('filterModel', Program::class)
+            ->set('filterLanguageId', $language->id)
+            ->set('filterTranslatableId', $program->id)
+            ->call('resetFilters')
+            ->assertSet('search', '')
+            ->assertSet('filterModel', '')
+            ->assertSet('filterLanguageId', null)
+            ->assertSet('filterTranslatableId', null);
+    });
+});

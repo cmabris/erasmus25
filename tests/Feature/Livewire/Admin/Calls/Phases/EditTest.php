@@ -380,3 +380,75 @@ describe('Admin Calls Phases Edit - Loading Data', function () {
             ->assertSet('order', 5);
     });
 });
+
+describe('Admin Calls Phases Edit - Date Overlap Detection', function () {
+    it('dispatches warning when dates overlap with other phases', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $program = Program::factory()->create();
+        $academicYear = AcademicYear::factory()->create();
+        $call = Call::factory()->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+        ]);
+
+        // Create an existing phase with dates
+        CallPhase::factory()->create([
+            'call_id' => $call->id,
+            'name' => 'Fase Existente',
+            'start_date' => '2024-01-01',
+            'end_date' => '2024-01-31',
+        ]);
+
+        // Create the phase to edit
+        $phaseToEdit = CallPhase::factory()->create([
+            'call_id' => $call->id,
+            'name' => 'Fase a Editar',
+            'start_date' => '2024-03-01',
+            'end_date' => '2024-03-31',
+        ]);
+
+        // Update with overlapping dates
+        Livewire::test(Edit::class, ['call' => $call, 'call_phase' => $phaseToEdit])
+            ->set('start_date', '2024-01-15')
+            ->set('end_date', '2024-02-15')
+            ->assertDispatched('phase-date-overlap-warning');
+    });
+
+    it('does not dispatch warning when dates do not overlap with other phases', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $program = Program::factory()->create();
+        $academicYear = AcademicYear::factory()->create();
+        $call = Call::factory()->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+        ]);
+
+        // Create an existing phase with dates
+        CallPhase::factory()->create([
+            'call_id' => $call->id,
+            'name' => 'Fase Existente',
+            'start_date' => '2024-01-01',
+            'end_date' => '2024-01-31',
+        ]);
+
+        // Create the phase to edit
+        $phaseToEdit = CallPhase::factory()->create([
+            'call_id' => $call->id,
+            'name' => 'Fase a Editar',
+            'start_date' => '2024-03-01',
+            'end_date' => '2024-03-31',
+        ]);
+
+        // Update with non-overlapping dates
+        Livewire::test(Edit::class, ['call' => $call, 'call_phase' => $phaseToEdit])
+            ->set('start_date', '2024-02-01')
+            ->set('end_date', '2024-02-28')
+            ->assertNotDispatched('phase-date-overlap-warning');
+    });
+});

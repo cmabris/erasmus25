@@ -417,3 +417,70 @@ describe('Admin Programs Edit - Slug Generation', function () {
             ->assertSet('slug', 'custom-slug');
     });
 });
+
+describe('Admin Programs Edit - Translations', function () {
+    it('loads existing translations for all active languages', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        // Create active languages
+        $english = \App\Models\Language::factory()->create(['code' => 'en', 'is_active' => true]);
+        $spanish = \App\Models\Language::factory()->create(['code' => 'es', 'is_active' => true]);
+
+        $program = Program::factory()->create(['name' => 'Test Program']);
+
+        // Create translations for the program
+        $program->setTranslation('name', 'en', 'Test Program English');
+        $program->setTranslation('name', 'es', 'Programa de Prueba');
+        $program->setTranslation('description', 'en', 'English Description');
+
+        $component = Livewire::test(Edit::class, ['program' => $program]);
+
+        $translations = $component->get('translations');
+
+        expect($translations)->toHaveKey('en')
+            ->and($translations)->toHaveKey('es')
+            ->and($translations['en']['name'])->toBe('Test Program English')
+            ->and($translations['es']['name'])->toBe('Programa de Prueba')
+            ->and($translations['en']['description'])->toBe('English Description');
+    });
+
+    it('initializes empty translations for languages without translations', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        // Create active language without translations
+        \App\Models\Language::factory()->create(['code' => 'fr', 'is_active' => true]);
+
+        $program = Program::factory()->create(['name' => 'Test Program']);
+
+        $component = Livewire::test(Edit::class, ['program' => $program]);
+
+        $translations = $component->get('translations');
+
+        expect($translations)->toHaveKey('fr')
+            ->and($translations['fr']['name'])->toBe('')
+            ->and($translations['fr']['description'])->toBe('');
+    });
+
+    it('only loads translations for active languages', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        // Create one active and one inactive language
+        \App\Models\Language::factory()->create(['code' => 'en', 'is_active' => true]);
+        \App\Models\Language::factory()->create(['code' => 'de', 'is_active' => false]);
+
+        $program = Program::factory()->create(['name' => 'Test Program']);
+
+        $component = Livewire::test(Edit::class, ['program' => $program]);
+
+        $translations = $component->get('translations');
+
+        expect($translations)->toHaveKey('en')
+            ->and($translations)->not->toHaveKey('de');
+    });
+});
