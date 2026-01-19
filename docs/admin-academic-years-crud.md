@@ -412,7 +412,8 @@ Traducciones equivalentes en inglés.
 
 ### Cobertura de Tests
 
-**Total:** 61 tests pasando (149 aserciones)
+**Total:** 69 tests pasando (162 aserciones)
+**Cobertura de líneas:** 97.59% (243/249)
 
 ### Estructura de Tests
 
@@ -428,16 +429,18 @@ Traducciones equivalentes en inglés.
 - ✅ Soft Delete (2 tests)
 - ✅ Restore (1 test)
 - ✅ Force Delete (2 tests)
+- ✅ Edge Cases (4 tests) - *añadidos en paso 3.8.4*
 
-**Total:** 23 tests
+**Total:** 27 tests (97.17% cobertura)
 
 #### CreateTest (`tests/Feature/Livewire/Admin/AcademicYears/CreateTest.php`)
 
 - ✅ Autorización (3 tests)
 - ✅ Creación Exitosa (3 tests)
 - ✅ Validación (7 tests)
+- ✅ Edge Cases (2 tests) - *añadidos en paso 3.8.4*
 
-**Total:** 13 tests
+**Total:** 15 tests (100% cobertura)
 
 #### EditTest (`tests/Feature/Livewire/Admin/AcademicYears/EditTest.php`)
 
@@ -445,7 +448,7 @@ Traducciones equivalentes en inglés.
 - ✅ Actualización Exitosa (3 tests)
 - ✅ Validación (4 tests)
 
-**Total:** 10 tests
+**Total:** 10 tests (100% cobertura)
 
 #### ShowTest (`tests/Feature/Livewire/Admin/AcademicYears/ShowTest.php`)
 
@@ -455,8 +458,9 @@ Traducciones equivalentes en inglés.
 - ✅ Soft Delete (2 tests)
 - ✅ Restore (1 test)
 - ✅ Force Delete (2 tests)
+- ✅ Computed Properties (2 tests) - *añadidos en paso 3.8.4*
 
-**Total:** 15 tests
+**Total:** 17 tests (95.45% cobertura)
 
 ### Tests de Modelo
 
@@ -790,5 +794,5 @@ Los componentes disparan eventos para notificaciones:
 
 ---
 
-**Última actualización:** 28 de diciembre de 2025
+**Última actualización:** 19 de enero de 2026
 

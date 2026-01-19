@@ -461,7 +461,7 @@ Se utiliza caché para datos frecuentemente accedidos:
 
 ### Cobertura de Tests
 
-**Total**: 85 tests pasando (185 assertions)
+**Total**: 143 tests pasando (~98.7% cobertura de líneas)
 
 #### 1. ActivityPolicy Tests (10 tests)
 - `tests/Feature/Policies/ActivityPolicyTest.php`
@@ -472,24 +472,50 @@ Se utiliza caché para datos frecuentemente accedidos:
   - Viewer: sin acceso
   - Usuario sin rol: sin acceso
 
-#### 2. Index Component Tests (20 tests)
+#### 2. Index Component Tests (39 tests)
 - `tests/Feature/Livewire/Admin/AuditLogs/IndexTest.php`
-- Cobertura:
+- Cobertura: 98.88% (176/178 líneas)
   - Autorización (5 tests)
   - Listado (4 tests)
   - Filtros (6 tests)
   - Ordenación (2 tests)
   - Exportación (3 tests)
+  - **Edge Cases (19 tests) - *añadidos en paso 3.8.4***:
+    - `sortBy` - ordenar y toggle dirección
+    - `resetFilters` - resetear todos los filtros
+    - `getModelDisplayName` - todos los modelos mapeados, null, unknown
+    - `getDescriptionDisplayName` - todos los tipos
+    - `getDescriptionBadgeVariant` - success, info, danger, neutral
+    - `getSubjectUrl` - null params, unknown model, URL válida
+    - `getSubjectTitle` - null, title, name, fallback
+    - `formatChangesSummary` - null, sin cambios, con cambios, más de 3 cambios
 
-#### 3. Show Component Tests (27 tests)
+#### 3. Show Component Tests (66 tests)
 - `tests/Feature/Livewire/Admin/AuditLogs/ShowTest.php`
-- Cobertura:
+- Cobertura: 98.52% (133/135 líneas)
   - Autorización (5 tests)
   - Visualización (8 tests)
   - Cambios (5 tests)
   - Propiedades personalizadas (3 tests)
   - IP y User Agent (2 tests)
   - Métodos helper (4 tests)
+  - **Edge Cases (39 tests) - *añadidos en paso 3.8.4***:
+    - `getModelDisplayName` - todos los modelos mapeados, null, unknown
+    - `getDescriptionDisplayName` - todas las descripciones
+    - `getDescriptionBadgeVariant` - todos los variantes
+    - `getSubjectUrl` - null, unknown, mapped models
+    - `getSubjectTitle` - null, title, name, fallback
+    - `formatValueForDisplay` - null, boolean, array, string largo/corto
+    - `formatJsonForDisplay` - array, JSON válido/inválido
+    - `parseUserAgent` - null, Chrome, Firefox, Mobile, Linux, Android
+    - `hasChanges` - con y sin cambios
+    - `getCustomProperties` - null, exclusión de props sistema
+    - `getChangesFromProperties` - Collection input, exclusión unchanged
+    - `getIpAddress/getUserAgent` - Collection input, alternative keys
+
+**Nota:** Las líneas no cubiertas (~2%) son bloques try-catch defensivos en `getSubjectUrl()` que manejan excepciones inesperadas al generar rutas.
+
+**Actualizado:** Enero 2026 (paso 3.8.4)
 
 #### 4. Automatic Logging Tests (15 tests)
 - `tests/Feature/ActivityLog/AutomaticLoggingTest.php`

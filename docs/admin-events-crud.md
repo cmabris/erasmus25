@@ -553,14 +553,43 @@ Todas las traducciones están en:
 
 ### Cobertura de Tests
 
+**Cobertura de líneas:** 95.77% (543/567 líneas)
+
 **Archivos de Test:**
-- `tests/Feature/Livewire/Admin/Events/IndexTest.php` - 41 tests
-- `tests/Feature/Livewire/Admin/Events/CreateTest.php` - 37 tests
-- `tests/Feature/Livewire/Admin/Events/EditTest.php` - 27 tests
-- `tests/Feature/Livewire/Admin/Events/ShowTest.php` - 20 tests
+- `tests/Feature/Livewire/Admin/Events/IndexTest.php` - 54 tests (97.65% cobertura)
+- `tests/Feature/Livewire/Admin/Events/CreateTest.php` - 44 tests (93.65% cobertura)
+- `tests/Feature/Livewire/Admin/Events/EditTest.php` - 33 tests (93.79% cobertura)
+- `tests/Feature/Livewire/Admin/Events/ShowTest.php` - 21 tests (98.51% cobertura)
 - `tests/Feature/Livewire/Admin/Events/IntegrationTest.php` - 10 tests
 
-**Total:** 135 tests, 332 assertions
+**Total:** 162 tests
+
+**Tests añadidos en paso 3.8.4 (27 nuevos):**
+
+*Create.php (7 tests):*
+- `updatedStartDate` sets time to 00:00 when is_all_day is true
+- `updatedEndDate` sets time to 00:00 when is_all_day is true
+- `updatedEndDate` shows/clears error when end is before/after start
+- `validateUploadedFile` returns true/false for valid/invalid images
+
+*Edit.php (6 tests):*
+- `updatedStartDate`/`updatedEndDate` con is_all_day
+- `updatedStartDate` auto-adjusts end date when before start
+- `validateUploadedFile` tests
+
+*Index.php (13 tests):*
+- `calendarEvents` returns events for week/day view
+- `calendarEvents` filters by call/eventType
+- `confirmDelete/Restore/ForceDelete` sets ID and shows modal
+- `goToDate` sets currentDate
+- `delete/restore/forceDelete` early returns when ID is null
+
+*Show.php (1 test):*
+- `getEventTypeConfig` returns correct config for all event types
+
+**Nota:** Las líneas no cubiertas corresponden a casos edge muy específicos en manejo de fechas all-day y `validateUploadedFile` de FilePond.
+
+**Actualizado:** Enero 2026 (paso 3.8.4)
 
 ### Áreas Cubiertas
 

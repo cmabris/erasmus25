@@ -18,7 +18,7 @@ El CRUD de Usuarios y Roles permite a los administradores gestionar completament
 - ✅ **Autorización**: Control de acceso mediante `UserPolicy`
 - ✅ **Responsive**: Diseño adaptativo usando Flux UI y Tailwind CSS v4
 - ✅ **Componentes Reutilizables**: 4 componentes UI nuevos para usuarios y audit logs
-- ✅ **Tests Completos**: 172 tests pasando (397 assertions)
+- ✅ **Tests Completos**: 193+ tests pasando (~98.98% cobertura de líneas)
 
 ---
 
@@ -498,14 +498,15 @@ AuditLog::query()
 - `IndexTest.php`: 32 tests (74 assertions)
 - `CreateTest.php`: 28 tests (68 assertions)
 - `EditTest.php`: 32 tests (74 assertions)
-- `ShowTest.php`: 37 tests (75 assertions)
+- `ShowTest.php`: 58 tests (98.98% cobertura - 194/196 líneas)
+- `ImportTest.php`: 100% cobertura (113/113 líneas)
 
 **FormRequests:**
 - `StoreUserRequestTest.php`: 20 tests
 - `UpdateUserRequestTest.php`: 13 tests
 - `AssignRoleRequestTest.php`: 10 tests
 
-**Total: 172 tests pasando (397 assertions)**
+**Total: 193+ tests pasando**
 
 ### Cobertura
 
@@ -519,6 +520,29 @@ AuditLog::query()
 - ✅ Validación de campos
 - ✅ Restricciones de seguridad
 - ✅ Audit logs y estadísticas
+- ✅ Importación de usuarios (100% cobertura) - *añadido en paso 3.8.4*
+
+### Tests añadidos en paso 3.8.4
+
+**Import.php (15+ tests nuevos):**
+- `validateUploadedFile()` - archivo válido/inválido, mime types, tamaño
+- `import()` - bloque catch, dry run mode, modo normal, envío de emails
+
+**Show.php (21 tests nuevos):**
+- `getActionDisplayName` - todos los tipos (create, update, delete, publish, etc.)
+- `getActionBadgeVariant` - todos los variantes
+- `getModelDisplayName` - todos los modelos mapeados, null, unknown
+- `getModelUrl` - null params, unknown model
+- `getModelTitle` - title, name, fallback, null
+- `formatChanges` - null, sin cambios, array values, null values
+- `canDelete/canAssignRoles` - returns false for self
+- `openAssignRolesModal/assignRoles` - does nothing when cannot assign
+- `canEdit` - returns false when lacks permission on another user
+- `getRoleDisplayName/Description/BadgeVariant` - unknown role cases
+
+**Nota:** Las 2 líneas no cubiertas son el bloque try-catch defensivo en `getModelUrl()`.
+
+**Actualizado:** Enero 2026 (paso 3.8.4)
 
 ---
 

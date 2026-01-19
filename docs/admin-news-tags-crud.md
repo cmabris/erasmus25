@@ -17,7 +17,7 @@ El CRUD de Etiquetas de Noticias permite a los administradores gestionar complet
 - ✅ **Ordenación**: Ordenación por nombre o slug en dirección ascendente/descendente
 - ✅ **Autorización**: Control de acceso mediante `NewsTagPolicy` (usa permisos del módulo `news.*`)
 - ✅ **Responsive**: Diseño adaptativo usando Flux UI y Tailwind CSS v4
-- ✅ **Tests Completos**: 59 tests pasando (129 assertions)
+- ✅ **Tests Completos**: 103 tests pasando con 100% de cobertura de líneas
 
 ---
 
@@ -459,14 +459,16 @@ Se añadió un nuevo elemento de navegación en el grupo "Contenido":
 - ✅ Tests de listado (paginación, búsqueda, ordenación, filtros)
 - ✅ Tests de acciones (eliminar, restaurar, force delete)
 - ✅ Tests de helpers (`canCreate`, `canDeleteNewsTag`, `resetFilters`)
-- **Total:** 30 tests (78 assertions)
+- ✅ Tests de edge cases (early returns cuando IDs son null) - *añadidos en paso 3.8.4*
+- **Total:** 36 tests (100% cobertura)
 
 #### CreateTest.php
 - ✅ Tests de autorización
 - ✅ Tests de creación exitosa
 - ✅ Tests de validación (campos requeridos, longitud máxima, unicidad)
 - ✅ Tests de generación automática de slug
-- **Total:** 12 tests (25 assertions)
+- ✅ Tests de validación de slug en tiempo real - *añadidos en paso 3.8.4*
+- **Total:** 14 tests (100% cobertura)
 
 #### EditTest.php
 - ✅ Tests de autorización
@@ -475,9 +477,21 @@ Se añadió un nuevo elemento de navegación en el grupo "Contenido":
 - ✅ Tests de validación (campos requeridos, longitud máxima, unicidad ignorando registro actual)
 - ✅ Tests de generación automática de slug
 - ✅ Tests de eventos (`news-tag-updated`)
-- **Total:** 17 tests (26 assertions)
+- ✅ Tests de preservación de slug personalizado - *añadidos en paso 3.8.4*
+- **Total:** 20 tests (100% cobertura)
 
-**Total General:** 59 tests (129 assertions)
+#### ShowTest.php
+- ✅ Tests de autorización
+- ✅ Tests de visualización
+- ✅ Tests de estadísticas
+- ✅ Tests de eliminación (soft delete, restore, force delete)
+- ✅ Tests de validación de relaciones
+- ✅ Tests de computed properties
+- **Total:** 33 tests (100% cobertura) - *componente añadido en paso 3.8.4*
+
+**Total General:** 103 tests (100% cobertura de líneas - 179/179)
+
+**Actualizado:** Enero 2026 (paso 3.8.4)
 
 ---
 

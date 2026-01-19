@@ -537,16 +537,37 @@ Cada vista incluye breadcrumbs para navegación:
 - Validación (6 tests)
 - Campos dinámicos (6 tests)
 
-#### EditTest.php (10 tests)
+#### EditTest.php (30+ tests - 100% cobertura)
 - Autorización (3 tests)
 - Actualización exitosa (3 tests)
 - Validación (3 tests)
 - Conversión de formato legacy (1 test)
+- **Edge Cases añadidos en paso 3.8.4 (~20 tests):**
+  - Actualización de campos específicos (baremo, destinos, fechas)
+  - Validación de relaciones
+  - Manejo de errores
+  - Actualización de estados (borrador, abierta, cerrada, archivada)
+  - Publicación de convocatoria
 
-#### ShowTest.php (12 tests)
+#### ShowTest.php (30 tests - 100% cobertura)
 - Autorización (2 tests)
 - Visualización (4 tests)
 - Acciones (6 tests)
+- **Edge Cases añadidos en paso 3.8.4 (17 tests):**
+  - `unmarkPhaseAsCurrent` - desmarcar fase actual
+  - `unpublishResolution` - despublicar resolución
+  - `changeStatus` - casos de closed_at y published_at
+  - `delete` con relaciones - verificar que no elimina con fases/resoluciones
+  - `forceDelete` - eliminación permanente
+  - `getStatusColor` - colores para cada estado
+  - `getValidStatusTransitions` - transiciones para borrador, abierta, archivada
+  - `getStatusDescription` - descripciones para cada estado
+  - `canDelete` - permisos y relaciones
+  - `hasRelationships` - verificar fases, resoluciones
+
+#### ImportTest.php (100% cobertura - añadido en paso 3.8.4)
+- `validateUploadedFile()` - archivo válido/inválido, mime types, tamaño
+- `import()` - bloque catch, dry run mode, modo normal, errores en archivo
 
 ### Tests de FormRequests
 
@@ -562,9 +583,11 @@ Cada vista incluye breadcrumbs para navegación:
 
 ### Cobertura Total
 
-- **74 tests** pasando
-- **163 assertions** exitosas
+- **120+ tests** pasando
+- **100% cobertura** en Edit.php, Show.php e Import.php
 - Todos los tests ejecutándose correctamente en paralelo
+
+**Actualizado:** Enero 2026 (paso 3.8.4)
 
 ---
 
