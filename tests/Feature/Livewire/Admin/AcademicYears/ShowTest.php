@@ -94,10 +94,10 @@ describe('Admin AcademicYears Show - Display', function () {
         ]);
 
         $category = \App\Models\DocumentCategory::firstOrCreate(
-            ['slug' => 'test-category-' . uniqid()],
+            ['slug' => 'test-category-'.uniqid()],
             [
-                'name' => 'Test Category ' . uniqid(),
-                'slug' => 'test-category-' . uniqid(),
+                'name' => 'Test Category '.uniqid(),
+                'slug' => 'test-category-'.uniqid(),
                 'order' => 1,
             ]
         );
@@ -290,5 +290,35 @@ describe('Admin AcademicYears Show - Force Delete', function () {
             ->assertDispatched('academic-year-force-delete-error');
 
         expect(AcademicYear::withTrashed()->find($academicYear->id))->not->toBeNull();
+    });
+});
+
+describe('Admin AcademicYears Show - Computed Properties', function () {
+    it('academicYearId computed property returns the correct ID', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $academicYear = AcademicYear::factory()->create();
+
+        $component = Livewire::test(Show::class, ['academic_year' => $academicYear]);
+
+        // Call the method directly on the instance
+        $academicYearId = $component->instance()->academicYearId();
+        expect($academicYearId)->toBe($academicYear->id);
+    });
+
+    it('editUrl computed property returns the correct route', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $academicYear = AcademicYear::factory()->create();
+
+        $component = Livewire::test(Show::class, ['academic_year' => $academicYear]);
+
+        // Call the method directly on the instance
+        $editUrl = $component->instance()->editUrl();
+        expect($editUrl)->toBe(route('admin.academic-years.edit', $academicYear->id));
     });
 });

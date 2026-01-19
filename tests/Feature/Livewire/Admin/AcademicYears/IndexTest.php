@@ -101,10 +101,10 @@ describe('Admin AcademicYears Index - Listing', function () {
         ]);
 
         $category = \App\Models\DocumentCategory::firstOrCreate(
-            ['slug' => 'test-category-' . uniqid()],
+            ['slug' => 'test-category-'.uniqid()],
             [
-                'name' => 'Test Category ' . uniqid(),
-                'slug' => 'test-category-' . uniqid(),
+                'name' => 'Test Category '.uniqid(),
+                'slug' => 'test-category-'.uniqid(),
                 'order' => 1,
             ]
         );
@@ -435,5 +435,58 @@ describe('Admin AcademicYears Index - Force Delete', function () {
             ->assertDispatched('academic-year-force-delete-error');
 
         expect(AcademicYear::withTrashed()->find($academicYear->id))->not->toBeNull();
+    });
+});
+
+describe('Admin AcademicYears Index - Edge Cases', function () {
+    it('delete does nothing when academicYearToDelete is null', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $component = Livewire::test(Index::class)
+            ->set('academicYearToDelete', null)
+            ->call('delete');
+
+        $component->assertNotDispatched('academic-year-deleted')
+            ->assertNotDispatched('academic-year-delete-error');
+    });
+
+    it('restore does nothing when academicYearToRestore is null', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $component = Livewire::test(Index::class)
+            ->set('academicYearToRestore', null)
+            ->call('restore');
+
+        $component->assertNotDispatched('academic-year-restored');
+    });
+
+    it('forceDelete does nothing when academicYearToForceDelete is null', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $component = Livewire::test(Index::class)
+            ->set('academicYearToForceDelete', null)
+            ->call('forceDelete');
+
+        $component->assertNotDispatched('academic-year-force-deleted')
+            ->assertNotDispatched('academic-year-force-delete-error');
+    });
+
+    it('resetFilters resets all filter values', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        Livewire::test(Index::class)
+            ->set('search', 'test search')
+            ->set('showDeleted', '1')
+            ->call('resetFilters')
+            ->assertSet('search', '')
+            ->assertSet('showDeleted', '0');
     });
 });

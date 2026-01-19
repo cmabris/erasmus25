@@ -184,3 +184,26 @@ describe('Admin AcademicYears Create - Validation', function () {
             ->assertHasErrors(['year']);
     });
 });
+
+describe('Admin AcademicYears Create - Edge Cases', function () {
+    it('updatedStartDate validates when both dates are set and start is after end', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        Livewire::test(Create::class)
+            ->set('end_date', '2024-08-31')
+            ->set('start_date', '2024-09-01')  // After end_date
+            ->assertHasErrors(['start_date']);
+    });
+
+    it('updatedStartDate does not validate when only start_date is set', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        Livewire::test(Create::class)
+            ->set('start_date', '2024-09-01')
+            ->assertHasNoErrors(['start_date']);
+    });
+});
