@@ -717,4 +717,149 @@ describe('UsersImport - Password Generation', function () {
         $password = $import->getUsersWithPasswords()->first()['password'];
         expect(strlen($password))->toBeGreaterThanOrEqual(12);
     });
+
+    it('does not add user to usersWithPasswords when password is provided via english header', function () {
+        $data = [
+            [
+                'name',
+                'email',
+                'password',
+                'roles',
+            ],
+            [
+                'Test User',
+                'test@example.com',
+                'ProvidedPassword123!', // Password proporcionado
+                '',
+            ],
+        ];
+
+        $file = createExcelFile($data);
+
+        $import = new UsersImport(false, false);
+        Excel::import($import, $file);
+
+        // When password is provided via english 'password' header, should NOT be in usersWithPasswords
+        $passwords = $import->getUsersWithPasswords();
+        expect($passwords->count())->toBe(0);
+    });
+});
+
+describe('UsersImport - Getter Methods', function () {
+    it('returns processed users collection', function () {
+        $data = [
+            [
+                'Nombre',
+                'Email',
+                'Contraseña',
+                'Roles',
+            ],
+            [
+                'Test User',
+                'test@example.com',
+                'Password123!',
+                'admin',
+            ],
+        ];
+
+        $file = createExcelFile($data);
+
+        $import = new UsersImport(false, false);
+        Excel::import($import, $file);
+
+        $processedUsers = $import->getProcessedUsers();
+
+        expect($processedUsers)->toBeInstanceOf(\Illuminate\Support\Collection::class)
+            ->and($processedUsers)->toHaveCount(1)
+            ->and($processedUsers->first()['status'])->toBe('created')
+            ->and($processedUsers->first()['row'])->toBe(2)
+            ->and($processedUsers->first())->toHaveKey('user');
+    });
+
+    it('returns processed users for dry run mode', function () {
+        $data = [
+            [
+                'Nombre',
+                'Email',
+                'Contraseña',
+                'Roles',
+            ],
+            [
+                'Test User',
+                'test@example.com',
+                'Password123!',
+                '',
+            ],
+        ];
+
+        $file = createExcelFile($data);
+
+        $import = new UsersImport(true, false); // dry-run = true
+        Excel::import($import, $file);
+
+        $processedUsers = $import->getProcessedUsers();
+
+        expect($processedUsers)->toHaveCount(1)
+            ->and($processedUsers->first()['status'])->toBe('valid')
+            ->and($processedUsers->first()['row'])->toBe(2)
+            ->and($processedUsers->first())->toHaveKey('data');
+    });
+});
+
+describe('UsersImport - English Headers', function () {
+    it('supports English column headers', function () {
+        $data = [
+            [
+                'name',
+                'email',
+                'password',
+                'roles',
+            ],
+            [
+                'English User',
+                'english@example.com',
+                'Password123!',
+                'admin',
+            ],
+        ];
+
+        $file = createExcelFile($data);
+
+        $import = new UsersImport(false, false);
+        Excel::import($import, $file);
+
+        expect($import->getImportedCount())->toBe(1);
+
+        $user = User::first();
+        expect($user->name)->toBe('English User')
+            ->and($user->email)->toBe('english@example.com')
+            ->and($user->hasRole(Roles::ADMIN))->toBeTrue();
+    });
+});
+
+describe('UsersImport - Name Handling', function () {
+    it('trims name whitespace', function () {
+        $data = [
+            [
+                'Nombre',
+                'Email',
+                'Contraseña',
+                'Roles',
+            ],
+            [
+                '  Test User with spaces  ',
+                'test@example.com',
+                'Password123!',
+                '',
+            ],
+        ];
+
+        $file = createExcelFile($data);
+
+        $import = new UsersImport(false, false);
+        Excel::import($import, $file);
+
+        $user = User::first();
+        expect($user->name)->toBe('Test User with spaces');
+    });
 });
