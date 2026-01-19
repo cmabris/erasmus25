@@ -624,3 +624,182 @@ describe('Admin Users Show - Audit Logs Display', function () {
         expect($activities->first()->id)->toBe($newActivity->id);
     });
 });
+
+describe('Admin Users Show - Complete Helper Coverage', function () {
+    beforeEach(function () {
+        $this->user = User::factory()->create();
+        $this->user->assignRole(Roles::SUPER_ADMIN);
+        $this->actingAs($this->user);
+
+        $this->testUser = User::factory()->create();
+    });
+
+    it('returns all action display names', function () {
+        $component = Livewire::test(Show::class, ['user' => $this->testUser]);
+        $instance = $component->instance();
+
+        expect($instance->getActionDisplayName('create'))->toBe(__('Crear'))
+            ->and($instance->getActionDisplayName('update'))->toBe(__('Actualizar'))
+            ->and($instance->getActionDisplayName('delete'))->toBe(__('Eliminar'))
+            ->and($instance->getActionDisplayName('publish'))->toBe(__('Publicar'))
+            ->and($instance->getActionDisplayName('archive'))->toBe(__('Archivar'))
+            ->and($instance->getActionDisplayName('restore'))->toBe(__('Restaurar'))
+            ->and($instance->getActionDisplayName('unknown_action'))->toBe('Unknown_action');
+    });
+
+    it('returns all action badge variants', function () {
+        $component = Livewire::test(Show::class, ['user' => $this->testUser]);
+        $instance = $component->instance();
+
+        expect($instance->getActionBadgeVariant('create'))->toBe('success')
+            ->and($instance->getActionBadgeVariant('update'))->toBe('info')
+            ->and($instance->getActionBadgeVariant('delete'))->toBe('danger')
+            ->and($instance->getActionBadgeVariant('publish'))->toBe('success')
+            ->and($instance->getActionBadgeVariant('archive'))->toBe('warning')
+            ->and($instance->getActionBadgeVariant('restore'))->toBe('info')
+            ->and($instance->getActionBadgeVariant('unknown_action'))->toBe('neutral');
+    });
+
+    it('returns all model display names', function () {
+        $component = Livewire::test(Show::class, ['user' => $this->testUser]);
+        $instance = $component->instance();
+
+        expect($instance->getModelDisplayName('App\Models\Program'))->toBe(__('Programa'))
+            ->and($instance->getModelDisplayName('App\Models\Call'))->toBe(__('Convocatoria'))
+            ->and($instance->getModelDisplayName('App\Models\NewsPost'))->toBe(__('Noticia'))
+            ->and($instance->getModelDisplayName('App\Models\Document'))->toBe(__('Documento'))
+            ->and($instance->getModelDisplayName('App\Models\ErasmusEvent'))->toBe(__('Evento'))
+            ->and($instance->getModelDisplayName('App\Models\AcademicYear'))->toBe(__('Año Académico'))
+            ->and($instance->getModelDisplayName('App\Models\DocumentCategory'))->toBe(__('Categoría de Documento'))
+            ->and($instance->getModelDisplayName('App\Models\NewsTag'))->toBe(__('Etiqueta de Noticia'))
+            ->and($instance->getModelDisplayName(null))->toBe('-')
+            ->and($instance->getModelDisplayName('App\Models\UnknownModel'))->toBe('UnknownModel');
+    });
+
+    it('returns null for getModelUrl with null params', function () {
+        $component = Livewire::test(Show::class, ['user' => $this->testUser]);
+        $instance = $component->instance();
+
+        expect($instance->getModelUrl(null, 1))->toBeNull()
+            ->and($instance->getModelUrl('App\Models\Program', null))->toBeNull()
+            ->and($instance->getModelUrl(null, null))->toBeNull();
+    });
+
+    it('returns null for getModelUrl with unknown model type', function () {
+        $component = Livewire::test(Show::class, ['user' => $this->testUser]);
+        expect($component->instance()->getModelUrl('App\Models\UnknownModel', 1))->toBeNull();
+    });
+
+    it('returns model title with title property', function () {
+        $component = Livewire::test(Show::class, ['user' => $this->testUser]);
+        $modelWithTitle = (object) ['title' => 'My Title', 'id' => 1];
+        expect($component->instance()->getModelTitle($modelWithTitle))->toBe('My Title');
+    });
+
+    it('returns model title with name property when no title', function () {
+        $component = Livewire::test(Show::class, ['user' => $this->testUser]);
+        $modelWithName = (object) ['name' => 'My Name', 'id' => 1];
+        expect($component->instance()->getModelTitle($modelWithName))->toBe('My Name');
+    });
+
+    it('returns fallback model title when no title or name', function () {
+        $component = Livewire::test(Show::class, ['user' => $this->testUser]);
+        $modelWithOnlyId = (object) ['id' => 42];
+        expect($component->instance()->getModelTitle($modelWithOnlyId))->toBe(__('Registro #:id', ['id' => 42]));
+    });
+
+    it('returns dash for null model in getModelTitle', function () {
+        $component = Livewire::test(Show::class, ['user' => $this->testUser]);
+        expect($component->instance()->getModelTitle(null))->toBe('-');
+    });
+
+    it('returns dash for null changes in formatChanges', function () {
+        $component = Livewire::test(Show::class, ['user' => $this->testUser]);
+        expect($component->instance()->formatChanges(null))->toBe('-');
+    });
+
+    it('returns sin cambios when no actual changes in formatChanges', function () {
+        $component = Livewire::test(Show::class, ['user' => $this->testUser]);
+        $changes = [
+            'before' => ['name' => 'Same'],
+            'after' => ['name' => 'Same'],
+        ];
+        expect($component->instance()->formatChanges($changes))->toBe(__('Sin cambios'));
+    });
+
+    it('formats array values in changes', function () {
+        $component = Livewire::test(Show::class, ['user' => $this->testUser]);
+        $changes = [
+            'before' => ['tags' => ['tag1', 'tag2']],
+            'after' => ['tags' => ['tag1', 'tag3']],
+        ];
+        $result = $component->instance()->formatChanges($changes);
+        expect($result)->toContain('tags');
+    });
+
+    it('formats null values in changes', function () {
+        $component = Livewire::test(Show::class, ['user' => $this->testUser]);
+        $changes = [
+            'before' => ['description' => null],
+            'after' => ['description' => 'New description'],
+        ];
+        $result = $component->instance()->formatChanges($changes);
+        expect($result)->toContain('null')
+            ->and($result)->toContain('New description');
+    });
+
+    it('canDelete returns false for self', function () {
+        $component = Livewire::test(Show::class, ['user' => $this->user]);
+        expect($component->instance()->canDelete())->toBeFalse();
+    });
+
+    it('canAssignRoles returns false for self', function () {
+        $component = Livewire::test(Show::class, ['user' => $this->user]);
+        expect($component->instance()->canAssignRoles())->toBeFalse();
+    });
+
+    it('openAssignRolesModal does nothing when cannot assign roles', function () {
+        // User viewing themselves
+        $component = Livewire::test(Show::class, ['user' => $this->user]);
+        $component->call('openAssignRolesModal');
+        expect($component->get('showAssignRolesModal'))->toBeFalse();
+    });
+
+    it('assignRoles does nothing when cannot assign roles', function () {
+        // User trying to assign roles to themselves
+        $component = Livewire::test(Show::class, ['user' => $this->user]);
+        $component->set('selectedRoles', [Roles::ADMIN]);
+        $component->call('assignRoles');
+        // Should not dispatch any event since it returns early
+        $component->assertNotDispatched('user-roles-updated');
+    });
+
+    it('canEdit returns false when user lacks permission on another user', function () {
+        $viewer = User::factory()->create();
+        $viewer->assignRole(Roles::VIEWER);
+        $viewer->givePermissionTo(Permissions::USERS_VIEW);
+        $this->actingAs($viewer);
+
+        // Create another user to test editing permissions
+        $otherUser = User::factory()->create();
+
+        // Viewer can view but not edit other users
+        $component = Livewire::test(Show::class, ['user' => $otherUser]);
+        expect($component->instance()->canEdit())->toBeFalse();
+    });
+
+    it('getRoleDisplayName returns role name for unknown role', function () {
+        $component = Livewire::test(Show::class, ['user' => $this->testUser]);
+        expect($component->instance()->getRoleDisplayName('unknown-role'))->toBe('unknown-role');
+    });
+
+    it('getRoleDescription returns empty string for unknown role', function () {
+        $component = Livewire::test(Show::class, ['user' => $this->testUser]);
+        expect($component->instance()->getRoleDescription('unknown-role'))->toBe('');
+    });
+
+    it('getRoleBadgeVariant returns neutral for unknown role', function () {
+        $component = Livewire::test(Show::class, ['user' => $this->testUser]);
+        expect($component->instance()->getRoleBadgeVariant('unknown-role'))->toBe('neutral');
+    });
+});
