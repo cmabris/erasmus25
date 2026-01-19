@@ -452,3 +452,57 @@ describe('Admin NewsTags Index - Helpers', function () {
         expect($component->instance()->canDeleteNewsTag($tagWithRelationsLoaded))->toBeFalse();
     });
 });
+
+describe('Admin NewsTags Index - Edge Cases', function () {
+    beforeEach(function () {
+        $this->user = User::factory()->create();
+        $this->user->assignRole(Roles::ADMIN);
+        $this->actingAs($this->user);
+    });
+
+    it('delete does nothing when newsTagToDelete is null', function () {
+        $component = Livewire::test(Index::class)
+            ->set('newsTagToDelete', null)
+            ->call('delete');
+
+        // Should not dispatch any event since it returns early
+        $component->assertNotDispatched('news-tag-deleted')
+            ->assertNotDispatched('news-tag-delete-error');
+    });
+
+    it('restore does nothing when newsTagToRestore is null', function () {
+        $component = Livewire::test(Index::class)
+            ->set('newsTagToRestore', null)
+            ->call('restore');
+
+        // Should not dispatch any event since it returns early
+        $component->assertNotDispatched('news-tag-restored');
+    });
+
+    it('forceDelete does nothing when newsTagToForceDelete is null', function () {
+        $component = Livewire::test(Index::class)
+            ->set('newsTagToForceDelete', null)
+            ->call('forceDelete');
+
+        // Should not dispatch any event since it returns early
+        $component->assertNotDispatched('news-tag-force-deleted')
+            ->assertNotDispatched('news-tag-force-delete-error');
+    });
+
+    it('canDeleteNewsTag returns false when user has no delete permission', function () {
+        $viewer = User::factory()->create();
+        $viewer->assignRole(Roles::VIEWER);
+        $this->actingAs($viewer);
+
+        $tag = NewsTag::factory()->create();
+        $tag->loadCount(['newsPosts']);
+
+        $component = Livewire::test(Index::class);
+        expect($component->instance()->canDeleteNewsTag($tag))->toBeFalse();
+    });
+
+    it('canViewDeleted returns true for users with viewAny permission', function () {
+        $component = Livewire::test(Index::class);
+        expect($component->instance()->canViewDeleted())->toBeTrue();
+    });
+});

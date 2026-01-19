@@ -227,4 +227,35 @@ describe('Admin NewsTags Create - Slug Generation', function () {
 
         expect($component->get('slug'))->toBe('second-name');
     });
+
+    it('validates slug uniqueness in real-time when slug changes', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        NewsTag::factory()->create(['slug' => 'existing-slug']);
+
+        Livewire::test(Create::class)
+            ->set('slug', 'existing-slug')
+            ->assertHasErrors(['slug']);
+    });
+});
+
+describe('Admin NewsTags Create - Edge Cases', function () {
+    it('store generates slug from name when slug is empty', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        // Directamente setear nombre sin slug (simular el caso donde el slug es vacío en validated)
+        Livewire::test(Create::class)
+            ->set('name', 'Tag Without Slug')
+            ->set('slug', '')  // Explicitly set slug to empty
+            ->call('store')
+            ->assertRedirect(route('admin.news-tags.index'));
+
+        $tag = NewsTag::where('name', 'Tag Without Slug')->first();
+        expect($tag)->not->toBeNull()
+            ->and($tag->slug)->toBe('tag-without-slug');
+    });
 });

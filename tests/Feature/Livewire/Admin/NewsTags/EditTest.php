@@ -334,4 +334,60 @@ describe('Admin NewsTags Edit - Slug Generation', function () {
 
         expect($component->get('slug'))->toBe('new-name');
     });
+
+    it('validates slug uniqueness in real-time when slug changes', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $existingTag = NewsTag::factory()->create(['slug' => 'existing-slug']);
+        $tag = NewsTag::factory()->create(['slug' => 'original-slug']);
+
+        Livewire::test(Edit::class, ['news_tag' => $tag])
+            ->set('slug', 'existing-slug')
+            ->assertHasErrors(['slug']);
+    });
+});
+
+describe('Admin NewsTags Edit - Edge Cases', function () {
+    it('update generates slug from name when slug is empty', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $tag = NewsTag::factory()->create([
+            'name' => 'Original Name',
+            'slug' => 'original-name',
+        ]);
+
+        // Clear the slug and update - should generate from name
+        Livewire::test(Edit::class, ['news_tag' => $tag])
+            ->set('name', 'New Name')
+            ->set('slug', '')  // Explicitly set slug to empty
+            ->call('update')
+            ->assertRedirect(route('admin.news-tags.index'));
+
+        $tag->refresh();
+        expect($tag->name)->toBe('New Name')
+            ->and($tag->slug)->toBe('new-name');
+    });
+
+    it('update preserves custom slug when provided', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $tag = NewsTag::factory()->create([
+            'name' => 'Original Name',
+            'slug' => 'original-name',
+        ]);
+
+        Livewire::test(Edit::class, ['news_tag' => $tag])
+            ->set('name', 'New Name')
+            ->set('slug', 'my-custom-slug')
+            ->call('update');
+
+        $tag->refresh();
+        expect($tag->slug)->toBe('my-custom-slug');
+    });
 });
