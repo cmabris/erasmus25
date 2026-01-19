@@ -481,3 +481,25 @@ describe('Admin Events Show - Actions', function () {
             ->assertForbidden();
     });
 });
+
+describe('Admin Events Show - Event Type Config', function () {
+    it('returns correct config for all event types', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $event = ErasmusEvent::factory()->create();
+
+        $component = Livewire::test(Show::class, ['event' => $event]);
+        $instance = $component->instance();
+
+        // Test all event types
+        expect($instance->getEventTypeConfig('apertura'))->toBe(['variant' => 'success', 'icon' => 'play-circle', 'label' => __('Apertura')])
+            ->and($instance->getEventTypeConfig('cierre'))->toBe(['variant' => 'danger', 'icon' => 'stop-circle', 'label' => __('Cierre')])
+            ->and($instance->getEventTypeConfig('entrevista'))->toBe(['variant' => 'info', 'icon' => 'chat-bubble-left-right', 'label' => __('Entrevistas')])
+            ->and($instance->getEventTypeConfig('publicacion_provisional'))->toBe(['variant' => 'warning', 'icon' => 'document-text', 'label' => __('Listado provisional')])
+            ->and($instance->getEventTypeConfig('publicacion_definitivo'))->toBe(['variant' => 'success', 'icon' => 'document-check', 'label' => __('Listado definitivo')])
+            ->and($instance->getEventTypeConfig('reunion_informativa'))->toBe(['variant' => 'primary', 'icon' => 'user-group', 'label' => __('Reunión informativa')])
+            ->and($instance->getEventTypeConfig('unknown_type'))->toBe(['variant' => 'neutral', 'icon' => 'calendar', 'label' => __('Otro')]);
+    });
+});

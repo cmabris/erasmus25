@@ -696,3 +696,159 @@ describe('Admin Events Edit - Program and Call Association', function () {
         expect($availableCalls->pluck('id')->toArray())->not->toContain($call2->id);
     });
 });
+
+describe('Admin Events Edit - Edge Cases', function () {
+    it('updatedStartDate sets time to 00:00 when is_all_day is true', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $event = ErasmusEvent::factory()->create([
+            'is_all_day' => false,
+            'start_date' => now()->addDays(5),
+            'end_date' => now()->addDays(5)->addHours(2),
+        ]);
+
+        // Set is_all_day to true first
+        $component = Livewire::test(Edit::class, ['event' => $event])
+            ->set('is_all_day', true);
+
+        // Now set start_date - the updatedStartDate hook should set time to 00:00
+        $startDate = now()->addDays(6)->format('Y-m-d').'T14:30';
+        $component->set('start_date', $startDate);
+
+        $expectedStart = now()->addDays(6)->format('Y-m-d').'T00:00';
+        expect($component->get('start_date'))->toBe($expectedStart);
+    });
+
+    it('updatedEndDate sets time to 00:00 when is_all_day is true', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $event = ErasmusEvent::factory()->create([
+            'is_all_day' => false,
+            'start_date' => now()->addDays(5),
+            'end_date' => now()->addDays(5)->addHours(2),
+        ]);
+
+        $component = Livewire::test(Edit::class, ['event' => $event])
+            ->set('start_date', now()->addDays(5)->format('Y-m-d').'T00:00')
+            ->set('is_all_day', true);
+
+        // Now set end_date - the updatedEndDate hook should set time to 00:00
+        $endDate = now()->addDays(6)->format('Y-m-d').'T16:45';
+        $component->set('end_date', $endDate);
+
+        $expectedEnd = now()->addDays(6)->format('Y-m-d').'T00:00';
+        expect($component->get('end_date'))->toBe($expectedEnd);
+    });
+
+    it('updatedEndDate shows error when end is before start', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $event = ErasmusEvent::factory()->create([
+            'start_date' => now()->addDays(5),
+            'end_date' => now()->addDays(5)->addHours(2),
+        ]);
+
+        $startDate = now()->addDays(5)->format('Y-m-d\TH:i');
+        $endDate = now()->addDays(4)->format('Y-m-d\TH:i'); // Before start
+
+        $component = Livewire::test(Edit::class, ['event' => $event])
+            ->set('start_date', $startDate)
+            ->set('end_date', $endDate);
+
+        // Should have error
+        $component->assertHasErrors(['end_date']);
+    });
+
+    it('updatedEndDate clears error when end is after start', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $event = ErasmusEvent::factory()->create([
+            'start_date' => now()->addDays(5),
+            'end_date' => now()->addDays(5)->addHours(2),
+        ]);
+
+        $startDate = now()->addDays(5)->format('Y-m-d\TH:i');
+        $endDateBefore = now()->addDays(4)->format('Y-m-d\TH:i'); // Before start
+        $endDateAfter = now()->addDays(6)->format('Y-m-d\TH:i'); // After start
+
+        $component = Livewire::test(Edit::class, ['event' => $event])
+            ->set('start_date', $startDate)
+            ->set('end_date', $endDateBefore)
+            ->assertHasErrors(['end_date'])
+            ->set('end_date', $endDateAfter)
+            ->assertHasNoErrors(['end_date']);
+    });
+
+    it('updatedStartDate auto-adjusts end date when it is before start', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $event = ErasmusEvent::factory()->create([
+            'start_date' => now()->addDays(5),
+            'end_date' => now()->addDays(5)->addHours(2),
+        ]);
+
+        $startDate = now()->addDays(10)->format('Y-m-d\TH:i');
+        $endDate = now()->addDays(4)->format('Y-m-d\TH:i'); // Before start
+
+        $component = Livewire::test(Edit::class, ['event' => $event])
+            ->set('end_date', $endDate)
+            ->set('start_date', $startDate);
+
+        // The component should auto-adjust end_date to be after start_date
+        $adjustedEnd = Carbon::parse($startDate)->addHour()->format('Y-m-d\TH:i');
+        expect($component->get('end_date'))->toBe($adjustedEnd);
+    });
+
+    it('validateUploadedFile returns true for valid image', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $event = ErasmusEvent::factory()->create();
+        $fakeImage = UploadedFile::fake()->image('test.jpg', 800, 600);
+
+        $component = Livewire::test(Edit::class, ['event' => $event]);
+        $component->set('images', [$fakeImage]);
+
+        $result = $component->instance()->validateUploadedFile($fakeImage->getRealPath());
+        expect($result)->toBeTrue();
+    });
+
+    it('validateUploadedFile returns false for empty images', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $event = ErasmusEvent::factory()->create();
+        $component = Livewire::test(Edit::class, ['event' => $event]);
+
+        $result = $component->instance()->validateUploadedFile('/some/fake/path');
+        expect($result)->toBeFalse();
+    });
+
+    it('validateUploadedFile validates last image when path does not match', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $event = ErasmusEvent::factory()->create();
+        $fakeImage = UploadedFile::fake()->image('test.jpg', 800, 600);
+
+        $component = Livewire::test(Edit::class, ['event' => $event]);
+        $component->set('images', [$fakeImage]);
+
+        // Using a different path to trigger the fallback to validate the last image
+        $result = $component->instance()->validateUploadedFile('/nonexistent/path');
+        expect($result)->toBeTrue();
+    });
+});

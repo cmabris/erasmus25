@@ -923,3 +923,188 @@ describe('Admin Events Index - Reset Filters', function () {
             ->assertSet('showDeleted', '0');
     });
 });
+
+describe('Admin Events Index - Calendar Views Edge Cases', function () {
+    it('calendarEvents returns events for week view', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $eventInWeek = ErasmusEvent::factory()->create([
+            'start_date' => now()->startOfWeek()->addDays(2),
+            'end_date' => now()->startOfWeek()->addDays(2)->addHours(2),
+            'title' => 'Event In Week',
+        ]);
+
+        $component = Livewire::test(Index::class)
+            ->set('calendarView', 'week')
+            ->set('currentDate', now()->format('Y-m-d'));
+
+        $calendarEvents = $component->get('calendarEvents');
+        expect($calendarEvents->pluck('title')->toArray())->toContain('Event In Week');
+    });
+
+    it('calendarEvents returns events for day view', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $eventToday = ErasmusEvent::factory()->create([
+            'start_date' => now()->setTime(10, 0),
+            'end_date' => now()->setTime(12, 0),
+            'title' => 'Event Today',
+        ]);
+
+        $component = Livewire::test(Index::class)
+            ->set('calendarView', 'day')
+            ->set('currentDate', now()->format('Y-m-d'));
+
+        $calendarEvents = $component->get('calendarEvents');
+        expect($calendarEvents->pluck('title')->toArray())->toContain('Event Today');
+    });
+
+    it('calendarEvents filters by call when callFilter is set', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $program = Program::factory()->create();
+        $call1 = Call::factory()->create(['program_id' => $program->id]);
+        $call2 = Call::factory()->create(['program_id' => $program->id]);
+
+        $eventCall1 = ErasmusEvent::factory()->create([
+            'program_id' => $program->id,
+            'call_id' => $call1->id,
+            'start_date' => now(),
+            'title' => 'Event Call 1',
+        ]);
+
+        $eventCall2 = ErasmusEvent::factory()->create([
+            'program_id' => $program->id,
+            'call_id' => $call2->id,
+            'start_date' => now(),
+            'title' => 'Event Call 2',
+        ]);
+
+        $component = Livewire::test(Index::class)
+            ->set('callFilter', $call1->id);
+
+        $calendarEvents = $component->get('calendarEvents');
+        expect($calendarEvents->pluck('title')->toArray())->toContain('Event Call 1')
+            ->and($calendarEvents->pluck('title')->toArray())->not->toContain('Event Call 2');
+    });
+
+    it('calendarEvents filters by eventType when eventTypeFilter is set', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $eventApertura = ErasmusEvent::factory()->create([
+            'start_date' => now(),
+            'event_type' => 'apertura',
+            'title' => 'Event Apertura',
+        ]);
+
+        $eventCierre = ErasmusEvent::factory()->create([
+            'start_date' => now(),
+            'event_type' => 'cierre',
+            'title' => 'Event Cierre',
+        ]);
+
+        $component = Livewire::test(Index::class)
+            ->set('eventTypeFilter', 'apertura');
+
+        $calendarEvents = $component->get('calendarEvents');
+        expect($calendarEvents->pluck('title')->toArray())->toContain('Event Apertura')
+            ->and($calendarEvents->pluck('title')->toArray())->not->toContain('Event Cierre');
+    });
+
+    it('confirmDelete sets eventToDelete and shows modal', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $event = ErasmusEvent::factory()->create();
+
+        Livewire::test(Index::class)
+            ->call('confirmDelete', $event->id)
+            ->assertSet('eventToDelete', $event->id)
+            ->assertSet('showDeleteModal', true);
+    });
+
+    it('confirmRestore sets eventToRestore and shows modal', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $event = ErasmusEvent::factory()->create();
+        $event->delete();
+
+        Livewire::test(Index::class)
+            ->call('confirmRestore', $event->id)
+            ->assertSet('eventToRestore', $event->id)
+            ->assertSet('showRestoreModal', true);
+    });
+
+    it('confirmForceDelete sets eventToForceDelete and shows modal', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $event = ErasmusEvent::factory()->create();
+        $event->delete();
+
+        Livewire::test(Index::class)
+            ->call('confirmForceDelete', $event->id)
+            ->assertSet('eventToForceDelete', $event->id)
+            ->assertSet('showForceDeleteModal', true);
+    });
+
+    it('goToDate sets currentDate to specified date', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $targetDate = '2025-06-15';
+
+        Livewire::test(Index::class)
+            ->call('goToDate', $targetDate)
+            ->assertSet('currentDate', $targetDate);
+    });
+
+    it('delete does nothing when eventToDelete is null', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $component = Livewire::test(Index::class)
+            ->set('eventToDelete', null)
+            ->call('delete');
+
+        $component->assertNotDispatched('event-deleted');
+    });
+
+    it('restore does nothing when eventToRestore is null', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $component = Livewire::test(Index::class)
+            ->set('eventToRestore', null)
+            ->call('restore');
+
+        $component->assertNotDispatched('event-restored');
+    });
+
+    it('forceDelete does nothing when eventToForceDelete is null', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $component = Livewire::test(Index::class)
+            ->set('eventToForceDelete', null)
+            ->call('forceDelete');
+
+        $component->assertNotDispatched('event-force-deleted');
+    });
+});
