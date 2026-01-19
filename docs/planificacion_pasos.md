@@ -670,10 +670,14 @@ Para cada policy:
 - [ ] Verificar validación
 - [ ] Verificar subida de archivos
 
-#### 3.8.5. Tests de Rutas
-- [ ] Tests para rutas públicas
-- [ ] Tests para rutas de administración
-- [ ] Verificar middleware y permisos
+#### 3.8.5. Tests de Rutas ✅ COMPLETADO (Paso 44)
+- [x] Tests para rutas públicas
+- [x] Tests para rutas de administración
+- [x] Verificar middleware y permisos
+- [x] Tests de Observers (CallObserver, ResolutionObserver)
+- [x] Tests de Middleware SetLocale
+- [x] Tests de Componentes Livewire Admin
+- **Resultado**: 3,702 tests, 8,429 assertions
 
 #### 3.8.6. Tests de Seeders
 - [ ] Tests para verificar datos iniciales
