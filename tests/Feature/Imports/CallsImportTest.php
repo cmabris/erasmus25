@@ -852,4 +852,571 @@ describe('CallsImport - Program and Academic Year Lookup', function () {
         $call = Call::first();
         expect($call->academic_year_id)->toBe($this->academicYear->id);
     });
+
+    it('finds academic year by numeric year value', function () {
+        // Create academic year with numeric year
+        $numericYear = AcademicYear::factory()->create([
+            'year' => 2025,
+        ]);
+
+        $data = [
+            [
+                'Programa',
+                'Año Académico',
+                'Título',
+                'Tipo',
+                'Modalidad',
+                'Número de Plazas',
+                'Destinos',
+            ],
+            [
+                'KA131',
+                2025, // Buscar por año numérico
+                'Convocatoria Test',
+                'alumnado',
+                'corta',
+                10,
+                'España',
+            ],
+        ];
+
+        $file = createExcelFile($data);
+
+        $import = new CallsImport(false, $this->user->id);
+        Excel::import($import, $file);
+
+        $call = Call::first();
+        expect($call->academic_year_id)->toBe($numericYear->id);
+    });
+});
+
+describe('CallsImport - Date Parsing Extended', function () {
+    it('parses dates in dash separated d-m-Y format', function () {
+        $data = [
+            [
+                'Programa',
+                'Año Académico',
+                'Título',
+                'Tipo',
+                'Modalidad',
+                'Número de Plazas',
+                'Destinos',
+                'Fecha Inicio Estimada',
+                'Fecha Fin Estimada',
+            ],
+            [
+                'KA131',
+                '2024-2025',
+                'Convocatoria Test',
+                'alumnado',
+                'corta',
+                10,
+                'España',
+                '01-09-2024',
+                '30-06-2025',
+            ],
+        ];
+
+        $file = createExcelFile($data);
+
+        $import = new CallsImport(false, $this->user->id);
+        Excel::import($import, $file);
+
+        $call = Call::first();
+        expect($call->estimated_start_date->format('Y-m-d'))->toBe('2024-09-01')
+            ->and($call->estimated_end_date->format('Y-m-d'))->toBe('2025-06-30');
+    });
+
+    it('parses dates in slash separated Y/m/d format', function () {
+        $data = [
+            [
+                'Programa',
+                'Año Académico',
+                'Título',
+                'Tipo',
+                'Modalidad',
+                'Número de Plazas',
+                'Destinos',
+                'Fecha Inicio Estimada',
+                'Fecha Fin Estimada',
+            ],
+            [
+                'KA131',
+                '2024-2025',
+                'Convocatoria Test',
+                'alumnado',
+                'corta',
+                10,
+                'España',
+                '2024/09/01',
+                '2025/06/30',
+            ],
+        ];
+
+        $file = createExcelFile($data);
+
+        $import = new CallsImport(false, $this->user->id);
+        Excel::import($import, $file);
+
+        $call = Call::first();
+        expect($call->estimated_start_date->format('Y-m-d'))->toBe('2024-09-01')
+            ->and($call->estimated_end_date->format('Y-m-d'))->toBe('2025-06-30');
+    });
+
+    it('parses dates in dot separated d.m.Y format', function () {
+        $data = [
+            [
+                'Programa',
+                'Año Académico',
+                'Título',
+                'Tipo',
+                'Modalidad',
+                'Número de Plazas',
+                'Destinos',
+                'Fecha Inicio Estimada',
+                'Fecha Fin Estimada',
+            ],
+            [
+                'KA131',
+                '2024-2025',
+                'Convocatoria Test',
+                'alumnado',
+                'corta',
+                10,
+                'España',
+                '01.09.2024',
+                '30.06.2025',
+            ],
+        ];
+
+        $file = createExcelFile($data);
+
+        $import = new CallsImport(false, $this->user->id);
+        Excel::import($import, $file);
+
+        $call = Call::first();
+        expect($call->estimated_start_date->format('Y-m-d'))->toBe('2024-09-01')
+            ->and($call->estimated_end_date->format('Y-m-d'))->toBe('2025-06-30');
+    });
+
+    it('parses Excel serial number dates', function () {
+        // Excel serial number: 45536 = 2024-09-01 (adjusted for Excel 1900 leap year bug)
+        // Excel serial number: 45839 = 2025-06-30
+        $data = [
+            [
+                'Programa',
+                'Año Académico',
+                'Título',
+                'Tipo',
+                'Modalidad',
+                'Número de Plazas',
+                'Destinos',
+                'Fecha Inicio Estimada',
+                'Fecha Fin Estimada',
+            ],
+            [
+                'KA131',
+                '2024-2025',
+                'Convocatoria Test',
+                'alumnado',
+                'corta',
+                10,
+                'España',
+                45536, // Excel serial number for 2024-09-01
+                45839, // Excel serial number for 2025-06-30
+            ],
+        ];
+
+        $file = createExcelFile($data);
+
+        $import = new CallsImport(false, $this->user->id);
+        Excel::import($import, $file);
+
+        $call = Call::first();
+        // Just verify the parsing works and returns valid dates
+        expect($call->estimated_start_date)->not->toBeNull()
+            ->and($call->estimated_end_date)->not->toBeNull()
+            ->and($call->estimated_end_date->gt($call->estimated_start_date))->toBeTrue();
+    });
+
+    it('fails with invalid date format and reports error', function () {
+        $data = [
+            [
+                'Programa',
+                'Año Académico',
+                'Título',
+                'Tipo',
+                'Modalidad',
+                'Número de Plazas',
+                'Destinos',
+                'Fecha Inicio Estimada',
+            ],
+            [
+                'KA131',
+                '2024-2025',
+                'Convocatoria Test',
+                'alumnado',
+                'corta',
+                10,
+                'España',
+                'fecha-invalida-xyz',
+            ],
+        ];
+
+        $file = createExcelFile($data);
+
+        $import = new CallsImport(false, $this->user->id);
+        Excel::import($import, $file);
+
+        expect($import->getImportedCount())->toBe(0)
+            ->and($import->getFailedCount())->toBe(1)
+            ->and(Call::count())->toBe(0);
+
+        $errors = $import->getRowErrors();
+        expect($errors)->toHaveCount(1);
+    });
+});
+
+describe('CallsImport - Getter Methods', function () {
+    it('returns processed calls collection', function () {
+        $data = [
+            [
+                'Programa',
+                'Año Académico',
+                'Título',
+                'Tipo',
+                'Modalidad',
+                'Número de Plazas',
+                'Destinos',
+            ],
+            [
+                'KA131',
+                '2024-2025',
+                'Convocatoria Test',
+                'alumnado',
+                'corta',
+                10,
+                'España',
+            ],
+        ];
+
+        $file = createExcelFile($data);
+
+        $import = new CallsImport(false, $this->user->id);
+        Excel::import($import, $file);
+
+        $processedCalls = $import->getProcessedCalls();
+
+        expect($processedCalls)->toBeInstanceOf(\Illuminate\Support\Collection::class)
+            ->and($processedCalls)->toHaveCount(1)
+            ->and($processedCalls->first()['status'])->toBe('created')
+            ->and($processedCalls->first()['row'])->toBe(2);
+    });
+
+    it('returns processed calls for dry run mode', function () {
+        $data = [
+            [
+                'Programa',
+                'Año Académico',
+                'Título',
+                'Tipo',
+                'Modalidad',
+                'Número de Plazas',
+                'Destinos',
+            ],
+            [
+                'KA131',
+                '2024-2025',
+                'Convocatoria Test',
+                'alumnado',
+                'corta',
+                10,
+                'España',
+            ],
+        ];
+
+        $file = createExcelFile($data);
+
+        $import = new CallsImport(true, $this->user->id); // dry-run = true
+        Excel::import($import, $file);
+
+        $processedCalls = $import->getProcessedCalls();
+
+        expect($processedCalls)->toHaveCount(1)
+            ->and($processedCalls->first()['status'])->toBe('valid')
+            ->and($processedCalls->first()['row'])->toBe(2)
+            ->and($processedCalls->first())->toHaveKey('data');
+    });
+});
+
+describe('CallsImport - English Headers', function () {
+    it('supports English column headers', function () {
+        $data = [
+            [
+                'program',
+                'academic_year',
+                'title',
+                'type',
+                'modality',
+                'number_of_places',
+                'destinations',
+            ],
+            [
+                'KA131',
+                '2024-2025',
+                'Test Call',
+                'alumnado',
+                'corta',
+                10,
+                'Spain',
+            ],
+        ];
+
+        $file = createExcelFile($data);
+
+        $import = new CallsImport(false, $this->user->id);
+        Excel::import($import, $file);
+
+        expect($import->getImportedCount())->toBe(1);
+
+        $call = Call::first();
+        expect($call->title)->toBe('Test Call')
+            ->and($call->destinations)->toBe(['Spain']);
+    });
+
+    it('supports English date headers', function () {
+        $data = [
+            [
+                'program',
+                'academic_year',
+                'title',
+                'type',
+                'modality',
+                'number_of_places',
+                'destinations',
+                'estimated_start_date',
+                'estimated_end_date',
+            ],
+            [
+                'KA131',
+                '2024-2025',
+                'Test Call',
+                'alumnado',
+                'corta',
+                10,
+                'Spain',
+                '2024-09-01',
+                '2025-06-30',
+            ],
+        ];
+
+        $file = createExcelFile($data);
+
+        $import = new CallsImport(false, $this->user->id);
+        Excel::import($import, $file);
+
+        $call = Call::first();
+        expect($call->estimated_start_date->format('Y-m-d'))->toBe('2024-09-01')
+            ->and($call->estimated_end_date->format('Y-m-d'))->toBe('2025-06-30');
+    });
+});
+
+describe('CallsImport - Optional Fields', function () {
+    it('handles optional requirements field', function () {
+        $data = [
+            [
+                'Programa',
+                'Año Académico',
+                'Título',
+                'Tipo',
+                'Modalidad',
+                'Número de Plazas',
+                'Destinos',
+                'Requisitos',
+            ],
+            [
+                'KA131',
+                '2024-2025',
+                'Convocatoria Test',
+                'alumnado',
+                'corta',
+                10,
+                'España',
+                'Requisitos importantes',
+            ],
+        ];
+
+        $file = createExcelFile($data);
+
+        $import = new CallsImport(false, $this->user->id);
+        Excel::import($import, $file);
+
+        $call = Call::first();
+        expect($call->requirements)->toBe('Requisitos importantes');
+    });
+
+    it('handles optional documentation field', function () {
+        $data = [
+            [
+                'Programa',
+                'Año Académico',
+                'Título',
+                'Tipo',
+                'Modalidad',
+                'Número de Plazas',
+                'Destinos',
+                'Documentación',
+            ],
+            [
+                'KA131',
+                '2024-2025',
+                'Convocatoria Test',
+                'alumnado',
+                'corta',
+                10,
+                'España',
+                'Documentación necesaria',
+            ],
+        ];
+
+        $file = createExcelFile($data);
+
+        $import = new CallsImport(false, $this->user->id);
+        Excel::import($import, $file);
+
+        $call = Call::first();
+        expect($call->documentation)->toBe('Documentación necesaria');
+    });
+
+    it('handles optional selection_criteria field', function () {
+        $data = [
+            [
+                'Programa',
+                'Año Académico',
+                'Título',
+                'Tipo',
+                'Modalidad',
+                'Número de Plazas',
+                'Destinos',
+                'Criterios de Selección',
+            ],
+            [
+                'KA131',
+                '2024-2025',
+                'Convocatoria Test',
+                'alumnado',
+                'corta',
+                10,
+                'España',
+                'Criterios de selección aplicables',
+            ],
+        ];
+
+        $file = createExcelFile($data);
+
+        $import = new CallsImport(false, $this->user->id);
+        Excel::import($import, $file);
+
+        $call = Call::first();
+        expect($call->selection_criteria)->toBe('Criterios de selección aplicables');
+    });
+
+    it('handles optional published_at field', function () {
+        $data = [
+            [
+                'Programa',
+                'Año Académico',
+                'Título',
+                'Tipo',
+                'Modalidad',
+                'Número de Plazas',
+                'Destinos',
+                'Fecha Publicación',
+            ],
+            [
+                'KA131',
+                '2024-2025',
+                'Convocatoria Test',
+                'alumnado',
+                'corta',
+                10,
+                'España',
+                '2024-08-15',
+            ],
+        ];
+
+        $file = createExcelFile($data);
+
+        $import = new CallsImport(false, $this->user->id);
+        Excel::import($import, $file);
+
+        $call = Call::first();
+        expect($call->published_at->format('Y-m-d'))->toBe('2024-08-15');
+    });
+
+    it('handles optional closed_at field', function () {
+        $data = [
+            [
+                'Programa',
+                'Año Académico',
+                'Título',
+                'Tipo',
+                'Modalidad',
+                'Número de Plazas',
+                'Destinos',
+                'Fecha Cierre',
+            ],
+            [
+                'KA131',
+                '2024-2025',
+                'Convocatoria Test',
+                'alumnado',
+                'corta',
+                10,
+                'España',
+                '2024-12-31',
+            ],
+        ];
+
+        $file = createExcelFile($data);
+
+        $import = new CallsImport(false, $this->user->id);
+        Excel::import($import, $file);
+
+        $call = Call::first();
+        expect($call->closed_at->format('Y-m-d'))->toBe('2024-12-31');
+    });
+
+    it('handles optional status field', function () {
+        $data = [
+            [
+                'Programa',
+                'Año Académico',
+                'Título',
+                'Tipo',
+                'Modalidad',
+                'Número de Plazas',
+                'Destinos',
+                'Estado',
+            ],
+            [
+                'KA131',
+                '2024-2025',
+                'Convocatoria Test',
+                'alumnado',
+                'corta',
+                10,
+                'España',
+                'abierta',
+            ],
+        ];
+
+        $file = createExcelFile($data);
+
+        $import = new CallsImport(false, $this->user->id);
+        Excel::import($import, $file);
+
+        $call = Call::first();
+        expect($call->status)->toBe('abierta');
+    });
 });
