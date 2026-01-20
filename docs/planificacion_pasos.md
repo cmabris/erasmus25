@@ -712,14 +712,27 @@ Para cada policy:
 - [x] Caché para configuraciones del sistema (Program, AcademicYear, DocumentCategory)
 - [x] Invalidación de caché al actualizar contenido (via model hooks)
 
-#### 3.9.3. Optimización de Imágenes
-- [ ] Implementar conversión de imágenes (Laravel Media Library)
-- [ ] Generar thumbnails automáticamente
-- [ ] Optimizar tamaño de archivos
+#### 3.9.3. Optimización de Imágenes ✅ COMPLETADO
+- [x] Publicar y configurar `config/media-library.php`
+- [x] Implementar conversión a WebP (formato moderno, 40-70% menos peso)
+- [x] Configurar calidad óptima (85%) en todas las conversiones
+- [x] Actualizar modelos con conversiones optimizadas:
+  - Program: thumbnail, medium, large (WebP)
+  - NewsPost: thumbnail, medium, large, hero (1920x1080 WebP)
+  - ErasmusEvent: thumbnail, medium, large (WebP)
+  - Document: preview (WebP)
+- [x] Crear componente `responsive-image.blade.php`
+- [x] Actualizar vistas públicas para usar conversiones optimizadas
+- [x] Regenerar conversiones existentes (38 medios procesados)
+- [x] Tests del componente (19 tests, 26 assertions)
+
+**Documentación:**
+- [Plan detallado](pasos/paso-3.9.3-plan.md) - Plan de trabajo completo ✅
+- [Prompts y resultados](pasos/paso47.md) - Historial completo de implementación ✅
 
 #### 3.9.4. Paginación y Lazy Loading
+- [x] Lazy loading para imágenes (implementado en 3.9.3 con `loading="lazy"` y `decoding="async"`)
 - [ ] Implementar paginación en todos los listados
-- [ ] Lazy loading para imágenes
 - [ ] Infinite scroll donde sea apropiado
 
 #### 3.9.5. SEO
