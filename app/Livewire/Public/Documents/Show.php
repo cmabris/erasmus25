@@ -215,7 +215,7 @@ class Show extends Component
     #[Computed]
     public function documentTypeConfig(): array
     {
-        return match($this->document->document_type) {
+        return match ($this->document->document_type) {
             'convocatoria' => ['icon' => 'document-text', 'color' => 'primary', 'label' => __('Convocatoria')],
             'modelo' => ['icon' => 'document-duplicate', 'color' => 'info', 'label' => __('Modelo')],
             'seguro' => ['icon' => 'shield-check', 'color' => 'success', 'label' => __('Seguro')],
@@ -225,6 +225,16 @@ class Show extends Component
             'otro' => ['icon' => 'document', 'color' => 'neutral', 'label' => __('Otro')],
             default => ['icon' => 'document', 'color' => 'neutral', 'label' => __('Documento')],
         };
+    }
+
+    /**
+     * Get the document preview image URL from Media Library.
+     */
+    #[Computed]
+    public function previewImage(): ?string
+    {
+        return $this->document->getFirstMediaUrl('file', 'preview')
+            ?: null;
     }
 
     /**
@@ -240,7 +250,7 @@ class Show extends Component
             ->layout('components.layouts.public', [
                 'title' => $this->document->title.' - Documentos Erasmus+',
                 'description' => $description,
+                'image' => $this->previewImage,
             ]);
     }
 }
-

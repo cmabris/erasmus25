@@ -135,6 +135,26 @@ class Home extends Component
     }
 
     /**
+     * Get JSON-LD structured data for the organization.
+     *
+     * @return array<string, mixed>
+     */
+    protected function getOrganizationJsonLd(): array
+    {
+        return [
+            '@context' => 'https://schema.org',
+            '@type' => 'EducationalOrganization',
+            'name' => config('app.name'),
+            'url' => route('home'),
+            'logo' => config('app.url').'/images/logo.png',
+            'description' => __('Portal de gestión de movilidades Erasmus+ para alumnado y personal docente.'),
+            'sameAs' => [
+                // Add social media URLs here when available
+            ],
+        ];
+    }
+
+    /**
      * Render the component.
      */
     public function render(): View
@@ -143,6 +163,7 @@ class Home extends Component
             ->layout('components.layouts.public', [
                 'title' => __('Erasmus+ - Movilidad Internacional'),
                 'description' => __('Portal de gestión de movilidades Erasmus+ para alumnado y personal docente. Descubre convocatorias, programas y oportunidades de movilidad internacional.'),
+                'jsonLd' => $this->getOrganizationJsonLd(),
             ]);
     }
 }

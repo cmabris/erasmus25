@@ -1,6 +1,11 @@
 @props([
     'title' => null,
     'description' => null,
+    'image' => null,
+    'type' => 'website',
+    'article' => null,
+    'jsonLd' => null,
+    'noindex' => false,
     'transparentNav' => false,
     'simpleFooter' => false,
 ])
@@ -10,8 +15,19 @@
     <head>
         @include('partials.head', ['title' => $title])
         
-        @if($description)
-            <meta name="description" content="{{ $description }}">
+        {{-- SEO Meta Tags --}}
+        <x-seo.meta 
+            :title="$title"
+            :description="$description"
+            :image="$image"
+            :type="$type"
+            :article="$article"
+            :noindex="$noindex"
+        />
+        
+        {{-- JSON-LD Structured Data --}}
+        @if($jsonLd)
+            <x-seo.json-ld :data="$jsonLd" />
         @endif
     </head>
     <body class="min-h-screen bg-white antialiased dark:bg-zinc-900">

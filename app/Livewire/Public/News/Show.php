@@ -102,14 +102,23 @@ class Show extends Component
      */
     public function render(): View
     {
-        $excerpt = $this->newsPost->excerpt
+        $description = $this->newsPost->excerpt
             ? Str::limit(strip_tags($this->newsPost->excerpt), 160)
             : __('Noticia sobre movilidad internacional Erasmus+.');
 
         return view('livewire.public.news.show')
             ->layout('components.layouts.public', [
                 'title' => $this->newsPost->title.' - Noticias Erasmus+',
-                'description' => $excerpt,
+                'description' => $description,
+                'image' => $this->featuredImage,
+                'type' => 'article',
+                'article' => [
+                    'published_time' => $this->newsPost->published_at?->toIso8601String(),
+                    'modified_time' => $this->newsPost->updated_at?->toIso8601String(),
+                    'author' => $this->newsPost->author?->name,
+                    'section' => $this->newsPost->program?->name ?? 'Erasmus+',
+                    'tags' => $this->newsPost->tags->pluck('name')->toArray(),
+                ],
             ]);
     }
 }

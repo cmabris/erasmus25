@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SitemapController;
 use App\Livewire\Admin\Dashboard as AdminDashboard;
 use App\Livewire\Notifications\Index as NotificationsIndex;
 use App\Livewire\Public\Calls;
@@ -30,6 +31,9 @@ use Laravel\Fortify\Features;
 
 // Página principal
 Route::get('/', Home::class)->name('home');
+
+// Sitemap XML para SEO
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 // Búsqueda Global
 // Búsqueda unificada en programas, convocatorias, noticias y documentos

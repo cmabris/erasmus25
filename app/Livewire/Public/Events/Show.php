@@ -85,6 +85,17 @@ class Show extends Component
     }
 
     /**
+     * Get the event image URL from Media Library.
+     */
+    #[Computed]
+    public function eventImage(): ?string
+    {
+        return $this->event->getFirstMediaUrl('images', 'large')
+            ?: $this->event->getFirstMediaUrl('images', 'medium')
+            ?: $this->event->getFirstMediaUrl('images');
+    }
+
+    /**
      * Render the component.
      */
     public function render(): View
@@ -93,6 +104,7 @@ class Show extends Component
             ->layout('components.layouts.public', [
                 'title' => "{$this->event->title} - Eventos Erasmus+",
                 'description' => $this->event->description ?: __('Detalle del evento Erasmus+'),
+                'image' => $this->eventImage,
             ]);
     }
 }

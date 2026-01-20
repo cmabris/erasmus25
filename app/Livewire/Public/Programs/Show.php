@@ -185,6 +185,17 @@ class Show extends Component
     }
 
     /**
+     * Get the program image URL from Media Library.
+     */
+    #[Computed]
+    public function programImage(): ?string
+    {
+        return $this->program->getFirstMediaUrl('image', 'large')
+            ?: $this->program->getFirstMediaUrl('image', 'medium')
+            ?: $this->program->getFirstMediaUrl('image');
+    }
+
+    /**
      * Render the component.
      */
     public function render(): View
@@ -193,6 +204,7 @@ class Show extends Component
             ->layout('components.layouts.public', [
                 'title' => $this->program->name.' - Erasmus+',
                 'description' => $this->program->description,
+                'image' => $this->programImage,
             ]);
     }
 }

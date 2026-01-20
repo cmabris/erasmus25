@@ -1,2 +1,38 @@
+# Robots.txt for Erasmus+ Portal
+# https://erasmus25.test
+
 User-agent: *
-Disallow:
+Allow: /
+
+# Sitemap location
+Sitemap: https://erasmus25.test/sitemap.xml
+
+# Disallow admin and authentication routes
+Disallow: /admin
+Disallow: /admin/
+Disallow: /login
+Disallow: /register
+Disallow: /password
+Disallow: /forgot-password
+Disallow: /reset-password
+Disallow: /two-factor-challenge
+Disallow: /settings
+Disallow: /settings/
+Disallow: /dashboard
+Disallow: /notificaciones
+
+# Disallow internal/technical routes
+Disallow: /livewire/
+Disallow: /_debugbar/
+Disallow: /sanctum/
+Disallow: /api/
+
+# Disallow user-specific pages
+Disallow: /email/verify
+
+# Allow search engines to index newsletter subscribe page
+Allow: /newsletter/suscribir
+
+# Disallow newsletter verification and unsubscribe with tokens
+Disallow: /newsletter/verificar/
+Disallow: /newsletter/baja/

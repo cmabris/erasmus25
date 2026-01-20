@@ -567,38 +567,44 @@ it('robots.txt disallows admin routes', function () {
 - [ ] Crear componente `seo/pagination-links.blade.php`
 - [ ] Integrar rel="prev"/rel="next" en layouts paginados
 
-### Fase 2: Componente SEO
-- [ ] Crear componente `seo/meta.blade.php`
-- [ ] Actualizar `layouts/public.blade.php` con nuevos props
-- [ ] Actualizar `partials/head.blade.php`
+### Fase 2: Componente SEO ✅ COMPLETADA
+- [x] Crear componente `seo/meta.blade.php`
+- [x] Crear componente `seo/json-ld.blade.php`
+- [x] Actualizar `layouts/public.blade.php` con nuevos props (title, description, image, type, article, jsonLd, noindex)
+- [x] Actualizar `partials/head.blade.php`
 
-### Fase 3: Actualizar Componentes Show
-- [ ] `News/Show.php` - añadir OG image y article metadata
-- [ ] `Calls/Show.php` - añadir description mejorada
-- [ ] `Programs/Show.php` - añadir OG image
-- [ ] `Documents/Show.php` - metadatos básicos
-- [ ] `Events/Show.php` - metadatos básicos
+### Fase 3: Actualizar Componentes Show ✅ COMPLETADA
+- [x] `News/Show.php` - añadir OG image y article metadata (published_time, modified_time, author, section, tags)
+- [x] `Calls/Show.php` - ya tenía description mejorada
+- [x] `Programs/Show.php` - añadir OG image (programImage computed property)
+- [x] `Documents/Show.php` - añadir preview image
+- [x] `Events/Show.php` - añadir event image
+- [x] `Home.php` - añadir JSON-LD Organization schema
 
-### Fase 4: Sitemap
-- [ ] Crear `SitemapController.php`
-- [ ] Crear vista `sitemap/index.blade.php`
-- [ ] Añadir ruta `/sitemap.xml`
-- [ ] Verificar que excluye rutas de admin
+### Fase 4: Sitemap ✅ COMPLETADA
+- [x] Crear `SitemapController.php` (con caché de 1 hora)
+- [x] Crear vista `sitemap/index.blade.php`
+- [x] Añadir ruta `/sitemap.xml`
+- [x] Verificar que excluye rutas de admin
+- [x] Tests: 15 tests (52 assertions) en `SitemapTest.php`
 
-### Fase 5: robots.txt
-- [ ] Actualizar con referencia a sitemap
-- [ ] Añadir reglas de exclusión para admin, auth, etc.
+### Fase 5: robots.txt ✅ COMPLETADA
+- [x] Actualizar con referencia a sitemap
+- [x] Añadir reglas de exclusión para admin, auth, settings, livewire, etc.
+- [x] Permitir newsletter/suscribir, bloquear tokens de verificación/baja
+- [x] Tests: 9 tests (12 assertions) en `RobotsTxtTest.php`
 
-### Fase 6: JSON-LD (Opcional)
-- [ ] Crear componente `seo/json-ld.blade.php`
-- [ ] Añadir Organization schema en Home
+### Fase 6: JSON-LD (Opcional) ✅ PARCIALMENTE COMPLETADA
+- [x] Crear componente `seo/json-ld.blade.php`
+- [x] Añadir Organization schema en Home
 - [ ] Añadir Article schema en News/Show
 - [ ] Añadir Event schema en Events/Show
 
-### Fase 7: Tests
-- [ ] `tests/Feature/SEO/MetaTagsTest.php`
-- [ ] `tests/Feature/SEO/SitemapTest.php`
-- [ ] Ejecutar suite completa de tests
+### Fase 7: Tests ✅ COMPLETADA
+- [x] `tests/Feature/SEO/MetaTagsTest.php` - 13 tests, 53 assertions
+- [x] `tests/Feature/SEO/SitemapTest.php` - 15 tests, 52 assertions
+- [x] `tests/Feature/SEO/RobotsTxtTest.php` - 9 tests, 15 assertions
+- [x] Ejecutar suite completa de tests - **3,867 tests pasando (8,793 assertions)**
 
 ### Fase 8: Imagen OG por defecto
 - [ ] Crear imagen `public/images/og-default.jpg` (1200x630px)

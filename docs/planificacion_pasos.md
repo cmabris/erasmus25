@@ -730,16 +730,24 @@ Para cada policy:
 - [Plan detallado](pasos/paso-3.9.3-plan.md) - Plan de trabajo completo ✅
 - [Prompts y resultados](pasos/paso47.md) - Historial completo de implementación ✅
 
-#### 3.9.4. Paginación y Lazy Loading
+#### 3.9.4. Paginación y Lazy Loading ✅ COMPLETADO
 - [x] Lazy loading para imágenes (implementado en 3.9.3 con `loading="lazy"` y `decoding="async"`)
-- [ ] Implementar paginación en todos los listados
-- [ ] Infinite scroll donde sea apropiado
+- [x] Paginación ya implementada en todos los listados públicos (News, Calls, Programs, Documents, Events)
+- [ ] Infinite scroll donde sea apropiado (opcional, funcionalidad futura)
 
-#### 3.9.5. SEO
-- [ ] Meta tags dinámicos
-- [ ] Sitemap.xml
-- [ ] Robots.txt
-- [ ] URLs amigables (ya implementado con slugs)
+#### 3.9.5. SEO ✅ COMPLETADO
+- [x] Meta tags dinámicos (Open Graph, Twitter Cards, canonical URL)
+- [x] Componente `x-seo.meta` reutilizable
+- [x] Componente `x-seo.json-ld` para datos estructurados
+- [x] Sitemap.xml dinámico con caché
+- [x] Robots.txt mejorado con exclusiones
+- [x] URLs amigables (ya implementado con slugs)
+- [x] JSON-LD Organization en Home
+- [x] Article metadata para noticias
+- [x] Tests: 37 tests (120 assertions)
+
+**Documentación:**
+- [Plan detallado](pasos/paso-3.9.4-3.9.5-plan.md) - Plan de trabajo completo ✅
 
 ---
 
