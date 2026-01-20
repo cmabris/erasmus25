@@ -233,12 +233,15 @@
             <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 @foreach($this->news as $newsPost)
                     @php
-                        $featuredImage = $newsPost->getFirstMediaUrl('featured');
+                        // Use optimized WebP conversions: medium for featured card, thumbnail for regular cards
+                        $isFeatured = $loop->first && $loop->iteration === 1 && $this->news->currentPage() === 1;
+                        $featuredImage = $newsPost->getFirstMediaUrl('featured', $isFeatured ? 'medium' : 'thumbnail') 
+                            ?: $newsPost->getFirstMediaUrl('featured');
                     @endphp
                     <x-content.news-card 
                         :news="$newsPost" 
                         :imageUrl="$featuredImage"
-                        :variant="$loop->first && $loop->iteration === 1 && $this->news->currentPage() === 1 ? 'featured' : 'default'"
+                        :variant="$isFeatured ? 'featured' : 'default'"
                         :showProgram="true"
                         :showAuthor="false"
                         :showDate="true"

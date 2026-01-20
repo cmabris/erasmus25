@@ -146,8 +146,15 @@ class Document extends Model implements HasMedia
      */
     public function registerMediaConversions(?Media $media = null): void
     {
-        // For PDFs, we could add thumbnail generation if needed
-        // For now, we'll keep it simple and just store the files
+        // Thumbnail preview for image documents
+        $this->addMediaConversion('preview')
+            ->width(200)
+            ->height(200)
+            ->sharpen(10)
+            ->quality(85)
+            ->format('webp')
+            ->nonQueued()
+            ->performOnCollections('file');
     }
 
     /**

@@ -35,7 +35,7 @@ class Show extends Component
 
         // Load relationships with eager loading to avoid N+1 queries
         $this->newsTag = $news_tag->load([
-            'newsPosts' => fn ($query) => $query->latest()->limit(10),
+            'newsPosts' => fn ($query) => $query->with(['author', 'program'])->latest()->limit(10),
         ])->loadCount(['newsPosts']);
     }
 

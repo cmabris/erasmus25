@@ -27,7 +27,7 @@ describe('ResolutionsExport - Basic Export', function () {
         ]);
 
         $export = new ResolutionsExport(['call_id' => $call->id]);
-        $collection = $export->collection();
+        $collection = $export->query()->get();
 
         expect($collection)->toHaveCount(5);
     });
@@ -56,7 +56,7 @@ describe('ResolutionsExport - Basic Export', function () {
         ]);
 
         $export = new ResolutionsExport(['call_id' => $call1->id]);
-        $collection = $export->collection();
+        $collection = $export->query()->get();
 
         $ids = $collection->pluck('id')->toArray();
         expect($ids)->toContain($resolution1->id)
@@ -83,7 +83,7 @@ describe('ResolutionsExport - Basic Export', function () {
         $resolution2->delete(); // Soft delete
 
         $export = new ResolutionsExport(['call_id' => $call->id]);
-        $collection = $export->collection();
+        $collection = $export->query()->get();
 
         expect($collection)->toHaveCount(1)
             ->and($collection->first()->id)->toBe($resolution1->id);
@@ -263,7 +263,7 @@ describe('ResolutionsExport - Filters', function () {
             'call_id' => $call->id,
             'filterType' => 'provisional',
         ]);
-        $collection = $export->collection();
+        $collection = $export->query()->get();
 
         $ids = $collection->pluck('id')->toArray();
         expect($ids)->toContain($resolution1->id)
@@ -294,7 +294,7 @@ describe('ResolutionsExport - Filters', function () {
             'call_id' => $call->id,
             'filterPublished' => '1',
         ]);
-        $collection = $export->collection();
+        $collection = $export->query()->get();
 
         $ids = $collection->pluck('id')->toArray();
         expect($ids)->toContain($resolution1->id)
@@ -325,7 +325,7 @@ describe('ResolutionsExport - Filters', function () {
             'call_id' => $call->id,
             'filterPublished' => '0',
         ]);
-        $collection = $export->collection();
+        $collection = $export->query()->get();
 
         $ids = $collection->pluck('id')->toArray();
         expect($ids)->not->toContain($resolution1->id)
@@ -355,7 +355,7 @@ describe('ResolutionsExport - Filters', function () {
             'call_id' => $call->id,
             'filterPhase' => $phase1->id,
         ]);
-        $collection = $export->collection();
+        $collection = $export->query()->get();
 
         $ids = $collection->pluck('id')->toArray();
         expect($ids)->toContain($resolution1->id)
@@ -386,7 +386,7 @@ describe('ResolutionsExport - Filters', function () {
             'call_id' => $call->id,
             'search' => 'Provisional',
         ]);
-        $collection = $export->collection();
+        $collection = $export->query()->get();
 
         $ids = $collection->pluck('id')->toArray();
         expect($ids)->toContain($resolution1->id)
@@ -417,7 +417,7 @@ describe('ResolutionsExport - Filters', function () {
             'call_id' => $call->id,
             'search' => 'movilidad',
         ]);
-        $collection = $export->collection();
+        $collection = $export->query()->get();
 
         $ids = $collection->pluck('id')->toArray();
         expect($ids)->toContain($resolution1->id)
@@ -447,7 +447,7 @@ describe('ResolutionsExport - Filters', function () {
             'call_id' => $call->id,
             'showDeleted' => '1',
         ]);
-        $collection = $export->collection();
+        $collection = $export->query()->get();
 
         $ids = $collection->pluck('id')->toArray();
         expect($ids)->not->toContain($resolution1->id)
@@ -481,7 +481,7 @@ describe('ResolutionsExport - Filters', function () {
             'sortField' => 'official_date',
             'sortDirection' => 'desc',
         ]);
-        $collection = $export->collection();
+        $collection = $export->query()->get();
 
         $dates = $collection->pluck('official_date')->toArray();
         expect($dates[0]->format('Y-m-d'))->toBe('2024-06-02')
@@ -521,7 +521,7 @@ describe('ResolutionsExport - Filters', function () {
             'filterType' => 'provisional',
             'filterPublished' => '1',
         ]);
-        $collection = $export->collection();
+        $collection = $export->query()->get();
 
         $ids = $collection->pluck('id')->toArray();
         expect($ids)->toContain($resolution1->id)

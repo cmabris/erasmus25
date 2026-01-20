@@ -20,7 +20,7 @@ describe('CallsExport - Basic Export', function () {
         ]);
 
         $export = new CallsExport([]);
-        $collection = $export->collection();
+        $collection = $export->query()->get();
 
         expect($collection)->toHaveCount(5);
     });
@@ -40,7 +40,7 @@ describe('CallsExport - Basic Export', function () {
         $call2->delete(); // Soft delete
 
         $export = new CallsExport([]);
-        $collection = $export->collection();
+        $collection = $export->query()->get();
 
         expect($collection)->toHaveCount(1)
             ->and($collection->first()->id)->toBe($call1->id);
@@ -192,7 +192,7 @@ describe('CallsExport - Filters', function () {
         ]);
 
         $export = new CallsExport(['filterProgram' => $program1->id]);
-        $collection = $export->collection();
+        $collection = $export->query()->get();
 
         $ids = $collection->pluck('id')->toArray();
         expect($ids)->toContain($call1->id)
@@ -214,7 +214,7 @@ describe('CallsExport - Filters', function () {
         ]);
 
         $export = new CallsExport(['filterAcademicYear' => $academicYear1->id]);
-        $collection = $export->collection();
+        $collection = $export->query()->get();
 
         $ids = $collection->pluck('id')->toArray();
         expect($ids)->toContain($call1->id)
@@ -237,7 +237,7 @@ describe('CallsExport - Filters', function () {
         ]);
 
         $export = new CallsExport(['filterType' => 'alumnado']);
-        $collection = $export->collection();
+        $collection = $export->query()->get();
 
         $ids = $collection->pluck('id')->toArray();
         expect($ids)->toContain($call1->id)
@@ -260,7 +260,7 @@ describe('CallsExport - Filters', function () {
         ]);
 
         $export = new CallsExport(['filterModality' => 'corta']);
-        $collection = $export->collection();
+        $collection = $export->query()->get();
 
         $ids = $collection->pluck('id')->toArray();
         expect($ids)->toContain($call1->id)
@@ -283,7 +283,7 @@ describe('CallsExport - Filters', function () {
         ]);
 
         $export = new CallsExport(['filterStatus' => 'abierta']);
-        $collection = $export->collection();
+        $collection = $export->query()->get();
 
         $ids = $collection->pluck('id')->toArray();
         expect($ids)->toContain($call1->id)
@@ -306,7 +306,7 @@ describe('CallsExport - Filters', function () {
         ]);
 
         $export = new CallsExport(['search' => 'Movilidad']);
-        $collection = $export->collection();
+        $collection = $export->query()->get();
 
         $ids = $collection->pluck('id')->toArray();
         expect($ids)->toContain($call1->id)
@@ -331,7 +331,7 @@ describe('CallsExport - Filters', function () {
         ]);
 
         $export = new CallsExport(['search' => 'test']);
-        $collection = $export->collection();
+        $collection = $export->query()->get();
 
         $ids = $collection->pluck('id')->toArray();
         expect($ids)->toContain($call1->id)
@@ -353,7 +353,7 @@ describe('CallsExport - Filters', function () {
         $call2->delete(); // Soft delete
 
         $export = new CallsExport(['showDeleted' => '1']);
-        $collection = $export->collection();
+        $collection = $export->query()->get();
 
         $ids = $collection->pluck('id')->toArray();
         expect($ids)->not->toContain($call1->id) // Should not include non-deleted
@@ -381,7 +381,7 @@ describe('CallsExport - Filters', function () {
             'sortField' => 'title',
             'sortDirection' => 'asc',
         ]);
-        $collection = $export->collection();
+        $collection = $export->query()->get();
 
         $titles = $collection->pluck('title')->toArray();
         expect($titles[0])->toBe('A Convocatoria')
@@ -416,7 +416,7 @@ describe('CallsExport - Filters', function () {
             'filterProgram' => $program1->id,
             'filterType' => 'alumnado',
         ]);
-        $collection = $export->collection();
+        $collection = $export->query()->get();
 
         $ids = $collection->pluck('id')->toArray();
         expect($ids)->toContain($call1->id)

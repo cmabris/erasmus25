@@ -2,11 +2,14 @@
     {{-- Hero Section with Featured Image or Gradient --}}
     @if($this->featuredImage)
         <section class="relative h-[60vh] min-h-[400px] overflow-hidden">
-            {{-- Featured Image --}}
+            {{-- Featured Image (hero conversion - 1920x1080 WebP) --}}
             <img 
                 src="{{ $this->featuredImage }}" 
                 alt="{{ $newsPost->title }}"
                 class="h-full w-full object-cover"
+                loading="eager"
+                decoding="async"
+                fetchpriority="high"
             />
             
             {{-- Overlay --}}
@@ -303,7 +306,9 @@
             <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 @foreach($this->relatedNews as $relatedNewsPost)
                     @php
-                        $relatedImage = $relatedNewsPost->getFirstMediaUrl('featured');
+                        // Use thumbnail conversion for related news cards (WebP optimized)
+                        $relatedImage = $relatedNewsPost->getFirstMediaUrl('featured', 'thumbnail')
+                            ?: $relatedNewsPost->getFirstMediaUrl('featured');
                     @endphp
                     <x-content.news-card 
                         :news="$relatedNewsPost" 

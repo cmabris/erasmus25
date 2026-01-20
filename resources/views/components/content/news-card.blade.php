@@ -69,6 +69,7 @@
                     alt="{{ $title }}" 
                     class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                     loading="lazy"
+                    decoding="async"
                 >
             </div>
         @else
@@ -137,6 +138,7 @@
                             alt="{{ $title }}" 
                             class="h-full w-full object-cover"
                             loading="lazy"
+                            decoding="async"
                         >
                     </div>
                 @else
@@ -188,7 +190,7 @@
         <div class="flex items-start gap-3">
             @if($imageUrl)
                 <div class="h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-800">
-                    <img src="{{ $imageUrl }}" alt="{{ $title }}" class="h-full w-full object-cover" loading="lazy">
+                    <img src="{{ $imageUrl }}" alt="{{ $title }}" class="h-full w-full object-cover" loading="lazy" decoding="async">
                 </div>
             @endif
             <div class="min-w-0 flex-1">
@@ -216,6 +218,7 @@
                     alt="{{ $title }}" 
                     class="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
                     loading="lazy"
+                    decoding="async"
                 >
             </div>
         @else

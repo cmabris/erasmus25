@@ -98,25 +98,32 @@ class Program extends Model implements HasMedia
      */
     public function registerMediaConversions(?Media $media = null): void
     {
-        // Thumbnail conversion
+        // Thumbnail conversion - for cards and listings
         $this->addMediaConversion('thumbnail')
             ->width(300)
             ->height(300)
             ->sharpen(10)
+            ->quality(85)
+            ->format('webp')
+            ->nonQueued()
             ->performOnCollections('image');
 
-        // Medium conversion
+        // Medium conversion - for intermediate views
         $this->addMediaConversion('medium')
             ->width(800)
             ->height(600)
             ->sharpen(10)
+            ->quality(85)
+            ->format('webp')
             ->performOnCollections('image');
 
-        // Large conversion
+        // Large conversion - for detail views
         $this->addMediaConversion('large')
             ->width(1200)
             ->height(900)
             ->sharpen(10)
+            ->quality(85)
+            ->format('webp')
             ->performOnCollections('image');
     }
 

@@ -33,11 +33,15 @@ class Show extends Component
 
     /**
      * Get the featured image URL from Media Library.
+     * Uses 'hero' conversion (1920x1080 WebP) for optimal display.
      */
     #[Computed]
     public function featuredImage(): ?string
     {
-        return $this->newsPost->getFirstMediaUrl('featured');
+        // Try hero conversion first, fallback to large, then original
+        return $this->newsPost->getFirstMediaUrl('featured', 'hero')
+            ?: $this->newsPost->getFirstMediaUrl('featured', 'large')
+            ?: $this->newsPost->getFirstMediaUrl('featured');
     }
 
     /**

@@ -43,9 +43,9 @@ class Show extends Component
 
         // Load relationships with eager loading and counts to avoid N+1 queries
         $this->academicYear = $academic_year->load([
-            'calls' => fn ($query) => $query->latest()->limit(5),
-            'newsPosts' => fn ($query) => $query->latest()->limit(5),
-            'documents' => fn ($query) => $query->latest()->limit(5),
+            'calls' => fn ($query) => $query->with('program')->latest()->limit(5),
+            'newsPosts' => fn ($query) => $query->with(['author', 'program'])->latest()->limit(5),
+            'documents' => fn ($query) => $query->with(['category', 'program'])->latest()->limit(5),
         ])->loadCount(['calls', 'newsPosts', 'documents']);
     }
 

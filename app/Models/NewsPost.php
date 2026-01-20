@@ -139,24 +139,42 @@ class NewsPost extends Model implements HasMedia
      */
     public function registerMediaConversions(?Media $media = null): void
     {
-        // Featured image conversions
+        // Thumbnail - for cards and listings
         $this->addMediaConversion('thumbnail')
             ->width(300)
             ->height(300)
             ->sharpen(10)
+            ->quality(85)
+            ->format('webp')
+            ->nonQueued()
             ->performOnCollections('featured', 'gallery');
 
+        // Medium - for intermediate views and related news
         $this->addMediaConversion('medium')
             ->width(800)
             ->height(600)
             ->sharpen(10)
+            ->quality(85)
+            ->format('webp')
             ->performOnCollections('featured', 'gallery');
 
+        // Large - for detail views and hero images
         $this->addMediaConversion('large')
             ->width(1200)
             ->height(900)
             ->sharpen(10)
+            ->quality(85)
+            ->format('webp')
             ->performOnCollections('featured', 'gallery');
+
+        // Hero - for full-width hero sections (news detail page)
+        $this->addMediaConversion('hero')
+            ->width(1920)
+            ->height(1080)
+            ->sharpen(5)
+            ->quality(85)
+            ->format('webp')
+            ->performOnCollections('featured');
     }
 
     /**

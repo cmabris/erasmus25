@@ -262,25 +262,32 @@ class ErasmusEvent extends Model implements HasMedia
      */
     public function registerMediaConversions(?Media $media = null): void
     {
-        // Thumbnail conversion
+        // Thumbnail - for cards and calendar views
         $this->addMediaConversion('thumbnail')
             ->width(300)
             ->height(300)
             ->sharpen(10)
+            ->quality(85)
+            ->format('webp')
+            ->nonQueued()
             ->performOnCollections('images');
 
-        // Medium conversion
+        // Medium - for event listings and sidebars
         $this->addMediaConversion('medium')
             ->width(800)
             ->height(600)
             ->sharpen(10)
+            ->quality(85)
+            ->format('webp')
             ->performOnCollections('images');
 
-        // Large conversion
+        // Large - for event detail views
         $this->addMediaConversion('large')
             ->width(1200)
             ->height(900)
             ->sharpen(10)
+            ->quality(85)
+            ->format('webp')
             ->performOnCollections('images');
     }
 

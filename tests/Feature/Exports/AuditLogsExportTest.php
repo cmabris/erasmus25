@@ -91,7 +91,7 @@ describe('collection method with filters', function () {
             ->log('test_activity');
 
         $export = new AuditLogsExport([]);
-        $collection = $export->collection();
+        $collection = $export->query()->get();
 
         expect($collection)->toBeInstanceOf(Collection::class)
             ->and($collection)->toHaveCount(1);
@@ -107,7 +107,7 @@ describe('collection method with filters', function () {
             ->log('different_action');
 
         $export = new AuditLogsExport(['search' => 'find_this']);
-        $collection = $export->collection();
+        $collection = $export->query()->get();
 
         expect($collection)->toHaveCount(1)
             ->and($collection->first()->description)->toBe('find_this_action');
@@ -136,7 +136,7 @@ describe('collection method with filters', function () {
         ]);
 
         $export = new AuditLogsExport(['search' => 'Program']);
-        $collection = $export->collection();
+        $collection = $export->query()->get();
 
         expect($collection)->toHaveCount(1)
             ->and($collection->first()->subject_type)->toContain('Program');
@@ -164,7 +164,7 @@ describe('collection method with filters', function () {
         ]);
 
         $export = new AuditLogsExport(['filterModel' => Program::class]);
-        $collection = $export->collection();
+        $collection = $export->query()->get();
 
         expect($collection)->toHaveCount(1)
             ->and($collection->first()->subject_type)->toBe(Program::class);
@@ -182,7 +182,7 @@ describe('collection method with filters', function () {
             ->log('by_user2');
 
         $export = new AuditLogsExport(['filterCauserId' => $this->user->id]);
-        $collection = $export->collection();
+        $collection = $export->query()->get();
 
         expect($collection)->toHaveCount(1)
             ->and($collection->first()->causer_id)->toBe($this->user->id);
@@ -198,7 +198,7 @@ describe('collection method with filters', function () {
             ->log('another_description');
 
         $export = new AuditLogsExport(['filterDescription' => 'unique_description_123']);
-        $collection = $export->collection();
+        $collection = $export->query()->get();
 
         expect($collection)->toHaveCount(1)
             ->and($collection->first()->description)->toBe('unique_description_123');
@@ -214,7 +214,7 @@ describe('collection method with filters', function () {
             ->log('system_entry');
 
         $export = new AuditLogsExport(['filterLogName' => 'audit_log']);
-        $collection = $export->collection();
+        $collection = $export->query()->get();
 
         expect($collection)->toHaveCount(1)
             ->and($collection->first()->log_name)->toBe('audit_log');
@@ -233,7 +233,7 @@ describe('collection method with filters', function () {
             ->log('new_entry');
 
         $export = new AuditLogsExport(['filterDateFrom' => now()->subDays(2)->toDateString()]);
-        $collection = $export->collection();
+        $collection = $export->query()->get();
 
         expect($collection)->toHaveCount(1)
             ->and($collection->first()->description)->toBe('new_entry');
@@ -252,7 +252,7 @@ describe('collection method with filters', function () {
             ->log('new_entry');
 
         $export = new AuditLogsExport(['filterDateTo' => now()->subDays(5)->toDateString()]);
-        $collection = $export->collection();
+        $collection = $export->query()->get();
 
         expect($collection)->toHaveCount(1)
             ->and($collection->first()->description)->toBe('old_entry');
@@ -271,7 +271,7 @@ describe('collection method with filters', function () {
             'sortField' => 'description',
             'sortDirection' => 'asc',
         ]);
-        $collection = $export->collection();
+        $collection = $export->query()->get();
 
         expect($collection->first()->description)->toBe('aaa_first');
     });
@@ -313,7 +313,7 @@ describe('collection method with filters', function () {
             'filterModel' => Program::class,
             'filterCauserId' => $this->user->id,
         ]);
-        $collection = $export->collection();
+        $collection = $export->query()->get();
 
         expect($collection)->toHaveCount(1)
             ->and($collection->first()->causer_id)->toBe($this->user->id)
