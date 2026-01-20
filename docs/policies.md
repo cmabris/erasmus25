@@ -257,15 +257,65 @@ public function update(UpdateProgramRequest $request, Program $program)
 
 ### En Componentes Livewire
 
+#### Autorización en Acciones
+
 ```php
 public function publish(): void
 {
     $this->authorize('publish', $this->call);
-    // ...
+    
+    $this->call->update([
+        'status' => 'abierta',
+        'published_at' => now(),
+    ]);
+    
+    $this->dispatch('notify', message: __('admin.calls.published'));
 }
 ```
 
+#### Autorización en mount()
+
+```php
+public function mount(Call $call): void
+{
+    $this->authorize('view', $call);
+    $this->call = $call;
+}
+```
+
+#### Autorización Condicional para Botones
+
+```php
+public function render(): View
+{
+    return view('livewire.admin.calls.show', [
+        'canEdit' => auth()->user()->can('update', $this->call),
+        'canDelete' => auth()->user()->can('delete', $this->call),
+        'canPublish' => auth()->user()->can('publish', $this->call),
+    ]);
+}
+```
+
+#### Uso en la Vista del Componente
+
+```blade
+{{-- En la vista Blade del componente Livewire --}}
+@if($canPublish && !$call->published_at)
+    <flux:button wire:click="publish" variant="primary">
+        {{ __('admin.calls.actions.publish') }}
+    </flux:button>
+@endif
+
+@if($canDelete)
+    <flux:button wire:click="delete" variant="danger">
+        {{ __('common.actions.delete') }}
+    </flux:button>
+@endif
+```
+
 ### En Vistas Blade
+
+#### Directivas Básicas
 
 ```blade
 @can('update', $program)
@@ -275,6 +325,124 @@ public function publish(): void
 @can('publish', $call)
     <button>Publicar Convocatoria</button>
 @endcan
+```
+
+#### Con Flux UI - Botones de Acción
+
+```blade
+{{-- Grupo de acciones con autorización --}}
+<div class="flex gap-2">
+    @can('update', $program)
+        <flux:button 
+            href="{{ route('admin.programs.edit', $program) }}" 
+            variant="primary"
+            icon="pencil"
+        >
+            {{ __('common.actions.edit') }}
+        </flux:button>
+    @endcan
+
+    @can('delete', $program)
+        <flux:button 
+            wire:click="confirmDelete({{ $program->id }})" 
+            variant="danger"
+            icon="trash"
+        >
+            {{ __('common.actions.delete') }}
+        </flux:button>
+    @endcan
+</div>
+```
+
+#### Con Flux UI - Dropdown de Acciones
+
+```blade
+<flux:dropdown>
+    <flux:button variant="ghost" icon="ellipsis-vertical" />
+    
+    <flux:menu>
+        @can('view', $call)
+            <flux:menu.item href="{{ route('admin.calls.show', $call) }}" icon="eye">
+                {{ __('common.actions.view') }}
+            </flux:menu.item>
+        @endcan
+        
+        @can('update', $call)
+            <flux:menu.item href="{{ route('admin.calls.edit', $call) }}" icon="pencil">
+                {{ __('common.actions.edit') }}
+            </flux:menu.item>
+        @endcan
+        
+        @can('publish', $call)
+            @unless($call->published_at)
+                <flux:menu.item wire:click="publish({{ $call->id }})" icon="megaphone">
+                    {{ __('admin.calls.actions.publish') }}
+                </flux:menu.item>
+            @endunless
+        @endcan
+        
+        @can('delete', $call)
+            <flux:menu.separator />
+            <flux:menu.item wire:click="confirmDelete({{ $call->id }})" icon="trash" variant="danger">
+                {{ __('common.actions.delete') }}
+            </flux:menu.item>
+        @endcan
+    </flux:menu>
+</flux:dropdown>
+```
+
+#### Múltiples Permisos con @canany
+
+```blade
+@canany(['update', 'delete'], $document)
+    <div class="bg-yellow-50 p-4 rounded">
+        <p class="text-sm text-yellow-700">
+            {{ __('admin.documents.has_actions') }}
+        </p>
+    </div>
+@endcanany
+```
+
+#### Verificación Negativa con @cannot
+
+```blade
+@cannot('publish', $newsPost)
+    <flux:callout variant="warning" icon="exclamation-triangle">
+        {{ __('admin.news.cannot_publish') }}
+    </flux:callout>
+@endcannot
+```
+
+#### En Tablas de Listado
+
+```blade
+<flux:table>
+    <flux:columns>
+        <flux:column>{{ __('common.fields.title') }}</flux:column>
+        <flux:column>{{ __('common.fields.status') }}</flux:column>
+        @canany(['update', 'delete'], App\Models\Call::class)
+            <flux:column>{{ __('common.fields.actions') }}</flux:column>
+        @endcanany
+    </flux:columns>
+
+    <flux:rows>
+        @foreach($calls as $call)
+            <flux:row>
+                <flux:cell>{{ $call->title }}</flux:cell>
+                <flux:cell>
+                    <flux:badge :variant="$call->status_variant">
+                        {{ $call->status_label }}
+                    </flux:badge>
+                </flux:cell>
+                @canany(['update', 'delete'], $call)
+                    <flux:cell>
+                        {{-- Acciones aquí --}}
+                    </flux:cell>
+                @endcanany
+            </flux:row>
+        @endforeach
+    </flux:rows>
+</flux:table>
 ```
 
 ### Verificación Programática
@@ -312,6 +480,8 @@ public function before(User $user, string $ability): ?bool
 
 ## Matriz de Permisos por Rol
 
+### Matriz General
+
 | Rol | programs | calls | news | documents | events | users |
 |-----|----------|-------|------|-----------|--------|-------|
 | super-admin | ✅ Todo | ✅ Todo | ✅ Todo | ✅ Todo | ✅ Todo | ✅ Todo |
@@ -320,6 +490,38 @@ public function before(User $user, string $ability): ?bool
 | viewer | Solo Ver | Solo Ver | Solo Ver | Solo Ver | Solo Ver | ❌ |
 
 **Nota:** Solo el rol `super-admin` tiene acceso a la gestión de usuarios (`users.*`).
+
+### Matriz Detallada por Acción
+
+```
+                    ┌─────────────────────────────────────────────────────────────┐
+                    │                    PERMISOS POR ROL                         │
+                    ├─────────────┬─────────┬─────────┬─────────┬─────────┬───────┤
+                    │ super-admin │  admin  │ editor  │ viewer  │ sin rol │       │
+┌───────────────────┼─────────────┼─────────┼─────────┼─────────┼─────────┤       │
+│ viewAny           │     ✅      │    ✅    │    ✅    │    ✅    │    ❌    │       │
+│ view              │     ✅      │    ✅    │    ✅    │    ✅    │    ❌    │       │
+│ create            │     ✅      │    ✅    │    ✅    │    ❌    │    ❌    │       │
+│ update            │     ✅      │    ✅    │    ✅    │    ❌    │    ❌    │       │
+│ delete            │     ✅      │    ✅    │    ❌    │    ❌    │    ❌    │       │
+│ publish           │     ✅      │    ✅    │    ❌    │    ❌    │    ❌    │ *     │
+│ restore           │     ✅      │    ✅    │    ❌    │    ❌    │    ❌    │       │
+│ forceDelete       │     ✅      │    ✅    │    ❌    │    ❌    │    ❌    │ **    │
+└───────────────────┴─────────────┴─────────┴─────────┴─────────┴─────────┴───────┘
+
+* publish: Solo disponible en Call, Resolution, NewsPost
+** forceDelete: Validación adicional de relaciones en algunos modelos
+```
+
+### Acceso a Módulos de Sistema
+
+| Módulo | super-admin | admin | editor | viewer |
+|--------|-------------|-------|--------|--------|
+| Configuración | ✅ | ✅ | ❌ | ❌ |
+| Traducciones | ✅ | ✅ | ❌ | ❌ |
+| Auditoría | ✅ | ✅ | ❌ | ❌ |
+| Roles | ✅ | ❌ | ❌ | ❌ |
+| Usuarios | ✅ | ❌ | ❌ | ❌ |
 
 ---
 
@@ -417,6 +619,244 @@ Laravel detecta automáticamente las policies gracias a la convención de nombre
 - `App\Models\User` → `App\Policies\UserPolicy`
 
 No es necesario registrar manualmente las policies en `AuthServiceProvider`.
+
+**Excepción**: `RolePolicy` requiere registro manual porque el modelo `Role` pertenece al paquete Spatie Permission:
+
+```php
+// En AuthServiceProvider o AppServiceProvider
+Gate::policy(\Spatie\Permission\Models\Role::class, \App\Policies\RolePolicy::class);
+```
+
+---
+
+## Casos Especiales y Patrones Avanzados
+
+### 1. Validación de Relaciones en forceDelete()
+
+Algunos modelos no pueden eliminarse permanentemente si tienen relaciones activas:
+
+```php
+// ProgramPolicy
+public function forceDelete(User $user, Program $program): bool
+{
+    // Verificar que no tiene relaciones
+    if ($program->calls()->exists()) {
+        return false;
+    }
+    if ($program->newsPosts()->exists()) {
+        return false;
+    }
+    if ($program->documents()->exists()) {
+        return false;
+    }
+    if ($program->events()->exists()) {
+        return false;
+    }
+    
+    return $user->can(Permissions::PROGRAMS_DELETE);
+}
+```
+
+**Modelos afectados**:
+- `Program`: No eliminar si tiene calls, newsPosts, documents, events
+- `AcademicYear`: No eliminar si tiene calls
+- `DocumentCategory`: No eliminar si tiene documents
+- `NewsTag`: No eliminar si tiene newsPosts asociados
+
+### 2. Auto-protección de Usuario
+
+Un usuario nunca puede realizar ciertas acciones sobre sí mismo:
+
+```php
+// UserPolicy
+public function delete(User $user, User $model): bool
+{
+    // Prevenir auto-eliminación
+    if ($user->id === $model->id) {
+        return false;
+    }
+    
+    return $user->can(Permissions::USERS_DELETE);
+}
+
+public function assignRoles(User $user, User $model): bool
+{
+    // Prevenir modificación de propios roles
+    if ($user->id === $model->id) {
+        return false;
+    }
+    
+    return $user->can(Permissions::USERS_EDIT);
+}
+```
+
+### 3. Protección de Roles del Sistema
+
+Los roles del sistema no pueden ser eliminados ni modificados en ciertos aspectos:
+
+```php
+// RolePolicy
+public function delete(User $user, Role $role): bool
+{
+    // Roles del sistema protegidos
+    $protectedRoles = [
+        Roles::SUPER_ADMIN,
+        Roles::ADMIN,
+        Roles::EDITOR,
+        Roles::VIEWER,
+    ];
+    
+    if (in_array($role->name, $protectedRoles)) {
+        return false;
+    }
+    
+    return $user->hasRole(Roles::SUPER_ADMIN);
+}
+```
+
+### 4. Autorización Basada en Estado
+
+Algunas acciones dependen del estado del modelo:
+
+```php
+// En el componente Livewire
+public function publish(): void
+{
+    $this->authorize('publish', $this->call);
+    
+    // Verificación adicional de estado
+    if ($this->call->status !== 'borrador') {
+        $this->dispatch('notify', 
+            message: __('admin.calls.already_published'),
+            type: 'error'
+        );
+        return;
+    }
+    
+    // Proceder con publicación...
+}
+```
+
+### 5. Permisos en Entidades Anidadas
+
+Las sub-entidades heredan permisos de la entidad padre:
+
+```php
+// CallPhasePolicy - hereda permisos de calls
+public function create(User $user): bool
+{
+    return $user->can(Permissions::CALLS_CREATE);
+}
+
+// ResolutionPolicy - hereda permisos de calls
+public function publish(User $user, Resolution $resolution): bool
+{
+    return $user->can(Permissions::CALLS_PUBLISH);
+}
+```
+
+**Jerarquía de permisos**:
+```
+calls.*
+├── CallPhase (usa calls.*)
+└── Resolution (usa calls.*)
+
+news.*
+└── NewsTag (usa news.*)
+
+documents.*
+└── DocumentCategory (usa documents.*)
+```
+
+### 6. Acceso a Propio Perfil
+
+Un usuario siempre puede ver y editar su propio perfil, independientemente de permisos:
+
+```php
+// UserPolicy
+public function view(User $user, User $model): bool
+{
+    // Siempre puede ver su propio perfil
+    if ($user->id === $model->id) {
+        return true;
+    }
+    
+    return $user->can(Permissions::USERS_VIEW);
+}
+
+public function update(User $user, User $model): bool
+{
+    // Siempre puede editar su propio perfil
+    if ($user->id === $model->id) {
+        return true;
+    }
+    
+    return $user->can(Permissions::USERS_EDIT);
+}
+```
+
+---
+
+## Buenas Prácticas
+
+### 1. Usar Constantes de Permisos
+
+```php
+// ✅ Correcto
+$user->can(Permissions::CALLS_PUBLISH);
+
+// ❌ Evitar strings hardcodeados
+$user->can('calls.publish');
+```
+
+### 2. Autorizar Antes de Ejecutar
+
+```php
+// ✅ Correcto - autorizar primero
+public function delete(int $id): void
+{
+    $call = Call::findOrFail($id);
+    $this->authorize('delete', $call);
+    $call->delete();
+}
+
+// ❌ Evitar - ejecutar sin autorizar
+public function delete(int $id): void
+{
+    Call::findOrFail($id)->delete();
+}
+```
+
+### 3. Usar Policies en Lugar de Verificaciones Manuales
+
+```php
+// ✅ Correcto - usar policy
+@can('update', $program)
+    <button>Editar</button>
+@endcan
+
+// ❌ Evitar - verificación manual
+@if(auth()->user()->hasRole('admin') || auth()->user()->hasPermissionTo('programs.edit'))
+    <button>Editar</button>
+@endif
+```
+
+### 4. Documentar Casos Especiales
+
+Cuando una policy tiene lógica especial, documentarla en el código:
+
+```php
+/**
+ * Determina si el usuario puede eliminar permanentemente el programa.
+ * 
+ * IMPORTANTE: La eliminación permanente solo es posible si el programa
+ * no tiene relaciones con otros modelos (calls, news, documents, events).
+ */
+public function forceDelete(User $user, Program $program): bool
+{
+    // ... implementación
+}
+```
 
 ---
 
