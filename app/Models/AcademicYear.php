@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -71,12 +72,22 @@ class AcademicYear extends Model
     /**
      * Cache key for the current academic year.
      */
-    private const CACHE_KEY_CURRENT = 'academic_year.current';
+    public const CACHE_KEY_CURRENT = 'academic_year.current';
+
+    /**
+     * Cache key for all academic years.
+     */
+    public const CACHE_KEY_ALL = 'academic_years.all';
 
     /**
      * Cache TTL for the current academic year (24 hours).
      */
-    private const CACHE_TTL_CURRENT = 86400;
+    public const CACHE_TTL_CURRENT = 86400;
+
+    /**
+     * Cache TTL for all academic years (1 hour).
+     */
+    public const CACHE_TTL = 3600;
 
     /**
      * Scope to get the current academic year.
@@ -97,11 +108,35 @@ class AcademicYear extends Model
     }
 
     /**
+     * Get cached list of all academic years (ordered by year desc).
+     * Used in filters across multiple components.
+     */
+    public static function getCachedAll(): Collection
+    {
+        return Cache::remember(self::CACHE_KEY_ALL, self::CACHE_TTL, function () {
+            return static::query()
+                ->orderBy('year', 'desc')
+                ->get();
+        });
+    }
+
+    /**
+     * Clear all academic year caches.
+     */
+    public static function clearCache(): void
+    {
+        Cache::forget(self::CACHE_KEY_CURRENT);
+        Cache::forget(self::CACHE_KEY_ALL);
+    }
+
+    /**
      * Clear the current academic year cache.
+     *
+     * @deprecated Use clearCache() instead
      */
     public static function clearCurrentCache(): void
     {
-        Cache::forget(self::CACHE_KEY_CURRENT);
+        self::clearCache();
     }
 
     /**
@@ -165,20 +200,10 @@ class AcademicYear extends Model
             $academicYear->documents()->update(['academic_year_id' => null]);
         });
 
-        // Clear cache when academic year is updated or deleted
-        static::updated(function ($academicYear) {
-            if ($academicYear->isDirty('is_current')) {
-                static::clearCurrentCache();
-            }
-        });
-
-        static::deleted(function () {
-            static::clearCurrentCache();
-        });
-
-        static::restored(function () {
-            static::clearCurrentCache();
-        });
+        // Clear cache when academic year is created, updated, or deleted
+        static::saved(fn () => self::clearCache());
+        static::deleted(fn () => self::clearCache());
+        static::restored(fn () => self::clearCache());
     }
 
     /**

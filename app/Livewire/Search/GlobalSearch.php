@@ -135,29 +135,25 @@ class GlobalSearch extends Component
     }
 
     /**
-     * Available programs for filtering.
+     * Available programs for filtering (cached).
      *
      * @return Collection<int, Program>
      */
     #[Computed]
     public function availablePrograms(): Collection
     {
-        return Program::where('is_active', true)
-            ->orderBy('order')
-            ->orderBy('name')
-            ->get();
+        return Program::getCachedActive();
     }
 
     /**
-     * Available academic years for filtering.
+     * Available academic years for filtering (cached).
      *
      * @return Collection<int, AcademicYear>
      */
     #[Computed]
     public function availableAcademicYears(): Collection
     {
-        return AcademicYear::orderBy('year', 'desc')
-            ->get();
+        return AcademicYear::getCachedAll();
     }
 
     /**

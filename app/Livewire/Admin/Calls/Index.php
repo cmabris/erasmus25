@@ -147,25 +147,21 @@ class Index extends Component
     }
 
     /**
-     * Get all programs for filter dropdown.
+     * Get all programs for filter dropdown (cached).
      */
     #[Computed]
     public function programs(): \Illuminate\Database\Eloquent\Collection
     {
-        return Program::query()
-            ->orderBy('name')
-            ->get();
+        return Program::getCachedActive();
     }
 
     /**
-     * Get all academic years for filter dropdown.
+     * Get all academic years for filter dropdown (cached).
      */
     #[Computed]
     public function academicYears(): \Illuminate\Database\Eloquent\Collection
     {
-        return AcademicYear::query()
-            ->orderBy('year', 'desc')
-            ->get();
+        return AcademicYear::getCachedAll();
     }
 
     /**

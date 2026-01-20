@@ -3,10 +3,7 @@
 namespace App\Livewire\Public\Calls;
 
 use App\Models\Call;
-use App\Models\CallPhase;
 use App\Models\NewsPost;
-use App\Models\Program;
-use App\Models\Resolution;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
@@ -30,7 +27,16 @@ class Show extends Component
             abort(404);
         }
 
-        $this->call = $call;
+        // Eager load relationships to avoid N+1 queries
+        $this->call = $call->load([
+            'program',
+            'academicYear',
+            'phases' => fn ($q) => $q->orderBy('order'),
+            'resolutions' => fn ($q) => $q->whereNotNull('published_at')
+                ->with('callPhase')
+                ->orderBy('official_date', 'desc')
+                ->orderBy('published_at', 'desc'),
+        ]);
     }
 
     /**
@@ -79,33 +85,27 @@ class Show extends Component
     }
 
     /**
-     * Get current phases for this call.
+     * Get current phases for this call (from eager-loaded relation).
      *
      * @return Collection<int, CallPhase>
      */
     #[Computed]
     public function currentPhases(): Collection
     {
-        return $this->call->phases()
-            ->orderBy('order')
-            ->get();
+        // Use the pre-loaded relation (already ordered by 'order' in mount)
+        return $this->call->phases;
     }
 
     /**
-     * Get published resolutions for this call.
+     * Get published resolutions for this call (from eager-loaded relation).
      *
      * @return Collection<int, Resolution>
      */
     #[Computed]
     public function publishedResolutions(): Collection
     {
-        return Resolution::query()
-            ->where('call_id', $this->call->id)
-            ->whereNotNull('published_at')
-            ->with(['callPhase'])
-            ->orderBy('official_date', 'desc')
-            ->orderBy('published_at', 'desc')
-            ->get();
+        // Use the pre-loaded relation (already filtered and ordered in mount)
+        return $this->call->resolutions;
     }
 
     /**

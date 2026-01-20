@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use App\Models\Concerns\Translatable;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -127,5 +129,49 @@ class Program extends Model implements HasMedia
             ->logOnly(['code', 'name', 'description', 'is_active', 'order'])
             ->logOnlyDirty()
             ->dontLogIfAttributesChangedOnly(['updated_at', 'slug']);
+    }
+
+    /**
+     * Cache key for active programs.
+     */
+    public const CACHE_KEY_ACTIVE = 'programs.active';
+
+    /**
+     * Cache TTL in seconds (1 hour).
+     */
+    public const CACHE_TTL = 3600;
+
+    /**
+     * Get cached list of active programs.
+     * Used in filters across multiple components.
+     */
+    public static function getCachedActive(): Collection
+    {
+        return Cache::remember(self::CACHE_KEY_ACTIVE, self::CACHE_TTL, function () {
+            return static::query()
+                ->where('is_active', true)
+                ->orderBy('order')
+                ->orderBy('name')
+                ->get();
+        });
+    }
+
+    /**
+     * Clear the programs cache.
+     * Call this when programs are created, updated, or deleted.
+     */
+    public static function clearCache(): void
+    {
+        Cache::forget(self::CACHE_KEY_ACTIVE);
+    }
+
+    /**
+     * Boot the model and register cache invalidation.
+     */
+    protected static function booted(): void
+    {
+        // Clear cache when a program is saved or deleted
+        static::saved(fn () => self::clearCache());
+        static::deleted(fn () => self::clearCache());
     }
 }

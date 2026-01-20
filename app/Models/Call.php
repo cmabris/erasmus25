@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Livewire\Public\Home;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -183,5 +184,21 @@ class Call extends Model
             ])
             ->logOnlyDirty()
             ->dontLogIfAttributesChangedOnly(['updated_at', 'slug', 'created_by', 'updated_by']);
+    }
+
+    /**
+     * Clear home page cache when call status or publication changes.
+     */
+    protected static function booted(): void
+    {
+        // Clear home cache when a call is saved (status/published_at may have changed)
+        static::saved(function (self $call) {
+            // Only clear cache if status or published_at changed
+            if ($call->wasChanged(['status', 'published_at'])) {
+                Home::clearCache();
+            }
+        });
+
+        static::deleted(fn () => Home::clearCache());
     }
 }

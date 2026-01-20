@@ -90,6 +90,16 @@ class Dashboard extends Component
     protected const CACHE_TTL_CHARTS = 900; // 15 minutes
 
     /**
+     * Cache TTL in seconds for alerts.
+     */
+    protected const CACHE_TTL_ALERTS = 300; // 5 minutes
+
+    /**
+     * Cache TTL in seconds for recent activities.
+     */
+    protected const CACHE_TTL_ACTIVITIES = 120; // 2 minutes
+
+    /**
      * Load all statistics with caching.
      */
     protected function loadStatistics(): void
@@ -229,40 +239,44 @@ class Dashboard extends Component
     }
 
     /**
-     * Load recent activities from the system.
+     * Load recent activities from the system (cached).
      */
     protected function loadRecentActivities(): void
     {
-        $activities = collect();
+        $cacheKey = 'dashboard.recent_activities';
 
-        // Get activities from Spatie Activitylog
-        $activityLogs = Activity::query()
-            ->with(['causer', 'subject'])
-            ->orderBy('created_at', 'desc')
-            ->limit(10)
-            ->get();
+        $this->recentActivities = Cache::remember($cacheKey, self::CACHE_TTL_ACTIVITIES, function () {
+            $activities = collect();
 
-        foreach ($activityLogs as $activity) {
-            if ($activity->subject) {
-                $activities->push([
-                    'type' => $this->getActivityType($activity->subject_type),
-                    'action' => $activity->description,
-                    'title' => $this->getModelTitle($activity->subject),
-                    'user' => $activity->causer?->name ?? __('common.messages.system'),
-                    'date' => $activity->created_at,
-                    'url' => $this->getModelUrl($activity->subject_type, $activity->subject_id),
-                    'icon' => $this->getActivityIcon($activity->subject_type),
-                    'color' => $this->getActivityColor($activity->description),
-                ]);
+            // Get activities from Spatie Activitylog
+            $activityLogs = Activity::query()
+                ->with(['causer', 'subject'])
+                ->orderBy('created_at', 'desc')
+                ->limit(10)
+                ->get();
+
+            foreach ($activityLogs as $activity) {
+                if ($activity->subject) {
+                    $activities->push([
+                        'type' => $this->getActivityType($activity->subject_type),
+                        'action' => $activity->description,
+                        'title' => $this->getModelTitle($activity->subject),
+                        'user' => $activity->causer?->name ?? __('common.messages.system'),
+                        'date' => $activity->created_at,
+                        'url' => $this->getModelUrl($activity->subject_type, $activity->subject_id),
+                        'icon' => $this->getActivityIcon($activity->subject_type),
+                        'color' => $this->getActivityColor($activity->description),
+                    ]);
+                }
             }
-        }
 
-        // If we don't have enough activities from Activity, supplement with direct queries
-        if ($activities->count() < 8) {
-            $activities = $this->supplementActivities($activities);
-        }
+            // If we don't have enough activities from Activity, supplement with direct queries
+            if ($activities->count() < 8) {
+                $activities = $this->supplementActivities($activities);
+            }
 
-        $this->recentActivities = $activities;
+            return $activities;
+        });
     }
 
     /**
@@ -416,86 +430,90 @@ class Dashboard extends Component
     }
 
     /**
-     * Load alerts requiring attention.
+     * Load alerts requiring attention (cached).
      */
     protected function loadAlerts(): void
     {
-        $alerts = collect();
+        $cacheKey = 'dashboard.alerts';
 
-        // Calls closing soon (within 7 days)
-        $callsClosingSoon = Call::query()
-            ->where('status', 'abierta')
-            ->whereNotNull('published_at')
-            ->whereNotNull('closed_at')
-            ->where('closed_at', '<=', now()->addDays(7))
-            ->where('closed_at', '>', now())
-            ->orderBy('closed_at')
-            ->limit(5)
-            ->get();
+        $this->alerts = Cache::remember($cacheKey, self::CACHE_TTL_ALERTS, function () {
+            $alerts = collect();
 
-        foreach ($callsClosingSoon as $call) {
-            $daysLeft = max(0, now()->diffInDays($call->closed_at, false));
-            $alerts->push([
-                'type' => 'call_closing_soon',
-                'priority' => $daysLeft <= 3 ? 'high' : 'medium',
-                'title' => __('common.admin.dashboard.alerts.call_closing_soon', ['title' => $call->title, 'days' => format_number($daysLeft)]),
-                'description' => __('common.admin.dashboard.alerts.call_closing_soon_description', ['date' => format_date($call->closed_at)]),
-                'url' => \Illuminate\Support\Facades\Route::has('admin.calls.show') ? route('admin.calls.show', $call) : null,
-                'icon' => 'clock',
-                'variant' => $daysLeft <= 3 ? 'danger' : 'warning',
-            ]);
-        }
+            // Calls closing soon (within 7 days)
+            $callsClosingSoon = Call::query()
+                ->where('status', 'abierta')
+                ->whereNotNull('published_at')
+                ->whereNotNull('closed_at')
+                ->where('closed_at', '<=', now()->addDays(7))
+                ->where('closed_at', '>', now())
+                ->orderBy('closed_at')
+                ->limit(5)
+                ->get();
 
-        // Unpublished drafts older than 7 days
-        $oldDrafts = Call::query()
-            ->where('status', 'borrador')
-            ->whereNull('published_at')
-            ->where('created_at', '<', now()->subDays(7))
-            ->orderBy('created_at')
-            ->limit(5)
-            ->get();
+            foreach ($callsClosingSoon as $call) {
+                $daysLeft = max(0, now()->diffInDays($call->closed_at, false));
+                $alerts->push([
+                    'type' => 'call_closing_soon',
+                    'priority' => $daysLeft <= 3 ? 'high' : 'medium',
+                    'title' => __('common.admin.dashboard.alerts.call_closing_soon', ['title' => $call->title, 'days' => format_number($daysLeft)]),
+                    'description' => __('common.admin.dashboard.alerts.call_closing_soon_description', ['date' => format_date($call->closed_at)]),
+                    'url' => \Illuminate\Support\Facades\Route::has('admin.calls.show') ? route('admin.calls.show', $call) : null,
+                    'icon' => 'clock',
+                    'variant' => $daysLeft <= 3 ? 'danger' : 'warning',
+                ]);
+            }
 
-        foreach ($oldDrafts as $call) {
-            $daysOld = max(0, now()->diffInDays($call->created_at));
-            $alerts->push([
-                'type' => 'unpublished_draft',
-                'priority' => 'medium',
-                'title' => __('common.admin.dashboard.alerts.unpublished_draft', ['title' => $call->title, 'days' => format_number($daysOld)]),
-                'description' => __('common.admin.dashboard.alerts.unpublished_draft_description'),
-                'url' => \Illuminate\Support\Facades\Route::has('admin.calls.edit') ? route('admin.calls.edit', $call) : null,
-                'icon' => 'document-text',
-                'variant' => 'warning',
-            ]);
-        }
+            // Unpublished drafts older than 7 days
+            $oldDrafts = Call::query()
+                ->where('status', 'borrador')
+                ->whereNull('published_at')
+                ->where('created_at', '<', now()->subDays(7))
+                ->orderBy('created_at')
+                ->limit(5)
+                ->get();
 
-        // Upcoming events without location
-        $eventsWithoutLocation = ErasmusEvent::query()
-            ->where('is_public', true)
-            ->where('start_date', '>=', now()->startOfDay())
-            ->where('start_date', '<=', now()->addDays(7))
-            ->whereNull('location')
-            ->orderBy('start_date')
-            ->limit(3)
-            ->get();
+            foreach ($oldDrafts as $call) {
+                $daysOld = max(0, now()->diffInDays($call->created_at));
+                $alerts->push([
+                    'type' => 'unpublished_draft',
+                    'priority' => 'medium',
+                    'title' => __('common.admin.dashboard.alerts.unpublished_draft', ['title' => $call->title, 'days' => format_number($daysOld)]),
+                    'description' => __('common.admin.dashboard.alerts.unpublished_draft_description'),
+                    'url' => \Illuminate\Support\Facades\Route::has('admin.calls.edit') ? route('admin.calls.edit', $call) : null,
+                    'icon' => 'document-text',
+                    'variant' => 'warning',
+                ]);
+            }
 
-        foreach ($eventsWithoutLocation as $event) {
-            $alerts->push([
-                'type' => 'event_missing_location',
-                'priority' => 'low',
-                'title' => __('common.admin.dashboard.alerts.event_missing_location', ['title' => $event->title]),
-                'description' => __('common.admin.dashboard.alerts.event_missing_location_description', ['date' => format_date($event->start_date)]),
-                'url' => \Illuminate\Support\Facades\Route::has('admin.events.edit') ? route('admin.events.edit', $event) : null,
-                'icon' => 'map-pin',
-                'variant' => 'info',
-            ]);
-        }
+            // Upcoming events without location
+            $eventsWithoutLocation = ErasmusEvent::query()
+                ->where('is_public', true)
+                ->where('start_date', '>=', now()->startOfDay())
+                ->where('start_date', '<=', now()->addDays(7))
+                ->whereNull('location')
+                ->orderBy('start_date')
+                ->limit(3)
+                ->get();
 
-        $this->alerts = $alerts->sortBy(fn ($alert) => match ($alert['priority']) {
-            'high' => 1,
-            'medium' => 2,
-            'low' => 3,
-            default => 4,
-        })->take(5);
+            foreach ($eventsWithoutLocation as $event) {
+                $alerts->push([
+                    'type' => 'event_missing_location',
+                    'priority' => 'low',
+                    'title' => __('common.admin.dashboard.alerts.event_missing_location', ['title' => $event->title]),
+                    'description' => __('common.admin.dashboard.alerts.event_missing_location_description', ['date' => format_date($event->start_date)]),
+                    'url' => \Illuminate\Support\Facades\Route::has('admin.events.edit') ? route('admin.events.edit', $event) : null,
+                    'icon' => 'map-pin',
+                    'variant' => 'info',
+                ]);
+            }
+
+            return $alerts->sortBy(fn ($alert) => match ($alert['priority']) {
+                'high' => 1,
+                'medium' => 2,
+                'low' => 3,
+                default => 4,
+            })->take(5);
+        });
     }
 
     /**
@@ -660,6 +678,8 @@ class Dashboard extends Component
         Cache::forget('dashboard.charts.monthly_activity');
         Cache::forget('dashboard.charts.calls_by_program');
         Cache::forget('dashboard.charts.calls_by_status');
+        Cache::forget('dashboard.alerts');
+        Cache::forget('dashboard.recent_activities');
     }
 
     /**

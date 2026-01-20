@@ -197,14 +197,9 @@
                                         <x-ui.user-roles :user="$user" size="sm" :show-empty="false" />
                                     </td>
                                     <td class="px-4 py-4 whitespace-nowrap text-sm text-zinc-500 dark:text-zinc-400">
-                                        @php
-                                            $activitiesCount = \Spatie\Activitylog\Models\Activity::where('causer_type', \App\Models\User::class)
-                                                ->where('causer_id', $user->id)
-                                                ->count();
-                                        @endphp
-                                        @if($activitiesCount > 0)
+                                        @if($user->activities_count > 0)
                                             <flux:tooltip content="{{ __('Número de acciones registradas en el sistema') }}" position="top">
-                                                <span class="font-medium text-zinc-900 dark:text-white">{{ number_format($activitiesCount, 0, ',', '.') }}</span>
+                                                <span class="font-medium text-zinc-900 dark:text-white">{{ number_format($user->activities_count, 0, ',', '.') }}</span>
                                             </flux:tooltip>
                                         @else
                                             <span class="text-zinc-400 dark:text-zinc-500">0</span>

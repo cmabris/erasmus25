@@ -139,7 +139,7 @@ class Index extends Component
                         ->orWhere('slug', 'like', "%{$this->search}%");
                 });
             })
-            ->with(['category', 'program', 'academicYear', 'creator', 'updater'])
+            ->with(['category', 'program', 'academicYear', 'creator', 'updater', 'media'])
             ->withCount(['mediaConsents'])
             ->orderBy($this->sortField, $this->sortDirection)
             ->orderBy('created_at', 'desc')
@@ -147,36 +147,30 @@ class Index extends Component
     }
 
     /**
-     * Get all categories for filter dropdown.
+     * Get all categories for filter dropdown (cached).
      */
     #[Computed]
     public function categories(): \Illuminate\Database\Eloquent\Collection
     {
-        return DocumentCategory::query()
-            ->orderBy('name')
-            ->get();
+        return DocumentCategory::getCachedAll();
     }
 
     /**
-     * Get all programs for filter dropdown.
+     * Get all programs for filter dropdown (cached).
      */
     #[Computed]
     public function programs(): \Illuminate\Database\Eloquent\Collection
     {
-        return Program::query()
-            ->orderBy('name')
-            ->get();
+        return Program::getCachedActive();
     }
 
     /**
-     * Get all academic years for filter dropdown.
+     * Get all academic years for filter dropdown (cached).
      */
     #[Computed]
     public function academicYears(): \Illuminate\Database\Eloquent\Collection
     {
-        return AcademicYear::query()
-            ->orderBy('year', 'desc')
-            ->get();
+        return AcademicYear::getCachedAll();
     }
 
     /**

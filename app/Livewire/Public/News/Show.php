@@ -27,7 +27,8 @@ class Show extends Component
             abort(404);
         }
 
-        $this->newsPost = $newsPost;
+        // Eager load relationships to avoid N+1 queries
+        $this->newsPost = $newsPost->load(['program', 'academicYear', 'author', 'tags', 'media']);
     }
 
     /**

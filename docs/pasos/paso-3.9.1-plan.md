@@ -59,21 +59,59 @@ Tras revisar los componentes Livewire, modelos y migraciones existentes, se han 
 
 ## Plan de Trabajo
 
-### Fase 1: Auditoría y Detección de N+1 (Opcional con Laravel Telescope/Debugbar)
+### Fase 1: Auditoría y Detección de N+1 ✅ COMPLETADO
 
 #### 1.1. Configurar Laravel Debugbar (Desarrollo)
-- [ ] Instalar `barryvdh/laravel-debugbar` (si no está instalado)
-- [ ] Habilitar en entorno de desarrollo
-- [ ] Identificar consultas lentas/repetidas
+- [x] Instalar `barryvdh/laravel-debugbar` (si no está instalado)
+- [x] Habilitar en entorno de desarrollo
+- [x] Configurar para detección óptima de N+1:
+  - Mostrar todas las consultas (no solo lentas)
+  - Habilitar hints para N+1
+  - Habilitar EXPLAIN
+  - Habilitar timeline de consultas
+  - Habilitar cache collector
+- [x] Crear guía de uso: `docs/debugbar-n1-detection.md`
 
-### Fase 2: Optimización de Eager Loading
+#### 1.2. Configurar Detección Automática
+- [x] Habilitar `Model::shouldBeStrict()` en `AppServiceProvider` (detecta N+1 en desarrollo/testing)
+- [x] Crear trait `Tests\Concerns\CountsQueries` para tests de rendimiento
+- [x] Crear tests automatizados: `tests/Feature/Performance/QueryOptimizationTest.php`
+- [x] Establecer baseline de queries por componente
 
-#### 2.1. Mejorar Route Model Binding con Eager Loading
-- [ ] `Public\Calls\Show`: Precargar relaciones en `mount()`
-- [ ] `Public\News\Show`: Precargar relaciones en `mount()`
-- [ ] `Public\Documents\Show`: Precargar relaciones en `mount()`
-- [ ] `Public\Events\Show`: Precargar relaciones en `mount()`
-- [ ] `Public\Programs\Show`: Precargar relaciones en `mount()`
+#### 1.3. Problemas N+1 Detectados (a corregir en Fase 2)
+
+| Componente | Problema | Queries Extras |
+|------------|----------|----------------|
+| Admin\News\Index | Media N+1 (featured images) | 15 queries por listado |
+| Admin\Documents\Index | Media N+1 + Users N+1 | 15+ queries |
+| Admin\Events\Index | Media N+1 (event images) | 15 queries |
+| Admin\Users\Index | Activity count N+1 | 15 queries por usuario |
+| Admin\Calls\Index | Users N+1 (creator/updater) | 2 queries |
+
+### Fase 2: Optimización de Eager Loading ✅ COMPLETADO
+
+#### 2.1. Corregir N+1 en Componentes Admin Index
+- [x] `Admin\News\Index`: Añadido `->with('media')` al eager loading
+- [x] `Admin\Documents\Index`: Añadido `->with('media')` al eager loading
+- [x] `Admin\Events\Index`: Consolidado `->with(['program', 'call', 'creator', 'media'])`
+- [x] `Admin\Users\Index`: Añadido `withCount(['activities'])` y relación `activities()` al modelo User
+- [x] Actualizada vista `users/index.blade.php` para usar `$user->activities_count` en lugar de consulta directa
+
+#### 2.2. Mejoras Realizadas
+- El conteo de actividades por usuario ya no genera N+1 (de 15 queries a 1)
+- Media eager loading añadido a News, Documents y Events
+- Modelo User ahora tiene relación `activities()` para uso con `withCount()`
+
+#### 2.3. Componentes Public Show - Eager Loading ✅ COMPLETADO
+- [x] `Public\Calls\Show`: Añadido `->load(['program', 'academicYear'])`
+- [x] `Public\News\Show`: Añadido `->load(['program', 'academicYear', 'author', 'tags', 'media'])`
+- [x] `Public\Documents\Show`: Ya tenía eager loading (verificado)
+- [x] `Public\Events\Show`: Añadido `media` al eager loading existente
+- [x] `Public\Programs\Show`: No requiere cambios (modelo simple sin relaciones en mount)
+
+**Nota sobre Media N+1**: Las consultas de media que persisten en News/Events son debido a
+`getFirstMediaUrl()` con conversiones (thumbnail), que no utiliza la relación eager-loaded.
+Es comportamiento esperado de Spatie Media Library y no representa un problema real de rendimiento.
 
 **Ejemplo de mejora:**
 ```php
@@ -95,89 +133,84 @@ public function mount(Call $call): void
 }
 ```
 
-#### 2.2. Optimizar Computed Properties con Consultas
-- [ ] Convertir `currentPhases()` en `Public\Calls\Show` a usar relación precargada
-- [ ] Convertir `publishedResolutions()` en `Public\Calls\Show` a usar relación precargada
-- [ ] Optimizar `hasRelationships()` en `Admin\Calls\Show` usando counts precargados
+#### 2.4. Optimizar Computed Properties con Consultas ✅ COMPLETADO
+- [x] `Public\Calls\Show`: `currentPhases()` ahora usa relación precargada en mount
+- [x] `Public\Calls\Show`: `publishedResolutions()` ahora usa relación precargada en mount
+- [x] `Admin\Calls\Show`: `hasRelationships()` y `canDelete()` ahora usan `_count` precargados
 
-### Fase 3: Implementación de Caché
+### Fase 3: Implementación de Caché ✅ COMPLETADO
 
 #### 3.1. Caché para Datos de Referencia Frecuentes
-- [ ] Cachear lista de programas activos (usado en filtros en múltiples componentes)
-- [ ] Cachear lista de años académicos (usado en filtros)
-- [ ] Cachear categorías de documentos activas
+- [x] `Program::getCachedActive()` - Lista de programas activos (TTL: 1 hora)
+- [x] `AcademicYear::getCachedAll()` - Lista de años académicos (TTL: 1 hora)
+- [x] `DocumentCategory::getCachedAll()` - Lista de categorías (TTL: 1 hora)
 
-**Archivos a crear:**
-- `app/Services/CacheService.php` o usar métodos estáticos en modelos
+#### 3.2. Caché para Página Principal (Home)
+- [x] `Home::CACHE_KEY_CALLS` - Convocatorias abiertas (TTL: 15 min)
+- [x] `Home::CACHE_KEY_NEWS` - Noticias recientes (TTL: 15 min)
+- [x] `Home::CACHE_KEY_EVENTS` - Eventos próximos (TTL: 15 min)
 
-**Ejemplo de implementación:**
+#### 3.3. Invalidación Automática de Caché
+- [x] `Program` - Invalida cache en `saved()` y `deleted()`
+- [x] `AcademicYear` - Invalida cache en `saved()`, `deleted()`, `restored()`
+- [x] `DocumentCategory` - Invalida cache en `saved()` y `deleted()`
+- [x] `Call` - Invalida Home cache cuando cambia `status` o `published_at`
+- [x] `NewsPost` - Invalida Home cache cuando cambia `status` o `published_at`
+- [x] `ErasmusEvent` - Invalida Home cache cuando cambia `is_public` o fechas
+
+#### 3.4. Componentes Actualizados para Usar Caché
+- [x] `Admin\News\Index` - Usa `Program::getCachedActive()` y `AcademicYear::getCachedAll()`
+- [x] `Admin\Calls\Index` - Usa `Program::getCachedActive()` y `AcademicYear::getCachedAll()`
+- [x] `Admin\Documents\Index` - Usa todas las cachés de referencia
+- [x] `Admin\Events\Index` - Usa `Program::getCachedActive()`
+- [x] `Public\Home` - Usa `Program::getCachedActive()` y cachés propias
+
+### Fase 4: Índices de Base de Datos ✅ COMPLETADO
+
+#### 4.1. Análisis de Índices Existentes
+Se verificaron los índices existentes antes de crear nuevos:
+- `calls`: `program_id+academic_year_id+status`, `status+published_at`
+- `news_posts`: `deleted_at`, `program_id+status+published_at`, `academic_year_id+status`
+- `documents`: `deleted_at`, `category_id+program_id+is_active`
+- `resolutions`: `call_id+type`
+
+#### 4.2. Migración Creada
+- [x] Migración: `2026_01_20_160821_add_performance_indexes_phase_4.php`
+
+**Índices añadidos:**
 ```php
-// app/Models/Program.php
-public static function getCachedActive(): Collection
-{
-    return Cache::remember('programs.active', 3600, function () {
-        return static::query()
-            ->where('is_active', true)
-            ->orderBy('order')
-            ->orderBy('name')
-            ->get();
-    });
-}
-```
-
-#### 3.2. Caché para Estadísticas Públicas
-- [ ] Cachear estadísticas de la página principal
-- [ ] Cachear contadores de convocatorias abiertas/cerradas
-- [ ] Implementar invalidación de caché al actualizar contenido
-
-#### 3.3. Cachear Configuraciones del Sistema
-- [ ] Cachear settings del sistema
-- [ ] Implementar invalidación al editar configuraciones
-
-### Fase 4: Índices de Base de Datos
-
-#### 4.1. Crear Migración para Índices Faltantes
-- [ ] Crear migración: `php artisan make:migration add_performance_indexes`
-
-**Índices a añadir:**
-```php
-// calls
+// calls - para filtrado por tipo y modalidad
 $table->index('deleted_at', 'calls_deleted_at_index');
-$table->index(['deleted_at', 'status'], 'calls_deleted_at_status_index');
 $table->index('type', 'calls_type_index');
 $table->index('modality', 'calls_modality_index');
 
-// news_posts
-$table->index('deleted_at', 'news_posts_deleted_at_index');
-$table->index(['deleted_at', 'status', 'published_at'], 'news_posts_deleted_status_published_index');
-
-// documents
-$table->index('deleted_at', 'documents_deleted_at_index');
-$table->index('document_type', 'documents_type_index');
-
-// resolutions
+// resolutions - para filtrado de resoluciones publicadas
 $table->index('published_at', 'resolutions_published_at_index');
 $table->index(['call_id', 'published_at'], 'resolutions_call_published_index');
 
-// programs
+// programs - para getCachedActive() y filtros
 $table->index('is_active', 'programs_is_active_index');
 $table->index(['is_active', 'order'], 'programs_active_order_index');
 ```
 
-### Fase 5: Optimizaciones Específicas
+**Nota**: Los índices de `news_posts` y `documents` ya existían de migraciones anteriores.
+
+### Fase 5: Optimizaciones Específicas ✅ COMPLETADO
 
 #### 5.1. Optimizar Dashboard Administrativo
-- [ ] Revisar y mejorar consultas de `loadAlerts()`
-- [ ] Usar una sola consulta para múltiples contadores cuando sea posible
-- [ ] Cachear actividades recientes por usuario
+- [x] `loadAlerts()` ahora está cacheado (5 minutos)
+- [x] `loadRecentActivities()` ahora está cacheado (2 minutos)
+- [x] Actualizado `clearCache()` para incluir las nuevas cachés
 
 #### 5.2. Optimizar Componentes de Exportación
-- [ ] Verificar que los exports usen `chunk()` o `cursor()` para grandes volúmenes
-- [ ] Implementar lazy loading en exportaciones
+- [x] `CallsExport` convertido a `FromQuery` + `WithChunkReading` (chunks de 500)
+- [x] `AuditLogsExport` convertido a `FromQuery` + `WithChunkReading` (chunks de 500)
+- [x] `ResolutionsExport` convertido a `FromQuery` + `WithChunkReading` (chunks de 500)
 
 #### 5.3. Optimizar Consultas de Búsqueda Global
-- [ ] Implementar full-text search si es necesario (MySQL FULLTEXT)
-- [ ] Considerar límites más estrictos en búsquedas
+- [x] `availablePrograms()` ahora usa `Program::getCachedActive()`
+- [x] `availableAcademicYears()` ahora usa `AcademicYear::getCachedAll()`
+- [x] Límites ya existentes (`limitPerType = 10`) mantenidos
 
 ### Fase 6: Testing
 

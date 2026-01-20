@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Livewire\Public\Home;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -354,5 +355,19 @@ class NewsPost extends Model implements HasMedia
             ])
             ->logOnlyDirty()
             ->dontLogIfAttributesChangedOnly(['updated_at', 'slug', 'author_id', 'reviewed_by', 'reviewed_at']);
+    }
+
+    /**
+     * Clear home page cache when news status or publication changes.
+     */
+    protected static function booted(): void
+    {
+        static::saved(function (self $newsPost) {
+            if ($newsPost->wasChanged(['status', 'published_at'])) {
+                Home::clearCache();
+            }
+        });
+
+        static::deleted(fn () => Home::clearCache());
     }
 }

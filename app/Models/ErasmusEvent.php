@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Livewire\Public\Home;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -472,5 +473,19 @@ class ErasmusEvent extends Model implements HasMedia
             ])
             ->logOnlyDirty()
             ->dontLogIfAttributesChangedOnly(['updated_at', 'created_by']);
+    }
+
+    /**
+     * Clear home page cache when event visibility or dates change.
+     */
+    protected static function booted(): void
+    {
+        static::saved(function (self $event) {
+            if ($event->wasChanged(['is_public', 'start_date', 'end_date'])) {
+                Home::clearCache();
+            }
+        });
+
+        static::deleted(fn () => Home::clearCache());
     }
 }

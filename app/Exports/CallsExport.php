@@ -3,15 +3,16 @@
 namespace App\Exports;
 
 use App\Models\Call;
-use Illuminate\Support\Collection;
-use Maatwebsite\Excel\Concerns\FromCollection;
+use Illuminate\Contracts\Database\Eloquent\Builder;
+use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\WithTitle;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class CallsExport implements FromCollection, WithHeadings, WithMapping, WithStyles, WithTitle
+class CallsExport implements FromQuery, WithChunkReading, WithHeadings, WithMapping, WithStyles, WithTitle
 {
     /**
      * Filters to apply to the export.
@@ -31,11 +32,11 @@ class CallsExport implements FromCollection, WithHeadings, WithMapping, WithStyl
     }
 
     /**
-     * Get the collection to export.
+     * Get the query to export (uses chunking for memory efficiency).
      */
-    public function collection(): Collection
+    public function query(): Builder
     {
-        $query = Call::query()
+        return Call::query()
             ->when(($this->filters['showDeleted'] ?? '0') === '0', fn ($query) => $query->whereNull('deleted_at'))
             ->when(($this->filters['showDeleted'] ?? '0') === '1', fn ($query) => $query->onlyTrashed())
             ->when($this->filters['filterProgram'] ?? null, fn ($query) => $query->where('program_id', $this->filters['filterProgram']))
@@ -53,8 +54,14 @@ class CallsExport implements FromCollection, WithHeadings, WithMapping, WithStyl
             ->with(['program', 'academicYear', 'creator', 'updater'])
             ->orderBy($this->filters['sortField'] ?? 'created_at', $this->filters['sortDirection'] ?? 'desc')
             ->orderBy('created_at', 'desc');
+    }
 
-        return $query->get();
+    /**
+     * Chunk size for reading (memory optimization).
+     */
+    public function chunkSize(): int
+    {
+        return 500;
     }
 
     /**

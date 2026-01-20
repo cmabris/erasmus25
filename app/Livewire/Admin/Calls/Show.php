@@ -367,6 +367,7 @@ class Show extends Component
 
     /**
      * Check if the call can be deleted (has no relationships).
+     * Uses preloaded counts to avoid extra queries.
      */
     public function canDelete(): bool
     {
@@ -374,21 +375,21 @@ class Show extends Component
             return false;
         }
 
-        // Check if it has relationships
-        return ! ($this->call->phases()->exists()
-            || $this->call->resolutions()->exists()
-            || $this->call->applications()->exists());
+        // Use preloaded counts (faster than exists() queries)
+        return ! $this->hasRelationships;
     }
 
     /**
      * Check if the call has relationships.
+     * Uses preloaded counts to avoid extra queries.
      */
     #[Computed]
     public function hasRelationships(): bool
     {
-        return $this->call->phases()->exists()
-            || $this->call->resolutions()->exists()
-            || $this->call->applications()->exists();
+        // Use the counts loaded in mount() - no additional queries needed
+        return ($this->call->phases_count ?? 0) > 0
+            || ($this->call->resolutions_count ?? 0) > 0
+            || ($this->call->applications_count ?? 0) > 0;
     }
 
     /**

@@ -142,8 +142,7 @@ class Index extends Component
     public function events(): LengthAwarePaginator
     {
         return ErasmusEvent::query()
-            ->with(['program', 'call', 'creator'])
-            ->with('media')
+            ->with(['program', 'call', 'creator', 'media'])
             ->when($this->showDeleted === '0', fn ($query) => $query->whereNull('deleted_at'))
             ->when($this->showDeleted === '1', fn ($query) => $query->onlyTrashed())
             ->when($this->search, function ($query) {
@@ -182,8 +181,7 @@ class Index extends Component
     public function calendarEvents(): Collection
     {
         $query = ErasmusEvent::query()
-            ->with(['program', 'call', 'creator'])
-            ->with('media');
+            ->with(['program', 'call', 'creator', 'media']);
 
         // Apply filters
         if ($this->showDeleted === '0') {
@@ -319,17 +317,14 @@ class Index extends Component
     }
 
     /**
-     * Available programs for filtering.
+     * Available programs for filtering (cached).
      *
      * @return \Illuminate\Database\Eloquent\Collection<int, Program>
      */
     #[Computed]
     public function availablePrograms(): \Illuminate\Database\Eloquent\Collection
     {
-        return Program::query()
-            ->orderBy('order')
-            ->orderBy('name')
-            ->get();
+        return Program::getCachedActive();
     }
 
     /**

@@ -3,8 +3,9 @@
 namespace App\Exports;
 
 use App\Models\User;
-use Illuminate\Support\Collection;
-use Maatwebsite\Excel\Concerns\FromCollection;
+use Illuminate\Contracts\Database\Eloquent\Builder;
+use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStyles;
@@ -12,7 +13,7 @@ use Maatwebsite\Excel\Concerns\WithTitle;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Spatie\Activitylog\Models\Activity;
 
-class AuditLogsExport implements FromCollection, WithHeadings, WithMapping, WithStyles, WithTitle
+class AuditLogsExport implements FromQuery, WithChunkReading, WithHeadings, WithMapping, WithStyles, WithTitle
 {
     /**
      * Filters to apply to the export.
@@ -32,11 +33,11 @@ class AuditLogsExport implements FromCollection, WithHeadings, WithMapping, With
     }
 
     /**
-     * Get the collection to export.
+     * Get the query to export (uses chunking for memory efficiency).
      */
-    public function collection(): Collection
+    public function query(): Builder
     {
-        $query = Activity::query()
+        return Activity::query()
             ->with(['causer', 'subject'])
             ->when($this->filters['search'] ?? null, function ($query) {
                 $search = $this->filters['search'];
@@ -66,8 +67,14 @@ class AuditLogsExport implements FromCollection, WithHeadings, WithMapping, With
             })
             ->orderBy($this->filters['sortField'] ?? 'created_at', $this->filters['sortDirection'] ?? 'desc')
             ->orderBy('id', 'desc');
+    }
 
-        return $query->get();
+    /**
+     * Chunk size for reading (memory optimization).
+     */
+    public function chunkSize(): int
+    {
+        return 500;
     }
 
     /**

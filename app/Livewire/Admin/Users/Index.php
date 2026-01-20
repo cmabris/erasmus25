@@ -116,6 +116,9 @@ class Index extends Component
                 });
             })
             ->with(['roles', 'permissions']) // Eager load to avoid N+1 queries
+            ->withCount(['activities as activities_count' => function ($query) {
+                $query->where('causer_type', User::class);
+            }])
             ->orderBy($this->sortField, $this->sortDirection)
             ->orderBy('name', 'asc') // Secondary sort for consistent pagination
             ->paginate($this->perPage);

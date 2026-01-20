@@ -24,7 +24,7 @@ class Show extends Component
             abort(404);
         }
 
-        $this->event = $event->load(['program', 'call', 'creator']);
+        $this->event = $event->load(['program', 'call', 'creator', 'media']);
     }
 
     /**

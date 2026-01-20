@@ -3,15 +3,16 @@
 namespace App\Exports;
 
 use App\Models\Resolution;
-use Illuminate\Support\Collection;
-use Maatwebsite\Excel\Concerns\FromCollection;
+use Illuminate\Contracts\Database\Eloquent\Builder;
+use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\WithTitle;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class ResolutionsExport implements FromCollection, WithHeadings, WithMapping, WithStyles, WithTitle
+class ResolutionsExport implements FromQuery, WithChunkReading, WithHeadings, WithMapping, WithStyles, WithTitle
 {
     /**
      * Filters to apply to the export.
@@ -31,11 +32,11 @@ class ResolutionsExport implements FromCollection, WithHeadings, WithMapping, Wi
     }
 
     /**
-     * Get the collection to export.
+     * Get the query to export (uses chunking for memory efficiency).
      */
-    public function collection(): Collection
+    public function query(): Builder
     {
-        $query = Resolution::query()
+        return Resolution::query()
             ->when($this->filters['call_id'] ?? null, fn ($query) => $query->where('call_id', $this->filters['call_id']))
             ->when(($this->filters['showDeleted'] ?? '0') === '0', fn ($query) => $query->whereNull('deleted_at'))
             ->when(($this->filters['showDeleted'] ?? '0') === '1', fn ($query) => $query->onlyTrashed())
@@ -57,8 +58,14 @@ class ResolutionsExport implements FromCollection, WithHeadings, WithMapping, Wi
             ])
             ->orderBy($this->filters['sortField'] ?? 'official_date', $this->filters['sortDirection'] ?? 'desc')
             ->orderBy('created_at', 'desc');
+    }
 
-        return $query->get();
+    /**
+     * Chunk size for reading (memory optimization).
+     */
+    public function chunkSize(): int
+    {
+        return 500;
     }
 
     /**

@@ -12,6 +12,7 @@ use App\Observers\NewsPostObserver;
 use App\Observers\ResolutionObserver;
 use App\Policies\ActivityPolicy;
 use App\Policies\RolePolicy;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -33,6 +34,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Configurar protección contra lazy loading en desarrollo
+        // Esto lanzará una excepción si se detecta un problema N+1
+        $this->configureModelStrictness();
+
         // Cargar helpers personalizados
         if (file_exists($helperPath = base_path('app/Support/helpers.php'))) {
             require_once $helperPath;
@@ -54,5 +59,27 @@ class AppServiceProvider extends ServiceProvider
         Resolution::observe(ResolutionObserver::class);
         NewsPost::observe(NewsPostObserver::class);
         Document::observe(DocumentObserver::class);
+    }
+
+    /**
+     * Configure model strictness settings for development.
+     *
+     * - preventLazyLoading: Throws exception on N+1 queries (dev only)
+     * - preventSilentlyDiscardingAttributes: Throws exception on mass assignment issues
+     */
+    protected function configureModelStrictness(): void
+    {
+        // Solo en entornos de desarrollo y testing
+        $shouldBeStrict = ! $this->app->isProduction();
+
+        // Prevenir lazy loading (detecta N+1)
+        Model::preventLazyLoading($shouldBeStrict);
+
+        // Prevenir que se descarten atributos silenciosamente en mass assignment
+        Model::preventSilentlyDiscardingAttributes($shouldBeStrict);
+
+        // NO activamos preventAccessingMissingAttributes porque puede causar problemas
+        // con modelos que usan SoftDeletes donde deleted_at puede no estar siempre cargado
+        // Model::preventAccessingMissingAttributes($shouldBeStrict);
     }
 }
