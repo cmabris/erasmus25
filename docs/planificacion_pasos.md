@@ -694,16 +694,23 @@ Para cada policy:
 
 **Objetivo**: Optimizar rendimiento y mejorar la experiencia de usuario.
 
-#### 3.9.1. Optimización de Consultas
-- [ ] Implementar eager loading donde sea necesario
-- [ ] Revisar y optimizar consultas N+1
-- [ ] Implementar caché para consultas frecuentes
-- [ ] Usar índices de base de datos apropiados
+#### 3.9.1. Optimización de Consultas ✅ COMPLETADO
+- [x] Implementar eager loading donde sea necesario
+- [x] Revisar y optimizar consultas N+1
+- [x] Implementar caché para consultas frecuentes
+- [x] Usar índices de base de datos apropiados
+- [x] Tests de rendimiento (29 tests, 83 assertions)
+- [x] Exports optimizados con chunking
 
-#### 3.9.2. Caché
-- [ ] Implementar caché para listados públicos
-- [ ] Caché para configuraciones del sistema
-- [ ] Invalidación de caché al actualizar contenido
+**Documentación:**
+- [Plan detallado](pasos/paso-3.9.1-plan.md) - Plan de trabajo completo ✅
+- [Prompts y resultados](pasos/paso46.md) - Historial completo de implementación ✅
+- [Detección N+1](debugbar-n1-detection.md) - Guía de detección de N+1 ✅
+
+#### 3.9.2. Caché ✅ COMPLETADO (incluido en 3.9.1)
+- [x] Implementar caché para listados públicos (Home component)
+- [x] Caché para configuraciones del sistema (Program, AcademicYear, DocumentCategory)
+- [x] Invalidación de caché al actualizar contenido (via model hooks)
 
 #### 3.9.3. Optimización de Imágenes
 - [ ] Implementar conversión de imágenes (Laravel Media Library)
