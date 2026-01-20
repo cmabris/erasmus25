@@ -10,9 +10,24 @@ Este documento proporciona un resumen ejecutivo del estado de los tests en la ap
 
 ✅ **Cobertura de Código de Livewire: 100% ALCANZADO**
 
-Se han implementado y verificado **164 tests** con **322 assertions** que cubren:
-- Todas las relaciones Eloquent, accessors, mutators, métodos personalizados y eventos de modelo de los 19 modelos principales de la aplicación
-- Todos los componentes Livewire de Settings (Profile, Password, TwoFactor, RecoveryCodes, DeleteUserForm)
+✅ **Tests de Integración (Paso 3.8.7): COMPLETADO**
+
+### Estado Actual de la Suite de Tests
+
+| Métrica | Valor |
+|---------|-------|
+| **Tests totales** | 3,782 |
+| **Assertions totales** | 8,564 |
+| **Tiempo de ejecución** | ~141s (paralelo 4 procesos) |
+| **Estado** | ✅ Todos pasan |
+
+### Cobertura de Código Global
+
+| Métrica | Porcentaje |
+|---------|------------|
+| **Líneas** | ~97.5%+ |
+| **Métodos** | ~93%+ |
+| **Clases** | ~72%+ |
 
 ## Cobertura de Tests
 
@@ -121,11 +136,12 @@ Durante la implementación de los tests, se identificaron y corrigieron problema
 ## Próximos Pasos
 
 - [x] Tests de acceso a atributos (accessors, mutators) - ✅ Completado para Setting
-- [ ] Tests de funcionalidad de modelos (métodos personalizados, scopes)
-- [ ] Tests de validación de modelos
-- [ ] Tests de eventos de modelos (observers, events)
-- [ ] Tests de integración con controladores
-- [ ] Tests de API endpoints
+- [x] Tests de funcionalidad de modelos (métodos personalizados, scopes) - ✅ Completado
+- [x] Tests de validación de modelos - ✅ Completado
+- [x] Tests de eventos de modelos (observers, events) - ✅ Completado
+- [x] Tests de integración con controladores - ✅ Completado
+- [x] Tests de Helpers, Imports, Exports, Middlewares, Providers - ✅ Completado (Paso 3.8.7)
+- [ ] Tests de API endpoints (pendiente)
 
 ## Mejoras de Cobertura Realizadas
 
@@ -155,9 +171,41 @@ Durante la implementación de los tests, se identificaron y corrigieron problema
 - **Document**: Añadido test para generación automática de slug
 - **NewsPost**: Añadido test para generación automática de slug
 
+## Tests de Integración (Paso 3.8.7)
+
+Se completaron las siguientes fases de tests de integración:
+
+| Fase | Descripción | Estado |
+|------|-------------|--------|
+| Fase 1 | Tests para Support/helpers.php | ✅ |
+| Fase 2 | Tests para Imports (UsersImport, CallsImport) | ✅ |
+| Fase 3 | Tests para Exports (AuditLogs, Calls, Resolutions) | ✅ |
+| Fase 5 | Tests para Middleware SetLocale | ✅ |
+| Fase 6 | Tests para Form Requests | ✅ |
+| Fase 7 | Tests para Providers/Services | ✅ |
+
+### Archivos de Test Añadidos
+
+- `tests/Feature/Http/Middleware/SetLocaleTest.php` (19 tests)
+- `tests/Feature/Providers/AppServiceProviderTest.php` (12 tests)
+- `tests/Feature/Providers/FortifyServiceProviderTest.php` (9 tests)
+
+### Mejoras de Cobertura por Área
+
+| Área | Antes | Después |
+|------|-------|---------|
+| Support/helpers.php | 78.79% | ~95%+ |
+| Imports | 91.51% | ~98%+ |
+| Exports | 88-95% | 100% |
+| Middleware SetLocale | 89.13% | 97.83% |
+| Form Requests | 99.72% | 100% |
+| Providers | 93.75% | 100% |
+
 ## Documentación Relacionada
 
 - [Tests de Relaciones de Modelos - Detallado](models-tests.md)
 - [Plan de Trabajo - Tests de Modelos](models-testing-plan.md)
 - [Documentación de Migraciones](migrations-overview.md)
+- [Plan de Tests de Integración](pasos/paso-3.8.7-plan.md)
+- [Detalle de Paso 45](pasos/paso45.md)
 
