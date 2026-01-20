@@ -569,62 +569,13 @@ describe('UpdateSettingRequest - Prepare For Validation', function () {
         expect($request->has('value'))->toBeFalse();
     });
 
-    it('converts array to JSON for json type when string is invalid JSON', function () {
+    it('converts array to JSON string for json type', function () {
         $user = User::factory()->create();
         $user->assignRole(Roles::ADMIN);
         $this->actingAs($user);
 
         $setting = Setting::factory()->create(['type' => 'json']);
 
-        // The logic only converts if the value is a string that fails JSON decode
-        // and then checks if it's an array/object. Since arrays/objects passed directly
-        // are not strings, they won't be converted. This test verifies the actual behavior:
-        // when a string that looks like an array (but is invalid JSON) is passed,
-        // it should not convert because is_string check fails for actual arrays.
-        
-        // Test with invalid JSON string that contains array-like syntax
-        // Actually, the code checks is_string first, so arrays passed directly won't be processed
-        // This test verifies that arrays passed as strings (which would be unusual) 
-        // are handled correctly. But since the code checks is_string, we test the actual flow:
-        
-        // When value is a string that fails JSON decode, it checks if value is array/object
-        // But if it's a string, it can't be an array/object, so this branch never executes
-        // The conversion only happens if we pass the value as a string representation
-        
-        // Test actual behavior: string that fails JSON decode but is not array/object
-        $invalidJsonString = '{invalid json}';
-        
-        $request = UpdateSettingRequest::create(
-            "/admin/configuracion/{$setting->id}",
-            'PUT',
-            ['value' => $invalidJsonString]
-        );
-        $request->setRouteResolver(function () use ($setting) {
-            $route = new \Illuminate\Routing\Route(['PUT'], '/admin/configuracion/{setting}', []);
-            $route->bind(new \Illuminate\Http\Request);
-            $route->setParameter('setting', $setting);
-
-            return $route;
-        });
-
-        $reflection = new \ReflectionClass($request);
-        $method = $reflection->getMethod('prepareForValidation');
-        $method->setAccessible(true);
-        $method->invoke($request);
-
-        // Should remain as invalid JSON string (not converted because it's a string, not array/object)
-        $convertedValue = $request->input('value');
-        expect($convertedValue)->toBe($invalidJsonString);
-    });
-
-    it('does not convert non-string array/object for json type', function () {
-        $user = User::factory()->create();
-        $user->assignRole(Roles::ADMIN);
-        $this->actingAs($user);
-
-        $setting = Setting::factory()->create(['type' => 'json']);
-
-        // The code only processes strings, so arrays/objects passed directly are not converted
         $arrayValue = ['key' => 'value', 'number' => 123];
 
         $request = UpdateSettingRequest::create(
@@ -645,9 +596,76 @@ describe('UpdateSettingRequest - Prepare For Validation', function () {
         $method->setAccessible(true);
         $method->invoke($request);
 
-        // Should remain as array (not converted because is_string check fails)
+        // Should be converted to JSON string
         $convertedValue = $request->input('value');
-        expect($convertedValue)->toBe($arrayValue);
+        expect($convertedValue)->toBe(json_encode($arrayValue));
+        expect($convertedValue)->toBeString();
+    });
+
+    it('converts object to JSON string for json type', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $setting = Setting::factory()->create(['type' => 'json']);
+
+        $objectValue = (object) ['key' => 'value', 'number' => 123];
+
+        $request = UpdateSettingRequest::create(
+            "/admin/configuracion/{$setting->id}",
+            'PUT',
+            ['value' => $objectValue]
+        );
+        $request->setRouteResolver(function () use ($setting) {
+            $route = new \Illuminate\Routing\Route(['PUT'], '/admin/configuracion/{setting}', []);
+            $route->bind(new \Illuminate\Http\Request);
+            $route->setParameter('setting', $setting);
+
+            return $route;
+        });
+
+        $reflection = new \ReflectionClass($request);
+        $method = $reflection->getMethod('prepareForValidation');
+        $method->setAccessible(true);
+        $method->invoke($request);
+
+        // Should be converted to JSON string
+        $convertedValue = $request->input('value');
+        expect($convertedValue)->toBe(json_encode($objectValue));
+        expect($convertedValue)->toBeString();
+    });
+
+    it('does not modify invalid JSON string for json type', function () {
+        $user = User::factory()->create();
+        $user->assignRole(Roles::ADMIN);
+        $this->actingAs($user);
+
+        $setting = Setting::factory()->create(['type' => 'json']);
+
+        // Invalid JSON string - should remain unchanged (validation will fail later)
+        $invalidJsonString = '{invalid json}';
+
+        $request = UpdateSettingRequest::create(
+            "/admin/configuracion/{$setting->id}",
+            'PUT',
+            ['value' => $invalidJsonString]
+        );
+        $request->setRouteResolver(function () use ($setting) {
+            $route = new \Illuminate\Routing\Route(['PUT'], '/admin/configuracion/{setting}', []);
+            $route->bind(new \Illuminate\Http\Request);
+            $route->setParameter('setting', $setting);
+
+            return $route;
+        });
+
+        $reflection = new \ReflectionClass($request);
+        $method = $reflection->getMethod('prepareForValidation');
+        $method->setAccessible(true);
+        $method->invoke($request);
+
+        // Should remain unchanged (not an array/object, so not converted)
+        $convertedValue = $request->input('value');
+        expect($convertedValue)->toBe($invalidJsonString);
     });
 
     it('does not convert valid JSON string for json type', function () {

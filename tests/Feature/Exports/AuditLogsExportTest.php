@@ -652,6 +652,25 @@ describe('getSubjectTitle method', function () {
 });
 
 describe('formatChangesSummary method', function () {
+    it('returns dash when properties is null', function () {
+        $program = Program::factory()->create();
+
+        // Create activity and then manually update properties to null
+        $activity = activity()
+            ->performedOn($program)
+            ->log('test');
+        $activity = Activity::with(['causer', 'subject'])->find($activity->id);
+
+        // Force null properties
+        $activity->properties = null;
+
+        $export = new AuditLogsExport([]);
+        $mapped = $export->map($activity);
+
+        // When properties is null, should return '-'
+        expect($mapped[9])->toBe('-');
+    });
+
     it('returns Sin cambios when properties is empty', function () {
         $activity = activity()->log('test');
         $activity = Activity::with(['causer', 'subject'])->find($activity->id);

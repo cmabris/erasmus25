@@ -425,6 +425,170 @@ describe('CallsExport - Filters', function () {
     });
 });
 
+describe('CallsExport - Edge Cases for Labels', function () {
+    it('handles null type correctly', function () {
+        $program = Program::factory()->create();
+        $academicYear = AcademicYear::factory()->create();
+
+        $call = Call::factory()->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+            'type' => 'alumnado', // Create with valid type first
+        ]);
+
+        // Force null type on the model attribute
+        $call->type = null;
+
+        $export = new CallsExport([]);
+        $mapped = $export->map($call);
+
+        expect($mapped[4])->toBe('-');
+    });
+
+    it('handles unknown type with default value', function () {
+        $program = Program::factory()->create();
+        $academicYear = AcademicYear::factory()->create();
+
+        $call = Call::factory()->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+        ]);
+
+        // Force an unknown type directly on the model attribute
+        $call->type = 'unknown_type';
+
+        $export = new CallsExport([]);
+        $mapped = $export->map($call);
+
+        expect($mapped[4])->toBe('unknown_type');
+    });
+
+    it('handles null modality correctly', function () {
+        $program = Program::factory()->create();
+        $academicYear = AcademicYear::factory()->create();
+
+        $call = Call::factory()->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+            'modality' => 'corta', // Create with valid modality first
+        ]);
+
+        // Force null modality on the model attribute
+        $call->modality = null;
+
+        $export = new CallsExport([]);
+        $mapped = $export->map($call);
+
+        expect($mapped[5])->toBe('-');
+    });
+
+    it('handles unknown modality with default value', function () {
+        $program = Program::factory()->create();
+        $academicYear = AcademicYear::factory()->create();
+
+        $call = Call::factory()->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+        ]);
+
+        // Force an unknown modality directly on the model attribute
+        $call->modality = 'unknown_modality';
+
+        $export = new CallsExport([]);
+        $mapped = $export->map($call);
+
+        expect($mapped[5])->toBe('unknown_modality');
+    });
+
+    it('handles null status correctly', function () {
+        $program = Program::factory()->create();
+        $academicYear = AcademicYear::factory()->create();
+
+        $call = Call::factory()->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+            'status' => 'borrador', // Create with valid status first
+        ]);
+
+        // Force null status on the model attribute
+        $call->status = null;
+
+        $export = new CallsExport([]);
+        $mapped = $export->map($call);
+
+        expect($mapped[10])->toBe('-');
+    });
+
+    it('handles unknown status with default value', function () {
+        $program = Program::factory()->create();
+        $academicYear = AcademicYear::factory()->create();
+
+        $call = Call::factory()->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+        ]);
+
+        // Force an unknown status directly on the model attribute
+        $call->status = 'unknown_status';
+
+        $export = new CallsExport([]);
+        $mapped = $export->map($call);
+
+        expect($mapped[10])->toBe('unknown_status');
+    });
+
+    it('handles null destinations correctly', function () {
+        $program = Program::factory()->create();
+        $academicYear = AcademicYear::factory()->create();
+
+        $call = Call::factory()->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+            'destinations' => ['España'], // Create with valid destinations first
+        ]);
+
+        // Force null destinations on the model attribute
+        $call->destinations = null;
+
+        $export = new CallsExport([]);
+        $mapped = $export->map($call);
+
+        expect($mapped[7])->toBe('-');
+    });
+
+    it('handles non-array destinations correctly', function () {
+        $program = Program::factory()->create();
+        $academicYear = AcademicYear::factory()->create();
+
+        $call = Call::factory()->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+        ]);
+
+        // The formatDestinations method checks is_array, so we can test its behavior
+        // with different types if the model allows it
+        $export = new CallsExport([]);
+        $mapped = $export->map($call);
+
+        // Destinations should be formatted properly or show '-'
+        expect($mapped[7])->toBeString();
+    });
+});
+
+describe('CallsExport - Styles', function () {
+    it('applies bold style to header row', function () {
+        $export = new CallsExport([]);
+        $sheet = \Mockery::mock(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::class);
+
+        $styles = $export->styles($sheet);
+
+        expect($styles)->toHaveKey(1)
+            ->and($styles[1])->toHaveKey('font')
+            ->and($styles[1]['font'])->toHaveKey('bold')
+            ->and($styles[1]['font']['bold'])->toBeTrue();
+    });
+});
+
 describe('CallsExport - Data Formatting', function () {
     it('formats dates correctly', function () {
         $program = Program::factory()->create();

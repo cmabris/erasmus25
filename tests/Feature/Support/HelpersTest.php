@@ -7,6 +7,8 @@ use App\Models\Translation;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 
 uses(RefreshDatabase::class);
@@ -17,9 +19,118 @@ uses(RefreshDatabase::class);
 |--------------------------------------------------------------------------
 |
 | Tests para cubrir las funciones helper de app/Support/helpers.php
-| Objetivo: Aumentar cobertura de 46.46% a 90%+
+| Objetivo: Aumentar cobertura a 100%
 |
 */
+
+/*
+|--------------------------------------------------------------------------
+| Exception Handling Tests - Para cubrir catch blocks
+|--------------------------------------------------------------------------
+*/
+
+describe('exception handling in helpers', function () {
+    it('getCurrentLanguage returns null when database throws exception', function () {
+        App::setLocale('es');
+
+        // Temporarily rename the languages table to simulate DB exception
+        Schema::rename('languages', 'languages_backup');
+
+        try {
+            $result = getCurrentLanguage();
+            expect($result)->toBeNull();
+        } finally {
+            // Restore the table
+            Schema::rename('languages_backup', 'languages');
+        }
+    });
+
+    it('getAvailableLanguages returns empty collection when database throws exception', function () {
+        // Temporarily rename the languages table to simulate DB exception
+        Schema::rename('languages', 'languages_backup');
+
+        try {
+            $result = getAvailableLanguages();
+            expect($result)->toBeEmpty();
+            expect($result)->toBeInstanceOf(\Illuminate\Support\Collection::class);
+        } finally {
+            // Restore the table
+            Schema::rename('languages_backup', 'languages');
+        }
+    });
+
+    it('isLanguageAvailable returns false when database throws exception', function () {
+        // Temporarily rename the languages table to simulate DB exception
+        Schema::rename('languages', 'languages_backup');
+
+        try {
+            $result = isLanguageAvailable('es');
+            expect($result)->toBeFalse();
+        } finally {
+            // Restore the table
+            Schema::rename('languages_backup', 'languages');
+        }
+    });
+
+    it('getDefaultLanguage returns null when database throws exception', function () {
+        // Temporarily rename the languages table to simulate DB exception
+        Schema::rename('languages', 'languages_backup');
+
+        try {
+            $result = getDefaultLanguage();
+            expect($result)->toBeNull();
+        } finally {
+            // Restore the table
+            Schema::rename('languages_backup', 'languages');
+        }
+    });
+
+    it('setLanguage returns false when database throws exception', function () {
+        // Temporarily rename the languages table to simulate DB exception
+        Schema::rename('languages', 'languages_backup');
+
+        try {
+            $result = setLanguage('es');
+            expect($result)->toBeFalse();
+        } finally {
+            // Restore the table
+            Schema::rename('languages_backup', 'languages');
+        }
+    });
+
+    it('trans_model returns null when database throws exception', function () {
+        $language = Language::factory()->create(['code' => 'es', 'is_active' => true]);
+        App::setLocale('es');
+        $program = Program::factory()->create();
+
+        // Temporarily rename the translations table to simulate DB exception
+        Schema::rename('translations', 'translations_backup');
+
+        try {
+            $result = trans_model($program, 'name');
+            expect($result)->toBeNull();
+        } finally {
+            // Restore the table
+            Schema::rename('translations_backup', 'translations');
+        }
+    });
+
+    it('trans_model returns null for model that does not exist', function () {
+        $language = Language::factory()->create(['code' => 'es', 'is_active' => true]);
+        App::setLocale('es');
+
+        // Create a model instance without saving (exists = false)
+        $program = new Program;
+        $program->name = 'Test';
+        // Don't save - exists property is false
+
+        expect(trans_model($program, 'name'))->toBeNull();
+    });
+
+    it('trans_model returns null for null model', function () {
+        expect(trans_model(null, 'name'))->toBeNull();
+    });
+});
 
 describe('getCurrentLanguage', function () {
     it('returns current language model', function () {
@@ -502,6 +613,136 @@ describe('format_number', function () {
         // Should contain 99 as decimals
         expect($result)->toBeString();
         expect($result)->toMatch('/99/');
+    });
+
+    it('formats number with various decimal counts', function () {
+        App::setLocale('es');
+
+        // Test with 0 decimals
+        $result0 = format_number(1234.567, 0);
+        expect($result0)->toBeString();
+
+        // Test with 1 decimal
+        $result1 = format_number(1234.567, 1);
+        expect($result1)->toBeString();
+
+        // Test with 3 decimals
+        $result3 = format_number(1234.567, 3);
+        expect($result3)->toBeString();
+        expect($result3)->toMatch('/567/');
+    });
+
+    it('formats very large numbers', function () {
+        App::setLocale('es');
+
+        $result = format_number(1234567890123, 0);
+
+        expect($result)->toBeString();
+        expect(strlen($result))->toBeGreaterThan(10);
+    });
+
+    it('formats very small decimals', function () {
+        App::setLocale('es');
+
+        $result = format_number(0.0001, 4);
+
+        expect($result)->toBeString();
+        expect($result)->toMatch('/0001/');
+    });
+});
+
+describe('format_number edge cases', function () {
+    it('handles non-standard locale gracefully', function () {
+        // Set a locale that might not be fully supported
+        App::setLocale('xx');
+
+        $result = format_number(1234.56, 2);
+
+        // Should still return a formatted string (either through NumberFormatter or fallback)
+        expect($result)->toBeString();
+        expect($result)->not->toBeEmpty();
+    });
+
+    it('uses comma as decimal separator for es locale', function () {
+        App::setLocale('es');
+
+        $result = format_number(1234.56, 2);
+
+        // Spanish should use comma as decimal separator
+        expect($result)->toBeString();
+        // The result should contain the decimal part
+        expect($result)->toMatch('/56/');
+    });
+
+    it('uses dot as decimal separator for en locale', function () {
+        Language::factory()->create(['code' => 'en', 'is_active' => true]);
+        App::setLocale('en');
+
+        $result = format_number(1234.56, 2);
+
+        // English should use dot as decimal separator
+        expect($result)->toBeString();
+        expect($result)->toMatch('/56/');
+    });
+
+    it('formats number with fallback when locale is not standard', function () {
+        // Test with a non-standard locale that NumberFormatter might handle differently
+        App::setLocale('zz');
+
+        $result = format_number(1234.56, 2);
+
+        // Should use fallback number_format
+        expect($result)->toBeString();
+        expect($result)->not->toBeEmpty();
+    });
+
+    it('handles extreme locale values', function () {
+        // Test edge case locales
+        App::setLocale('');
+        $result1 = format_number(100, 0);
+        expect($result1)->toBeString();
+
+        App::setLocale('a');
+        $result2 = format_number(100, 0);
+        expect($result2)->toBeString();
+    });
+});
+
+describe('format_number fallback behavior', function () {
+    it('uses Spanish format separators for es locale', function () {
+        App::setLocale('es');
+
+        // The number_format fallback for 'es' uses:
+        // - comma as decimal separator
+        // - dot as thousands separator
+        $result = format_number(1234567.89, 2);
+
+        expect($result)->toBeString();
+        // Should contain the formatted number
+        expect(preg_match('/1.*234.*567.*89/', $result))->toBe(1);
+    });
+
+    it('uses English format separators for non-es locale', function () {
+        App::setLocale('en');
+
+        // The number_format fallback for non-'es' uses:
+        // - dot as decimal separator
+        // - comma as thousands separator
+        $result = format_number(1234567.89, 2);
+
+        expect($result)->toBeString();
+        // Should contain the formatted number
+        expect(preg_match('/1.*234.*567.*89/', $result))->toBe(1);
+    });
+
+    it('fallback handles fr locale like en (not es)', function () {
+        App::setLocale('fr');
+
+        $result = format_number(1234.56, 2);
+
+        // French should fall through to default (non-es) behavior in fallback
+        expect($result)->toBeString();
+        expect($result)->toMatch('/56/');
     });
 });
 

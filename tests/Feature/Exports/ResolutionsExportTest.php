@@ -530,6 +530,70 @@ describe('ResolutionsExport - Filters', function () {
     });
 });
 
+describe('ResolutionsExport - Edge Cases for Labels', function () {
+    it('handles null type correctly', function () {
+        $program = Program::factory()->create();
+        $academicYear = AcademicYear::factory()->create();
+        $call = Call::factory()->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+        ]);
+        $phase = CallPhase::factory()->create(['call_id' => $call->id]);
+
+        $resolution = Resolution::factory()->create([
+            'call_id' => $call->id,
+            'call_phase_id' => $phase->id,
+            'type' => 'provisional', // Create with valid type first
+        ]);
+
+        // Force null type on the model attribute after creation
+        $resolution->type = null;
+
+        $export = new ResolutionsExport(['call_id' => $call->id]);
+        $mapped = $export->map($resolution);
+
+        expect($mapped[4])->toBe('-');
+    });
+
+    it('handles unknown type with default value', function () {
+        $program = Program::factory()->create();
+        $academicYear = AcademicYear::factory()->create();
+        $call = Call::factory()->create([
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+        ]);
+        $phase = CallPhase::factory()->create(['call_id' => $call->id]);
+
+        $resolution = Resolution::factory()->create([
+            'call_id' => $call->id,
+            'call_phase_id' => $phase->id,
+            'type' => 'provisional', // Create with valid type first
+        ]);
+
+        // Force an unknown type directly on the model attribute
+        $resolution->type = 'unknown_type';
+
+        $export = new ResolutionsExport(['call_id' => $call->id]);
+        $mapped = $export->map($resolution);
+
+        expect($mapped[4])->toBe('unknown_type');
+    });
+});
+
+describe('ResolutionsExport - Styles', function () {
+    it('applies bold style to header row', function () {
+        $export = new ResolutionsExport([]);
+        $sheet = \Mockery::mock(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::class);
+
+        $styles = $export->styles($sheet);
+
+        expect($styles)->toHaveKey(1)
+            ->and($styles[1])->toHaveKey('font')
+            ->and($styles[1]['font'])->toHaveKey('bold')
+            ->and($styles[1]['font']['bold'])->toBeTrue();
+    });
+});
+
 describe('ResolutionsExport - Data Formatting', function () {
     it('formats dates correctly', function () {
         $program = Program::factory()->create();

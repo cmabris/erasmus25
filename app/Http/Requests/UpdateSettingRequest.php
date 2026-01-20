@@ -73,20 +73,15 @@ class UpdateSettingRequest extends FormRequest
             }
         }
 
-        // Validar JSON antes de la validación principal
+        // Convertir array/objeto a JSON para tipo json
         if ($setting->type === 'json' && $this->has('value')) {
             $value = $this->input('value');
 
-            if (is_string($value)) {
-                json_decode($value);
-                if (json_last_error() !== JSON_ERROR_NONE) {
-                    // Si no es JSON válido, intentar convertir array/objeto a JSON
-                    if (is_array($value) || is_object($value)) {
-                        $this->merge([
-                            'value' => json_encode($value),
-                        ]);
-                    }
-                }
+            // Si el valor es array u objeto, convertirlo a JSON string
+            if (is_array($value) || is_object($value)) {
+                $this->merge([
+                    'value' => json_encode($value),
+                ]);
             }
         }
     }

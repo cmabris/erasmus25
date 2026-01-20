@@ -1221,6 +1221,108 @@ describe('CallsImport - English Headers', function () {
     });
 });
 
+describe('CallsImport - Error Handling Methods', function () {
+    it('returns row errors collection via getRowErrors()', function () {
+        $data = [
+            [
+                'Programa',
+                'Año Académico',
+                'Título',
+                'Tipo',
+                'Modalidad',
+                'Número de Plazas',
+                'Destinos',
+            ],
+            [
+                'PROGRAMA_INEXISTENTE',
+                '2024-2025',
+                'Convocatoria Test',
+                'alumnado',
+                'corta',
+                10,
+                'España',
+            ],
+        ];
+
+        $file = createExcelFile($data);
+
+        $import = new CallsImport(false, $this->user->id);
+        Excel::import($import, $file);
+
+        $errors = $import->getRowErrors();
+
+        expect($errors)->toBeInstanceOf(\Illuminate\Support\Collection::class)
+            ->and($errors)->toHaveCount(1)
+            ->and($errors->first()['row'])->toBe(2)
+            ->and($errors->first())->toHaveKey('errors')
+            ->and($errors->first())->toHaveKey('data');
+    });
+
+    it('handles onFailure callback from Excel validation', function () {
+        $import = new CallsImport(false, $this->user->id);
+
+        // Create mock failures using Maatwebsite\Excel\Validators\Failure
+        $failure1 = new \Maatwebsite\Excel\Validators\Failure(
+            2,
+            'title',
+            ['The title is required'],
+            ['programa' => 'KA131', 'titulo' => '']
+        );
+
+        $failure2 = new \Maatwebsite\Excel\Validators\Failure(
+            3,
+            'type',
+            ['The type is invalid'],
+            ['programa' => 'KA131', 'tipo' => 'invalid']
+        );
+
+        // Call onFailure directly
+        $import->onFailure($failure1, $failure2);
+
+        $errors = $import->getRowErrors();
+
+        expect($errors)->toHaveCount(2)
+            ->and($errors->first()['row'])->toBe(2)
+            ->and($errors->first()['errors'])->toBe(['The title is required'])
+            ->and($errors->last()['row'])->toBe(3)
+            ->and($errors->last()['errors'])->toBe(['The type is invalid']);
+    });
+
+    it('getRowErrors returns empty collection when no errors', function () {
+        $data = [
+            [
+                'Programa',
+                'Año Académico',
+                'Título',
+                'Tipo',
+                'Modalidad',
+                'Número de Plazas',
+                'Destinos',
+            ],
+            [
+                'KA131',
+                '2024-2025',
+                'Convocatoria Válida',
+                'alumnado',
+                'corta',
+                10,
+                'España',
+            ],
+        ];
+
+        $file = createExcelFile($data);
+
+        $import = new CallsImport(false, $this->user->id);
+        Excel::import($import, $file);
+
+        $errors = $import->getRowErrors();
+
+        // Should have no errors for valid data
+        expect($errors)->toBeInstanceOf(\Illuminate\Support\Collection::class)
+            ->and($errors)->toHaveCount(0);
+    });
+});
+
 describe('CallsImport - Optional Fields', function () {
     it('handles optional requirements field', function () {
         $data = [
