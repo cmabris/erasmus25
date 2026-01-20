@@ -4,7 +4,7 @@ Este documento describe todos los Form Requests implementados en la aplicación 
 
 ## Resumen
 
-La aplicación cuenta con **22 Form Requests** organizados por entidad, siguiendo el patrón Store/Update de Laravel. Todos los mensajes de error están internacionalizados en español e inglés.
+La aplicación cuenta con **30 Form Requests** organizados por entidad, siguiendo el patrón Store/Update de Laravel. Todos los mensajes de error están internacionalizados en español e inglés.
 
 ## Form Requests por Entidad
 

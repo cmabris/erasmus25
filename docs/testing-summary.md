@@ -16,9 +16,9 @@ Este documento proporciona un resumen ejecutivo del estado de los tests en la ap
 
 | Métrica | Valor |
 |---------|-------|
-| **Tests totales** | 3,782 |
-| **Assertions totales** | 8,564 |
-| **Tiempo de ejecución** | ~141s (paralelo 4 procesos) |
+| **Tests totales** | 3,867 |
+| **Assertions totales** | 8,793 |
+| **Tiempo de ejecución** | ~150s (paralelo 4 procesos) |
 | **Estado** | ✅ Todos pasan |
 
 ### Cobertura de Código Global

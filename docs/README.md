@@ -62,6 +62,7 @@ Esta carpeta contiene la documentación técnica de la aplicación web "Erasmus+
 - **[Paso 46: Optimización de Consultas (Paso 3.9.1)](pasos/paso46.md)**: Detección y eliminación de N+1 queries, sistema de caché para datos de referencia, índices de BD optimizados, exports con chunking, y 29 tests de rendimiento (83 assertions).
 - **[Paso 47: Optimización de Imágenes (Paso 3.9.3)](pasos/paso47.md)**: Configuración de Media Library con WebP, conversiones optimizadas en 4 modelos, componente responsive-image.blade.php, y regeneración de 38 medios. Estado final: 3,830 tests (8,673 assertions).
 - **[Paso 48: SEO Completo (Paso 3.9.4-3.9.5)](pasos/paso48.md)**: Componentes SEO (meta tags, JSON-LD), sitemap.xml dinámico, robots.txt mejorado, Open Graph y Twitter Cards. Estado final: 3,867 tests (8,793 assertions).
+- **[Paso 49: Documentación de Funcionalidades (Paso 3.10.1)](pasos/paso49.md)**: Documentación completa de funcionalidades incluyendo creación de flujos-trabajo.md (8 flujos principales), funcionalidades-modulos.md (12 módulos, 80+ componentes), optimizaciones.md (guía técnica consolidada), actualización de policies.md (matrices, patrones, casos especiales), y actualización integral del README.md.
 - **[Planificación de Pasos de Desarrollo](planificacion_pasos.md)**: Planificación completa y estructurada de los siguientes pasos en el desarrollo de la aplicación, incluyendo seeders, Form Requests, Policies, área pública, panel de administración, rutas, funcionalidades avanzadas, testing y optimización.
 
 ### Base de Datos
