@@ -481,7 +481,11 @@ class ErasmusEvent extends Model implements HasMedia
     protected static function booted(): void
     {
         static::saved(function (self $event) {
-            if ($event->wasChanged(['is_public', 'start_date', 'end_date'])) {
+            // Clear cache if newly created public event or if visibility/dates changed
+            $isNewPublicEvent = $event->wasRecentlyCreated && $event->is_public;
+            $visibilityOrDatesChanged = $event->wasChanged(['is_public', 'start_date', 'end_date']);
+
+            if ($isNewPublicEvent || $visibilityOrDatesChanged) {
                 Home::clearCache();
             }
         });
