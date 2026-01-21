@@ -766,10 +766,10 @@ Para cada policy:
 - [Funcionalidades por Módulo](funcionalidades-modulos.md) - 12 módulos documentados ✅
 - [Optimizaciones](optimizaciones.md) - Guía técnica consolidada ✅
 
-#### 3.10.2. Guía de Usuario
-- [ ] Crear guía para administradores
-- [ ] Crear guía para editores
-- [ ] Capturas de pantalla de funcionalidades principales
+#### 3.10.2. Guía de Usuario ✅
+- [x] Crear guía para administradores (`docs/guia-usuario/guia-administrador.md`)
+- [x] Crear guía para editores (`docs/guia-usuario/guia-editor.md`)
+- [x] Capturas de pantalla de funcionalidades principales (12 capturas en `docs/guia-usuario/images/`)
 
 #### 3.10.3. Documentación Técnica
 - [ ] Actualizar README principal

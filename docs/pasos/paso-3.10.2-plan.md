@@ -588,18 +588,166 @@ Si hay que priorizar, el orden de importancia es:
 
 | Fase | Estado | Fecha |
 |------|--------|-------|
-| 1 | ⏳ Pendiente | - |
-| 2 | ⏳ Pendiente | - |
-| 3 | ⏳ Pendiente | - |
-| 4 | ⏳ Pendiente | - |
-| 5 | ⏳ Pendiente | - |
-| 6 | ⏳ Pendiente | - |
-| 7 | ⏳ Pendiente | - |
-| 8 | ⏳ Pendiente | - |
+| 1 | ✅ Completado | 20 Enero 2026 |
+| 2 | ✅ Completado | 21 Enero 2026 |
+| 3 | ✅ Completado | 21 Enero 2026 |
+| 4 | ✅ Completado | 21 Enero 2026 |
+| 5 | ✅ Completado | 21 Enero 2026 |
+| 6 | ✅ Completado | 21 Enero 2026 |
+| 7 | ✅ Completado | 21 Enero 2026 |
+| 8 | ✅ Completado | 21 Enero 2026 |
 | 9 | ⏳ Pendiente | - |
 | 10 | ⏳ Pendiente | - |
+
+### Detalle Fase 1 - Completada
+
+**Archivos creados:**
+- `docs/guia-usuario/README.md` - Índice de la guía
+- `docs/guia-usuario/guia-administrador.md` - Inicio de la guía
+
+**Secciones documentadas:**
+1. ✅ Introducción al Sistema (1.1 - 1.7)
+2. ✅ Acceso y Autenticación (2.1 - 2.5)
+3. ✅ Interfaz General (3.1 - 3.10)
+4. ✅ Perfil de Usuario (4.1 - 4.7)
+
+**Capturas pendientes (~12):**
+- `images/acceso/login.png`
+- `images/acceso/forgot-password.png`
+- `images/acceso/2fa-challenge.png`
+- `images/acceso/interfaz-general.png`
+- `images/acceso/busqueda-global.png`
+- `images/acceso/perfil-menu.png`
+- `images/acceso/perfil-editar.png`
+- `images/acceso/perfil-password.png`
+- `images/acceso/perfil-2fa.png`
+- `images/acceso/perfil-2fa-qr.png`
+- `images/acceso/perfil-apariencia.png`
+
+**Nota:** Las capturas de pantalla se realizarán al final del proceso de documentación.
+
+### Detalle Fase 2 - Completada
+
+**Secciones documentadas:**
+5. ✅ Dashboard de Administración (5.1 - 5.8)
+6. ✅ Gestión de Programas (6.1 - 6.9)
+
+**Capturas pendientes (~9):**
+- `images/dashboard/vista-general.png`
+- `images/dashboard/estadisticas.png`
+- `images/dashboard/alertas.png`
+- `images/dashboard/actividad-reciente.png`
+- `images/dashboard/graficos.png`
+- `images/programas/listado.png`
+- `images/programas/crear.png`
+- `images/programas/editar.png`
+- `images/programas/detalle.png`
+
+### Detalle Fase 3 - Completada
+
+**Secciones documentadas:**
+7. ✅ Gestión de Convocatorias (7.1 - 7.11)
+8. ✅ Fases de Convocatorias (8.1 - 8.10)
+9. ✅ Resoluciones de Convocatorias (9.1 - 9.10)
+
+**Capturas pendientes (~11):**
+- `images/convocatorias/listado.png`
+- `images/convocatorias/crear.png`
+- `images/convocatorias/editar.png`
+- `images/convocatorias/detalle.png`
+- `images/convocatorias/importar.png`
+- `images/convocatorias/fases-listado.png`
+- `images/convocatorias/fases-crear.png`
+- `images/convocatorias/fases-editar.png`
+- `images/convocatorias/resoluciones-listado.png`
+- `images/convocatorias/resoluciones-crear.png`
+- `images/convocatorias/resoluciones-editar.png`
+- `images/convocatorias/resoluciones-detalle.png`
+
+### Detalle Fase 4 - Completada
+
+**Secciones documentadas:**
+10. ✅ Gestión de Noticias (10.1 - 10.11)
+11. ✅ Gestión de Documentos (11.1 - 11.9)
+
+**Capturas pendientes (~10):**
+- `images/noticias/listado.png`
+- `images/noticias/crear.png`
+- `images/noticias/editor.png`
+- `images/noticias/editar.png`
+- `images/documentos/listado.png`
+- `images/documentos/crear.png`
+- `images/documentos/editar.png`
+- `images/documentos/detalle.png`
+
+### Detalle Fase 5 - Completada
+
+**Secciones documentadas:**
+12. ✅ Gestión de Eventos (12.1 - 12.11)
+13. ✅ Gestión de Newsletter (13.1 - 13.7)
+
+**Capturas pendientes (~8):**
+- `images/eventos/listado.png`
+- `images/eventos/calendario.png`
+- `images/eventos/crear.png`
+- `images/eventos/editar.png`
+- `images/eventos/detalle.png`
+- `images/newsletter/listado.png`
+- `images/newsletter/detalle.png`
+
+### Detalle Fase 6 - Completada
+
+**Secciones documentadas:**
+14. ✅ Gestión de Usuarios (14.1 - 14.9)
+15. ✅ Configuración del Sistema (15.1 - 15.5)
+16. ✅ Auditoría y Logs (16.1 - 16.7)
+- ✅ Apéndice A: Atajos de Teclado
+- ✅ Apéndice B: Soporte Técnico
+
+**Capturas pendientes (~6):**
+- `images/usuarios/listado.png`
+- `images/usuarios/crear.png`
+- `images/usuarios/editar.png`
+- `images/usuarios/detalle.png`
+- `images/auditoria/listado.png`
+- `images/auditoria/detalle.png`
+
+### Detalle Fase 7 - Completada
+
+**Archivo creado:** `docs/guia-usuario/guia-editor.md`
+
+**Secciones documentadas:**
+1. ✅ Introducción (rol del editor, qué puede/no puede hacer)
+2. ✅ Acceso al Sistema (login, recuperación, logout)
+3. ✅ Tu Perfil (configuración, 2FA)
+4. ✅ Interfaz General (estructura, navegación, búsqueda)
+5. ✅ Gestión de Programas (ver, crear, editar, traducciones)
+6. ✅ Gestión de Convocatorias (estados, fases, resoluciones)
+7. ✅ Gestión de Noticias (editor, imágenes, etiquetas)
+8. ✅ Gestión de Documentos (tipos, formatos, subida)
+9. ✅ Gestión de Eventos (calendario, tipos, imágenes)
+10. ✅ Preguntas Frecuentes (FAQ específicas para editores)
+- ✅ Resumen de Capacidades (tabla comparativa)
+
+---
+
+### Detalle Fase 8 - Completada
+
+**Capturas realizadas (12):**
+- ✅ `images/acceso/login.png` - Pantalla de inicio de sesión
+- ✅ `images/acceso/perfil.png` - Configuración del perfil
+- ✅ `images/dashboard/vista-general.png` - Dashboard de administración
+- ✅ `images/programas/listado.png` - Listado de programas
+- ✅ `images/convocatorias/listado.png` - Listado de convocatorias
+- ✅ `images/noticias/listado.png` - Listado de noticias
+- ✅ `images/documentos/listado.png` - Listado de documentos
+- ✅ `images/eventos/listado.png` - Listado de eventos (tabla)
+- ✅ `images/eventos/calendario.png` - Vista de calendario
+- ✅ `images/newsletter/listado.png` - Suscripciones newsletter
+- ✅ `images/usuarios/listado.png` - Gestión de usuarios
+- ✅ `images/auditoria/listado.png` - Auditoría y logs
 
 ---
 
 **Fecha de Creación**: Enero 2026  
-**Estado**: 📋 Plan creado - Pendiente de ejecución
+**Estado**: ✅ COMPLETADO - Todas las fases terminadas
