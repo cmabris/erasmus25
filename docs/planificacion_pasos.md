@@ -771,10 +771,10 @@ Para cada policy:
 - [x] Crear guía para editores (`docs/guia-usuario/guia-editor.md`)
 - [x] Capturas de pantalla de funcionalidades principales (12 capturas en `docs/guia-usuario/images/`)
 
-#### 3.10.3. Documentación Técnica
-- [ ] Actualizar README principal
-- [ ] Documentar arquitectura de la aplicación
-- [ ] Documentar decisiones técnicas importantes
+#### 3.10.3. Documentación Técnica ✅
+- [x] Actualizar README principal (`/README.md`)
+- [x] Documentar arquitectura de la aplicación (`docs/arquitectura.md`)
+- [x] Documentar decisiones técnicas importantes (`docs/decisiones-tecnicas.md` - 20 ADRs)
 
 ---
 

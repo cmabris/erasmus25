@@ -2,6 +2,24 @@
 
 Esta carpeta contiene la documentación técnica de la aplicación web "Erasmus+ Centro (Murcia)", un portal que centraliza toda la información Erasmus+ (Educación Escolar, Formación Profesional y Educación Superior).
 
+---
+
+## Documentación Principal
+
+### Arquitectura y Decisiones Técnicas
+
+- **[Arquitectura de la Aplicación](arquitectura.md)**: Visión general de la arquitectura, capas de la aplicación, estructura de directorios, patrones de diseño, flujo de datos y diagrama de componentes.
+
+- **[Decisiones Técnicas (ADR)](decisiones-tecnicas.md)**: Registro de las 20 decisiones técnicas más importantes del proyecto, organizadas por categoría (arquitectura, base de datos, autenticación, multimedia, i18n, testing, rendimiento).
+
+### Guías de Usuario
+
+- **[Guía de Usuario - Índice](guia-usuario/README.md)**: Punto de entrada a las guías de usuario.
+- **[Guía del Administrador](guia-usuario/guia-administrador.md)**: Guía completa para usuarios con roles super-admin y admin (~3300 líneas, 16 secciones).
+- **[Guía del Editor](guia-usuario/guia-editor.md)**: Guía resumida para usuarios con rol editor (~500 líneas, 10 secciones).
+
+---
+
 ## Estructura de la Documentación
 
 ### Guía de Desarrollo
@@ -211,5 +229,5 @@ La aplicación está dividida en dos áreas principales:
 ---
 
 **Última actualización**: Enero 2026  
-**Estado del proyecto**: En desarrollo activo (Paso 3.10 - Documentación Final)
+**Estado del proyecto**: ✅ Completado (v1.0)
 
