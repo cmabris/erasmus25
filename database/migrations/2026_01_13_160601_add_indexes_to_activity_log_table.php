@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -22,7 +23,25 @@ return new class extends Migration
             $table->index('created_at', 'activity_log_created_at_index');
 
             // Índice en description para búsquedas
-            $table->index('description', 'activity_log_description_index');
+            // Para MySQL: especificar longitud para columnas TEXT
+            // Para SQLite: no se puede especificar longitud, se omite el índice en description
+            $connection = DB::connection(config('activitylog.database_connection'));
+            $driver = $connection->getDriverName();
+            $tableName = config('activitylog.table_name');
+
+            if ($driver === 'mysql') {
+                try {
+                    $connection->statement("ALTER TABLE `{$tableName}` ADD INDEX `activity_log_description_index` (`description`(255))");
+                } catch (\Exception $e) {
+                    // Si el índice ya existe, ignorar el error
+                    if (str_contains($e->getMessage(), 'Duplicate key name')) {
+                        // Índice ya existe, continuar
+                    } else {
+                        throw $e;
+                    }
+                }
+            }
+            // SQLite no soporta índices en columnas TEXT con longitud, se omite
         });
     }
 

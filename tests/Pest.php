@@ -98,3 +98,43 @@ function createExcelFile(array $data): \Illuminate\Http\UploadedFile
 
     return $file;
 }
+
+/**
+ * Configura SQLite en memoria (comportamiento por defecto para la mayoría de tests).
+ *
+ * Esta función restaura la configuración por defecto de SQLite en memoria,
+ * que es la utilizada por la mayoría de tests de la aplicación.
+ */
+function useSqliteInMemory(): void
+{
+    config()->set('database.default', 'sqlite');
+    config()->set('database.connections.sqlite.database', ':memory:');
+}
+
+/**
+ * Configura SQLite en archivo persistente (necesario para tests que usan Artisan::call()).
+ *
+ * Los tests que utilizan Artisan::call() con subcomandos (como migrate:fresh) que abren
+ * nuevas conexiones a la base de datos requieren un archivo persistente en lugar de :memory:,
+ * ya que con :memory: la base de datos desaparece entre conexiones.
+ *
+ * @param  string  $filename  Nombre del archivo de BD (por defecto 'testing_command.sqlite')
+ */
+function useSqliteFile(string $filename = 'testing_command.sqlite'): void
+{
+    $dbPath = database_path($filename);
+
+    // Crear archivo vacío si no existe
+    if (! \Illuminate\Support\Facades\File::exists($dbPath)) {
+        \Illuminate\Support\Facades\File::put($dbPath, '');
+    }
+
+    // Configurar la conexión SQLite para usar el archivo persistente
+    config()->set('database.default', 'sqlite');
+    config()->set('database.connections.sqlite.database', $dbPath);
+
+    // Forzar reconexión para que use la nueva configuración
+    // Esto es crítico para que Artisan::call() use la misma BD
+    \Illuminate\Support\Facades\DB::purge('sqlite');
+    \Illuminate\Support\Facades\DB::reconnect('sqlite');
+}

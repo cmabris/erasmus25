@@ -17,7 +17,7 @@ class ErasmusEventSeeder extends Seeder
     public function run(): void
     {
         $programs = Program::where('is_active', true)->get();
-        $calls = Call::all();
+        $calls = Call::with('program')->get();
         $adminUser = User::where('email', 'admin@erasmus-murcia.es')->first();
 
         if ($programs->isEmpty()) {
@@ -60,7 +60,7 @@ class ErasmusEventSeeder extends Seeder
                 'call_id' => $call->id,
                 'title' => "Apertura de convocatoria: {$call->title}",
                 'description' => "Se abre oficialmente la convocatoria de movilidad {$call->title}. ".
-                    "Los interesados pueden comenzar a presentar sus solicitudes.",
+                    'Los interesados pueden comenzar a presentar sus solicitudes.',
                 'event_type' => 'apertura',
                 'start_date' => $publishedAt->copy()->setTime(9, 0),
                 'end_date' => null,
@@ -75,7 +75,7 @@ class ErasmusEventSeeder extends Seeder
                 'call_id' => $call->id,
                 'title' => "Reunión informativa: {$call->title}",
                 'description' => "Reunión informativa para resolver dudas sobre la convocatoria {$call->title}. ".
-                    "Se explicarán los requisitos, documentación necesaria y proceso de selección.",
+                    'Se explicarán los requisitos, documentación necesaria y proceso de selección.',
                 'event_type' => 'reunion_informativa',
                 'start_date' => $publishedAt->copy()->addWeeks(fake()->numberBetween(1, 2))->setTime(17, 0),
                 'end_date' => $publishedAt->copy()->addWeeks(fake()->numberBetween(1, 2))->setTime(19, 0),
@@ -92,7 +92,7 @@ class ErasmusEventSeeder extends Seeder
                     'call_id' => $call->id,
                     'title' => "Cierre de convocatoria: {$call->title}",
                     'description' => "Último día para presentar solicitudes para la convocatoria {$call->title}. ".
-                        "Las solicitudes deben entregarse antes de las 14:00 horas.",
+                        'Las solicitudes deben entregarse antes de las 14:00 horas.',
                     'event_type' => 'cierre',
                     'start_date' => $closeDate->setTime(14, 0),
                     'end_date' => null,
@@ -107,7 +107,7 @@ class ErasmusEventSeeder extends Seeder
                     'call_id' => $call->id,
                     'title' => "Entrevistas de selección: {$call->title}",
                     'description' => "Entrevistas personales con los candidatos preseleccionados para la convocatoria {$call->title}. ".
-                        "Se evaluarán los aspectos complementarios a la documentación presentada.",
+                        'Se evaluarán los aspectos complementarios a la documentación presentada.',
                     'event_type' => 'entrevista',
                     'start_date' => $closeDate->copy()->addWeeks(fake()->numberBetween(1, 2))->setTime(9, 0),
                     'end_date' => $closeDate->copy()->addWeeks(fake()->numberBetween(1, 2))->setTime(18, 0),
@@ -122,7 +122,7 @@ class ErasmusEventSeeder extends Seeder
                     'call_id' => $call->id,
                     'title' => "Publicación listado provisional: {$call->title}",
                     'description' => "Se publica el listado provisional de candidatos seleccionados para la convocatoria {$call->title}. ".
-                        "Los interesados pueden consultar el listado y presentar alegaciones en caso de disconformidad.",
+                        'Los interesados pueden consultar el listado y presentar alegaciones en caso de disconformidad.',
                     'event_type' => 'publicacion_provisional',
                     'start_date' => $closeDate->copy()->addWeeks(fake()->numberBetween(3, 4))->setTime(10, 0),
                     'end_date' => null,
@@ -137,7 +137,7 @@ class ErasmusEventSeeder extends Seeder
                     'call_id' => $call->id,
                     'title' => "Publicación listado definitivo: {$call->title}",
                     'description' => "Se publica el listado definitivo de candidatos seleccionados para la convocatoria {$call->title}. ".
-                        "Este listado es definitivo y no admite más alegaciones.",
+                        'Este listado es definitivo y no admite más alegaciones.',
                     'event_type' => 'publicacion_definitivo',
                     'start_date' => $closeDate->copy()->addWeeks(fake()->numberBetween(4, 5))->setTime(10, 0),
                     'end_date' => null,
@@ -159,7 +159,7 @@ class ErasmusEventSeeder extends Seeder
                 'call_id' => null,
                 'title' => "Reunión informativa general: {$program->name}",
                 'description' => "Reunión informativa sobre el programa {$program->name}. ".
-                    "Se explicarán las oportunidades de movilidad, requisitos generales y proceso de participación.",
+                    'Se explicarán las oportunidades de movilidad, requisitos generales y proceso de participación.',
                 'event_type' => 'reunion_informativa',
                 'start_date' => $now->copy()->addDays(fake()->numberBetween(5, 30))->setTime(17, 0),
                 'end_date' => $now->copy()->addDays(fake()->numberBetween(5, 30))->setTime(19, 0),
@@ -239,8 +239,8 @@ class ErasmusEventSeeder extends Seeder
                     default => fake()->randomElement([
                         "Jornada de puertas abiertas {$program->name}",
                         "Taller informativo {$program->name}",
-                        "Charla sobre movilidad internacional",
-                        "Presentación de experiencias Erasmus+",
+                        'Charla sobre movilidad internacional',
+                        'Presentación de experiencias Erasmus+',
                     ]),
                 };
 
@@ -328,4 +328,3 @@ class ErasmusEventSeeder extends Seeder
         $this->command->info('  - Eventos futuros: '.count(array_filter($eventsData, fn ($e) => Carbon::parse($e['start_date'])->isFuture())));
     }
 }
-

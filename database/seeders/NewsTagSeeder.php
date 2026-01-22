@@ -13,7 +13,18 @@ class NewsTagSeeder extends Seeder
      */
     public function run(): void
     {
-        $tags = [
+        // Etiquetas básicas comunes para el sitio web (disponibles en desarrollo y producción)
+        $basicTags = [
+            'Noticias',
+            'Eventos',
+            'Convocatorias',
+            'Erasmus+',
+            'Movilidad',
+            'Formación',
+        ];
+
+        // Etiquetas adicionales para desarrollo (más específicas)
+        $developmentTags = [
             'Movilidad Estudiantil',
             'Movilidad Personal',
             'Formación Profesional',
@@ -24,7 +35,6 @@ class NewsTagSeeder extends Seeder
             'Curso de Formación',
             'Experiencia Internacional',
             'Europa',
-            'Erasmus+',
             'KA1',
             'KA2',
             'KA3',
@@ -45,6 +55,9 @@ class NewsTagSeeder extends Seeder
             'Internacionalización',
             'Buenas Prácticas',
         ];
+
+        // Combinar todas las etiquetas
+        $tags = array_merge($basicTags, $developmentTags);
 
         foreach ($tags as $tagName) {
             NewsTag::updateOrCreate(
