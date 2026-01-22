@@ -96,8 +96,38 @@ DB_PASSWORD=tu_contraseña
 
 ### 5. Ejecutar Migraciones y Seeders
 
+Para **desarrollo** (con datos de prueba completos):
+
 ```bash
-# Crear tablas y datos de prueba
+php artisan setup:developer
+```
+
+Este comando ejecutará:
+- Migraciones fresh (elimina y recrea todas las tablas)
+- Todos los seeders (datos de prueba completos)
+- Limpieza de cachés
+- Creación del enlace de almacenamiento
+- Muestra credenciales de prueba
+
+Para **producción** (solo datos esenciales):
+
+```bash
+php artisan setup:production
+```
+
+Este comando ejecutará:
+- Validaciones de entorno
+- Migraciones fresh (con doble confirmación)
+- Solo seeders esenciales (idiomas, programas, años académicos, categorías, configuración, roles, etiquetas básicas, super-admin)
+- Optimización de cachés
+- Verificaciones post-setup
+
+> **Nota:** El comando `setup:production` solicitará el email del super-administrador y generará una contraseña aleatoria segura. El usuario deberá usar "olvidé mi contraseña" en el primer acceso.
+
+**Alternativa manual:**
+
+```bash
+# Crear tablas y datos básicos
 php artisan migrate --seed
 ```
 
@@ -161,7 +191,7 @@ No necesitas ejecutar ningún servidor adicional.
 
 ### Credenciales de Prueba
 
-El seeder crea usuarios de prueba para cada rol:
+Al ejecutar `setup:developer`, se crean usuarios de prueba para cada rol:
 
 | Rol | Email | Contraseña |
 |-----|-------|------------|
@@ -169,6 +199,8 @@ El seeder crea usuarios de prueba para cada rol:
 | Admin | admin@erasmus-murcia.es | password |
 | Editor | editor@erasmus-murcia.es | password |
 | Viewer | viewer@erasmus-murcia.es | password |
+
+> **Nota:** Estas credenciales solo están disponibles en el entorno de desarrollo. En producción, el comando `setup:production` crea únicamente el usuario super-administrador con una contraseña aleatoria generada.
 
 ### URLs Principales
 
@@ -298,6 +330,18 @@ La documentación completa está disponible en la carpeta [`docs/`](docs/README.
 
 ### Comandos Útiles
 
+#### Setup Inicial
+
+```bash
+# Preparar aplicación para desarrollo (migraciones + seeders completos)
+php artisan setup:developer
+
+# Preparar aplicación para producción (solo datos esenciales)
+php artisan setup:production
+```
+
+#### Desarrollo
+
 ```bash
 # Iniciar entorno de desarrollo (servidor + vite + queue + logs)
 composer run dev
@@ -319,7 +363,17 @@ php artisan view:cache
 php artisan media-library:regenerate
 ```
 
-### Crear Usuario Administrador
+#### Crear Usuario Administrador
+
+**Opción 1: Usar comando setup:production (recomendado)**
+
+```bash
+php artisan setup:production
+```
+
+Este comando crea automáticamente el usuario super-administrador con una contraseña aleatoria segura.
+
+**Opción 2: Manualmente con Tinker**
 
 ```bash
 php artisan tinker

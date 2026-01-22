@@ -19,9 +19,10 @@ Esta guía está dirigida a usuarios con roles de **Super Administrador** y **Ad
 11. [Gestión de Newsletter](#11-gestión-de-newsletter)
 12. [Gestión de Usuarios](#12-gestión-de-usuarios)
 13. [Gestión de Roles y Permisos](#13-gestión-de-roles-y-permisos)
-14. [Configuración del Sistema](#14-configuración-del-sistema)
-15. [Traducciones](#15-traducciones)
-16. [Auditoría y Logs](#16-auditoría-y-logs)
+14. [Configuración Inicial del Sistema](#14-configuración-inicial-del-sistema)
+15. [Configuración del Sistema](#15-configuración-del-sistema)
+16. [Traducciones](#16-traducciones)
+17. [Auditoría y Logs](#17-auditoría-y-logs)
 
 ---
 
@@ -3052,7 +3053,157 @@ Puedes importar múltiples usuarios desde Excel o CSV:
 
 ---
 
-## 15. Configuración del Sistema
+## 15. Configuración Inicial del Sistema
+
+Esta sección está dirigida a **super-administradores** que realizan la instalación inicial del sistema en un entorno de producción.
+
+> **Nota:** Esta sección es solo para la configuración inicial. Para la configuración del sistema en funcionamiento, consulta la [Sección 16: Configuración del Sistema](#16-configuración-del-sistema).
+
+---
+
+### 15.1. Comando de Setup para Producción
+
+El sistema incluye un comando especializado para preparar la aplicación en un entorno de producción:
+
+```bash
+php artisan setup:production
+```
+
+Este comando realiza automáticamente todas las tareas necesarias para poner el sistema en funcionamiento.
+
+#### ¿Qué hace el comando?
+
+1. **Validaciones de entorno:**
+   - Verifica la conexión a la base de datos
+   - Comprueba la existencia del archivo `.env`
+   - Valida permisos de escritura en `storage/` y `bootstrap/cache/`
+   - Advierte si `APP_ENV` no es 'production' o si `APP_DEBUG` está en 'true'
+
+2. **Migraciones:**
+   - Ejecuta `migrate:fresh` (elimina y recrea todas las tablas)
+   - Solicita doble confirmación antes de ejecutar (para evitar pérdidas accidentales de datos)
+
+3. **Seeders esenciales:**
+   - `LanguagesSeeder` - Idiomas disponibles (Español, Inglés)
+   - `ProgramsSeeder` - Programas Erasmus+ (Educación Escolar, FP, Educación Superior)
+   - `AcademicYearsSeeder` - Años académicos básicos
+   - `DocumentCategoriesSeeder` - Categorías de documentos
+   - `SettingsSeeder` - Configuraciones del sistema
+   - `RolesAndPermissionsSeeder` - Roles y permisos del sistema
+   - `NewsTagSeeder` - Etiquetas básicas para noticias
+   - `ProductionAdminUserSeeder` - Usuario super-administrador inicial
+
+4. **Optimización:**
+   - Limpia todos los cachés (config, route, view, application, permissions, events)
+   - Optimiza cachés para producción
+   - Crea el enlace de almacenamiento (`storage:link`)
+
+5. **Verificaciones post-setup:**
+   - Verifica que el usuario super-admin se creó correctamente
+   - Verifica que los roles y permisos están configurados
+   - Verifica que los idiomas están disponibles
+
+#### Opciones del comando
+
+| Opción | Descripción |
+|--------|-------------|
+| `--force` | Omite confirmaciones y advertencias (útil para scripts automatizados) |
+| `--admin-email=email@ejemplo.com` | Especifica el email del super-admin directamente (evita la pregunta interactiva) |
+
+#### Ejemplo de uso
+
+**Opción 1: Modo interactivo (recomendado para primera instalación)**
+
+```bash
+php artisan setup:production
+```
+
+El comando te pedirá:
+1. Confirmación para continuar (advertencia sobre datos que se eliminarán)
+2. Confirmación para ejecutar `migrate:fresh` (doble confirmación)
+3. Email del usuario super-administrador
+
+**Opción 2: Con opciones (útil para scripts)**
+
+```bash
+php artisan setup:production --force --admin-email=admin@centro.es
+```
+
+#### Creación del Usuario Super-Administrador
+
+El comando crea automáticamente el usuario super-administrador con las siguientes características:
+
+- **Nombre:** "Super Administrador"
+- **Email:** El que proporciones (por terminal o con `--admin-email`)
+- **Contraseña:** Generada aleatoriamente (mínimo 16 caracteres, con mayúsculas, minúsculas, números y símbolos)
+- **Rol:** `super-admin` (asignado automáticamente)
+- **Email verificado:** Sí (marcado como verificado)
+
+#### Credenciales del Super-Administrador
+
+Al finalizar el comando, se mostrará una tabla con las credenciales:
+
+```
+📋 Credenciales del Super-Administrador:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ comando te mostrará las credenciales al finalizar. **Guarda estas credenciales de forma segura.**
+
+#### Cambiar Contraseña del Super-Administrador
+
+Como la contraseña se genera aleatoriamente, deberás cambiarla en el primer acceso:
+
+1. Accede a la URL de la aplicación
+2. Haz clic en **"¿Olvidaste tu contraseña?"**
+3. Introduce el email del super-administrador
+4. Revisa tu correo y sigue el enlace de restablecimiento
+5. Establece una nueva contraseña
+
+> **Importante:** Asegúrate de guardar las credenciales mostradas por el comando en un lugar seguro hasta que puedas cambiar la contraseña.
+
+#### Próximos Pasos Después del Setup
+
+Una vez completado el setup inicial:
+
+1. **Cambiar contraseña del super-admin** (usando "olvidé mi contraseña")
+2. **Acceder al panel de administración** (`/admin`)
+3. **Crear usuarios adicionales** desde el panel (Gestión de Usuarios)
+4. **Configurar el sistema** según las necesidades del centro (Configuración del Sistema)
+5. **Añadir contenido inicial** (programas, convocatorias, noticias, etc.)
+
+---
+
+### 15.2. Comando de Setup para Desarrollo
+
+> **Nota:** Este comando está destinado únicamente para entornos de desarrollo. **NO debe ejecutarse en producción.**
+
+Para preparar la aplicación en un entorno de desarrollo:
+
+```bash
+php artisan setup:developer
+```
+
+Este comando ejecuta:
+- Migraciones fresh (elimina y recrea todas las tablas)
+- **Todos los seeders** (incluyendo datos de prueba completos: convocatorias, noticias, documentos, eventos, etc.)
+- Limpieza de cachés
+- Creación del enlace de almacenamiento
+- Muestra credenciales de prueba para todos los roles
+
+**Opciones:**
+- `--force` - Ejecuta sin confirmación
+- `--no-cache` - No limpia cachés
+
+**Credenciales de prueba creadas:**
+
+| Rol | Email | Contraseña |
+|-----|-------|------------|
+| Super Admin | super-admin@erasmus-murcia.es | password |
+| Admin | admin@erasmus-murcia.es | password |
+| Editor | editor@erasmus-murcia.es | password |
+| Viewer | viewer@erasmus-murcia.es | password |
+
+---
+
+## 16. Configuración del Sistema
 
 Esta sección describe las opciones de configuración disponibles en el sistema.
 
@@ -3060,7 +3211,7 @@ Esta sección describe las opciones de configuración disponibles en el sistema.
 
 ---
 
-### 15.1. Variables de Entorno Principales
+### 16.1. Variables de Entorno Principales
 
 | Variable | Descripción | Ejemplo |
 |----------|-------------|---------|
@@ -3071,7 +3222,7 @@ Esta sección describe las opciones de configuración disponibles en el sistema.
 
 ---
 
-### 15.2. Configuración de Idiomas
+### 16.2. Configuración de Idiomas
 
 El sistema soporta **español (ES)** e **inglés (EN)**.
 
@@ -3084,7 +3235,7 @@ El sistema soporta **español (ES)** e **inglés (EN)**.
 
 ---
 
-### 15.3. Años Académicos
+### 16.3. Años Académicos
 
 Los años académicos se gestionan desde la base de datos:
 
@@ -3099,7 +3250,7 @@ Los años académicos se gestionan desde la base de datos:
 
 ---
 
-### 15.4. Categorías de Documentos
+### 16.4. Categorías de Documentos
 
 Las categorías de documentos permiten organizar los archivos:
 
@@ -3109,7 +3260,7 @@ Las categorías de documentos permiten organizar los archivos:
 
 ---
 
-### 15.5. Configuración de Email
+### 16.5. Configuración de Email
 
 Para el envío de correos (newsletter, notificaciones):
 
@@ -3125,7 +3276,7 @@ Para el envío de correos (newsletter, notificaciones):
 
 ---
 
-## 16. Auditoría y Logs
+## 17. Auditoría y Logs
 
 El sistema de auditoría registra automáticamente todas las acciones realizadas en la aplicación, proporcionando un historial completo de cambios.
 
@@ -3137,7 +3288,7 @@ El sistema de auditoría registra automáticamente todas las acciones realizadas
 
 ---
 
-### 16.1. ¿Qué se Registra?
+### 17.1. ¿Qué se Registra?
 
 El sistema registra automáticamente:
 
@@ -3163,7 +3314,7 @@ El sistema registra automáticamente:
 
 ---
 
-### 16.2. Listado de Logs
+### 17.2. Listado de Logs
 
 #### Información en la Tabla
 
@@ -3188,7 +3339,7 @@ El sistema registra automáticamente:
 
 ---
 
-### 16.3. Filtros de Auditoría
+### 17.3. Filtros de Auditoría
 
 | Filtro | Descripción |
 |--------|-------------|
@@ -3201,7 +3352,7 @@ El sistema registra automáticamente:
 
 ---
 
-### 16.4. Ver Detalle de un Log
+### 17.4. Ver Detalle de un Log
 
 La vista de detalle muestra información completa:
 
@@ -3228,7 +3379,7 @@ La vista de detalle muestra información completa:
 
 ---
 
-### 16.5. Exportar Logs
+### 17.5. Exportar Logs
 
 Puedes exportar los logs de auditoría a Excel:
 
@@ -3246,7 +3397,7 @@ Puedes exportar los logs de auditoría a Excel:
 
 ---
 
-### 16.6. Uso de la Auditoría
+### 17.6. Uso de la Auditoría
 
 #### Para Investigar Problemas
 
@@ -3268,7 +3419,7 @@ Puedes exportar los logs de auditoría a Excel:
 
 ---
 
-### 16.7. Resumen de Permisos para Auditoría
+### 17.7. Resumen de Permisos para Auditoría
 
 | Acción | Viewer | Editor | Admin | Super Admin |
 |--------|:------:|:------:|:-----:|:-----------:|
