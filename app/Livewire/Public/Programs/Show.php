@@ -140,7 +140,7 @@ class Show extends Component
     public function relatedCalls(): Collection
     {
         return Call::query()
-            ->with(['academicYear'])
+            ->with(['program', 'academicYear'])
             ->where('program_id', $this->program->id)
             ->whereIn('status', ['abierta', 'cerrada'])
             ->whereNotNull('published_at')
@@ -159,7 +159,7 @@ class Show extends Component
     public function relatedNews(): Collection
     {
         return NewsPost::query()
-            ->with(['author'])
+            ->with(['program', 'author'])
             ->where('program_id', $this->program->id)
             ->where('status', 'publicado')
             ->whereNotNull('published_at')

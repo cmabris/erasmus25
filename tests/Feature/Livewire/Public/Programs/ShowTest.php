@@ -56,7 +56,9 @@ it('displays related calls when available', function () {
         'title' => 'Convocatoria de prueba',
     ]);
 
-    Livewire::test(Show::class, ['program' => $this->program])
+    // Renderizar la vista completa para detectar problemas de lazy loading
+    $this->get(route('programas.show', $this->program->slug))
+        ->assertOk()
         ->assertSee('Convocatoria de prueba')
         ->assertSee(__('Convocatorias de este programa'));
 });
@@ -77,7 +79,9 @@ it('displays related news when available', function () {
         'title' => 'Noticia de prueba',
     ]);
 
-    Livewire::test(Show::class, ['program' => $this->program])
+    // Renderizar la vista completa para detectar problemas de lazy loading
+    $this->get(route('programas.show', $this->program->slug))
+        ->assertOk()
         ->assertSee('Noticia de prueba')
         ->assertSee(__('Noticias relacionadas'));
 });
@@ -278,7 +282,9 @@ it('only shows open and closed calls', function () {
         'title' => 'Convocatoria abierta',
     ]);
 
-    Livewire::test(Show::class, ['program' => $this->program])
+    // Renderizar la vista completa para detectar problemas de lazy loading
+    $this->get(route('programas.show', $this->program->slug))
+        ->assertOk()
         ->assertSee('Convocatoria abierta')
         ->assertDontSee('Borrador de convocatoria');
 });
@@ -304,7 +310,9 @@ it('only shows published news', function () {
         'title' => 'Noticia publicada',
     ]);
 
-    Livewire::test(Show::class, ['program' => $this->program])
+    // Renderizar la vista completa para detectar problemas de lazy loading
+    $this->get(route('programas.show', $this->program->slug))
+        ->assertOk()
         ->assertSee('Noticia publicada')
         ->assertDontSee('Noticia borrador');
 });

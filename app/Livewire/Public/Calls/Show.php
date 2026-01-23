@@ -117,7 +117,7 @@ class Show extends Component
     public function relatedNews(): Collection
     {
         return NewsPost::query()
-            ->with(['author'])
+            ->with(['program', 'author'])
             ->where('program_id', $this->call->program_id)
             ->where('status', 'publicado')
             ->whereNotNull('published_at')
