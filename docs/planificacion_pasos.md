@@ -778,6 +778,180 @@ Para cada policy:
 
 ---
 
+### **Paso 3.11: Tests de Navegador (Browser Testing)**
+
+**Objetivo**: Implementar tests de navegador usando Pest v4 para validar el comportamiento completo de la aplicación desde la perspectiva del usuario final, detectando problemas que solo aparecen en el renderizado completo (lazy loading, JavaScript, CSS, interacciones).
+
+#### 3.11.1. Configuración de Tests de Navegador
+- [ ] Verificar que Pest v4 está correctamente instalado y configurado
+- [ ] Configurar entorno de testing para browser tests
+- [ ] Crear estructura de directorios `tests/Browser/`
+- [ ] Configurar base de datos de testing para browser tests
+- [ ] Configurar factories y seeders para datos de prueba
+- [ ] Documentar configuración y requisitos del sistema
+
+**Documentación:**
+- [Plan detallado](pasos/paso-3.11.1-plan.md) - Configuración paso a paso
+
+#### 3.11.2. Tests de Páginas Públicas Críticas
+- [ ] Test de página Home (`/`)
+  - Verificar renderizado completo
+  - Verificar que se muestran programas activos
+  - Verificar que se muestran convocatorias abiertas
+  - Verificar que se muestran noticias recientes
+  - Verificar que se muestran eventos próximos
+  - Detectar problemas de lazy loading
+- [ ] Test de listado de Programas (`/programas`)
+  - Verificar filtros funcionan correctamente
+  - Verificar búsqueda
+  - Verificar paginación
+  - Verificar enlaces a programas individuales
+- [ ] Test de detalle de Programa (`/programas/{slug}`)
+  - Verificar renderizado completo con relaciones cargadas
+  - Verificar que se muestran convocatorias relacionadas
+  - Verificar que se muestran noticias relacionadas
+  - Verificar navegación a otras secciones
+  - **Crítico**: Detectar problemas de lazy loading (program, academicYear)
+- [ ] Test de listado de Convocatorias (`/convocatorias`)
+  - Verificar filtros (programa, año académico, tipo, modalidad, estado)
+  - Verificar búsqueda
+  - Verificar paginación
+  - Verificar enlaces a convocatorias individuales
+- [ ] Test de detalle de Convocatoria (`/convocatorias/{slug}`)
+  - Verificar renderizado completo con relaciones cargadas
+  - Verificar que se muestran fases
+  - Verificar que se muestran resoluciones publicadas
+  - Verificar que se muestran noticias relacionadas
+  - **Crítico**: Detectar problemas de lazy loading (program, academicYear, phases, resolutions)
+- [ ] Test de listado de Noticias (`/noticias`)
+  - Verificar filtros
+  - Verificar búsqueda
+  - Verificar paginación
+- [ ] Test de detalle de Noticia (`/noticias/{slug}`)
+  - Verificar renderizado completo
+  - Verificar que se muestran noticias relacionadas
+  - Verificar que se muestran convocatorias relacionadas
+  - **Crítico**: Detectar problemas de lazy loading (program, author, tags)
+
+**Documentación:**
+- [Plan detallado](pasos/paso-3.11.2-plan.md) - Tests de páginas públicas
+
+#### 3.11.3. Tests de Flujos de Autenticación y Autorización
+- [ ] Test de Login
+  - Verificar formulario de login
+  - Verificar validación de credenciales
+  - Verificar redirección después del login
+  - Verificar manejo de errores
+- [ ] Test de Registro
+  - Verificar formulario de registro
+  - Verificar validación de datos
+  - Verificar creación de usuario
+  - Verificar verificación de email (si aplica)
+- [ ] Test de Recuperación de Contraseña
+  - Verificar solicitud de recuperación
+  - Verificar enlace de reset
+  - Verificar cambio de contraseña
+- [ ] Test de Autorización en Rutas Públicas
+  - Verificar que usuarios no autenticados pueden acceder a páginas públicas
+  - Verificar que usuarios autenticados pueden acceder a páginas públicas
+- [ ] Test de Autorización en Rutas de Administración
+  - Verificar que usuarios no autenticados son redirigidos
+  - Verificar que usuarios sin permisos son denegados
+  - Verificar que usuarios con permisos pueden acceder
+
+**Documentación:**
+- [Plan detallado](pasos/paso-3.11.3-plan.md) - Tests de autenticación
+
+#### 3.11.4. Tests de Formularios y Validación en Tiempo Real
+- [ ] Test de Formulario de Suscripción Newsletter
+  - Verificar validación de email
+  - Verificar selección de programas de interés
+  - Verificar envío y confirmación
+  - Verificar manejo de errores
+- [ ] Test de Formularios de Administración (si aplica en área pública)
+  - Verificar validación en tiempo real
+  - Verificar mensajes de error
+  - Verificar envío exitoso
+- [ ] Test de Búsqueda Global
+  - Verificar búsqueda en tiempo real
+  - Verificar resultados de búsqueda
+  - Verificar navegación a resultados
+
+**Documentación:**
+- [Plan detallado](pasos/paso-3.11.4-plan.md) - Tests de formularios
+
+#### 3.11.5. Tests de Interacciones JavaScript y Componentes Dinámicos
+- [ ] Test de Navegación con Livewire
+  - Verificar navegación sin recargar página (`wire:navigate`)
+  - Verificar transiciones suaves
+  - Verificar que el estado se mantiene
+- [ ] Test de Componentes Interactivos
+  - Verificar dropdowns y menús
+  - Verificar modales (si hay en área pública)
+  - Verificar tabs y acordeones
+  - Verificar tooltips
+- [ ] Test de Filtros Dinámicos
+  - Verificar que los filtros se aplican sin recargar
+  - Verificar que los resultados se actualizan
+  - Verificar que la URL se actualiza correctamente
+- [ ] Test de Paginación
+  - Verificar navegación entre páginas
+  - Verificar que los datos se cargan correctamente
+
+**Documentación:**
+- [Plan detallado](pasos/paso-3.11.5-plan.md) - Tests de interacciones JavaScript
+
+#### 3.11.6. Tests de Rendimiento y Optimización
+- [ ] Test de Carga de Páginas
+  - Verificar tiempos de carga aceptables
+  - Verificar que no hay consultas N+1
+  - Verificar que las relaciones están eager loaded
+- [ ] Test de Consultas a Base de Datos
+  - Verificar número máximo de consultas por página
+  - Verificar que no hay consultas duplicadas
+  - Verificar uso de caché cuando aplica
+- [ ] Test de Lazy Loading Detection
+  - Verificar que todas las relaciones necesarias están cargadas
+  - Detectar intentos de lazy loading
+  - Validar eager loading en componentes críticos
+
+**Documentación:**
+- [Plan detallado](pasos/paso-3.11.6-plan.md) - Tests de rendimiento
+
+#### 3.11.7. Tests de Responsive y Accesibilidad
+- [ ] Test de Diseño Responsive
+  - Verificar que las páginas se ven bien en móviles
+  - Verificar que las páginas se ven bien en tablets
+  - Verificar que las páginas se ven bien en desktop
+- [ ] Test de Accesibilidad Básica
+  - Verificar navegación por teclado
+  - Verificar contraste de colores
+  - Verificar que los elementos son accesibles
+  - Verificar que no hay errores de JavaScript en consola
+
+**Documentación:**
+- [Plan detallado](pasos/paso-3.11.7-plan.md) - Tests de responsive y accesibilidad
+
+#### 3.11.8. Integración con CI/CD y Documentación
+- [ ] Configurar tests de navegador en CI/CD
+  - Configurar entorno de CI para browser tests
+  - Configurar ejecución automática de tests
+  - Configurar reportes de resultados
+- [ ] Documentar ejecución de tests
+  - Crear guía de ejecución de tests de navegador
+  - Documentar troubleshooting común
+  - Documentar mejores prácticas
+- [ ] Integrar con suite de tests existente
+  - Asegurar que los tests de navegador se ejecutan junto con los tests funcionales
+  - Configurar cobertura de tests combinada
+  - Documentar estrategia de testing completa
+
+**Documentación:**
+- [Plan detallado](pasos/paso-3.11.8-plan.md) - Integración CI/CD
+- [Guía de Testing](docs/testing-guide.md) - Guía completa de testing
+
+---
+
 ## Priorización Recomendada
 
 ### Fase 1: Fundamentos (Pasos 3.1 - 3.3)
@@ -827,6 +1001,15 @@ Para cada policy:
 ### Fase 8: Documentación (Paso 3.10)
 **Duración estimada**: 1 semana
 - Documentación final
+
+### Fase 9: Tests de Navegador (Paso 3.11)
+**Duración estimada**: 1-2 semanas
+- Configuración de browser tests
+- Tests de páginas públicas críticas
+- Tests de autenticación y autorización
+- Tests de formularios e interacciones
+- Tests de rendimiento y optimización
+- Integración con CI/CD
 
 ---
 
