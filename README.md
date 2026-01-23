@@ -253,6 +253,28 @@ php artisan test --parallel
 - **Assertions**: 8,793+
 - **Cobertura**: 100% en modelos, policies, form requests y componentes Livewire
 
+### Browser Testing
+
+La aplicación incluye tests de navegador usando Pest v4 y Playwright para validar el comportamiento completo de la aplicación desde la perspectiva del usuario final.
+
+#### Ejecutar Browser Tests
+
+```bash
+# Todos los browser tests
+./vendor/bin/pest tests/Browser
+
+# Test específico
+./vendor/bin/pest tests/Browser/Public/HomeTest.php
+
+# Modo headed (ver navegador)
+./vendor/bin/pest tests/Browser --headed
+
+# Con debug (pausa en errores)
+./vendor/bin/pest tests/Browser --debug
+```
+
+Para más información, consulta la [documentación completa de Browser Testing](docs/browser-testing-setup.md).
+
 ---
 
 ## Estructura del Proyecto
@@ -312,6 +334,7 @@ erasmus25/
 
 ### Testing
 - **Pest PHP v4** - Framework de testing
+- **Pest Browser Plugin** - Tests de navegador con Playwright
 
 ---
 
@@ -323,6 +346,7 @@ La documentación completa está disponible en la carpeta [`docs/`](docs/README.
 - **[Documentación Técnica](docs/README.md)** - Arquitectura, modelos, APIs
 - **[Flujos de Trabajo](docs/flujos-trabajo.md)** - Procesos operativos
 - **[Roles y Permisos](docs/roles-and-permissions.md)** - Sistema de autorización
+- **[Browser Testing](docs/browser-testing-setup.md)** - Configuración y uso de tests de navegador
 
 ---
 
