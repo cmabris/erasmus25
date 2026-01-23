@@ -15,6 +15,16 @@ pest()->extend(Tests\TestCase::class)
     ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
     ->in('Feature');
 
+// Configuración para Browser Tests
+pest()->extend(Tests\TestCase::class)
+    ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+    ->in('Browser');
+
+// Configurar modo headed por defecto solo en desarrollo local (no en CI)
+if (! env('CI')) {
+    pest()->browser()->headed();
+}
+
 /*
 |--------------------------------------------------------------------------
 | Global Test Setup
