@@ -54,9 +54,14 @@ SELECT * FROM users WHERE id IN (1,2,3);-- 1 consulta
 | Componente | Relaciones Cargadas |
 |------------|---------------------|
 | `Public\Calls\Index` | `program`, `academicYear` |
+| `Public\Calls\Show` | `program`, `academicYear`, `phases`, `resolutions` (en mount) |
 | `Public\News\Index` | `program`, `academicYear`, `author`, `tags`, `media` |
+| `Public\News\Show` | `program`, `academicYear`, `author`, `tags`, `media` (en mount) |
+| `Public\Programs\Show` | `program` (en `relatedCalls` y `relatedNews`) |
 | `Public\Documents\Index` | `category`, `program`, `academicYear`, `media` |
+| `Public\Documents\Show` | `category`, `program`, `academicYear`, `creator`, `media` |
 | `Public\Events\Index` | `program`, `call`, `media` |
+| `Public\Events\Show` | `program`, `call`, `creator`, `media` |
 | `Public\Home` | Todas las relaciones necesarias por sección |
 | `Search\GlobalSearch` | Eager loading específico por tipo de entidad |
 
@@ -95,9 +100,66 @@ it('loads calls index with optimal queries', function () {
 - Consultas duplicadas: 0
 - Tiempo total DB: < 100ms
 
+### Correcciones Recientes (Enero 2026)
+
+Se corrigieron problemas de lazy loading detectados en producción que no fueron capturados por los tests funcionales:
+
+#### Problema Detectado
+
+Los componentes `Public\Programs\Show` y `Public\Calls\Show` intentaban acceder a relaciones (`program`) en componentes Blade (`call-card`, `news-card`) que no estaban eager loaded, causando `LazyLoadingViolationException` en producción.
+
+**Causa raíz**: Los tests funcionales usaban `Livewire::test()` que no renderiza completamente las vistas Blade, por lo que no se ejecutaba el código que accedía a las relaciones.
+
+#### Correcciones Aplicadas
+
+1. **`Public\Programs\Show::relatedCalls()`**:
+   ```php
+   // Antes
+   ->with(['academicYear'])
+   
+   // Después
+   ->with(['program', 'academicYear'])
+   ```
+
+2. **`Public\Programs\Show::relatedNews()`**:
+   ```php
+   // Antes
+   ->with(['author'])
+   
+   // Después
+   ->with(['program', 'author'])
+   ```
+
+3. **`Public\Calls\Show::relatedNews()`**:
+   ```php
+   // Antes
+   ->with(['author'])
+   
+   // Después
+   ->with(['program', 'author'])
+   ```
+
+#### Mejoras en Tests
+
+Se actualizaron los tests para usar `$this->get(route(...))` en lugar de `Livewire::test()` en casos críticos, asegurando que se renderice completamente la vista y se detecten problemas de lazy loading:
+
+```php
+// Antes
+Livewire::test(Show::class, ['program' => $this->program])
+    ->assertSee('Convocatoria de prueba');
+
+// Después
+$this->get(route('programas.show', $this->program->slug))
+    ->assertOk()
+    ->assertSee('Convocatoria de prueba');
+```
+
+**Lección aprendida**: Los browser tests (Pest v4) son esenciales para detectar problemas que solo aparecen en el renderizado completo de la aplicación.
+
 ### Documentación Relacionada
 
 - [Guía de Detección N+1](debugbar-n1-detection.md)
+- [Plan de Browser Testing](pasos/paso-3.11.1-plan.md)
 
 ---
 
