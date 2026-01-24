@@ -11,7 +11,7 @@ use App\Models\NewsTag;
 use App\Models\Program;
 use App\Models\Resolution;
 use App\Models\User;
-use Illuminate\Support\Collection;
+use Database\Seeders\RolesAndPermissionsSeeder;
 
 /**
  * Helper function to create public test data for browser tests.
@@ -54,11 +54,69 @@ function createPublicTestData(): array
  * Helper function to create an authenticated user for browser tests.
  *
  * @param  array<string, mixed>  $attributes  Additional attributes for the user
- * @return \App\Models\User
  */
 function createAuthenticatedUser(array $attributes = []): User
 {
     return User::factory()->create($attributes);
+}
+
+/**
+ * Asegura que los roles y permisos del sistema existen en la base de datos.
+ *
+ * Ejecuta RolesAndPermissionsSeeder para crear roles (super-admin, admin, editor, viewer)
+ * y sus permisos. Idempotente (usa firstOrCreate). Necesario antes de assignRole()
+ * en tests con RefreshDatabase, ya que cada test parte de BD vacía.
+ */
+function ensureRolesExist(): void
+{
+    (new RolesAndPermissionsSeeder)->run();
+}
+
+/**
+ * Crea un usuario de prueba para tests de autenticación y autorización.
+ *
+ * - Usa withoutTwoFactor() para evitar el flujo de 2FA en el login.
+ * - Contraseña por defecto: 'password' (se hashea por el cast del modelo).
+ * - Si se pasa $role, ejecuta ensureRolesExist() y asigna el rol (p. ej. Roles::VIEWER).
+ *
+ * Para login en browser tests, usar performLogin($user) con la contraseña 'password'.
+ *
+ * @param  array<string, mixed>  $overrides  Atributos que sobrescriben los por defecto
+ * @param  string|null  $role  Nombre del rol a asignar (App\Support\Roles::*)
+ */
+function createAuthTestUser(array $overrides = [], ?string $role = null): User
+{
+    $user = User::factory()->withoutTwoFactor()->create(array_merge(
+        ['password' => 'password'],
+        $overrides
+    ));
+
+    if ($role !== null) {
+        ensureRolesExist();
+        $user->assignRole($role);
+    }
+
+    return $user;
+}
+
+/**
+ * Ejecuta el flujo de login en el navegador (visit, fill, submit).
+ *
+ * Debe llamarse desde un test de Pest Browser (visit() proviene del plugin).
+ * Tras login exitoso, Fortify redirige a /dashboard. La página devuelta
+ * permite encadenar navigate() o visit() a otras rutas (p. ej. /admin/...).
+ *
+ * @param  \App\Models\User  $user  Usuario creado con createAuthTestUser (contraseña 'password')
+ * @return mixed Página del navegador tras el login (encadenar navigate, assertSee, etc.)
+ */
+function performLogin(User $user)
+{
+    $page = visit(route('login'));
+    $page->fill('email', $user->email)
+        ->fill('password', 'password')
+        ->click('Log in');
+
+    return $page;
 }
 
 /**
