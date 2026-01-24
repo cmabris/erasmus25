@@ -5,6 +5,7 @@ namespace Tests\Browser\Helpers;
 use App\Models\AcademicYear;
 use App\Models\Call;
 use App\Models\CallPhase;
+use App\Models\Document;
 use App\Models\ErasmusEvent;
 use App\Models\NewsPost;
 use App\Models\NewsTag;
@@ -172,6 +173,110 @@ function createHomeTestData(): array
         'news' => $news,
         'events' => $events,
         'author' => $author,
+    ];
+}
+
+/**
+ * Helper function to create newsletter subscription form test data for browser tests.
+ *
+ * Creates 2-3 active programs with known codes (KA1, KA2, KA3) for the newsletter
+ * subscribe form. The Subscribe component uses toggleProgram($program->code), so
+ * predictable codes allow tests to reliably select programs by clicking on them.
+ *
+ * @return array<string, mixed> Array containing the created models
+ */
+function createNewsletterTestData(): array
+{
+    $programs = collect([
+        Program::factory()->create([
+            'code' => 'KA1',
+            'name' => 'Programa KA1',
+            'is_active' => true,
+            'order' => 1,
+        ]),
+        Program::factory()->create([
+            'code' => 'KA2',
+            'name' => 'Programa KA2',
+            'is_active' => true,
+            'order' => 2,
+        ]),
+        Program::factory()->create([
+            'code' => 'KA3',
+            'name' => 'Programa KA3',
+            'is_active' => true,
+            'order' => 3,
+        ]),
+    ]);
+
+    return [
+        'programs' => $programs,
+    ];
+}
+
+/**
+ * Helper function to create global search test data for browser tests.
+ *
+ * Creates a complete set of test data for GlobalSearch browser tests including:
+ * - 1 program ("Programa de Movilidad", code KA1)
+ * - 1 academic year (2024-2025)
+ * - 1 call ("Convocatoria de Movilidad", abierta, published)
+ * - 1 news post ("Noticia sobre Movilidad", publicado)
+ * - 1 document ("Documento de Movilidad", is_active)
+ *
+ * All titles/descriptions contain "Movilidad" so a single search term can find
+ * results across all types. Mirrors the structure used in GlobalSearchTest (Feature).
+ *
+ * @return array<string, mixed> Array containing the created models
+ */
+function createGlobalSearchTestData(): array
+{
+    $program = Program::factory()->create([
+        'name' => 'Programa de Movilidad',
+        'code' => 'KA1',
+        'description' => 'Programa de movilidad estudiantil',
+        'is_active' => true,
+    ]);
+
+    $academicYear = AcademicYear::factory()->create([
+        'year' => '2024-2025',
+    ]);
+
+    $author = User::factory()->create();
+
+    $call = Call::factory()->create([
+        'title' => 'Convocatoria de Movilidad',
+        'requirements' => 'Requisitos para movilidad',
+        'status' => 'abierta',
+        'published_at' => now(),
+        'program_id' => $program->id,
+        'academic_year_id' => $academicYear->id,
+    ]);
+
+    $news = NewsPost::factory()->create([
+        'title' => 'Noticia sobre Movilidad',
+        'excerpt' => 'Resumen de la noticia',
+        'status' => 'publicado',
+        'published_at' => now(),
+        'program_id' => $program->id,
+        'academic_year_id' => $academicYear->id,
+        'author_id' => $author->id,
+    ]);
+
+    $document = Document::factory()->create([
+        'title' => 'Documento de Movilidad',
+        'description' => 'Descripción del documento',
+        'is_active' => true,
+        'program_id' => $program->id,
+        'academic_year_id' => $academicYear->id,
+    ]);
+
+    return [
+        'program' => $program,
+        'academicYear' => $academicYear,
+        'author' => $author,
+        'call' => $call,
+        'news' => $news,
+        'document' => $document,
     ];
 }
 

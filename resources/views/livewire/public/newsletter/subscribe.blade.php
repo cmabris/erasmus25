@@ -81,6 +81,7 @@
                         {{-- Email Field --}}
                         <div>
                             <flux:input
+                                name="email"
                                 wire:model="email"
                                 :label="__('common.newsletter.email')"
                                 type="email"
@@ -163,7 +164,8 @@
                         {{-- Privacy Policy Acceptance --}}
                         <div>
                             <label class="flex cursor-pointer items-start gap-3">
-                                <input 
+                                <input
+                                    name="acceptPrivacy"
                                     type="checkbox"
                                     wire:model="acceptPrivacy"
                                     class="mt-0.5 size-4 rounded border-zinc-300 text-erasmus-600 focus:ring-erasmus-500 dark:border-zinc-600 dark:bg-zinc-700"

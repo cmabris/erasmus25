@@ -14,6 +14,7 @@
             {{-- Search Input --}}
             <div class="mt-6">
                 <x-ui.search-input 
+                    name="query"
                     wire:model.live.debounce.300ms="query" 
                     :placeholder="__('common.search.global_placeholder')"
                     size="lg"
