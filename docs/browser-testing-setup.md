@@ -99,6 +99,10 @@ use function Tests\Browser\Helpers\createAuthenticatedUser;
 $user = createAuthenticatedUser(['email' => 'admin@example.com']);
 ```
 
+### Helpers de Autenticación y Autorización
+
+Para tests de login, registro, recuperación de contraseña y autorización (roles en admin): `createAuthTestUser`, `performLogin`, `ensureRolesExist`. Contraseña de prueba: `password`; se usa `withoutTwoFactor()` para evitar 2FA. Ver [browser-testing-auth.md](browser-testing-auth.md).
+
 ## Comandos Útiles
 
 ### Ejecutar Todos los Browser Tests

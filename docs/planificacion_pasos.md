@@ -837,24 +837,24 @@ Para cada policy:
 - [Plan detallado](pasos/paso-3.11.2-plan.md) - Tests de páginas públicas
 
 #### 3.11.3. Tests de Flujos de Autenticación y Autorización
-- [ ] Test de Login
+- [x] Test de Login
   - Verificar formulario de login
   - Verificar validación de credenciales
   - Verificar redirección después del login
   - Verificar manejo de errores
-- [ ] Test de Registro
+- [x] Test de Registro
   - Verificar formulario de registro
   - Verificar validación de datos
   - Verificar creación de usuario
   - Verificar verificación de email (si aplica)
-- [ ] Test de Recuperación de Contraseña
+- [x] Test de Recuperación de Contraseña
   - Verificar solicitud de recuperación
   - Verificar enlace de reset
   - Verificar cambio de contraseña
-- [ ] Test de Autorización en Rutas Públicas
+- [x] Test de Autorización en Rutas Públicas
   - Verificar que usuarios no autenticados pueden acceder a páginas públicas
   - Verificar que usuarios autenticados pueden acceder a páginas públicas
-- [ ] Test de Autorización en Rutas de Administración
+- [x] Test de Autorización en Rutas de Administración
   - Verificar que usuarios no autenticados son redirigidos
   - Verificar que usuarios sin permisos son denegados
   - Verificar que usuarios con permisos pueden acceder
