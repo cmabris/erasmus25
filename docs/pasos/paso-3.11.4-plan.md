@@ -38,9 +38,9 @@ Implementar tests de navegador para los formularios públicos y la búsqueda en 
 
 ### ⚠️ Pendiente de Implementar
 
-1. **Tests de navegador del formulario de Newsletter** (validación, programas, envío, confirmación, errores).
-2. **Tests de navegador de la Búsqueda Global** (búsqueda en tiempo real, resultados, filtros, navegación a resultados).
-3. **Helpers específicos** (opcionales) para datos de Newsletter y de búsqueda si se precisan.
+1. ~~**Tests de navegador del formulario de Newsletter**~~ ✅ Completado (Fase 2).
+2. ~~**Tests de navegador de la Búsqueda Global**~~ ✅ Completado (Fase 3).
+3. ~~**Helpers específicos**~~ ✅ Completado (Fase 1).
 
 ---
 
@@ -64,20 +64,20 @@ Implementar tests de navegador para los formularios públicos y la búsqueda en 
 
 **Archivo**: `tests/Browser/Helpers.php`
 
-- [ ] **Función `createNewsletterTestData(): array`** (opcional, si se quiere centralizar):
+- [x] **Función `createNewsletterTestData(): array`** (opcional, si se quiere centralizar):
   - Crear 2–3 programas activos con `code` conocido (p. ej. `KA1`, `KA2`) para poder marcar checkboxes en los tests.
   - Devolver `['programs' => $programs]`.
   - Si los tests crean los programas en `beforeEach` directamente, este helper puede omitirse.
 
-- [ ] Decisión: Si `createPublicTestData()` o `createHomeTestData()` ya crean programas activos y basta con eso para Newsletter, reutilizarlos. Si hace falta un conjunto mínimo específico (p. ej. solo programas con `code` conocido para `toggleProgram`), añadir `createNewsletterTestData()` o un `beforeEach` local en `NewsletterSubscribeTest`.
+- [x] Decisión: Se añadió `createNewsletterTestData()` con 3 programas (KA1, KA2, KA3) y nombres/order para que los tests de Newsletter puedan usar `toggleProgram($program->code)` de forma fiable.
 
 #### 1.2. Datos para Búsqueda Global
 
-- [ ] Los datos necesarios (Program, Call, NewsPost, Document, AcademicYear) pueden crearse en `beforeEach` de `GlobalSearchTest` o reutilizar un helper existente. El `GlobalSearchTest` de Feature ya usa `Program::factory()`, `Call::factory()`, etc. con títulos/descripciones que contienen el término de búsqueda. Replicar un `beforeEach` similar en el browser test (p. ej. programa "Movilidad", convocatoria "Convocatoria de Movilidad", noticia "Noticia sobre Movilidad", documento "Documento de Movilidad") para poder comprobar resultados visibles en la página.
+- [x] Se añadió **`createGlobalSearchTestData(): array`** en `tests/Browser/Helpers.php`. Crea program ("Programa de Movilidad", KA1), academicYear (2024-2025), call ("Convocatoria de Movilidad", abierta, published), news ("Noticia sobre Movilidad", publicado), document ("Documento de Movilidad", is_active). Todos con el término "Movilidad" para una búsqueda única. El `GlobalSearchTest` (browser) podrá usar este helper en `beforeEach` o invocarlo bajo demanda.
 
 ---
 
-### Fase 2: Tests del Formulario de Suscripción a Newsletter
+### Fase 2: Tests del Formulario de Suscripción a Newsletter ✅ COMPLETADA
 
 **Objetivo**: Comprobar en el navegador el formulario, la validación, la selección de programas, el envío exitoso, la confirmación y el manejo de errores.
 
@@ -85,12 +85,12 @@ Implementar tests de navegador para los formularios públicos y la búsqueda en 
 
 #### 2.1. Configuración y `beforeEach`
 
-- [ ] `uses(RefreshDatabase::class)` (hereda de Pest `in('Browser')`).
-- [ ] `beforeEach`: crear al menos 2 programas activos con `code` (p. ej. `KA1`, `KA2`) para que el formulario muestre checkboxes. Opcional: `App::setLocale('es')` si se desea fijar idioma.
+- [x] `RefreshDatabase` vía Pest `in('Browser')`.
+- [x] `beforeEach`: `App::setLocale('es')` y `createNewsletterTestData()` (programas KA1, KA2, KA3).
 
 #### 2.2. Tests a implementar
 
-- [ ] **Test: Verificar formulario de suscripción**
+- [x] **Test: Verificar formulario de suscripción**
   - `visit(route('newsletter.subscribe'))`
   - `assertSee` textos clave: p. ej. `__('common.newsletter.stay_informed')` o equivalente, `__('common.newsletter.email')`, `__('common.newsletter.subscribe')`
   - `assertPresent` para input email (p. ej. `input[name="email"]` o por label).
@@ -98,32 +98,32 @@ Implementar tests de navegador para los formularios públicos y la búsqueda en 
   - Comprobar checkbox de privacidad y botón "Suscribirse" (o `__('common.newsletter.subscribe')`).
   - `assertNoJavascriptErrors()`.
 
-- [ ] **Test: Validación de email — campo vacío**
+- [x] **Test: Validación de email — campo vacío**
   - `visit(route('newsletter.subscribe'))`
   - Dejar email vacío, marcar `acceptPrivacy` (click en el checkbox o en su label).
   - `click(__('common.newsletter.subscribe'))` o el texto del botón.
   - `assertSee` mensaje de error relacionado con email requerido (texto según `lang` o validación de Laravel). Permanecer en la ruta de suscripción.
 
-- [ ] **Test: Validación de email — formato inválido**
+- [x] **Test: Validación de email — formato inválido**
   - `fill('email', 'invalid')`, `acceptPrivacy` marcado, submit.
   - `assertSee` error de formato de email.
 
-- [ ] **Test: Validación de email — duplicado**
+- [x] **Test: Validación de email — duplicado**
   - `NewsletterSubscription::factory()->create(['email' => 'existente@example.com'])`
   - `fill('email', 'existente@example.com')`, `acceptPrivacy` marcado, submit.
   - `assertSee` mensaje de email ya registrado / unique.
 
-- [ ] **Test: Validación de aceptación de privacidad**
+- [x] **Test: Validación de aceptación de privacidad**
   - `fill('email', 'nuevo@example.com')`, **no** marcar `acceptPrivacy`, submit.
   - `assertSee` el mensaje personalizado `'Debe aceptar la política de privacidad para suscribirse.'` o la clave traducida equivalente.
 
-- [ ] **Test: Selección de programas de interés**
+- [x] **Test: Selección de programas de interés**
   - `visit(route('newsletter.subscribe'))`
   - `fill('email', 'test@example.com')`, marcar `acceptPrivacy`
   - Hacer click en el label/checkbox de al menos un programa (p. ej. el que tenga `code` 'KA1' o el primer programa listado).
   - Submit. En un test con `Mail::fake()`, comprobar que la suscripción se crea con `programs` conteniendo ese código (`assertDatabaseHas` o equivalente vía modelo). Si el test se centra solo en “selección visible”, comprobar que el flujo llega a éxito y que no hay error de validación en `selectedPrograms`/`programs.*`.
 
-- [ ] **Test: Envío exitoso y confirmación**
+- [x] **Test: Envío exitoso y confirmación**
   - `Mail::fake()`
   - Crear programas activos en `beforeEach`.
   - `visit(route('newsletter.subscribe'))` → `fill('email', 'nuevo@example.com')` → marcar `acceptPrivacy` → `click(__('common.newsletter.subscribe'))`
@@ -132,25 +132,22 @@ Implementar tests de navegador para los formularios públicos y la búsqueda en 
   - `Mail::assertSent(NewsletterVerificationMail::class)`
   - `$this->assertDatabaseHas('newsletter_subscriptions', ['email' => 'nuevo@example.com'])`.
 
-- [ ] **Test: Manejo de errores — no se muestra éxito si hay error de validación**
+- [x] **Test: Manejo de errores — no se muestra éxito si hay error de validación**
   - Submit con email duplicado (o inválido) y `acceptPrivacy` marcado.
   - `assertDontSee(__('common.newsletter.subscription_success'))` (o que no aparezca el bloque de éxito). Opcional: comprobar que sigue visible el formulario (p. ej. el botón Suscribirse o el campo email).
 
-- [ ] **Test: Sin errores de JavaScript en la página de suscripción**
+- [x] **Test: Sin errores de JavaScript en la página de suscripción**
   - `visit(route('newsletter.subscribe'))` → `assertNoJavascriptErrors()`.
 
 #### 2.3. Detalles de implementación (selectores y convenciones)
 
-- **Email**: `fill('email', '...')` si el `flux:input` expone `name="email"`.
-- **Nombre**: opcional; si se usa, `fill('name', '...')`.
-- **AcceptPrivacy**: el checkbox usa `wire:model="acceptPrivacy"`. Hacer `click` en el label que contiene el texto de privacidad o localizar el input y hacer `check` si Pest lo soporta para ese elemento. Si `flux:checkbox` no genera un `input` estándar, buscar por el texto "política de privacidad" o "accept_data_processing" y hacer `click` en el contenedor que actúa como checkbox.
-- **Programas**: `click` en el `<label>` o en el texto del programa que envuelve el `wire:click="toggleProgram('...')"`. Si se conoce el `code`, se puede hacer `click` en el texto del programa (nombre o code) que esté dentro de ese label.
-- **Submit**: `click(__('common.newsletter.subscribe'))` o `click('Suscribirse')` según el idioma.
-- Si `fill` no encuentra el campo por `name`, probar con `fill('input[name="email"]', '...')` o el selector que admita Pest. Documentar en el plan la convención usada.
+- **Vista**: Se añadió `name="email"` al `flux:input` de email y `name="acceptPrivacy"` al checkbox de privacidad.
+- **Email**: `fill('email', '...')`. **AcceptPrivacy**: `check('acceptPrivacy')`. **Programas**: `click('Programa KA1')`. **Submit**: `click(__('common.newsletter.subscribe'))`.
+- **script()**: No encadenar con `check`/`fill` (devuelve el resultado JS). Usar para quitar `required` o `type="email"` y forzar validación servidor. **wait(1)** tras submit antes de `assertSee` de errores.
 
 ---
 
-### Fase 3: Tests de la Búsqueda Global
+### Fase 3: Tests de la Búsqueda Global ✅ COMPLETADA
 
 **Objetivo**: Comprobar en el navegador la búsqueda en tiempo real, los resultados, los filtros avanzados y la navegación a los resultados.
 
@@ -158,70 +155,70 @@ Implementar tests de navegador para los formularios públicos y la búsqueda en 
 
 #### 3.1. Configuración y `beforeEach`
 
-- [ ] `uses(RefreshDatabase::class)`.
-- [ ] `beforeEach`: crear datos de búsqueda (al menos 1 Program, 1 AcademicYear, 1 Call publicada, 1 NewsPost publicada, 1 Document activo) con títulos/descripciones que contengan un término común (p. ej. "Movilidad") para poder `assertSee` en resultados.
+- [x] `RefreshDatabase` vía Pest `in('Browser')`.
+- [x] `beforeEach`: `App::setLocale('es')` y `createGlobalSearchTestData()` (Program, AcademicYear, Call, NewsPost, Document con "Movilidad").
 
 #### 3.2. Tests a implementar
 
-- [ ] **Test: Verificar página de búsqueda**
+- [x] **Test: Verificar página de búsqueda**
   - `visit(route('search'))`
   - `assertSee(__('common.search.global_title'))`, `assertSee(__('common.search.global_description'))`
   - `assertSee(__('common.search.start_search'))` o equivalente cuando `query` está vacío.
   - `assertNoJavascriptErrors()`.
 
-- [ ] **Test: Búsqueda en tiempo real — resultados de programas**
+- [x] **Test: Búsqueda en tiempo real — resultados de programas**
   - `visit(route('search'))`
   - `fill` en el input de búsqueda el término que coincida con un programa (p. ej. "Movilidad").
   - Esperar al debounce (≥ 400 ms, p. ej. 1 s) para que Livewire envíe la petición y se rendericen resultados.
   - `assertSee` el nombre del programa creado en `beforeEach`.
   - `assertSee(__('common.search.programs'))` en el encabezado de la sección.
 
-- [ ] **Test: Búsqueda en tiempo real — resultados de convocatorias, noticias, documentos**
+- [x] **Test: Búsqueda en tiempo real — resultados de convocatorias, noticias, documentos**
   - Similar al anterior: término que coincida con Call, NewsPost, Document. Tras esperar debounce, `assertSee` títulos/contenido y los encabezados de sección (`common.search.calls`, `common.search.news`, `common.search.documents`).
 
-- [ ] **Test: Resultados vacíos**
+- [x] **Test: Resultados vacíos**
   - `fill` con un término que no coincida con nada (p. ej. "XyZAbC123Nada").
   - Esperar debounce.
   - `assertSee(__('common.search.no_results'))` y `assertSee(__('common.search.no_results_message'))`.
 
-- [ ] **Test: Filtros avanzados — mostrar/ocultar panel**
+- [x] **Test: Filtros avanzados — mostrar/ocultar panel**
   - `visit(route('search'))`
   - `click(__('common.search.advanced_filters'))` → `assertSee(__('common.search.content_types'))` (o texto del panel de filtros).
   - `click` de nuevo en "Filtros avanzados" (o el botón que hace `toggleFilters`) → comprobar que el panel se oculta (por ejemplo, que no se ve "content_types" o que el botón cambia de chevron). Ajustar según la vista (chevron-up/chevron-down).
 
-- [ ] **Test: Filtro por programa**
+- [x] **Test: Filtro por programa**
   - Crear 2 programas (uno con "Movilidad" en nombre, otro "Otro"). Crear Call/News solo para el primero.
   - `visit(route('search'))` → `fill('query', 'Movilidad')` → esperar debounce.
   - Abrir filtros avanzados → en el select de programa, elegir el programa que tiene "Movilidad" (por `fill` en el select o `select_option`). El componente usa `wire:model.live="program"`.
   - Esperar a que se actualicen los resultados. Comprobar que se muestran resultados del programa elegido. (Opcional: comprobar que al elegir el otro programa, los resultados de "Movilidad" en Call/News no aparecen si solo están asociados al primero.)
 
-- [ ] **Test: Botón “Limpiar búsqueda” (clear search)**
+- [x] **Test: Botón “Limpiar búsqueda” (clear search)**
   - `visit(route('search'))` → `fill('query', 'algo')` → esperar debounce (para que exista el botón de limpiar).
   - `click(__('common.search.clear_search'))`. Comprobar que el input se limpia y que se muestra de nuevo el estado inicial (`common.search.start_search` o similar).
 
-- [ ] **Test: Navegación a un resultado**
+- [x] **Test: Navegación a un resultado**
   - `visit(route('search'))` → `fill('query', 'Movilidad')` → esperar debounce.
   - `assertSee` al menos un enlace (nombre de programa, convocatoria, etc.).
   - `click` en el enlace de uno de los resultados (p. ej. el programa). Comprobar que se navega a la ruta pública correcta (`programas.show` por slug, o `convocatorias.show`, etc.) y que la página de detalle muestra el contenido esperado (`assertSee` nombre/título del recurso). Se usa `wire:navigate`, por lo que la transición puede ser SPA; `assertPathIs` o `assertUrlContains` según la ruta.
 
-- [ ] **Test: Sin errores de JavaScript en la página de búsqueda**
+- [x] **Test: Sin errores de JavaScript en la página de búsqueda**
   - `visit(route('search'))` → `assertNoJavascriptErrors()`.
   - Opcional: tras realizar una búsqueda y abrir filtros, `assertNoJavascriptErrors()` de nuevo.
 
 #### 3.3. Detalles de implementación
 
-- **Input de búsqueda**: el componente usa `<x-ui.search-input wire:model.live.debounce.300ms="query" ... />`. Revisar en `resources/views/components/ui/search-input.blade.php` (o equivalente) el `name` o `id` del input para usar `fill('...', 'término')`. Si no hay `name`, usar un selector por placeholder: `__('common.search.global_placeholder')` o por `data-test` si se añade.
-- **Debounce**: después de `fill` en el input, esperar al menos 1 segundo (≥ 400 ms tras el debounce de 300 ms) para que Livewire procese y renderice. Usar la API de Pest Browser o Playwright (p. ej. `$page->wait(1)` si existe, o `sleep(1)` en PHP, o `browser_wait_for` con `time` en segundos si el test se ejecuta en un contexto que lo ofrezca). Documentar la convención elegida.
-- **Select de programa / año**: si usan `wire:model.live`, al cambiar la opción Livewire actualizará los resultados. Usar `select_option` o `fill` en el select según la API de Pest. Revisar los `id`: `program-filter`, `academic-year-filter`.
+- **Input de búsqueda**: se añadió `name="query"` al `x-ui.search-input` en `global-search.blade.php`. Uso: `fill('query', 'término')`.
+- **Debounce**: tras `fill('query', ...)` se usa `wait(1)` antes de aserciones de resultados.
+- **Select de programa**: `select('#program-filter', 'Programa de Movilidad')` por id y texto de la opción.
 
 ---
 
-### Fase 4: Formularios de Administración en Área Pública
+### Fase 4: Formularios de Administración en Área Pública ✅ COMPLETADA
 
 **Objetivo**: Dejar documentada la decisión y, si en el futuro hubiera formularios de admin en área pública, un lugar donde añadir tests.
 
-- [ ] **Decisión**: No hay formularios de administración en el área pública. Los CRUD de admin están en `/admin/*` y requieren autenticación; los tests de acceso y formularios de admin se contemplan en pasos de tests de componentes de administración (p. ej. 3.8.4) o en un futuro paso de browser tests de admin.
-- [ ] En el plan se deja explícito que el ítem "Test de Formularios de Administración (si aplica en área pública)" **no aplica** en este momento. Si más adelante se expusiera algún formulario de admin en una ruta pública, se añadirían tests en un archivo `tests/Browser/Public/AdminFormXTest.php` o similar, siguiendo el mismo patrón: validación, mensajes de error, envío exitoso.
+- [x] **Decisión**: No hay formularios de administración en el área pública. Los CRUD de admin están en `/admin/*` y requieren autenticación; los tests de acceso y formularios de admin se contemplan en pasos de tests de componentes de administración (p. ej. 3.8.4) o en un futuro paso de browser tests de admin.
+- [x] En el plan se deja explícito que el ítem "Test de Formularios de Administración (si aplica en área pública)" **no aplica** en este momento. Si más adelante se expusiera algún formulario de admin en una ruta pública, se añadirían tests en un archivo `tests/Browser/Public/AdminFormXTest.php` o similar, siguiendo el mismo patrón: validación, mensajes de error, envío exitoso.
 
 ---
 
@@ -229,7 +226,7 @@ Implementar tests de navegador para los formularios públicos y la búsqueda en 
 
 #### 5.1. Documentación
 
-- [ ] Crear o actualizar una sección en `docs/browser-testing-public-pages.md` o en `docs/browser-testing-setup.md` (o nuevo `docs/browser-testing-forms.md`) con:
+- [x] Crear o actualizar una sección en `docs/browser-testing-public-pages.md` con:
   - Resumen de los archivos: `NewsletterSubscribeTest.php`, `GlobalSearchTest.php`.
   - Descripción de los escenarios: validación de newsletter, envío y confirmación, búsqueda en tiempo real, filtros, navegación a resultados.
   - Convenciones: uso de `fill`, `click`, espera de debounce, `Mail::fake()` en newsletter.
@@ -237,18 +234,18 @@ Implementar tests de navegador para los formularios públicos y la búsqueda en 
 
 #### 5.2. Actualizar `docs/planificacion_pasos.md`
 
-- [ ] En el paso 3.11.4, marcar como completados los ítems según el avance:
-  - [ ] Test de Formulario de Suscripción Newsletter
-  - [ ] Test de Formularios de Administración (si aplica en área pública) — dejar como N/A y anotado.
-  - [ ] Test de Búsqueda Global
+- [x] En el paso 3.11.4, marcar como completados los ítems según el avance:
+  - [x] Test de Formulario de Suscripción Newsletter
+  - [x] Test de Formularios de Administración (si aplica en área pública) — N/A, anotado.
+  - [x] Test de Búsqueda Global
 
 #### 5.3. Verificación final
 
-- [ ] Ejecutar:
+- [x] Ejecutar:
   - `./vendor/bin/pest tests/Browser/Public/NewsletterSubscribeTest.php`
   - `./vendor/bin/pest tests/Browser/Public/GlobalSearchTest.php`
   - Comprobar que todos pasan.
-- [ ] Revisar que no queden `skip()` o `todo()` sin justificar.
+- [x] Revisar que no queden `skip()` o `todo()` sin justificar.
 - [ ] Opcional: ejecutar `./vendor/bin/pest tests/Browser` y comprobar que la suite ampliada sigue pasando.
 
 ---
@@ -327,4 +324,4 @@ Tras completar el paso 3.11.4:
 ---
 
 **Fecha de Creación**: Enero 2026  
-**Estado**: 📋 Plan listo para implementación
+**Estado**: ✅ Completado (Fases 1–5)

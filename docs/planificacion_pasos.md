@@ -863,16 +863,13 @@ Para cada policy:
 - [Plan detallado](pasos/paso-3.11.3-plan.md) - Tests de autenticación
 
 #### 3.11.4. Tests de Formularios y Validación en Tiempo Real
-- [ ] Test de Formulario de Suscripción Newsletter
+- [x] Test de Formulario de Suscripción Newsletter
   - Verificar validación de email
   - Verificar selección de programas de interés
   - Verificar envío y confirmación
   - Verificar manejo de errores
-- [ ] Test de Formularios de Administración (si aplica en área pública)
-  - Verificar validación en tiempo real
-  - Verificar mensajes de error
-  - Verificar envío exitoso
-- [ ] Test de Búsqueda Global
+- [x] Test de Formularios de Administración (N/A — no hay formularios de admin en área pública)
+- [x] Test de Búsqueda Global
   - Verificar búsqueda en tiempo real
   - Verificar resultados de búsqueda
   - Verificar navegación a resultados

@@ -10,13 +10,15 @@ Los tests están organizados en el directorio `tests/Browser/Public/` con la sig
 
 ```
 tests/Browser/Public/
-├── HomeTest.php              # Tests de página de inicio
-├── ProgramsIndexTest.php      # Tests de listado de programas
+├── HomeTest.php                # Tests de página de inicio
+├── ProgramsIndexTest.php        # Tests de listado de programas
 ├── ProgramsShowTest.php        # Tests de detalle de programa
-├── CallsIndexTest.php         # Tests de listado de convocatorias
+├── CallsIndexTest.php          # Tests de listado de convocatorias
 ├── CallsShowTest.php          # Tests de detalle de convocatoria
 ├── NewsIndexTest.php          # Tests de listado de noticias
 ├── NewsShowTest.php           # Tests de detalle de noticia
+├── NewsletterSubscribeTest.php # Tests de formulario de suscripción newsletter
+├── GlobalSearchTest.php       # Tests de búsqueda global en tiempo real
 ├── PerformanceTest.php        # Tests de rendimiento
 └── AccessibilityTest.php      # Tests de accesibilidad básica
 ```
@@ -33,6 +35,8 @@ Los helpers están ubicados en `tests/Browser/Helpers.php` y proporcionan funcio
 - `createCallShowTestData()` - Datos para detalle de convocatoria
 - `createNewsTestData()` - Datos para listado de noticias
 - `createNewsShowTestData()` - Datos para detalle de noticia
+- `createNewsletterTestData()` - Datos para formulario newsletter (programas KA1, KA2, KA3)
+- `createGlobalSearchTestData()` - Datos para búsqueda global (programa, call, news, document con «Movilidad»)
 
 ## Cómo Ejecutar los Tests
 
@@ -207,6 +211,52 @@ Los helpers están ubicados en `tests/Browser/Helpers.php` y proporcionan funcio
 - Los límites de elementos relacionados se respetan
 - La seguridad funciona (404 para no publicadas)
 
+### Formulario de Suscripción Newsletter (NewsletterSubscribeTest.php)
+
+**Objetivo**: Comprobar en el navegador el formulario de suscripción, la validación (email vacío, inválido, duplicado, privacidad), la selección de programas, el envío exitoso con confirmación y el manejo de errores.
+
+**Tests principales**:
+- Formulario con email, programas activos (KA1, KA2, KA3), checkbox de privacidad y botón Suscribirse
+- Validación: email vacío, formato inválido, email duplicado, aceptación de privacidad
+- Selección de programas y comprobación de que la suscripción incluye `programs` en BD
+- Envío exitoso: mensaje de éxito, envío de `NewsletterVerificationMail`, registro en `newsletter_subscriptions`
+- Sin éxito cuando hay error de validación
+- Sin errores de JavaScript
+
+**Convenciones**:
+- `fill('email', ...)`, `check('acceptPrivacy')`, `click(__('common.newsletter.subscribe'))`
+- Para forzar validación servidor (email vacío/inválido): `script()` para quitar `required` o `type="email"`; no encadenar `script()` con `check`/`fill`
+- `Mail::fake()` antes de `visit` en tests de envío exitoso; `wait(1)` tras submit antes de `assertSee` de errores
+
+**Comando**:
+```bash
+./vendor/bin/pest tests/Browser/Public/NewsletterSubscribeTest.php
+```
+
+### Búsqueda Global (GlobalSearchTest.php)
+
+**Objetivo**: Comprobar la búsqueda en tiempo real (`wire:model.live.debounce.300ms`), los resultados agrupados por tipo, los filtros avanzados (mostrar/ocultar, filtro por programa), el botón «Limpiar búsqueda» y la navegación a resultados.
+
+**Tests principales**:
+- Página: título, descripción, estado inicial «Comienza tu búsqueda»
+- Búsqueda en tiempo real: programas, convocatorias, noticias, documentos (término «Movilidad»)
+- Resultados vacíos
+- Filtros avanzados: mostrar/ocultar panel, filtro por programa (`select('#program-filter', '...')`)
+- Limpiar búsqueda: vuelta al estado inicial
+- Navegación a detalle (p. ej. programa) con `assertPathBeginsWith('/programas/')`
+- Sin errores de JavaScript (página inicial y tras búsqueda + filtros)
+
+**Convenciones**:
+- `fill('query', 'término')` — el input tiene `name="query"` en `global-search.blade.php`
+- `wait(1)` tras `fill('query', ...)` para el debounce (300 ms) y la respuesta Livewire
+- `select('#program-filter', 'Programa de Movilidad')` para el select de programa
+
+**Comandos**:
+```bash
+./vendor/bin/pest tests/Browser/Public/GlobalSearchTest.php
+# Depuración: --headed (ver navegador), --debug (pausar al fallar)
+```
+
 ### Rendimiento (PerformanceTest.php)
 
 **Objetivo**: Verificar que las páginas cargan en tiempos aceptables y con un número razonable de consultas.
@@ -295,7 +345,8 @@ Los tests incluyen verificaciones críticas para detectar problemas de lazy load
 
 - [Documentación de Pest Browser](https://pestphp.com/docs/browser-testing)
 - [Documentación de Playwright](https://playwright.dev)
-- [Plan de Tests](docs/pasos/paso-3.11.2-plan.md)
+- [Plan de Tests - Páginas públicas](docs/pasos/paso-3.11.2-plan.md)
+- [Plan 3.11.4 - Formularios y validación en tiempo real](docs/pasos/paso-3.11.4-plan.md)
 
 ---
 
