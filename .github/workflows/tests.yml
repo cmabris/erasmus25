@@ -49,6 +49,11 @@ jobs:
       - name: Install PHP dependencies
         run: composer install --prefer-dist --no-progress --no-interaction --no-ansi
 
+      - name: Create .env file
+        run: |
+          cp .env.example .env || echo "APP_NAME=Laravel" > .env
+          echo "APP_KEY=" >> .env
+
       - name: Generate application key
         run: php artisan key:generate
 
@@ -138,6 +143,11 @@ jobs:
         run: npx playwright install --with-deps chromium
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
+
+      - name: Create .env file
+        run: |
+          cp .env.example .env || echo "APP_NAME=Laravel" > .env
+          echo "APP_KEY=" >> .env
 
       - name: Generate application key
         run: php artisan key:generate
