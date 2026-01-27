@@ -878,20 +878,20 @@ Para cada policy:
 - [Plan detallado](pasos/paso-3.11.4-plan.md) - Tests de formularios
 
 #### 3.11.5. Tests de Interacciones JavaScript y Componentes Dinámicos
-- [ ] Test de Navegación con Livewire
+- [x] Test de Navegación con Livewire
   - Verificar navegación sin recargar página (`wire:navigate`)
   - Verificar transiciones suaves
   - Verificar que el estado se mantiene
-- [ ] Test de Componentes Interactivos
+- [x] Test de Componentes Interactivos
   - Verificar dropdowns y menús
   - Verificar modales (si hay en área pública)
   - Verificar tabs y acordeones
   - Verificar tooltips
-- [ ] Test de Filtros Dinámicos
+- [x] Test de Filtros Dinámicos
   - Verificar que los filtros se aplican sin recargar
   - Verificar que los resultados se actualizan
   - Verificar que la URL se actualiza correctamente
-- [ ] Test de Paginación
+- [x] Test de Paginación
   - Verificar navegación entre páginas
   - Verificar que los datos se cargan correctamente
 

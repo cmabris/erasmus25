@@ -85,25 +85,81 @@ Los helpers están ubicados en `tests/Browser/Helpers.php` y proporcionan funcio
 - No hay problemas de lazy loading
 - Los límites de elementos se respetan
 
+### Navegación SPA con `wire:navigate` (LivewireNavigateTest.php)
+
+**Objetivo**: Verificar que la navegación entre páginas públicas usando `wire:navigate` se comporta como una SPA (sin recarga completa), actualizando correctamente la URL, el contenido y sin errores de JavaScript.
+
+**Tests principales**:
+- Navegación desde home a Programas, Convocatorias y Noticias mediante enlaces del nav con `wire:navigate`.
+- Navegación desde listados (programas, convocatorias, noticias) a sus páginas de detalle usando enlaces con `wire:navigate`.
+- Verificación de que el historial del navegador se actualiza correctamente.
+- Confirmación de ausencia de errores de JavaScript tras varias navegaciones encadenadas.
+
+**Convenciones**:
+- Uso de `assertPathIs` / `assertPathBeginsWith` para comprobar la URL tras el click.
+- Comprobar contenido característico de cada página (`assertSee(...)`).
+- `assertNoJavascriptErrors()` después de secuencias de navegación.
+
+**Comando**:
+```bash
+./vendor/bin/pest tests/Browser/Public/LivewireNavigateTest.php
+```
+
+### Componentes Interactivos (InteractiveComponentsTest.php)
+
+**Objetivo**: Probar en navegador los componentes interactivos clave del layout público: menú móvil y language switcher.
+
+**Tests principales**:
+- Menú móvil:
+  - Abrir menú haciendo click en el botón hamburguesa (`aria-label="common.nav.open_menu"`).
+  - Cerrar menú al hacer click fuera (por ejemplo, en el logo/home).
+  - Navegar a Programas, Convocatorias y Noticias desde el menú móvil y comprobar que el menú se cierra.
+- Language switcher:
+  - Abrir el dropdown de idiomas.
+  - Cambiar de idioma (p. ej. ES → EN) y verificar que la página se recarga vía Livewire navigate con el nuevo locale.
+  - Cerrar el dropdown haciendo click fuera.
+- Documentar que en el área pública no hay otros componentes interactivos complejos (modales, tabs, tooltips).
+
+**Convenciones**:
+- Menú móvil:
+  - Seleccionar el botón por `aria-label="{{ __('common.nav.open_menu') }}"`.
+  - Seleccionar enlaces del menú por `role="menu"` y `href*="/programas"`, `href*="/convocatorias"`, `href*="/noticias"`.
+- Language switcher:
+  - Botón principal por `aria-label="{{ __('common.language.change') }}"`.
+  - Opciones por texto visible (“English”, “Español”) y `wire:click="switchLanguage('...')`.
+- Añadir pequeños `wait()` si hay transiciones de Alpine o peticiones Livewire encadenadas.
+
+**Comando**:
+```bash
+./vendor/bin/pest tests/Browser/Public/InteractiveComponentsTest.php
+```
+
 ### Listado de Programas (ProgramsIndexTest.php)
 
 **Objetivo**: Verificar el funcionamiento del listado de programas con filtros y búsqueda.
 
 **Tests principales**:
-- Renderizado del listado
-- Visualización de programas activos e inactivos
-- Filtros por tipo de programa
-- Búsqueda por nombre, código y descripción
-- Paginación
-- Estadísticas
-- Reset de filtros
-- Verificación de eager loading
+- Renderizado del listado.
+- Visualización de programas activos e inactivos.
+- Filtros por tipo de programa (`tipo`), búsqueda (`q`) y “solo activos” (`activos`), tanto por URL como dinámicos en página.
+- Búsqueda por nombre, código y descripción.
+- Paginación (9 por página) y mantenimiento de filtros al cambiar de página.
+- Estadísticas.
+- Reset de filtros.
+- Verificación de eager loading.
 
 **Qué se verifica**:
-- Los filtros funcionan correctamente
-- La búsqueda encuentra resultados relevantes
-- La paginación mantiene los filtros
-- No hay consultas N+1
+- Los filtros funcionan correctamente, tanto vía query string como cambiando select/input/checkbox en la página (Livewire con `wire:model.live`).
+- La búsqueda encuentra resultados relevantes.
+- La paginación mantiene los filtros y muestra contenido coherente al navegar entre páginas.
+- No hay consultas N+1.
+
+**Convenciones de selectores**:
+- Búsqueda: `fill('search', '...')` (input con `name="search"`).
+- Filtro de tipo: `select('#type-filter', 'KA1')`.
+- Filtro “Solo activos”: `uncheck('onlyActive')` (checkbox con `name="onlyActive"`).
+- Reset de filtros: `click('[data-test=\"programs-reset-filters\"]')`.
+- Paginación: `click('button[wire\\:click*=\"gotoPage(2\"]')` para ir a la página 2.
 
 ### Detalle de Programa (ProgramsShowTest.php)
 
