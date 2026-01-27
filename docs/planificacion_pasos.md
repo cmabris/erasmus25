@@ -916,12 +916,12 @@ Para cada policy:
 - [Plan detallado](pasos/paso-3.11.6-plan.md) - Tests de rendimiento ✅
 - [Documentación de rendimiento](browser-testing-performance.md) - Guía completa de tests de rendimiento ✅
 
-#### 3.11.7. Tests de Responsive y Accesibilidad
-- [ ] Test de Diseño Responsive
+#### 3.11.7. Tests de Responsive y Accesibilidad ✅ COMPLETADO
+- [x] Test de Diseño Responsive
   - Verificar que las páginas se ven bien en móviles
   - Verificar que las páginas se ven bien en tablets
   - Verificar que las páginas se ven bien en desktop
-- [ ] Test de Accesibilidad Básica
+- [x] Test de Accesibilidad Básica
   - Verificar navegación por teclado
   - Verificar contraste de colores
   - Verificar que los elementos son accesibles
@@ -929,6 +929,7 @@ Para cada policy:
 
 **Documentación:**
 - [Plan detallado](pasos/paso-3.11.7-plan.md) - Tests de responsive y accesibilidad
+- [Guía de Testing Responsive y Accesibilidad](browser-testing-responsive-accessibility.md) - Documentación completa
 
 #### 3.11.8. Integración con CI/CD y Documentación
 - [ ] Configurar tests de navegador en CI/CD
