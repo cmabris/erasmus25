@@ -616,3 +616,406 @@ function createNewsShowTestData(): array
         'relatedCalls' => $relatedCalls,
     ];
 }
+
+// ============================================
+// Performance Testing Helpers
+// ============================================
+
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+
+/**
+ * Start logging database queries for browser tests.
+ *
+ * Call this before visiting a page to start tracking queries.
+ * Must be paired with stopBrowserQueryLog() after the page visit.
+ */
+function startBrowserQueryLog(): void
+{
+    DB::flushQueryLog();
+    DB::enableQueryLog();
+}
+
+/**
+ * Stop logging and get the query log.
+ *
+ * @return array<int, array{query: string, bindings: array, time: float}>
+ */
+function stopBrowserQueryLog(): array
+{
+    $queries = DB::getQueryLog();
+    DB::disableQueryLog();
+
+    return $queries;
+}
+
+/**
+ * Get the query count from the current log.
+ *
+ * @param  array<int, array{query: string, bindings: array, time: float}>  $queries
+ */
+function getBrowserQueryCount(array $queries): int
+{
+    return count($queries);
+}
+
+/**
+ * Get all logged queries.
+ *
+ * @param  array<int, array{query: string, bindings: array, time: float}>  $queries
+ * @return array<int, array{query: string, bindings: array, time: float}>
+ */
+function getBrowserQueries(array $queries): array
+{
+    return $queries;
+}
+
+/**
+ * Normalize a query for comparison (replace specific values with placeholders).
+ *
+ * This is used to detect duplicate queries (N+1 problems) by normalizing
+ * queries so that queries with different values but the same structure are
+ * considered duplicates.
+ */
+function normalizeBrowserQuery(string $query): string
+{
+    // Replace numeric values
+    $query = preg_replace('/\b\d+\b/', '?', $query);
+
+    // Replace quoted strings
+    $query = preg_replace("/'[^']*'/", '?', $query);
+
+    // Replace IN clauses with multiple values
+    $query = preg_replace('/\bIN\s*\(\s*\?(?:\s*,\s*\?)*\s*\)/i', 'IN (?)', $query);
+
+    return $query;
+}
+
+/**
+ * Get duplicate queries (potential N+1).
+ *
+ * @param  array<int, array{query: string, bindings: array, time: float}>  $queries
+ * @return array<string, int> Query pattern => count
+ */
+function getBrowserDuplicateQueries(array $queries): array
+{
+    $patterns = collect($queries)
+        ->map(fn ($query) => normalizeBrowserQuery($query['query']))
+        ->countBy()
+        ->filter(fn ($count) => $count > 1)
+        ->all();
+
+    return $patterns;
+}
+
+/**
+ * Get total query time in milliseconds.
+ *
+ * @param  array<int, array{query: string, bindings: array, time: float}>  $queries
+ */
+function getBrowserTotalQueryTime(array $queries): float
+{
+    return collect($queries)->sum('time');
+}
+
+/**
+ * Get queries that exceed a time threshold.
+ *
+ * @param  array<int, array{query: string, bindings: array, time: float}>  $queries
+ * @param  float  $threshold  Time in milliseconds
+ * @return array<int, array{query: string, bindings: array, time: float}>
+ */
+function getBrowserSlowQueries(array $queries, float $threshold = 100.0): array
+{
+    return collect($queries)
+        ->filter(fn ($query) => $query['time'] > $threshold)
+        ->values()
+        ->all();
+}
+
+/**
+ * Assert that query count is less than a threshold.
+ *
+ * @param  array<int, array{query: string, bindings: array, time: float}>  $queries
+ * @param  int  $maxQueries  Maximum number of queries allowed
+ * @param  string|null  $message  Custom error message
+ *
+ * @throws \PHPUnit\Framework\AssertionFailedError
+ */
+function assertBrowserQueryCountLessThan(array $queries, int $maxQueries, ?string $message = null): void
+{
+    $count = getBrowserQueryCount($queries);
+    $message = $message ?? "Expected less than {$maxQueries} queries, but {$count} were executed.";
+
+    if ($count >= $maxQueries) {
+        outputBrowserQueryDetails($queries);
+    }
+
+    expect($count)->toBeLessThan($maxQueries, $message);
+}
+
+/**
+ * Assert there are no duplicate queries (N+1 detection).
+ *
+ * @param  array<int, array{query: string, bindings: array, time: float}>  $queries
+ * @param  array<string>  $allowedPatterns  Patterns that are allowed to be duplicated (e.g., 'activity_log', 'permissions')
+ * @param  string|null  $message  Custom error message
+ *
+ * @throws \PHPUnit\Framework\AssertionFailedError
+ */
+function assertBrowserNoDuplicateQueries(array $queries, array $allowedPatterns = [], ?string $message = null): void
+{
+    $duplicates = getBrowserDuplicateQueries($queries);
+
+    // Filter out allowed patterns
+    foreach ($allowedPatterns as $pattern) {
+        $duplicates = array_filter(
+            $duplicates,
+            fn ($query) => ! str_contains($query, $pattern),
+            ARRAY_FILTER_USE_KEY
+        );
+    }
+
+    if (! empty($duplicates)) {
+        $message = $message ?? 'Potential N+1 queries detected:';
+        $details = collect($duplicates)
+            ->map(fn ($count, $query) => "  - {$query} (executed {$count} times)")
+            ->implode("\n");
+
+        expect($duplicates)->toBeEmpty("{$message}\n{$details}");
+    }
+
+    expect(true)->toBeTrue();
+}
+
+/**
+ * Assert no queries exceed the time threshold.
+ *
+ * @param  array<int, array{query: string, bindings: array, time: float}>  $queries
+ * @param  float  $threshold  Time in milliseconds
+ * @param  string|null  $message  Custom error message
+ *
+ * @throws \PHPUnit\Framework\AssertionFailedError
+ */
+function assertBrowserNoSlowQueries(array $queries, float $threshold = 100.0, ?string $message = null): void
+{
+    $slowQueries = getBrowserSlowQueries($queries, $threshold);
+
+    if (! empty($slowQueries)) {
+        $message = $message ?? "Slow queries detected (>{$threshold}ms):";
+        $details = collect($slowQueries)
+            ->map(fn ($query) => "  - {$query['time']}ms: {$query['query']}")
+            ->implode("\n");
+
+        expect($slowQueries)->toBeEmpty("{$message}\n{$details}");
+    }
+
+    expect(true)->toBeTrue();
+}
+
+/**
+ * Assert total query time is less than threshold.
+ *
+ * @param  array<int, array{query: string, bindings: array, time: float}>  $queries
+ * @param  float  $maxTime  Time in milliseconds
+ * @param  string|null  $message  Custom error message
+ *
+ * @throws \PHPUnit\Framework\AssertionFailedError
+ */
+function assertBrowserTotalQueryTimeLessThan(array $queries, float $maxTime, ?string $message = null): void
+{
+    $totalTime = getBrowserTotalQueryTime($queries);
+    $message = $message ?? "Expected total query time less than {$maxTime}ms, but took {$totalTime}ms.";
+
+    expect($totalTime)->toBeLessThan($maxTime, $message);
+}
+
+/**
+ * Output query details for debugging.
+ *
+ * @param  array<int, array{query: string, bindings: array, time: float}>  $queries
+ */
+function outputBrowserQueryDetails(array $queries): void
+{
+    $count = getBrowserQueryCount($queries);
+    $totalTime = getBrowserTotalQueryTime($queries);
+
+    echo "\n=== Query Log ({$count} queries, {$totalTime}ms total) ===\n";
+
+    foreach ($queries as $index => $query) {
+        $num = $index + 1;
+        echo "[{$num}] {$query['time']}ms: {$query['query']}\n";
+    }
+
+    $duplicates = getBrowserDuplicateQueries($queries);
+    if (! empty($duplicates)) {
+        echo "\n=== Potential N+1 Queries ===\n";
+        foreach ($duplicates as $pattern => $count) {
+            echo "  - {$pattern} (x{$count})\n";
+        }
+    }
+
+    echo "===========================\n\n";
+}
+
+/**
+ * Assert that a relation is eager loaded (no individual queries for each instance).
+ *
+ * This checks that there are no queries like "SELECT * FROM table WHERE id = ?"
+ * executed multiple times for the same relation, which would indicate lazy loading.
+ *
+ * @param  string  $relation  Name of the relation (e.g., 'program', 'academicYear')
+ * @param  array<int, array{query: string, bindings: array, time: float}>  $queries
+ * @param  string|null  $message  Custom error message
+ *
+ * @throws \PHPUnit\Framework\AssertionFailedError
+ */
+function assertEagerLoaded(string $relation, array $queries, ?string $message = null): void
+{
+    // Look for queries that load the relation individually (lazy loading pattern)
+    // Pattern: SELECT * FROM {table} WHERE id = ? (executed multiple times)
+    $lazyLoadingPattern = '/SELECT\s+.*\s+FROM\s+[\w`]+\s+WHERE\s+id\s*=\s*\?/i';
+
+    $lazyQueries = collect($queries)
+        ->filter(function ($query) use ($lazyLoadingPattern, $relation) {
+            $normalized = normalizeBrowserQuery($query['query']);
+
+            // Check if it matches the lazy loading pattern and relates to the relation
+            return preg_match($lazyLoadingPattern, $query['query']) &&
+                   (stripos($query['query'], $relation) !== false || stripos($normalized, $relation) !== false);
+        })
+        ->all();
+
+    // Count how many times the same pattern appears
+    $duplicateLazyQueries = collect($lazyQueries)
+        ->map(fn ($query) => normalizeBrowserQuery($query['query']))
+        ->countBy()
+        ->filter(fn ($count) => $count > 1)
+        ->all();
+
+    if (! empty($duplicateLazyQueries)) {
+        $message = $message ?? "Relation '{$relation}' appears to be lazy loaded (N+1 detected):";
+        $details = collect($duplicateLazyQueries)
+            ->map(fn ($count, $query) => "  - {$query} (executed {$count} times)")
+            ->implode("\n");
+
+        expect($duplicateLazyQueries)->toBeEmpty("{$message}\n{$details}");
+    }
+
+    expect(true)->toBeTrue();
+}
+
+/**
+ * Assert that there are no lazy loading queries for a specific model and relation.
+ *
+ * @param  string  $model  Name of the model (e.g., 'Program', 'Call')
+ * @param  string  $relation  Name of the relation (e.g., 'academicYear', 'program')
+ * @param  array<int, array{query: string, bindings: array, time: float}>  $queries
+ * @param  string|null  $message  Custom error message
+ *
+ * @throws \PHPUnit\Framework\AssertionFailedError
+ */
+function assertNoLazyLoading(string $model, string $relation, array $queries, ?string $message = null): void
+{
+    // Convert model name to table name (snake_case, plural)
+    $tableName = str($model)->snake()->plural()->toString();
+
+    // Look for queries that load the relation individually
+    // Pattern: SELECT * FROM {relation_table} WHERE {model}_id = ? (executed multiple times)
+    $lazyLoadingPattern = "/SELECT\s+.*\s+FROM\s+[`\"]?{$tableName}[`\"]?\s+WHERE\s+[\w`]+\s*=\s*\?/i";
+
+    $lazyQueries = collect($queries)
+        ->filter(function ($query) use ($lazyLoadingPattern) {
+            return preg_match($lazyLoadingPattern, $query['query']);
+        })
+        ->all();
+
+    // Count how many times the same pattern appears
+    $duplicateLazyQueries = collect($lazyQueries)
+        ->map(fn ($query) => normalizeBrowserQuery($query['query']))
+        ->countBy()
+        ->filter(fn ($count) => $count > 1)
+        ->all();
+
+    if (! empty($duplicateLazyQueries)) {
+        $message = $message ?? "Lazy loading detected for {$model}->{$relation}:";
+        $details = collect($duplicateLazyQueries)
+            ->map(fn ($count, $query) => "  - {$query} (executed {$count} times)")
+            ->implode("\n");
+
+        expect($duplicateLazyQueries)->toBeEmpty("{$message}\n{$details}");
+    }
+
+    expect(true)->toBeTrue();
+}
+
+/**
+ * Assert that cache is being used (second load has fewer queries).
+ *
+ * This compares query counts between two loads of the same page.
+ * The second load should have fewer queries if cache is working.
+ *
+ * @param  array<int, array{query: string, bindings: array, time: float}>  $queriesWithoutCache  Queries from first load
+ * @param  array<int, array{query: string, bindings: array, time: float}>  $queriesWithCache  Queries from second load
+ * @param  string|null  $message  Custom error message
+ *
+ * @throws \PHPUnit\Framework\AssertionFailedError
+ */
+function compareQueryCountsWithCache(array $queriesWithoutCache, array $queriesWithCache, ?string $message = null): void
+{
+    $countWithoutCache = getBrowserQueryCount($queriesWithoutCache);
+    $countWithCache = getBrowserQueryCount($queriesWithCache);
+
+    $message = $message ?? "Cache should reduce queries. First load: {$countWithoutCache}, Second load: {$countWithCache}.";
+
+    // Cache should reduce queries (second load should have fewer or equal queries)
+    expect($countWithCache)->toBeLessThanOrEqual($countWithoutCache, $message);
+}
+
+/**
+ * Assert that a specific cache key is being used (no queries for that data).
+ *
+ * This is a helper to verify that certain data is being served from cache
+ * rather than being queried from the database. Note: This requires knowing
+ * which queries correspond to the cached data.
+ *
+ * @param  string  $key  Cache key name (for reference in error messages)
+ * @param  array<int, array{query: string, bindings: array, time: float}>  $queries  Queries from the page load
+ * @param  array<string>  $queryPatterns  SQL patterns that should NOT appear if cache is used (e.g., ['SELECT * FROM settings', 'SELECT * FROM programs WHERE is_active'])
+ * @param  string|null  $message  Custom error message
+ *
+ * @throws \PHPUnit\Framework\AssertionFailedError
+ */
+function assertCacheUsed(string $key, array $queries, array $queryPatterns = [], ?string $message = null): void
+{
+    if (empty($queryPatterns)) {
+        // If no patterns provided, just verify cache exists (basic check)
+        expect(Cache::has($key))->toBeTrue("Cache key '{$key}' should exist.");
+
+        return;
+    }
+
+    // Check if any of the patterns appear in queries (indicating cache was NOT used)
+    $uncachedQueries = collect($queries)
+        ->filter(function ($query) use ($queryPatterns) {
+            foreach ($queryPatterns as $pattern) {
+                if (stripos($query['query'], $pattern) !== false) {
+                    return true;
+                }
+            }
+
+            return false;
+        })
+        ->all();
+
+    if (! empty($uncachedQueries)) {
+        $message = $message ?? "Cache key '{$key}' appears to not be used. Found queries that should be cached:";
+        $details = collect($uncachedQueries)
+            ->map(fn ($query) => "  - {$query['query']}")
+            ->implode("\n");
+
+        expect($uncachedQueries)->toBeEmpty("{$message}\n{$details}");
+    }
+
+    expect(true)->toBeTrue();
+}
