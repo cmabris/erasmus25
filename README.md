@@ -4,7 +4,9 @@
 [![PHP](https://img.shields.io/badge/PHP-8.3+-777BB4?style=flat-square&logo=php)](https://php.net)
 [![Livewire](https://img.shields.io/badge/Livewire-3.x-FB70A9?style=flat-square&logo=livewire)](https://livewire.laravel.com)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.x-06B6D4?style=flat-square&logo=tailwindcss)](https://tailwindcss.com)
-[![Tests](https://img.shields.io/badge/Tests-3867+-4CAF50?style=flat-square)](tests/)
+[![Tests](https://github.com/USERNAME/REPO/workflows/Tests/badge.svg)](https://github.com/USERNAME/REPO/actions)
+
+> **Nota**: Reemplaza `USERNAME/REPO` en el badge de Tests con tu usuario y nombre de repositorio de GitHub.
 [![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](LICENSE)
 
 Portal web para la gestión centralizada de programas Erasmus+ de un centro educativo. Permite gestionar convocatorias de movilidad, noticias, documentos, eventos y suscripciones al boletín informativo.
