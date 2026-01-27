@@ -68,6 +68,7 @@
                 {{-- Search --}}
                 <div class="w-full sm:max-w-xs">
                     <x-ui.search-input 
+                        name="search"
                         wire:model.live.debounce.300ms="search" 
                         :placeholder="__('common.search.call_placeholder')"
                         size="md"
@@ -167,6 +168,7 @@
                         <button 
                             wire:click="resetFilters"
                             type="button"
+                            data-test="calls-reset-filters"
                             class="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm text-zinc-600 transition-colors hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-700"
                         >
                             <flux:icon name="x-mark" class="[:where(&)]:size-4" variant="outline" />
@@ -256,7 +258,12 @@
                 icon="megaphone"
             >
                 @if($search || $program || $academicYear || $type || $modality || $status)
-                    <x-ui.button wire:click="resetFilters" variant="outline" icon="arrow-path">
+                    <x-ui.button 
+                        wire:click="resetFilters" 
+                        variant="outline" 
+                        icon="arrow-path"
+                        data-test="calls-reset-filters"
+                    >
                         {{ __('common.filters.clear') }}
                     </x-ui.button>
                 @endif

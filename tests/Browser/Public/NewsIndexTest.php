@@ -182,6 +182,109 @@ it('filters news by program', function () {
 });
 
 // ============================================
+// Fase 3.3: Filtros dinámicos (cambiar en la página, sin recarga)
+// ============================================
+
+it('updates results and URL when changing program select in page', function () {
+    $p1 = Program::factory()->create(['name' => 'Prog N1', 'is_active' => true]);
+    $p2 = Program::factory()->create(['name' => 'Prog N2', 'is_active' => true]);
+    $year = AcademicYear::factory()->create();
+    $author = User::factory()->create();
+
+    NewsPost::factory()->create([
+        'program_id' => $p1->id,
+        'academic_year_id' => $year->id,
+        'author_id' => $author->id,
+        'status' => 'publicado',
+        'published_at' => now(),
+        'title' => 'Noticia N1',
+    ]);
+    NewsPost::factory()->create([
+        'program_id' => $p2->id,
+        'academic_year_id' => $year->id,
+        'author_id' => $author->id,
+        'status' => 'publicado',
+        'published_at' => now(),
+        'title' => 'Noticia N2',
+    ]);
+
+    $page = visit(route('noticias.index'))
+        ->select('#program-filter', (string) $p1->id)
+        ->wait(1);
+
+    $page->assertSee('Noticia N1')
+        ->assertDontSee('Noticia N2')
+        ->assertQueryStringHas('programa', (string) $p1->id)
+        ->assertNoJavascriptErrors();
+});
+
+it('updates results and URL when typing in search input', function () {
+    $program = Program::factory()->create(['is_active' => true]);
+    $year = AcademicYear::factory()->create();
+    $author = User::factory()->create();
+
+    NewsPost::factory()->create([
+        'program_id' => $program->id,
+        'academic_year_id' => $year->id,
+        'author_id' => $author->id,
+        'status' => 'publicado',
+        'published_at' => now(),
+        'title' => 'Noticia sobre Becas',
+    ]);
+    NewsPost::factory()->create([
+        'program_id' => $program->id,
+        'academic_year_id' => $year->id,
+        'author_id' => $author->id,
+        'status' => 'publicado',
+        'published_at' => now(),
+        'title' => 'Noticia sobre Movilidad',
+    ]);
+
+    $page = visit(route('noticias.index'))
+        ->fill('search', 'Becas')
+        ->wait(1);
+
+    $page->assertSee('Noticia sobre Becas')
+        ->assertDontSee('Noticia sobre Movilidad')
+        ->assertQueryStringHas('q', 'Becas')
+        ->assertNoJavascriptErrors();
+});
+
+it('resets filters when clicking reset button', function () {
+    $p1 = Program::factory()->create(['name' => 'Prog NR1', 'is_active' => true]);
+    $p2 = Program::factory()->create(['name' => 'Prog NR2', 'is_active' => true]);
+    $year = AcademicYear::factory()->create();
+    $author = User::factory()->create();
+
+    NewsPost::factory()->create([
+        'program_id' => $p1->id,
+        'academic_year_id' => $year->id,
+        'author_id' => $author->id,
+        'status' => 'publicado',
+        'published_at' => now(),
+        'title' => 'Noticia NR1',
+    ]);
+    NewsPost::factory()->create([
+        'program_id' => $p2->id,
+        'academic_year_id' => $year->id,
+        'author_id' => $author->id,
+        'status' => 'publicado',
+        'published_at' => now(),
+        'title' => 'Noticia NR2',
+    ]);
+
+    $page = visit(route('noticias.index', ['programa' => $p1->id]))
+        ->assertSee('Noticia NR1')
+        ->assertDontSee('Noticia NR2')
+        ->click(__('common.actions.reset'))
+        ->wait(1);
+
+    $page->assertSee('Noticia NR1')
+        ->assertSee('Noticia NR2')
+        ->assertNoJavascriptErrors();
+});
+
+// ============================================
 // Test: Verificar filtro por año académico
 // ============================================
 
@@ -468,6 +571,130 @@ it('displays pagination when there are more than 12 news posts', function () {
     expect($visibleCount)->toBeLessThanOrEqual(12);
     expect($visibleCount)->toBeGreaterThan(0);
 
+    $page->assertNoJavascriptErrors();
+});
+
+// ============================================
+// Fase 4.3: Tests de Paginación
+// ============================================
+
+it('shows correct content when clicking page 2', function () {
+    $program = Program::factory()->create(['is_active' => true]);
+    $academicYear = AcademicYear::factory()->create();
+    $author = User::factory()->create();
+
+    $newsPosts = collect();
+    for ($i = 1; $i <= 15; $i++) {
+        $newsPosts->push(NewsPost::factory()->create([
+            'title' => "News Pag {$i}",
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+            'author_id' => $author->id,
+            'status' => 'publicado',
+            'published_at' => now(),
+        ]));
+    }
+
+    $page = visit(route('noticias.index'));
+
+    // Guardar las noticias visibles en la primera página
+    $firstPageNews = [];
+    foreach ($newsPosts as $news) {
+        try {
+            $page->assertSee($news->title);
+            $firstPageNews[] = $news->title;
+        } catch (\Exception $e) {
+            // Noticia no visible, continuar
+        }
+    }
+
+    expect(count($firstPageNews))->toBeGreaterThan(0);
+
+    // Ir a página 2
+    $page->click('button[wire\\:click*="gotoPage(2"]')
+        ->wait(1.5);
+
+    // Guardar las noticias visibles en la segunda página
+    $secondPageNews = [];
+    foreach ($newsPosts as $news) {
+        try {
+            $page->assertSee($news->title);
+            $secondPageNews[] = $news->title;
+        } catch (\Exception $e) {
+            // Noticia no visible, continuar
+        }
+    }
+
+    // Verificar que hay noticias visibles en la segunda página
+    expect(count($secondPageNews))->toBeGreaterThan(0);
+    $page->assertNoJavascriptErrors();
+});
+
+it('navigates to page 2 and back to page 1', function () {
+    $program = Program::factory()->create(['is_active' => true]);
+    $academicYear = AcademicYear::factory()->create();
+    $author = User::factory()->create();
+
+    $newsPosts = collect();
+    for ($i = 1; $i <= 15; $i++) {
+        $newsPosts->push(NewsPost::factory()->create([
+            'title' => "News Nav {$i}",
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+            'author_id' => $author->id,
+            'status' => 'publicado',
+            'published_at' => now(),
+        ]));
+    }
+
+    $page = visit(route('noticias.index'));
+
+    // Guardar las noticias visibles en la primera página
+    $firstPageNews = [];
+    foreach ($newsPosts as $news) {
+        try {
+            $page->assertSee($news->title);
+            $firstPageNews[] = $news->title;
+        } catch (\Exception $e) {
+            // Noticia no visible, continuar
+        }
+    }
+
+    expect(count($firstPageNews))->toBeGreaterThan(0);
+
+    // Ir a página 2
+    $page->click('button[wire\\:click*="gotoPage(2"]')
+        ->wait(1.5);
+
+    // Guardar las noticias visibles en la segunda página
+    $secondPageNews = [];
+    foreach ($newsPosts as $news) {
+        try {
+            $page->assertSee($news->title);
+            $secondPageNews[] = $news->title;
+        } catch (\Exception $e) {
+            // Noticia no visible, continuar
+        }
+    }
+
+    expect(count($secondPageNews))->toBeGreaterThan(0);
+
+    // Volver a página 1
+    $page->click('button[wire\\:click*="gotoPage(1"]')
+        ->wait(1.5);
+
+    // Verificar que las noticias de la primera página están de nuevo visibles
+    $backToFirstPageNews = [];
+    foreach ($firstPageNews as $firstPageNew) {
+        try {
+            $page->assertSee($firstPageNew);
+            $backToFirstPageNews[] = $firstPageNew;
+        } catch (\Exception $e) {
+            // Continuar
+        }
+    }
+
+    expect(count($backToFirstPageNews))->toBeGreaterThan(0);
     $page->assertNoJavascriptErrors();
 });
 

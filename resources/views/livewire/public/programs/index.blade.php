@@ -72,6 +72,7 @@
                 {{-- Search --}}
                 <div class="w-full sm:max-w-xs">
                     <x-ui.search-input 
+                        name="search"
                         wire:model.live.debounce.300ms="search" 
                         :placeholder="__('common.search.program_placeholder')"
                         size="md"
@@ -99,7 +100,8 @@
                     {{-- Active Only Toggle --}}
                     <label class="flex cursor-pointer items-center gap-2">
                         <input 
-                            type="checkbox" 
+                            type="checkbox"
+                            name="onlyActive"
                             wire:model.live="onlyActive"
                             class="size-4 rounded border-zinc-300 text-erasmus-600 focus:ring-erasmus-500 dark:border-zinc-600 dark:bg-zinc-700"
                         >
@@ -113,6 +115,7 @@
                         <button 
                             wire:click="resetFilters"
                             type="button"
+                            data-test="programs-reset-filters"
                             class="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm text-zinc-600 transition-colors hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-700"
                         >
                             <flux:icon name="x-mark" class="[:where(&)]:size-4" variant="outline" />
@@ -164,7 +167,12 @@
                 icon="academic-cap"
             >
                 @if($search || $type || !$onlyActive)
-                    <x-ui.button wire:click="resetFilters" variant="outline" icon="arrow-path">
+                    <x-ui.button 
+                        wire:click="resetFilters" 
+                        variant="outline" 
+                        icon="arrow-path"
+                        data-test="programs-reset-filters"
+                    >
                         {{ __('common.filters.clear') }}
                     </x-ui.button>
                 @endif

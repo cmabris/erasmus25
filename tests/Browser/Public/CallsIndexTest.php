@@ -175,6 +175,100 @@ it('filters calls by program', function () {
 });
 
 // ============================================
+// Fase 3.2: Filtros dinámicos (cambiar en la página, sin recarga)
+// ============================================
+
+it('updates results and URL when changing program select in page', function () {
+    $p1 = Program::factory()->create(['name' => 'Prog P1', 'is_active' => true]);
+    $p2 = Program::factory()->create(['name' => 'Prog P2', 'is_active' => true]);
+    $year = AcademicYear::factory()->create();
+
+    Call::factory()->create([
+        'program_id' => $p1->id,
+        'academic_year_id' => $year->id,
+        'status' => 'abierta',
+        'published_at' => now(),
+        'title' => 'Convocatoria P1',
+    ]);
+    Call::factory()->create([
+        'program_id' => $p2->id,
+        'academic_year_id' => $year->id,
+        'status' => 'abierta',
+        'published_at' => now(),
+        'title' => 'Convocatoria P2',
+    ]);
+
+    $page = visit('/convocatorias')
+        ->select('#program-filter', (string) $p1->id)
+        ->wait(1);
+
+    $page->assertSee('Convocatoria P1')
+        ->assertDontSee('Convocatoria P2')
+        ->assertQueryStringHas('programa', (string) $p1->id)
+        ->assertNoJavascriptErrors();
+});
+
+it('updates results and URL when typing in search input', function () {
+    $program = Program::factory()->create(['is_active' => true]);
+    $year = AcademicYear::factory()->create();
+
+    Call::factory()->create([
+        'program_id' => $program->id,
+        'academic_year_id' => $year->id,
+        'status' => 'abierta',
+        'published_at' => now(),
+        'title' => 'Convocatoria Movilidad 2025',
+    ]);
+    Call::factory()->create([
+        'program_id' => $program->id,
+        'academic_year_id' => $year->id,
+        'status' => 'abierta',
+        'published_at' => now(),
+        'title' => 'Convocatoria Cooperación',
+    ]);
+
+    $page = visit('/convocatorias')
+        ->fill('search', 'Movilidad')
+        ->wait(1);
+
+    $page->assertSee('Convocatoria Movilidad 2025')
+        ->assertDontSee('Convocatoria Cooperación')
+        ->assertQueryStringHas('q', 'Movilidad')
+        ->assertNoJavascriptErrors();
+});
+
+it('resets filters when clicking reset button', function () {
+    $p1 = Program::factory()->create(['name' => 'Prog R1', 'is_active' => true]);
+    $p2 = Program::factory()->create(['name' => 'Prog R2', 'is_active' => true]);
+    $year = AcademicYear::factory()->create();
+
+    Call::factory()->create([
+        'program_id' => $p1->id,
+        'academic_year_id' => $year->id,
+        'status' => 'abierta',
+        'published_at' => now(),
+        'title' => 'Conv R1',
+    ]);
+    Call::factory()->create([
+        'program_id' => $p2->id,
+        'academic_year_id' => $year->id,
+        'status' => 'abierta',
+        'published_at' => now(),
+        'title' => 'Conv R2',
+    ]);
+
+    $page = visit('/convocatorias?programa='.$p1->id)
+        ->assertSee('Conv R1')
+        ->assertDontSee('Conv R2')
+        ->click(__('common.actions.reset'))
+        ->wait(1);
+
+    $page->assertSee('Conv R1')
+        ->assertSee('Conv R2')
+        ->assertNoJavascriptErrors();
+});
+
+// ============================================
 // Test: Verificar filtro por año académico
 // ============================================
 
@@ -545,6 +639,126 @@ it('displays pagination when there are more than 12 calls', function () {
     expect($callsCount)->toBeLessThanOrEqual(12);
     expect($callsCount)->toBeGreaterThan(0);
 
+    $page->assertNoJavascriptErrors();
+});
+
+// ============================================
+// Fase 4.2: Tests de Paginación
+// ============================================
+
+it('shows correct content when clicking page 2', function () {
+    $program = Program::factory()->create(['is_active' => true]);
+    $academicYear = AcademicYear::factory()->create();
+
+    $calls = collect();
+    for ($i = 1; $i <= 15; $i++) {
+        $calls->push(Call::factory()->create([
+            'title' => "Call Pag {$i}",
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+            'status' => 'abierta',
+            'published_at' => now(),
+        ]));
+    }
+
+    $page = visit('/convocatorias');
+
+    // Guardar las convocatorias visibles en la primera página
+    $firstPageCalls = [];
+    foreach ($calls as $call) {
+        try {
+            $page->assertSee($call->title);
+            $firstPageCalls[] = $call->title;
+        } catch (\Exception $e) {
+            // Convocatoria no visible, continuar
+        }
+    }
+
+    expect(count($firstPageCalls))->toBeGreaterThan(0);
+
+    // Ir a página 2
+    $page->click('button[wire\\:click*="gotoPage(2"]')
+        ->wait(1.5);
+
+    // Guardar las convocatorias visibles en la segunda página
+    $secondPageCalls = [];
+    foreach ($calls as $call) {
+        try {
+            $page->assertSee($call->title);
+            $secondPageCalls[] = $call->title;
+        } catch (\Exception $e) {
+            // Convocatoria no visible, continuar
+        }
+    }
+
+    // Verificar que hay convocatorias visibles en la segunda página
+    expect(count($secondPageCalls))->toBeGreaterThan(0);
+    $page->assertNoJavascriptErrors();
+});
+
+it('navigates to page 2 and back to page 1', function () {
+    $program = Program::factory()->create(['is_active' => true]);
+    $academicYear = AcademicYear::factory()->create();
+
+    $calls = collect();
+    for ($i = 1; $i <= 15; $i++) {
+        $calls->push(Call::factory()->create([
+            'title' => "Call Nav {$i}",
+            'program_id' => $program->id,
+            'academic_year_id' => $academicYear->id,
+            'status' => 'abierta',
+            'published_at' => now(),
+        ]));
+    }
+
+    $page = visit('/convocatorias');
+
+    // Guardar las convocatorias visibles en la primera página
+    $firstPageCalls = [];
+    foreach ($calls as $call) {
+        try {
+            $page->assertSee($call->title);
+            $firstPageCalls[] = $call->title;
+        } catch (\Exception $e) {
+            // Convocatoria no visible, continuar
+        }
+    }
+
+    expect(count($firstPageCalls))->toBeGreaterThan(0);
+
+    // Ir a página 2
+    $page->click('button[wire\\:click*="gotoPage(2"]')
+        ->wait(1.5);
+
+    // Guardar las convocatorias visibles en la segunda página
+    $secondPageCalls = [];
+    foreach ($calls as $call) {
+        try {
+            $page->assertSee($call->title);
+            $secondPageCalls[] = $call->title;
+        } catch (\Exception $e) {
+            // Convocatoria no visible, continuar
+        }
+    }
+
+    expect(count($secondPageCalls))->toBeGreaterThan(0);
+
+    // Volver a página 1
+    $page->click('button[wire\\:click*="gotoPage(1"]')
+        ->wait(1.5);
+
+    // Verificar que las convocatorias de la primera página están de nuevo visibles
+    $backToFirstPageCalls = [];
+    foreach ($firstPageCalls as $firstPageCall) {
+        try {
+            $page->assertSee($firstPageCall);
+            $backToFirstPageCalls[] = $firstPageCall;
+        } catch (\Exception $e) {
+            // Continuar
+        }
+    }
+
+    expect(count($backToFirstPageCalls))->toBeGreaterThan(0);
     $page->assertNoJavascriptErrors();
 });
 

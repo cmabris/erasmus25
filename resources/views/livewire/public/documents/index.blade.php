@@ -68,6 +68,7 @@
                 {{-- Search --}}
                 <div class="w-full sm:max-w-xs">
                     <x-ui.search-input 
+                        name="search"
                         wire:model.live.debounce.300ms="search" 
                         :placeholder="__('common.search.document_placeholder')"
                         size="md"
@@ -84,6 +85,7 @@
                             </label>
                             <select 
                                 id="category-filter"
+                                name="category"
                                 wire:model.live="category"
                                 class="rounded-lg border border-zinc-300 bg-white py-2 pl-3 pr-8 text-sm shadow-sm focus:border-erasmus-500 focus:ring-erasmus-500 dark:border-zinc-600 dark:bg-zinc-700 dark:text-white"
                             >
@@ -103,6 +105,7 @@
                             </label>
                             <select 
                                 id="program-filter"
+                                name="program"
                                 wire:model.live="program"
                                 class="rounded-lg border border-zinc-300 bg-white py-2 pl-3 pr-8 text-sm shadow-sm focus:border-erasmus-500 focus:ring-erasmus-500 dark:border-zinc-600 dark:bg-zinc-700 dark:text-white"
                             >
@@ -122,6 +125,7 @@
                             </label>
                             <select 
                                 id="year-filter"
+                                name="academicYear"
                                 wire:model.live="academicYear"
                                 class="rounded-lg border border-zinc-300 bg-white py-2 pl-3 pr-8 text-sm shadow-sm focus:border-erasmus-500 focus:ring-erasmus-500 dark:border-zinc-600 dark:bg-zinc-700 dark:text-white"
                             >
@@ -138,9 +142,10 @@
                         <label for="type-filter" class="text-sm font-medium text-zinc-600 dark:text-zinc-400">
                             {{ __('common.documents.type') }}
                         </label>
-                        <select 
-                            id="type-filter"
-                            wire:model.live="documentType"
+                            <select 
+                                id="type-filter"
+                                name="documentType"
+                                wire:model.live="documentType"
                             class="rounded-lg border border-zinc-300 bg-white py-2 pl-3 pr-8 text-sm shadow-sm focus:border-erasmus-500 focus:ring-erasmus-500 dark:border-zinc-600 dark:bg-zinc-700 dark:text-white"
                         >
                             <option value="">{{ __('common.filters.all') }}</option>
@@ -155,6 +160,7 @@
                         <button 
                             wire:click="resetFilters"
                             type="button"
+                            data-test="documents-reset-filters"
                             class="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm text-zinc-600 transition-colors hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-700"
                         >
                             <flux:icon name="x-mark" class="[:where(&)]:size-4" variant="outline" />
@@ -240,7 +246,12 @@
                 icon="folder-open"
             >
                 @if($search || $category || $program || $academicYear || $documentType)
-                    <x-ui.button wire:click="resetFilters" variant="outline" icon="arrow-path">
+                    <x-ui.button 
+                        wire:click="resetFilters" 
+                        variant="outline" 
+                        icon="arrow-path"
+                        data-test="documents-reset-filters"
+                    >
                         {{ __('common.filters.clear') }}
                     </x-ui.button>
                 @endif
