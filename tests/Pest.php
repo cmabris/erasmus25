@@ -20,8 +20,24 @@ pest()->extend(Tests\TestCase::class)
     ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
     ->in('Browser');
 
-// Configurar modo headed por defecto solo en desarrollo local (no en CI)
-if (! env('CI')) {
+// Configurar modo headed por defecto solo en desarrollo local (no en CI ni en modo paralelo)
+// Detectar modo paralelo verificando argumentos de línea de comandos y variables de entorno
+// Pest/PHPUnit establece TEST_TOKEN cuando se ejecutan tests en paralelo
+$isParallel = false;
+
+// Verificar si --parallel está en los argumentos de línea de comandos
+if (in_array('--parallel', $_SERVER['argv'] ?? [])) {
+    $isParallel = true;
+}
+
+// Verificar TEST_TOKEN (se establece cuando Pest ejecuta tests en paralelo)
+if (! $isParallel) {
+    $isParallel = getenv('TEST_TOKEN') !== false || isset($_SERVER['TEST_TOKEN']);
+}
+
+$isCI = env('CI', false);
+
+if (! $isCI && ! $isParallel) {
     pest()->browser()->headed();
 }
 
