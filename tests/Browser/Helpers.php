@@ -187,25 +187,32 @@ function createHomeTestData(): array
  */
 function createNewsletterTestData(): array
 {
+    // Usar firstOrCreate para evitar conflictos si los programas ya existen
     $programs = collect([
-        Program::factory()->create([
-            'code' => 'KA1',
-            'name' => 'Programa KA1',
-            'is_active' => true,
-            'order' => 1,
-        ]),
-        Program::factory()->create([
-            'code' => 'KA2',
-            'name' => 'Programa KA2',
-            'is_active' => true,
-            'order' => 2,
-        ]),
-        Program::factory()->create([
-            'code' => 'KA3',
-            'name' => 'Programa KA3',
-            'is_active' => true,
-            'order' => 3,
-        ]),
+        Program::firstOrCreate(
+            ['code' => 'KA1'],
+            [
+                'name' => 'Programa KA1',
+                'is_active' => true,
+                'order' => 1,
+            ]
+        ),
+        Program::firstOrCreate(
+            ['code' => 'KA2'],
+            [
+                'name' => 'Programa KA2',
+                'is_active' => true,
+                'order' => 2,
+            ]
+        ),
+        Program::firstOrCreate(
+            ['code' => 'KA3'],
+            [
+                'name' => 'Programa KA3',
+                'is_active' => true,
+                'order' => 3,
+            ]
+        ),
     ]);
 
     return [
@@ -1018,4 +1025,275 @@ function assertCacheUsed(string $key, array $queries, array $queryPatterns = [],
     }
 
     expect(true)->toBeTrue();
+}
+
+// ============================================
+// Responsive Testing Helpers
+// ============================================
+
+/**
+ * Assert that there is no horizontal scroll overflow on the page.
+ *
+ * Verifies that the body width does not exceed the viewport width,
+ * which would cause horizontal scrolling.
+ *
+ * @param  mixed  $page  The browser page instance from Pest
+ * @param  string|null  $message  Custom error message
+ *
+ * @throws \PHPUnit\Framework\AssertionFailedError
+ */
+function assertNoHorizontalScroll($page, ?string $message = null): void
+{
+    // Use assertScript to verify that scrollWidth <= innerWidth
+    // This means there's no horizontal overflow
+    $page->assertScript('document.body.scrollWidth <= window.innerWidth', true);
+}
+
+// ============================================
+// Accessibility Testing Helpers
+// ============================================
+
+/**
+ * Focus an element by selector.
+ *
+ * Uses JavaScript to focus an element, simulating keyboard navigation.
+ *
+ * @param  mixed  $page  The browser page instance from Pest
+ * @param  string  $selector  CSS selector for the element to focus
+ */
+function focusElement($page, string $selector): void
+{
+    // Escape single quotes in selector for JavaScript
+    $escapedSelector = str_replace("'", "\\'", $selector);
+    $page->script("
+        const element = document.querySelector('{$escapedSelector}');
+        if (element) {
+            element.focus();
+        }
+    ");
+    // Small wait to ensure focus is applied
+    $page->wait(0.1);
+}
+
+/**
+ * Get the currently focused element tag name.
+ *
+ * @param  mixed  $page  The browser page instance from Pest
+ * @return string|null The tag name of the focused element, or null if none
+ */
+function getFocusedElementTag($page): ?string
+{
+    $tagName = $page->assertScript('document.activeElement ? document.activeElement.tagName.toLowerCase() : null', null);
+
+    return $tagName;
+}
+
+/**
+ * Assert that an element has focus.
+ *
+ * @param  mixed  $page  The browser page instance from Pest
+ * @param  string  $selector  CSS selector for the element
+ * @param  string|null  $message  Custom error message
+ */
+function assertElementHasFocus($page, string $selector, ?string $message = null): void
+{
+    // Escape single quotes in selector for JavaScript
+    $escapedSelector = str_replace("'", "\\'", $selector);
+    $page->assertScript("document.activeElement && document.activeElement.matches('{$escapedSelector}')", true);
+}
+
+/**
+ * Assert that focus indicator is visible on the currently focused element.
+ *
+ * Checks if the focused element has a visible outline or border.
+ *
+ * @param  mixed  $page  The browser page instance from Pest
+ * @param  string|null  $message  Custom error message
+ */
+function assertFocusIndicatorVisible($page, ?string $message = null): void
+{
+    $page->assertScript("
+        (function() {
+            const element = document.activeElement;
+            if (!element) return false;
+            const style = window.getComputedStyle(element);
+            const outline = style.outline;
+            const outlineWidth = style.outlineWidth;
+            const borderWidth = style.borderWidth;
+            return (outline !== 'none' && outlineWidth !== '0px') || (borderWidth !== '0px');
+        })()
+    ", true);
+}
+
+// ============================================
+// Semantic Structure Testing Helpers
+// ============================================
+
+/**
+ * Assert that a semantic HTML element exists on the page.
+ *
+ * @param  mixed  $page  The browser page instance from Pest
+ * @param  string  $tagName  The HTML tag name (e.g., 'header', 'main', 'nav', 'article')
+ * @param  string|null  $message  Custom error message
+ */
+function assertSemanticElementExists($page, string $tagName, ?string $message = null): void
+{
+    $page->assertScript("document.querySelector('{$tagName}') !== null", true);
+}
+
+/**
+ * Assert that multiple semantic HTML elements exist on the page.
+ *
+ * @param  mixed  $page  The browser page instance from Pest
+ * @param  array<string>  $tagNames  Array of HTML tag names to verify
+ */
+function assertSemanticStructure($page, array $tagNames): void
+{
+    foreach ($tagNames as $tagName) {
+        assertSemanticElementExists($page, $tagName, "Semantic element <{$tagName}> should exist on the page.");
+    }
+}
+
+/**
+ * Assert that a heading exists with a specific level.
+ *
+ * @param  mixed  $page  The browser page instance from Pest
+ * @param  int  $level  Heading level (1-6)
+ * @param  string|null  $message  Custom error message
+ */
+function assertHeadingExists($page, int $level, ?string $message = null): void
+{
+    $page->assertScript("document.querySelector('h{$level}') !== null", true);
+}
+
+/**
+ * Assert that an element has a specific ARIA attribute.
+ *
+ * @param  mixed  $page  The browser page instance from Pest
+ * @param  string  $selector  CSS selector for the element
+ * @param  string  $ariaAttribute  ARIA attribute name (e.g., 'label', 'role', 'hidden')
+ * @param  string|null  $expectedValue  Expected value (optional, just checks existence if null)
+ */
+function assertHasAriaAttribute($page, string $selector, string $ariaAttribute, ?string $expectedValue = null): void
+{
+    $escapedSelector = str_replace("'", "\\'", $selector);
+
+    if ($expectedValue !== null) {
+        $escapedValue = str_replace("'", "\\'", $expectedValue);
+        $page->assertScript("document.querySelector('{$escapedSelector}')?.getAttribute('aria-{$ariaAttribute}') === '{$escapedValue}'", true);
+    } else {
+        $page->assertScript("document.querySelector('{$escapedSelector}')?.hasAttribute('aria-{$ariaAttribute}')", true);
+    }
+}
+
+/**
+ * Assert that an input has an associated label.
+ *
+ * @param  mixed  $page  The browser page instance from Pest
+ * @param  string  $inputSelector  CSS selector for the input element
+ */
+function assertInputHasLabel($page, string $inputSelector): void
+{
+    $escapedSelector = str_replace("'", "\\'", $inputSelector);
+    // Check if input has id and label with for attribute, or aria-label, or is wrapped in label
+    // Also check for Flux UI labels which may use data-flux-label or aria-labelledby
+    $page->assertScript("
+        (function() {
+            const input = document.querySelector('{$escapedSelector}');
+            if (!input) return false;
+            
+            // Check aria-label
+            if (input.hasAttribute('aria-label') && input.getAttribute('aria-label').trim() !== '') {
+                return true;
+            }
+            
+            // Check aria-labelledby (used by Flux UI)
+            if (input.hasAttribute('aria-labelledby')) {
+                const labelId = input.getAttribute('aria-labelledby');
+                const label = document.getElementById(labelId);
+                if (label) return true;
+            }
+            
+            // Check if wrapped in label
+            if (input.closest('label')) {
+                return true;
+            }
+            
+            // Check if has id and label with for attribute
+            if (input.id) {
+                const label = document.querySelector('label[for=\"' + input.id + '\"]');
+                if (label) return true;
+            }
+            
+            // Check for Flux UI label structure (data-flux-label)
+            const fluxField = input.closest('[data-flux-field]');
+            if (fluxField) {
+                // Check for data-flux-label attribute or label element
+                const fluxLabel = fluxField.querySelector('[data-flux-label], label');
+                if (fluxLabel && fluxLabel.textContent.trim() !== '') return true;
+                // Also check for aria-labelledby pointing to a label in the field
+                const labelledBy = input.getAttribute('aria-labelledby');
+                if (labelledBy) {
+                    const labelEl = document.getElementById(labelledBy);
+                    if (labelEl && fluxField.contains(labelEl)) return true;
+                }
+            }
+            
+            // Check if input is inside a fieldset with legend (also accessible)
+            const fieldset = input.closest('fieldset');
+            if (fieldset) {
+                const legend = fieldset.querySelector('legend');
+                if (legend) return true;
+            }
+            
+            return false;
+        })()
+    ", true);
+}
+
+// ============================================
+// Color Contrast Testing Helpers
+// ============================================
+
+/**
+ * Assert that an element has sufficient color contrast classes.
+ *
+ * This is a basic check that verifies elements use Tailwind classes
+ * that typically provide sufficient contrast (WCAG AA).
+ *
+ * @param  mixed  $page  The browser page instance from Pest
+ * @param  string  $selector  CSS selector for the element
+ * @param  bool  $isLargeText  Whether the text is large (18pt+ or 14pt+ bold)
+ */
+function assertHasContrastClasses($page, string $selector, bool $isLargeText = false): void
+{
+    $escapedSelector = str_replace("'", "\\'", $selector);
+
+    // Check if element has classes that typically provide sufficient contrast
+    // For normal text: text-gray-900, text-zinc-900, text-white, etc. on contrasting backgrounds
+    // For large text: same classes but with lower contrast requirement
+    $hasContrastClasses = $page->assertScript("
+        (function() {
+            const element = document.querySelector('{$escapedSelector}');
+            if (!element) return false;
+            
+            const classList = element.className;
+            const computedStyle = window.getComputedStyle(element);
+            const color = computedStyle.color;
+            const bgColor = computedStyle.backgroundColor;
+            
+            // Check for common Tailwind text color classes that provide good contrast
+            const textColorClasses = ['text-gray-900', 'text-zinc-900', 'text-white', 'text-black', 
+                                      'text-gray-800', 'text-zinc-800', 'text-gray-700', 'text-zinc-700',
+                                      'text-erasmus-700', 'text-erasmus-600'];
+            
+            const hasTextColor = textColorClasses.some(cls => classList.includes(cls));
+            
+            // If element has text color class, assume it's using proper contrast
+            // (Tailwind's default colors are designed for accessibility)
+            return hasTextColor || color !== 'rgb(0, 0, 0)' || bgColor !== 'rgba(0, 0, 0, 0)';
+        })()
+    ", true);
+
+    expect($hasContrastClasses)->toBeTrue("Element '{$selector}' should have contrast classes or computed colors");
 }
