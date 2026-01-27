@@ -20,7 +20,7 @@ jobs:
     env:
       APP_ENV: testing
       DB_CONNECTION: sqlite
-      DB_DATABASE: :memory:
+      DB_DATABASE: ":memory:"
       CACHE_STORE: array
       SESSION_DRIVER: array
       MAIL_MAILER: array
@@ -85,7 +85,7 @@ jobs:
     env:
       APP_ENV: testing
       DB_CONNECTION: sqlite
-      DB_DATABASE: :memory:
+      DB_DATABASE: ":memory:"
       CACHE_STORE: array
       SESSION_DRIVER: array
       MAIL_MAILER: array
