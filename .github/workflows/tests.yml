@@ -66,6 +66,12 @@ jobs:
           cp .env.example .env || echo "APP_NAME=Laravel" > .env
           echo "APP_KEY=" >> .env
 
+      - name: Ensure storage and cache directories are writable
+        run: |
+          mkdir -p storage/framework/{sessions,views,cache}
+          mkdir -p bootstrap/cache
+          chmod -R 775 storage bootstrap/cache
+
       - name: Generate application key
         run: php artisan key:generate
 
@@ -170,6 +176,12 @@ jobs:
         run: |
           cp .env.example .env || echo "APP_NAME=Laravel" > .env
           echo "APP_KEY=" >> .env
+
+      - name: Ensure storage and cache directories are writable
+        run: |
+          mkdir -p storage/framework/{sessions,views,cache}
+          mkdir -p bootstrap/cache
+          chmod -R 775 storage bootstrap/cache
 
       - name: Generate application key
         run: php artisan key:generate
