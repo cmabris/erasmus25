@@ -898,22 +898,23 @@ Para cada policy:
 **Documentación:**
 - [Plan detallado](pasos/paso-3.11.5-plan.md) - Tests de interacciones JavaScript
 
-#### 3.11.6. Tests de Rendimiento y Optimización
-- [ ] Test de Carga de Páginas
+#### 3.11.6. Tests de Rendimiento y Optimización ✅
+- [x] Test de Carga de Páginas
   - Verificar tiempos de carga aceptables
   - Verificar que no hay consultas N+1
   - Verificar que las relaciones están eager loaded
-- [ ] Test de Consultas a Base de Datos
+- [x] Test de Consultas a Base de Datos
   - Verificar número máximo de consultas por página
   - Verificar que no hay consultas duplicadas
   - Verificar uso de caché cuando aplica
-- [ ] Test de Lazy Loading Detection
+- [x] Test de Lazy Loading Detection
   - Verificar que todas las relaciones necesarias están cargadas
   - Detectar intentos de lazy loading
   - Validar eager loading en componentes críticos
 
 **Documentación:**
-- [Plan detallado](pasos/paso-3.11.6-plan.md) - Tests de rendimiento
+- [Plan detallado](pasos/paso-3.11.6-plan.md) - Tests de rendimiento ✅
+- [Documentación de rendimiento](browser-testing-performance.md) - Guía completa de tests de rendimiento ✅
 
 #### 3.11.7. Tests de Responsive y Accesibilidad
 - [ ] Test de Diseño Responsive
