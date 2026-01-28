@@ -16,18 +16,6 @@ beforeEach(function () {
         $this->markTestSkipped('Los tests de comandos no se ejecutan en modo paralelo');
     }
 
-    // En CI, cerrar cualquier transacción activa antes de continuar
-    // Esto evita conflictos con RefreshDatabase que pueden ocurrir en entornos CI
-    if (env('CI', false)) {
-        try {
-            if (\Illuminate\Support\Facades\DB::transactionLevel() > 0) {
-                \Illuminate\Support\Facades\DB::rollBack();
-            }
-        } catch (\Exception $e) {
-            // Ignorar errores si no hay transacción activa
-        }
-    }
-
     // Limpiar archivo de BD existente ANTES de configurar para evitar que RefreshDatabase
     // intente hacer VACUUM en un archivo con datos (lo cual falla en SQLite dentro de transacciones)
     $dbPath = database_path('testing_setup_production.sqlite');
@@ -53,18 +41,6 @@ beforeEach(function () {
 });
 
 afterEach(function () {
-    // En CI, cerrar cualquier transacción activa antes de limpiar
-    // Esto evita conflictos con RefreshDatabase que pueden ocurrir en entornos CI
-    if (env('CI', false)) {
-        try {
-            if (\Illuminate\Support\Facades\DB::transactionLevel() > 0) {
-                \Illuminate\Support\Facades\DB::rollBack();
-            }
-        } catch (\Exception $e) {
-            // Ignorar errores si no hay transacción activa
-        }
-    }
-
     // Limpiar archivo de BD después de cada test para asegurar estado limpio para el siguiente
     // Esto evita que RefreshDatabase intente hacer VACUUM en el siguiente test
     $dbPath = database_path('testing_setup_production.sqlite');
